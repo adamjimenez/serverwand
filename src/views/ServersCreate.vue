@@ -11,6 +11,10 @@
       Server details
     </v-subheader>
 
+    <v-subheader v-if="serverId==0">
+      Connect to a server which is freshly installed with Ubuntu 18.04.1 LTS.
+    </v-subheader>
+
     <Loading :value="loading" />
 
     <v-form
