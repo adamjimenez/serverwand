@@ -9,329 +9,351 @@
       </v-alert>
 
       <Loading :value="fetching" />
+      
+      <v-subheader v-if="!fetching">
+        {{ data.domain }}
+                      
+        <a v-bind:href="'http://' + data.domain" target="_blank">
+          <i class="material-icons">open_in_new</i>
+        </a>
+      </v-subheader>
 
-      <div v-if="!fetching">
-        <v-subheader>
-          {{ data.domain }}
-                        
-          <a v-bind:href="'http://' + data.domain" target="_blank">
-            <i class="material-icons">open_in_new</i>
-          </a>
-        </v-subheader>
+      <v-tabs
+        value="!fetching"
+        dark
+      >
 
-        <v-tabs
-          value="!fetching"
-          dark
+        <v-tab
+          ripple
         >
+          Summary 
+        </v-tab>
 
-          <v-tab
-            ripple
-          >
-            Summary 
-          </v-tab>
+        <v-tab-item>
+          <v-card>
 
-          <v-tab-item>
-            <v-card>
+            <v-layout row v-if="data.ip != data.webserver.ip">
+              <v-flex xs12>
+                <v-card tile flat>
+                  <v-card-text>
+                    <strong>Warning: {{data.domain}} [{{ data.ip }}] does not resolve to server ip [{{data.webserver.ip}}]</strong>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+            </v-layout>
 
-              <v-layout row v-if="data.ip != data.webserver.ip">
-                <v-flex xs12>
+            <v-layout row>
+              <v-flex xs12>
+                <v-card tile flat>
+                  <v-card-text>                            
+                    {{ data.domain }}
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+            </v-layout>
+            
+            <v-divider></v-divider>
+
+            <v-layout row>
+              <v-flex xs6>
+                <v-card tile flat>
+                  <v-card-text>Disk Usage:</v-card-text>
+                </v-card>
+              </v-flex>
+              <v-flex xs6>
+                <v-card tile flat>
+                  <v-card-text>
+                    {{ format(data.disk_usage) }}
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+            </v-layout>
+            
+            <v-divider></v-divider>
+
+            <v-layout row>
+              <v-flex xs6>
+                <v-card tile flat>
+                  <v-card-text>FTP host:</v-card-text>
+                </v-card>
+              </v-flex>
+              <v-flex xs6>
+                <v-card tile flat>
+                  <v-card-text>
+                    {{data.domain}}
+                    <Copy :val="data.domain" />
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+            </v-layout>
+            
+            <v-divider></v-divider>
+
+            <v-layout row>
+              <v-flex xs6>
+                <v-card tile flat>
+                  <v-card-text>Username:</v-card-text>
+                </v-card>
+              </v-flex>
+              <v-flex xs6>
+                <v-card tile flat>
+                  <v-card-text>
+                    {{data.domain}}
+                    <Copy :val="data.domain" />
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+            </v-layout>
+            
+            <v-divider></v-divider>
+
+            <v-form
+              ref="passwordForm"
+              v-model="passwordFormValid"
+            >
+              <v-expansion-panel
+                v-model="passwordPanel"
+                expand
+              >
+                <v-expansion-panel-content>
+                  <v-icon slot="actions" color="primary">$vuetify.icons.expand</v-icon>
+                  <div slot="header">Reset password</div>
+                  <v-card tile flat>
+                    <v-card-text class="grey lighten-3">                                
+                      <v-text-field
+                        v-model="password"
+                        :append-icon="showPassword ? 'visibility_off' : 'visibility'"
+                        :rules="[rules.required, rules.min]"
+                        :type="showPassword ? 'text' : 'password'"
+                        name="ftp_password"
+                        label="Password"
+                        hint="At least 8 characters"
+                        counter
+                        @click:append="showPassword = !showPassword"
+                      ></v-text-field>
+                    </v-card-text>
+                    <v-card-actions class="grey lighten-3">
+                      <v-btn color="primary" flat @click="submitPassword">Submit</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-form>
+
+          </v-card>
+        </v-tab-item>
+
+        <v-tab
+          ripple
+        >
+          Database
+        </v-tab>
+
+        <v-tab-item>
+          <v-card>
+
+            <v-layout row v-if="data.db_name==false">
+              <v-flex xs12>
+                <v-btn
+                  :disabled="loading!=''"
+                  :loading="loading=='database'"
+                  @click="addDatabase"
+                  >
+                  Add Database
+                </v-btn>
+              </v-flex>
+            </v-layout>
+
+            <div v-else>
+              <v-layout row>
+                <v-flex xs6>
+                  <v-card tile flat>
+                    <v-card-text>DB Name:</v-card-text>
+                  </v-card>
+                </v-flex>
+                <v-flex xs6>
                   <v-card tile flat>
                     <v-card-text>
-                      <strong>Warning: {{data.domain}} [{{ data.ip }}] does not resolve to server ip [{{data.webserver.ip}}]</strong>
+                      {{data.db_name}}
+                      <Copy :val="data.db_name" />
                     </v-card-text>
                   </v-card>
                 </v-flex>
               </v-layout>
 
               <v-layout row>
-                <v-flex xs12>
-                  <v-card tile flat>
-                    <v-card-text>                            
-                      {{ data.domain }}
-                    </v-card-text>
-                  </v-card>
-                </v-flex>
-              </v-layout>
-
-              <v-layout row>
                 <v-flex xs6>
                   <v-card tile flat>
-                    <v-card-text>FTP host:</v-card-text>
+                    <v-card-text>DB Username:</v-card-text>
                   </v-card>
                 </v-flex>
                 <v-flex xs6>
                   <v-card tile flat>
                     <v-card-text>
-                      {{data.domain}}
-                      <Copy :val="data.domain" />
-                    </v-card-text>
-                  </v-card>
-                </v-flex>
-              </v-layout>
-
-              <v-layout row>
-                <v-flex xs6>
-                  <v-card tile flat>
-                    <v-card-text>Username:</v-card-text>
-                  </v-card>
-                </v-flex>
-                <v-flex xs6>
-                  <v-card tile flat>
-                    <v-card-text>
-                      {{data.domain}}
-                      <Copy :val="data.domain" />
+                      {{data.db_name}}
+                      <Copy :val="data.db_name" />
                     </v-card-text>
                   </v-card>
                 </v-flex>
               </v-layout>
 
               <v-form
-                ref="passwordForm"
-                v-model="passwordFormValid"
+                ref="dbPasswordForm"
+                v-model="dbPasswordFormValid"
               >
                 <v-expansion-panel
-                  v-model="passwordPanel"
+                  v-model="dbPasswordPanel"
                   expand
                 >
                   <v-expansion-panel-content>
                     <v-icon slot="actions" color="primary">$vuetify.icons.expand</v-icon>
-                    <div slot="header">Reset password</div>
+                    <div slot="header">Reset db password</div>
                     <v-card tile flat>
                       <v-card-text class="grey lighten-3">                                
                         <v-text-field
-                          v-model="password"
-                          :append-icon="showPassword ? 'visibility_off' : 'visibility'"
+                          v-model="dbPassword"
+                          :append-icon="showDbPassword ? 'visibility_off' : 'visibility'"
                           :rules="[rules.required, rules.min]"
-                          :type="showPassword ? 'text' : 'password'"
-                          name="ftp_password"
+                          :type="showDbPassword ? 'text' : 'password'"
+                          name="db_password"
                           label="Password"
                           hint="At least 8 characters"
                           counter
-                          @click:append="showPassword = !showPassword"
+                          @click:append="showDbPassword = !showDbPassword"
                         ></v-text-field>
                       </v-card-text>
                       <v-card-actions class="grey lighten-3">
-                        <v-btn color="primary" flat @click="submitPassword">Submit</v-btn>
+                        <v-btn color="primary" flat @click="submitDbPassword">Submit</v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-form>
+            </div>
+                  
 
-            </v-card>
-          </v-tab-item>
+          </v-card>
+        </v-tab-item>
 
-          <v-tab
-            ripple
-          >
-            Database
-          </v-tab>
 
-          <v-tab-item>
-            <v-card>
+        <v-tab
+          ripple
+        >
+          Aliases
+        </v-tab>
 
-              <v-layout row v-if="data.db_name==false">
-                <v-flex xs12>
-                  <v-btn
-                    :disabled="loading!=''"
-                    :loading="loading=='database'"
-                    @click="addDatabase"
-                    >
-                    Add Database
-                  </v-btn>
-                </v-flex>
-              </v-layout>
-
-              <div v-else>
-                <v-layout row>
-                  <v-flex xs6>
-                    <v-card tile flat>
-                      <v-card-text>DB Name:</v-card-text>
-                    </v-card>
-                  </v-flex>
-                  <v-flex xs6>
-                    <v-card tile flat>
-                      <v-card-text>
-                        {{data.db_name}}
-                        <Copy :val="data.db_name" />
-                      </v-card-text>
-                    </v-card>
-                  </v-flex>
-                </v-layout>
-
-                <v-layout row>
-                  <v-flex xs6>
-                    <v-card tile flat>
-                      <v-card-text>DB Username:</v-card-text>
-                    </v-card>
-                  </v-flex>
-                  <v-flex xs6>
-                    <v-card tile flat>
-                      <v-card-text>
-                        {{data.db_name}}
-                        <Copy :val="data.db_name" />
-                      </v-card-text>
-                    </v-card>
-                  </v-flex>
-                </v-layout>
-
-                <v-form
-                  ref="dbPasswordForm"
-                  v-model="dbPasswordFormValid"
-                >
-                  <v-expansion-panel
-                    v-model="dbPasswordPanel"
-                    expand
-                  >
-                    <v-expansion-panel-content>
-                      <v-icon slot="actions" color="primary">$vuetify.icons.expand</v-icon>
-                      <div slot="header">Reset db password</div>
-                      <v-card tile flat>
-                        <v-card-text class="grey lighten-3">                                
-                          <v-text-field
-                            v-model="dbPassword"
-                            :append-icon="showDbPassword ? 'visibility_off' : 'visibility'"
-                            :rules="[rules.required, rules.min]"
-                            :type="showDbPassword ? 'text' : 'password'"
-                            name="db_password"
-                            label="Password"
-                            hint="At least 8 characters"
-                            counter
-                            @click:append="showDbPassword = !showDbPassword"
-                          ></v-text-field>
-                        </v-card-text>
-                        <v-card-actions class="grey lighten-3">
-                          <v-btn color="primary" flat @click="submitDbPassword">Submit</v-btn>
-                        </v-card-actions>
-                      </v-card>
-                    </v-expansion-panel-content>
-                  </v-expansion-panel>
-                </v-form>
-              </div>
+        <v-tab-item>
+            <template v-for="(item, index) in data.aliases">
+              <v-card 
+                :key="index"
+              >
+                <v-card-title primary-title>
+                    {{index}}
                     
+                    <div v-if="item != data.webserver.ip">
+                      <strong>&nbsp; - {{index}} [{{ item }}] does not resolve to server ip [{{data.webserver.ip}}]</strong>
+                    </div>
+                    
+                    <div>
+                        <v-btn
+                          :disabled="dialog"
+                          :loading="dialog"
+                          @click="deleteAlias(index)"
+                          >
+                          Delete
+                        </v-btn>
+                    </div>
+                </v-card-title>
+              </v-card>
+            </template>
 
-            </v-card>
-          </v-tab-item>
-
-
-          <v-tab
-            ripple
-          >
-            Aliases
-          </v-tab>
-
-          <v-tab-item>
-              <template v-for="(item, index) in data.aliases">
-                <v-card 
-                  :key="index"
+          <v-card>
+            <div>
+                <v-btn
+                  @click="addAlias()"
                 >
-                  <v-card-title primary-title>
-                      {{index}}
-                      
-                      <div v-if="item != data.webserver.ip">
-                        <strong>&nbsp; - {{index}} [{{ item }}] does not resolve to server ip [{{data.webserver.ip}}]</strong>
-                      </div>
-                      
-                      <div>
-                          <v-btn
-                            :disabled="dialog"
-                            :loading="dialog"
-                            @click="deleteAlias(index)"
-                            >
-                            Delete
-                          </v-btn>
-                      </div>
-                  </v-card-title>
+                  Add domain alias
+                </v-btn>
+            </div>
+          </v-card>
+        </v-tab-item>
+
+        <v-tab
+          ripple
+        >
+          Apps
+        </v-tab>
+
+        <v-tab-item>
+          <v-card>
+
+            <v-layout row>
+              <v-flex xs6>
+                <v-card tile flat>
+                  <v-card-text>Wordpress:</v-card-text>
                 </v-card>
-              </template>
+              </v-flex>
+              <v-flex xs6>
+                <v-card tile flat>
+                  <v-card-text>
+                    <v-btn
+                      v-if="data.wordpress === false"
+                      :disabled="loading!=''"
+                      :loading="loading=='wordpress'"
+                      @click="installWordpress"
+                      >
+                      Install wordpress
+                    </v-btn>
 
-            <v-card>
-              <div>
-                  <v-btn
-                    @click="addAlias()"
-                  >
-                    Add domain alias
-                  </v-btn>
-              </div>
-            </v-card>
-          </v-tab-item>
+                    <div v-else>
+                      {{ data.wordpress }}
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+            </v-layout>
+            
+          </v-card>
+        </v-tab-item>
+        
+        <v-tab
+          ripple
+        >
+          Settings 
+        </v-tab>
 
-          <v-tab
-            ripple
-          >
-            Apps
-          </v-tab>
+        <v-tab-item>
+          <v-card>
+            <v-card-title primary-title>
 
-          <v-tab-item>
-            <v-card>
+              <v-btn
+                @click="editDomain"
+                >
+                Edit
+              </v-btn>
 
-              <v-layout row>
-                <v-flex xs6>
-                  <v-card tile flat>
-                    <v-card-text>Wordpress:</v-card-text>
-                  </v-card>
-                </v-flex>
-                <v-flex xs6>
-                  <v-card tile flat>
-                    <v-card-text>
-                      <v-btn
-                        v-if="data.wordpress === false"
-                        :disabled="loading!=''"
-                        :loading="loading=='wordpress'"
-                        @click="installWordpress"
-                        >
-                        Install wordpress
-                      </v-btn>
+              <v-btn
+                :disabled="data.ssl>0"
+                :loading="loading=='ssl'"
+                @click="enableSSL"
+                >
+                Enable SSL
+              </v-btn>
 
-                      <div v-else>
-                        {{ data.wordpress }}
-                      </div>
-                    </v-card-text>
-                  </v-card>
-                </v-flex>
-              </v-layout>
-              
-            </v-card>
-          </v-tab-item>
-          
-          <v-tab
-            ripple
-          >
-            Settings 
-          </v-tab>
+              <v-btn
+                :disabled="dialog"
+                :loading="loading=='delete'"
+                @click="deleteDomain"
+                >
+                Delete
+              </v-btn>
 
-          <v-tab-item>
-            <v-card>
-              <v-card-title primary-title>
+            </v-card-title>
+          </v-card>
+        </v-tab-item>
 
-                <v-btn
-                  @click="editDomain"
-                  >
-                  Edit
-                </v-btn>
-
-                <v-btn
-                  :disabled="data.ssl>0"
-                  :loading="loading=='ssl'"
-                  @click="enableSSL"
-                  >
-                  Enable SSL
-                </v-btn>
-
-                <v-btn
-                  :disabled="dialog"
-                  :loading="loading=='delete'"
-                  @click="deleteDomain"
-                  >
-                  Delete
-                </v-btn>
-
-              </v-card-title>
-            </v-card>
-          </v-tab-item>
-
-        </v-tabs>
-      </div>
+      </v-tabs>
+      
 
     </v-flex>
 
@@ -411,7 +433,9 @@
         domainId: null,
         post: null,
         error: null,
-        data: {},
+        data: {
+          webserver: {}
+        },
         dialog: false,
         details: '',
         fetching: true,
@@ -445,6 +469,16 @@
       '$route': 'fetchData'
     },
     methods: {
+      format: function(size) {
+        if (size === '' || size === -1) {
+          return ''
+        }
+
+        var si
+        for(si = 0; size >= 1024; size /= 1024, si++) {}
+
+        return '' + Math.round(size) + 'KMGT'.substr(si, 1)
+      },
       fetchData () {        
         var self = this
         this.error = ''

@@ -1,5 +1,4 @@
 <template>
-  <div>
     <v-layout>
       <v-flex>
         <v-alert
@@ -10,6 +9,18 @@
         </v-alert> 
 
         <Loading :value="fetching" />
+      
+        <v-subheader v-if="!fetching">
+          <h1>{{ data.name }}</h1>
+        </v-subheader>
+
+        <v-subheader v-if="!fetching">
+          <p>IP address: ({{ data.location }})</p>
+        </v-subheader>
+
+        <v-subheader v-if="!fetching">
+          <p>Kernel version: {{ data.kernel }}</p>
+        </v-subheader>
 
         <v-tabs
           value="!fetching"
@@ -25,16 +36,6 @@
           <v-tab-item>
             <v-card>
               <v-list two-line>
-                <v-list-tile
-                  :key="data.name"
-                >
-                  <v-list-tile-content>
-                    <v-list-tile-title v-html="data.name"></v-list-tile-title>
-                    <v-list-tile-sub-title v-html="data.host"></v-list-tile-sub-title>
-                  </v-list-tile-content>
-                </v-list-tile>
-
-                <v-divider></v-divider>
                 
                 <v-list-tile>
                   <v-list-tile-content>
@@ -48,9 +49,52 @@
                 <v-list-tile>
                   <v-list-tile-content>
                     <v-list-tile-title>
+                      <i class="fas fa-microchip"></i>
+                      CPU
+                    </v-list-tile-title>
+                    <v-list-tile-sub-title v-if="data.cpu">{{data.cores}} core<span v-if="data.cores>1">s</span>, {{data.cpu}}</v-list-tile-sub-title>
+                  </v-list-tile-content>
+                </v-list-tile>
+
+                <v-divider></v-divider>
+                
+                <v-list-tile>
+                  <v-list-tile-content>
+                    <v-list-tile-title>
+                      <i class="fas fa-hdd"></i>
+                      Disk Usage
+                    </v-list-tile-title>
+                    <v-list-tile-title>
                         <v-progress-linear v-model="data.disk_perc"></v-progress-linear>
                     </v-list-tile-title>
                     <v-list-tile-sub-title v-html="format(data.disk_free)+'  free of '+format(data.disk_space)"></v-list-tile-sub-title>
+                  </v-list-tile-content>
+                </v-list-tile>
+
+                <v-divider></v-divider>
+                
+                <v-list-tile>
+                  <v-list-tile-content>
+                    <v-list-tile-title>
+                      <i class="fas fa-memory"></i>
+                      Memory Usage
+                    </v-list-tile-title>
+                    <v-list-tile-title>
+                        <v-progress-linear v-model="data.mem_perc"></v-progress-linear>
+                    </v-list-tile-title>
+                    <v-list-tile-sub-title v-html="format(data.mem_free)+'  free of '+format(data.mem_total)"></v-list-tile-sub-title>
+                  </v-list-tile-content>
+                </v-list-tile>
+
+                <v-divider></v-divider>
+                
+                <v-list-tile>
+                  <v-list-tile-content>
+                    <v-list-tile-title>
+                      <i class="fas fa-clock"></i> 
+                      Uptime
+                    </v-list-tile-title>
+                    <v-list-tile-sub-title v-html="data.uptime"></v-list-tile-sub-title>
                   </v-list-tile-content>
                 </v-list-tile>
               </v-list>
@@ -160,8 +204,6 @@
       </v-dialog>
 
 
-    </v-layout>
-
     <v-navigation-drawer
       v-model="userDrawer"
       absolute
@@ -202,7 +244,8 @@
 
     </v-navigation-drawer>
 
-  </div>
+    </v-layout>
+
 </template>
 
 <script>
@@ -269,6 +312,7 @@
             
           self.data = response.data.items[0]
           self.data.disk_perc = Math.round((1- (self.data.disk_free / self.data.disk_space)) * 100)
+          self.data.mem_perc = Math.round((1- (self.data.mem_free / self.data.mem_total)) * 100)
         })
         .catch(function (error) {
           console.log(error)
