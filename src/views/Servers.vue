@@ -13,7 +13,7 @@
 
         <Loading :value="loading" />
         
-        <v-list two-line v-if="items">
+        <v-list two-line v-if="items.length">
           <template v-for="(item, index) in items">
             <v-divider
               v-if="item.divider"
@@ -35,11 +35,17 @@
           </template>
         </v-list>
 
-        <div v-else>
-            <router-link to="/servers/create">
-                Add a server
-            </router-link>
-        </div>
+        <v-list v-else>
+          <v-list-tile>
+            <v-list-tile-content>
+              <v-list-tile-title>
+                <router-link to="/servers/create">
+                    Add a server
+                </router-link>
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
 
       </v-card>
     </v-flex>
@@ -81,7 +87,6 @@
         api.servers()
         .then(function (response) {
           console.log(response)
-
           self.items = response.data.items
         })
         .catch(function (error) {

@@ -17,7 +17,7 @@
         </v-card-title>
 
 
-        <v-list two-line v-if="servers">
+        <v-list two-line v-if="servers.length">
           <template v-for="(item, index) in servers">
             <v-divider
               v-if="item.divider"
@@ -39,11 +39,15 @@
           </template>
         </v-list>
 
-        <div v-else>
-            <router-link to="/servers/create">
-                Add a server
-            </router-link>
-        </div>
+        <v-list v-else>
+          <v-list-tile>
+            <v-list-tile-content>
+              <v-list-tile-title>                
+                No items to display
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
 
       </v-card>
 
@@ -52,7 +56,7 @@
           <div class="headline">Domains</div>
         </v-card-title>
 
-        <v-list two-line v-if="domains">
+        <v-list two-line v-if="domains.length">
           <template v-for="(item, index) in domains">
             <v-divider
               v-if="item.divider"
@@ -74,11 +78,16 @@
           </template>
         </v-list>
 
-        <div v-else>
-            <router-link to="/domains/create">
-                Add a domain
-            </router-link>
-        </div>
+        <v-list v-else>
+          <v-list-tile>
+            <v-list-tile-content>
+              <v-list-tile-title>                
+                No items to display
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+
       </v-card>
 
     </v-flex>

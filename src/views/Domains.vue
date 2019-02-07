@@ -16,7 +16,7 @@
 
         <Loading :value="loading" />
 
-        <v-list two-line v-if="items">
+        <v-list two-line v-if="items.length">
           <template v-for="(item, index) in items">
             <v-divider
               v-if="item.divider"
@@ -38,11 +38,17 @@
           </template>
         </v-list>
 
-        <div v-else>
-            <router-link to="/domains/create">
-                Add a domain
-            </router-link>
-        </div>
+        <v-list v-else>
+          <v-list-tile>
+            <v-list-tile-content>
+              <v-list-tile-title>
+                <router-link to="/domains/create">
+                    Add a domain
+                </router-link>
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
         
       </v-card>
     </v-flex>
@@ -103,7 +109,7 @@
         })
       },      
       goto(to) {
-        this.$router.push('domains/'+to)
+        this.$router.push('domains/' + to)
       }
     }
   }
