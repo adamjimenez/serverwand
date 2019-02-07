@@ -1,0 +1,151 @@
+<template>
+  <v-layout row>
+    <v-flex>
+      <v-alert
+        :value="error.length>0"
+        type="error"
+      >
+      {{error}}
+      </v-alert> 
+
+      <Loading :value="loading" />
+
+      <v-card>
+
+        <v-card-title primary-title>
+          <div class="headline">Servers</div>
+        </v-card-title>
+
+
+        <v-list two-line v-if="servers">
+          <template v-for="(item, index) in servers">
+            <v-divider
+              v-if="item.divider"
+              :inset="item.inset"
+              :key="index"
+            ></v-divider>
+
+            <v-list-tile
+              v-else
+              :key="item.name"
+              @click="goto('/servers/' + item.id)"
+            >
+
+              <v-list-tile-content>
+                <v-list-tile-title v-html="item.name"></v-list-tile-title>
+                <v-list-tile-sub-title v-html="item.hostname"></v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </template>
+        </v-list>
+
+        <div v-else>
+            <router-link to="/servers/create">
+                Add a server
+            </router-link>
+        </div>
+
+      </v-card>
+
+      <v-card>
+        <v-card-title primary-title>
+          <div class="headline">Domains</div>
+        </v-card-title>
+
+        <v-list two-line v-if="domains">
+          <template v-for="(item, index) in domains">
+            <v-divider
+              v-if="item.divider"
+              :inset="item.inset"
+              :key="index"
+            ></v-divider>
+
+            <v-list-tile
+              v-else
+              :key="item.name"
+              @click="goto('/domains/' + item.id)"
+            >
+
+              <v-list-tile-content>
+                <v-list-tile-title v-html="item.domain"></v-list-tile-title>
+                <v-list-tile-sub-title></v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </template>
+        </v-list>
+
+        <div v-else>
+            <router-link to="/domains/create">
+                Add a domain
+            </router-link>
+        </div>
+      </v-card>
+
+    </v-flex>
+
+
+  </v-layout>  
+</template>
+
+<script>
+  import api from '../services/api';
+  import Loading from '../components/Loading'
+
+  export default {
+    components: {
+      Loading
+    },
+    data () {
+      return {
+        loading: true,
+        post: null,
+        error: '',
+        servers: [],
+        domains: []
+      }
+    },
+    created () {
+      // fetch the data when the view is created and the data is
+      // already being observed
+      this.fetchData()
+    },
+    watch: {
+      // call again the method if the route changes
+      '$route': 'fetchData'
+    },
+    methods: {
+      fetchData () {        
+        var self = this
+        this.error = ''
+        this.loading = true
+ 
+        api.summary()
+        .then(function (response) {
+          console.log(response)
+
+          if (response.data.error) {
+            self.error = response.data.error
+
+            if (response.data.expired) {
+              location.href = 'https://serverwand.com/pricing'
+            }
+
+            return false
+          }
+
+          self.servers = response.data.servers
+          self.domains = response.data.domains
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+        .finally(function() {
+          self.loading = false
+        })
+      },
+      goto(to) {
+        this.$router.push(to)
+      }
+    }
+  }
+</script>

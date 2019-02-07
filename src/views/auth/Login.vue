@@ -1,0 +1,154 @@
+<template>
+  <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation
+  >
+
+
+    <v-card-title primary-title>
+      <h1 style="text-align: center; width: 100%;">
+        ServerWand
+      </h1>
+    </v-card-title>
+
+    <v-subheader>
+      Sign in
+    </v-subheader>
+
+    <v-alert
+      :value="error.length>0"
+      type="error"
+    >
+    {{error}}
+    </v-alert>
+  
+    <div style="margin: 0 8px;">
+      <v-btn
+        :disabled="dialog"
+        :loading="dialog"
+        color="error"
+        @click="loginGoogle"
+      >
+        <i class="fa fa-google"></i>
+        Google
+      </v-btn>
+    </div>
+
+    <v-card-text>
+      <v-divider></v-divider>
+      
+      <v-text-field
+        v-model="email"
+        :rules="usernameRules"
+        label="Email"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        type="password"
+        v-model="password"
+        :rules="passwordRules"
+        label="Password"
+        required
+      ></v-text-field>
+    </v-card-text>
+    
+    <div style="margin: 0 8px;">
+      <v-btn
+        :disabled="dialog"
+        :loading="dialog"
+        color="success"
+        @click="validate"
+      >
+        Login
+      </v-btn>
+    </div>
+
+    <v-subheader>
+      <router-link to="/auth/forgot">Forgot password</router-link>
+    </v-subheader>
+
+    <v-subheader>
+      <router-link to="/auth/register">Register</router-link>
+    </v-subheader>
+
+    <v-dialog
+      v-model="dialog"
+      hide-overlay
+      persistent
+      width="300"
+    >
+      <v-card
+        color="primary"
+        dark
+      >
+        <v-card-text>
+          Please stand by
+          <v-progress-linear
+            indeterminate
+            color="white"
+            class="mb-0"
+          ></v-progress-linear>
+              
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+  </v-form>
+
+</template>
+
+<script>
+  import api from '../../services/api';
+
+  export default {
+    data: () => ({
+      valid: true,
+      email: '',
+      password: '',
+      usernameRules: [
+        v => !!v || 'Username is required'
+      ],
+      passwordRules: [
+        v => !!v || 'Password is required'
+      ],
+      dialog: false,
+      loading: false,
+      error: ''
+    }),
+
+    methods: {
+      loginGoogle () {
+          location.href = 'https://serverwand.com/login?provider=google';
+      },
+      validate () {
+        var self = this
+
+        if (this.$refs.form.validate()) {
+          this.dialog = true
+          this.error = ''
+
+          api.login({
+            email: this.email,
+            password: this.password
+          })
+          .then(function (response) {
+            console.log(response)
+            if (response.data.success) {
+                self.$router.push('/')
+            } else {
+                self.error = response.data.error;
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+          .finally(function (error) {
+            self.dialog = false
+            self.loading = false
+          })
+        }
+      }
+    }
+  }
+</script>
