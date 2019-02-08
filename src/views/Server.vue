@@ -104,6 +104,51 @@
           <v-tab
             ripple
           >
+            Cronjobs
+          </v-tab>
+
+          <v-tab-item>
+              <template v-for="(item, index) in data.cronjobs">
+                <v-card 
+                  :key="index"
+                >
+                  <v-card-title primary-title>
+                      {{item.command}}
+                      
+                      <div>
+                          <v-btn
+                            @click="editCronjob(item)"
+                            >
+                            Edit
+                          </v-btn>
+                      </div>
+                      <div>
+                          <v-btn
+                            :disabled="dialog"
+                            :loading="dialog"
+                            @click="deleteCronjob(item.line)"
+                            >
+                            Delete
+                          </v-btn>
+                      </div>
+                  </v-card-title>
+                </v-card>
+              </template>
+
+            <v-card>
+              <div>
+                  <v-btn
+                    @click="addCronjob()"
+                  >
+                    Add cron job
+                  </v-btn>
+              </div>
+            </v-card>
+          </v-tab-item>
+          
+          <v-tab
+            ripple
+          >
             System users 
           </v-tab>
 
@@ -238,7 +283,6 @@
         temporary
         right
       >
-
         <v-card>
             <v-card-title>
               System user
@@ -263,13 +307,95 @@
                 :disabled="dialog"
                 :loading="dialog"
                 color="success"
-                @click="validate"
+                @click="saveUser"
               >
                 Save
               </v-btn>
             </v-card-text>
         </v-card>
+      </v-navigation-drawer>
 
+      <v-navigation-drawer
+        v-model="cronjobDrawer"
+        absolute
+        temporary
+        right
+      >
+        <v-card>
+          <v-form
+            ref="cronjobForm"
+          >
+            <v-card-title>
+              Cronjob
+            </v-card-title>
+
+            <v-card-text>
+              <v-text-field
+                v-model="cronjob.line"
+                label="Line"
+                v-show="false"
+              ></v-text-field>
+
+              <v-text-field
+                v-model="cronjob.command"
+                label="Command"
+                required
+                :rules="[rules.required]"
+              ></v-text-field>
+
+              <v-text-field
+                v-model="cronjob.user"
+                label="User"
+                required
+                :rules="[rules.required, rules.alpha]"
+              ></v-text-field>
+
+              <v-text-field
+                v-model="cronjob.minute"
+                label="Minute"
+                required
+                :rules="[rules.required, rules.minute]"
+              ></v-text-field>
+
+              <v-text-field
+                v-model="cronjob.hour"
+                label="Hour"
+                required
+                :rules="[rules.required, rules.hour]"
+              ></v-text-field>
+
+              <v-text-field
+                v-model="cronjob.dom"
+                label="Day of month"
+                required
+                :rules="[rules.required, rules.dom]"
+              ></v-text-field>
+
+              <v-text-field
+                v-model="cronjob.mon"
+                label="Month"
+                required
+                :rules="[rules.required, rules.mon]"
+              ></v-text-field>
+
+              <v-text-field
+                v-model="cronjob.dow"
+                label="Day of week"
+                required
+                :rules="[rules.required, rules.dow]"
+              ></v-text-field>
+              
+              <v-btn
+                :disabled="dialog"
+                :loading="dialog"
+                color="success"
+                @click="saveCronjob"
+              >
+                Save
+              </v-btn>
+            </v-card-text>
+          </v-form>
+        </v-card>
       </v-navigation-drawer>
 
     </v-layout>
@@ -295,10 +421,31 @@
           user: '',
           password: ''
         },
+        cronjob: {
+          name: '',
+          user: '',
+          command: '',
+          minute: '',
+          hour: '',
+          dom: '',
+          mon: '',
+          dow: ''
+        },
+        cronjobs: [],
+        rules: {
+          required: value => !!value || 'Required.',
+          alpha: v => /^[a-zA-Z]+$/g.test(v) || 'Must contain a-z characters only',
+          minute: v => (v=='*' || (v>=0 && v<60) ) || '0-59 or *',
+          hour: v => (v=='*' || (v>=0 && v<24) ) || '0-23 or *',
+          dom: v => (v=='*' || (v>=1 && v<=31) ) || '1-31 or *',
+          mon: v => (v=='*' || (v>=1 && v<12) ) || '1-12 or *',
+          dow: v => (v=='*' || (v>=1 && v<7) ) || '1-7 or *',
+        },
         dialog: false,
         details: '',
         fetching: true,
-        userDrawer: false,        
+        userDrawer: false,
+        cronjobDrawer: false,
         serverId: 0,
         logs: [{
           value: 'journal',
@@ -425,7 +572,7 @@
           self.dialog = false
         })
       },
-      validate () {
+      saveUser () {
         var self = this
 
         if (this.system_user.user && this.system_user.password) {
@@ -469,6 +616,62 @@
           console.log(response)
           self.logContent = response.data.content
         })
+      },      
+      addCronjob() {
+        this.cronjob = {}
+        this.cronjobDrawer = true
+      },
+      editCronjob(cronjob) {
+        this.cronjob = cronjob
+        this.cronjobDrawer = true
+      },
+      deleteCronjob(line) {
+        var self = this
+        this.dialog = true
+        this.error = ''
+
+        api.deleteCronjob(this.serverId, {line: line})
+        .then(function (response) {
+          console.log(response)
+          
+          if (!response.data.success) {
+            self.error = response.data.error;
+          } else {
+            self.fetchData()
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+        .finally(function() {
+          self.dialog = false
+        })
+      },
+      saveCronjob() {
+        var self = this
+        this.error = ''
+
+        if (this.$refs.cronjobForm.validate()) {
+          this.dialog = true
+          
+          api.saveCronjob(self.serverId, this.cronjob)
+          .then(function (response) {
+            console.log(response)
+            if (response.data.error) {
+              self.error = response.data.error
+            } else {
+              self.cronjobDrawer = false
+              self.fetchData()
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+          .finally(function() {
+            self.dialog = false
+            self.loading = ''
+          })
+        }
       }
     }
   }
