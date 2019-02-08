@@ -198,7 +198,8 @@
                 </v-btn>
               </v-card-title>
               <v-card-text>
-                <pre>{{ logContent }}</pre>
+                <div v-if="log=='serverstatus'" v-html="logContent" class="serverstatus"></div>
+                <pre v-else>{{ logContent }}</pre>
               </v-card-text>
             </v-card>
           </v-tab-item>
@@ -320,6 +321,9 @@
         }, {
           value: 'letsencrypt',
           text: 'Letsencrypt',
+        }, {
+          value: 'serverstatus',
+          text: 'Server Status',
         }],
         log: '',        
         logContent: ''
@@ -469,3 +473,12 @@
     }
   }
 </script>
+
+<style>
+.serverstatus {
+  all: initial;
+  * {
+    all: unset;
+  }
+}
+</style>
