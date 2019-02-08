@@ -15,18 +15,14 @@
         </v-subheader>
 
         <v-subheader v-if="!fetching">
-          <p>IP address: {{data.ip}} ({{ data.location }})</p>
-        </v-subheader>
-
-        <v-subheader v-if="!fetching">
-          <p>Kernel version: {{ data.kernel }}</p>
+          <p>IP address: {{data.ip}} ({{ data.location }})</p>          
+          <p style="margin-left: 20px;">Kernel version: {{ data.kernel }}</p>
         </v-subheader>
 
         <v-tabs
           value="!fetching"
           dark
         >
-
           <v-tab
             ripple
           >
@@ -35,66 +31,103 @@
 
           <v-tab-item>
             <v-card>
-              <v-list two-line>
-                
+
+              <v-container
+              >
+                <v-layout>
+                  <v-flex xs12 sm3>
+                    <div class="feature">
+                      <div>
+                        <div class="icon">
+                          <i class="fas fa-microchip"></i>
+                        </div>
+
+                        <div class="label">
+                          CPU
+                        </div>
+                      </div>
+                      
+                      <div style="clear: both; font-size: 12px;">
+                        <div style="font-size: 20px;">{{data.cores}} core<span v-if="data.cores>1">s</span></div>
+                        {{data.cpu}}
+                      </div>
+                    </div>
+                  </v-flex>
+
+                  <v-flex xs12 sm3>              
+                    <div class="feature">
+                      <div>
+                        <div class="icon">
+                            <i class="fas fa-memory"></i>
+                        </div>
+
+                        <div class="label">
+                          Memory Usage
+                        </div>
+                      </div>
+                      
+                      <div style="clear: both;">
+                          <v-list-tile-title>
+                              <v-progress-linear 
+                                v-model="data.mem_perc"
+                                height="20"
+                              ></v-progress-linear>
+                          </v-list-tile-title>
+                          <v-list-tile-sub-title v-html="format(data.mem_free)+'  free of '+format(data.mem_total)"></v-list-tile-sub-title>
+                      </div>
+                    </div>
+                  </v-flex>
+
+                  <v-flex xs12 sm3>              
+                    <div class="feature">
+                      <div>
+                        <div class="icon">
+                          <i class="fas fa-hdd"></i>
+                        </div>
+
+                        <div class="label">
+                          Disk Usage
+                        </div>
+                      </div>
+                      
+                      <div style="clear: both;">
+                          <v-list-tile-title>
+                              <v-progress-linear 
+                                v-model="data.disk_perc"
+                                height="20"
+                              ></v-progress-linear>
+                          </v-list-tile-title>
+                          <v-list-tile-sub-title v-html="format(data.disk_free)+'  free of '+format(data.disk_space)"></v-list-tile-sub-title>
+                      </div>
+                    </div>
+                  </v-flex>
+
+                  <v-flex xs12 sm3>              
+                    <div class="feature" style="border-right: 0;">
+                      <div>
+                        <div class="icon">
+                          <i class="fas fa-clock"></i>
+                        </div>
+
+                        <div class="label">
+                          Uptime
+                        </div>
+                      </div>
+                      
+                      <div style="clear: both; font-size: 14px;">
+                        {{data.uptime}}
+                      </div>
+                    </div>
+                  </v-flex>
+
+                </v-layout>
+              </v-container>
+
+              <v-list two-line>                
                 <v-list-tile>
                   <v-list-tile-content>
                     <v-list-tile-title v-html="`Webserver`"></v-list-tile-title>
                     <v-list-tile-sub-title v-html="data.webserver ? 'Installed' : 'Not installed'"></v-list-tile-sub-title>
-                  </v-list-tile-content>
-                </v-list-tile>
-
-                <v-divider></v-divider>
-                
-                <v-list-tile>
-                  <v-list-tile-content>
-                    <v-list-tile-title>
-                      <i class="fas fa-microchip"></i>
-                      CPU
-                    </v-list-tile-title>
-                    <v-list-tile-sub-title v-if="data.cpu">{{data.cores}} core<span v-if="data.cores>1">s</span>, {{data.cpu}}</v-list-tile-sub-title>
-                  </v-list-tile-content>
-                </v-list-tile>
-
-                <v-divider></v-divider>
-                
-                <v-list-tile>
-                  <v-list-tile-content>
-                    <v-list-tile-title>
-                      <i class="fas fa-hdd"></i>
-                      Disk Usage
-                    </v-list-tile-title>
-                    <v-list-tile-title>
-                        <v-progress-linear v-model="data.disk_perc"></v-progress-linear>
-                    </v-list-tile-title>
-                    <v-list-tile-sub-title v-html="format(data.disk_free)+'  free of '+format(data.disk_space)"></v-list-tile-sub-title>
-                  </v-list-tile-content>
-                </v-list-tile>
-
-                <v-divider></v-divider>
-                
-                <v-list-tile>
-                  <v-list-tile-content>
-                    <v-list-tile-title>
-                      <i class="fas fa-memory"></i>
-                      Memory Usage
-                    </v-list-tile-title>
-                    <v-list-tile-title>
-                        <v-progress-linear v-model="data.mem_perc"></v-progress-linear>
-                    </v-list-tile-title>
-                    <v-list-tile-sub-title v-html="format(data.mem_free)+'  free of '+format(data.mem_total)"></v-list-tile-sub-title>
-                  </v-list-tile-content>
-                </v-list-tile>
-
-                <v-divider></v-divider>
-                
-                <v-list-tile>
-                  <v-list-tile-content>
-                    <v-list-tile-title>
-                      <i class="fas fa-clock"></i> 
-                      Uptime
-                    </v-list-tile-title>
-                    <v-list-tile-sub-title v-html="data.uptime"></v-list-tile-sub-title>
                   </v-list-tile-content>
                 </v-list-tile>
               </v-list>
@@ -683,5 +716,19 @@
   * {
     all: unset;
   }
+}
+
+.feature {
+  margin: 0 5px;
+  padding: 15px 15px;
+  min-height: 140px;
+  border-right: 1px solid #ccc;
+}
+.icon {
+  font-size: 30px; float: left;
+}
+.label {
+  float: right;
+  font-size: 12px;
 }
 </style>
