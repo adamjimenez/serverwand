@@ -15,7 +15,7 @@
         </v-subheader>
 
         <v-subheader v-if="!fetching">
-          <p>IP address: ({{ data.location }})</p>
+          <p>IP address: {{data.ip}} ({{ data.location }})</p>
         </v-subheader>
 
         <v-subheader v-if="!fetching">
