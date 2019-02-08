@@ -174,6 +174,34 @@
               </v-card-title>
             </v-card>
           </v-tab-item>
+          
+          <v-tab
+            ripple
+          >
+            Logs
+          </v-tab>
+
+          <v-tab-item>
+            <v-card>
+              <v-card-title primary-title>
+                <v-select
+                  :items="logs"
+                  label="Log"
+                  @change="fetchLog"
+                ></v-select>
+                
+                <v-btn
+                  @click="fetchLog()"                  
+                  :disabled="!log"
+                  >
+                  <i class="fas fa-redo-alt"></i>
+                </v-btn>
+              </v-card-title>
+              <v-card-text>
+                <pre>{{ logContent }}</pre>
+              </v-card-text>
+            </v-card>
+          </v-tab-item>
 
         </v-tabs>
 
@@ -203,46 +231,45 @@
         </v-card>
       </v-dialog>
 
+      <v-navigation-drawer
+        v-model="userDrawer"
+        absolute
+        temporary
+        right
+      >
 
-    <v-navigation-drawer
-      v-model="userDrawer"
-      absolute
-      temporary
-      right
-    >
+        <v-card>
+            <v-card-title>
+              System user
+            </v-card-title>
 
-      <v-card>
-          <v-card-title>
-            System user
-          </v-card-title>
+            <v-card-text>
+              <v-text-field
+                v-model="system_user.user"
+                label="User"
+                required
+              ></v-text-field>
+              
+              <v-text-field              
+                v-model="system_user.password"
+                type="password"
+                label="Password"
+                required
+                browser-autocomplete="new-password"
+              ></v-text-field>
+              
+              <v-btn
+                :disabled="dialog"
+                :loading="dialog"
+                color="success"
+                @click="validate"
+              >
+                Save
+              </v-btn>
+            </v-card-text>
+        </v-card>
 
-          <v-card-text>
-            <v-text-field
-              v-model="system_user.user"
-              label="User"
-              required
-            ></v-text-field>
-            
-            <v-text-field              
-              v-model="system_user.password"
-              type="password"
-              label="Password"
-              required
-              browser-autocomplete="new-password"
-            ></v-text-field>
-            
-            <v-btn
-              :disabled="dialog"
-              :loading="dialog"
-              color="success"
-              @click="validate"
-            >
-              Save
-            </v-btn>
-          </v-card-text>
-      </v-card>
-
-    </v-navigation-drawer>
+      </v-navigation-drawer>
 
     </v-layout>
 
@@ -271,7 +298,31 @@
         details: '',
         fetching: true,
         userDrawer: false,        
-        serverId: 0
+        serverId: 0,
+        logs: [{
+          value: 'journal',
+          text: 'Journal',
+        }, {
+          value: 'auth',
+          text: 'Auth',
+        }, {
+          value: 'apache_access',
+          text: 'Apache Access',
+        }, {
+          value: 'apache_error',
+          text: 'Apache Error',
+        }, {
+          value: 'mysql',
+          text: 'MySQL',
+        }, {
+          value: 'fail2ban',
+          text: 'Fail2ban',
+        }, {
+          value: 'letsencrypt',
+          text: 'Letsencrypt',
+        }],
+        log: '',        
+        logContent: ''
       }
     },
     created () {
@@ -397,7 +448,23 @@
             self.dialog = false
           })
         }
+      },
+      fetchLog (log) {
+        var self = this
 
+        if (log) {
+          self.log = log
+        } else if (!self.log) {
+          return
+        }
+
+        this.logContent = 'loading..'
+
+        api.fetchLog(this.serverId, {log: self.log})
+        .then(function (response) {
+          console.log(response)
+          self.logContent = response.data.content
+        })
       }
     }
   }

@@ -33,6 +33,9 @@ export default {
     deleteSystemUser(serverId, payload) {
         return axios.post('https://serverwand.com/api/servers/' + serverId + '/deletesystemuser', payload);
     },
+    fetchLog(serverId, payload) {
+        return axios.post('https://serverwand.com/api/servers/' + serverId + '/fetchlog', payload);
+    },
     saveAlias(domainId, payload) {
         return axios.post('https://serverwand.com/api/domains/' + domainId + '/savealias', payload);
     },
