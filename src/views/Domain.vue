@@ -20,7 +20,6 @@
 
       <v-tabs
         value="!fetching"
-        dark
       >
 
         <v-tab

@@ -28,7 +28,7 @@
             <v-list-tile
               v-else
               :key="item.name"
-              @click="goto('/servers/' + item.id)"
+              @click="goto('/servers/' + item.id + '/summary')"
             >
 
               <v-list-tile-content>

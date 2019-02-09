@@ -24,7 +24,7 @@
           <v-list-tile
             v-for="item in items"
             :key="item.title"
-            @click="goto(item.to)"
+            :to="item.to"
           >
             <v-list-tile-content>
               <v-list-tile-title>{{ item.title }}</v-list-tile-title>
@@ -69,17 +69,6 @@
           //{ title: 'Mail', to: '/mail' },
         ]
       }
-    },
-    methods:{
-      goto(to) {
-        this.$router.push(to)
-      }
     }
   }
 </script>
-
-<style>
-a {
-  text-decoration: none;
-}
-</style>

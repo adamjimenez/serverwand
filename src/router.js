@@ -29,7 +29,23 @@ export default new Router({
         {
           path: '/servers/:id',
           name: 'server',
-          component: () => import(/* webpackChunkName: "server" */ './views/Server.vue')
+          component: () => import(/* webpackChunkName: "server" */ './views/Server.vue'),
+          children: [{
+            path: '/servers/:id/summary',
+            component: () => import('./views/servers/Summary.vue')
+          }, {
+            path: '/servers/:id/cronjobs',
+            component: () => import('./views/servers/Cronjobs.vue')
+          }, {
+            path: '/servers/:id/systemusers',
+            component: () => import('./views/servers/Systemusers.vue')
+          }, {
+            path: '/servers/:id/settings',
+            component: () => import('./views/servers/Settings.vue')
+          }, {
+            path: '/servers/:id/logs',
+            component: () => import('./views/servers/Logs.vue')
+          }]
         },
         {
           path: '/servers/:id/edit',
