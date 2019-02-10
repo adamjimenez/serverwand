@@ -39,6 +39,18 @@ export default {
     deleteSystemUser(serverId, payload) {
         return axios.post('https://serverwand.com/api/servers/' + serverId + '/deletesystemuser', payload);
     },
+    firewall(serverId) {
+        return axios.get('https://serverwand.com/api/servers/' + serverId + '/firewall');
+    },
+    setFirewallStatus(serverId, payload) {
+        return axios.post('https://serverwand.com/api/servers/' + serverId + '/firewall', payload);
+    },
+    saveFirewallRule(serverId, payload) {
+        return axios.post('https://serverwand.com/api/servers/' + serverId + '/savefirewallrule', payload);
+    },
+    deleteFirewallRule(serverId, payload) {
+        return axios.post('https://serverwand.com/api/servers/' + serverId + '/deletefirewallrule', payload);
+    },
     fetchLog(serverId, payload) {
         return axios.post('https://serverwand.com/api/servers/' + serverId + '/fetchlog', payload);
     },

@@ -42,6 +42,7 @@
         </v-card>
 
         <v-navigation-drawer
+            app
             v-model="userDrawer"
             absolute
             temporary

@@ -45,6 +45,9 @@ export default new Router({
           }, {
             path: '/servers/:id/logs',
             component: () => import('./views/servers/Logs.vue')
+          }, {
+            path: '/servers/:id/firewall',
+            component: () => import('./views/servers/Firewall.vue')
           }]
         },
         {

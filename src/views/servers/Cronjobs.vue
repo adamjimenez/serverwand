@@ -1,7 +1,7 @@
 <template>
     <div>
         <Loading :value="fetching" />
-        
+
         <template v-for="(item, index) in data.cronjobs">
         <v-card 
             :key="index"
@@ -42,6 +42,7 @@
         </v-card>
 
       <v-navigation-drawer
+        app
         v-model="cronjobDrawer"
         absolute
         temporary
