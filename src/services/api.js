@@ -75,8 +75,8 @@ export default {
     updateDomain(domainId, payload) {
         return axios.post('https://serverwand.com/api/domains/' + domainId + '/update', payload);
     },
-    enableSSL(domainId) {
-        return axios.get('https://serverwand.com/api/domains/' + domainId + '/enablessl');
+    setSSL(domainId, payload) {
+        return axios.post('https://serverwand.com/api/domains/' + domainId + '/setssl', payload);
     },
     deleteDomain(domainId) {
         return axios.get('https://serverwand.com/api/domains/' + domainId + '/delete');

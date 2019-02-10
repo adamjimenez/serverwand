@@ -322,31 +322,28 @@
         </v-tab>
 
         <v-tab-item>
+
+          <v-card>
+              <div>
+                  <v-card-title primary-title>
+                      <v-switch
+                          v-model="data.ssl"
+                          label="SSL"
+                          @change="toggleSSL()"
+                      ></v-switch>
+                  </v-card-title>
+              </div>
+          </v-card>
+
           <v-card>
             <v-card-title primary-title>
-
-              <v-btn
-                @click="editDomain"
-                >
-                Edit
-              </v-btn>
-
-              <v-btn
-                :disabled="data.ssl>0"
-                :loading="loading=='ssl'"
-                @click="enableSSL"
-                >
-                Enable SSL
-              </v-btn>
-
               <v-btn
                 :disabled="dialog"
                 :loading="loading=='delete'"
                 @click="deleteDomain"
                 >
-                Delete
+                Delete Domain
               </v-btn>
-
             </v-card-title>
           </v-card>
         </v-tab-item>
@@ -500,13 +497,13 @@
           self.fetching = false
         })
       },
-      enableSSL () { 
+      toggleSSL () { 
         var self = this
         this.error = ''
         this.dialog = true
         this.loading = 'ssl'
 
-        api.enableSSL(this.$route.params.id)
+        api.setSSL(this.$route.params.id, {status: this.data.ssl})
         .then(function (response) {
           console.log(response)
 
@@ -571,9 +568,6 @@
           self.dialog = false
           self.loading = ''
         })
-      },
-      editDomain () { 
-        this.$router.push('/domains/' + this.$route.params.id + '/edit')
       },
       deleteDomain () { 
         var self = this
