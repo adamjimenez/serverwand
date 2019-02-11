@@ -31,11 +31,11 @@
         <v-tab-item>
           <v-card>
 
-            <v-layout row v-if="data.ip != data.webserver.ip">
+            <v-layout row v-if="data.ip != data.server.ip">
               <v-flex xs12>
                 <v-card tile flat>
                   <v-card-text>
-                    <strong>Warning: {{data.domain}} [{{ data.ip }}] does not resolve to server ip [{{data.webserver.ip}}]</strong>
+                    <strong>Warning: {{data.domain}} [{{ data.ip }}] does not resolve to server ip [{{data.server.ip}}]</strong>
                   </v-card-text>
                 </v-card>
               </v-flex>
@@ -249,8 +249,8 @@
                 <v-card-title primary-title>
                     {{index}}
                     
-                    <div v-if="item != data.webserver.ip">
-                      <strong>&nbsp; - {{index}} [{{ item }}] does not resolve to server ip [{{data.webserver.ip}}]</strong>
+                    <div v-if="item != data.server.ip">
+                      <strong>&nbsp; - {{index}} [{{ item }}] does not resolve to server ip [{{data.server.ip}}]</strong>
                     </div>
                     
                     <div>
@@ -430,7 +430,7 @@
         post: null,
         error: null,
         data: {
-          webserver: {}
+          server: {}
         },
         dialog: false,
         details: '',

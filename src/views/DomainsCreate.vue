@@ -30,9 +30,9 @@
 
       <v-select
         :disabled="domainId>0"
-        v-model="data.webserver"
-        :items="webservers"
-        label="Web Server"
+        v-model="data.server"
+        :items="servers"
+        label="Server"
       ></v-select>
 
       <v-text-field
@@ -100,16 +100,14 @@
       data: {
         domain: '',
         password: '',
-        webserver: '',
-        mailserver: '',
+        server: '',
       },
       domainRules: [
         v => !!v || 'Domain is required'
       ],
       passwordRules: [
       ],
-      webservers: [],
-      mailservers: [],
+      servers: [],
       dialog: false,
       details: "",
       serverId: 0,
@@ -152,7 +150,7 @@
             location.href = 'https://serverwand.com/login'
             
           response.data.items.forEach(element => {
-              self.webservers.push({
+              self.servers.push({
                   text: element.name,
                   value: element.id
               });
