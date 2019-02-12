@@ -66,7 +66,7 @@
           { title: 'Dashboard', to: '/dashboard' },
           { title: 'Servers', to: '/servers' },
           { title: 'Domains', to: '/domains' },
-          //{ title: 'Mail', to: '/mail' },
+          { title: 'Teams', to: '/teams' },
         ]
       }
     }

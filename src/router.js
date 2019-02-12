@@ -79,6 +79,30 @@ export default new Router({
           path: '/settings/profile',
           name: 'profile',
           component: () => import(/* webpackChunkName: "profile" */ './views/settings/Profile.vue')
+        }, {
+          path: '/teams',
+          component: () => import('./views/Teams.vue')
+        }, {
+          path: '/teams/create',
+          component: () => import('./views/TeamsCreate.vue')
+        },
+        {
+          path: '/teams/:id/edit',
+          component: () => import('./views/TeamsCreate.vue')
+        },
+        {
+          path: '/teams/:id',
+          component: () => import('./views/Team.vue'),
+          children: [{
+            path: '/teams/:id/members',
+            component: () => import('./views/teams/Members.vue')
+          }, {
+            path: '/teams/:id/servers',
+            component: () => import('./views/teams/Servers.vue')
+          }, {
+            path: '/teams/:id/settings',
+            component: () => import('./views/teams/Settings.vue')
+          }]
         },
       ]
     },
@@ -107,6 +131,6 @@ export default new Router({
           component: () => import('./views/auth/Logout.vue')
         },
       ]
-    }
+    },
   ]
 })

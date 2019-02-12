@@ -25,7 +25,7 @@
       items: [
         { title: 'Server', to: '/servers/create' },
         { title: 'Domain', to: '/domains/create' },
-        //{ title: 'Mail', to: '/mail/create' },
+        { title: 'Team', to: '/teams/create' },
         //{ title: 'User', to: '/users/create' }
       ]
     }),

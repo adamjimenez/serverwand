@@ -3,6 +3,12 @@ import axios from 'axios'
 axios.defaults.withCredentials = true; 
 
 export default {
+    get(path) {
+        return axios.get('https://serverwand.com/api/' + path);
+    },
+    post(path, payload) {
+        return axios.post('https://serverwand.com/api/' + path, payload);
+    },
     summary() {
         return axios.get('https://serverwand.com/api/summary');
     },
@@ -104,5 +110,17 @@ export default {
     },
     logout() {
         return axios.post('https://serverwand.com/api/auth/logout');
+    },
+    teams() {
+        return axios.get('https://serverwand.com/api/teams');
+    },
+    team(teamId) {
+        return axios.get('https://serverwand.com/api/teams/' + teamId);
+    },
+    createTeam(payload) {
+        return axios.post('https://serverwand.com/api/teams/create', payload);
+    },
+    updateTeam(teamId, payload) {
+        return axios.post('https://serverwand.com/api/teams/' + teamId + '/update', payload);
     },
 }

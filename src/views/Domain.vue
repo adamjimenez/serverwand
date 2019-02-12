@@ -484,9 +484,6 @@
         api.domain(this.domainId)
         .then(function (response) {
           console.log(response)
-
-          if (response.data.logged_out)
-            location.href = 'https://serverwand.com/login'
             
           self.data = response.data.items[0]
         })
