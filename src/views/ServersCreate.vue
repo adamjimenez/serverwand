@@ -10,19 +10,47 @@
     <v-subheader>
       Server details
     </v-subheader>
-
-    <v-subheader v-if="serverId==0">
-      Connect to a server which is freshly installed with Ubuntu 18.04.1 LTS.
-    </v-subheader>
-
     <Loading :value="loading" />
 
+    <v-item-group>
+      <v-container grid-list-md>
+        <v-layout wrap>
+          <v-flex xs12 sm6 class="py-2">
+              <p>Provider</p>
+              <v-btn-toggle v-model="data.provider">
+                <v-btn 
+                  flat 
+                  value="linode"                  
+                  @click="getOptions('linode', true)"
+                >
+                  <span><i class="fab fa-linode"></i></span>
+                  <span>Linode</span>
+                </v-btn>
+                <v-btn flat value="digitalocean">
+                  <span><i class="fab fa-digital-ocean"></i></span>
+                  <span>Digital Ocean</span>
+                </v-btn>
+                <v-btn flat value="custom">
+                  <span><i class="fas fa-server"></i></span>
+                  <span>Custom Server</span>
+                </v-btn>
+              </v-btn-toggle>
+            </v-flex>
+        </v-layout>
+      </v-container>
+    </v-item-group>
+
     <v-form
-      v-if="!loading"
+      v-if="(data.provider!='')"
       ref="form"
       v-model="valid"
       lazy-validation
     >
+
+      <v-subheader v-if="serverId==0">
+        Connect to a server which is freshly installed with Ubuntu 18.04.1 LTS.
+      </v-subheader>
+
       <v-text-field
         v-model="data.name"
         :rules="nameRules"
@@ -30,45 +58,61 @@
         required
       ></v-text-field>
 
-      <v-text-field
-        :disabled="serverId>0"
-        v-model="data.host"
-        :rules="hostRules"
-        label="Host name/ IP Address"
-        required
-      ></v-text-field>
+      <div
+        v-if="(provider!='custom')"
+      >
 
-      <v-text-field
-        :disabled="serverId>0"
-        v-model="data.user"
-        label="Username"
-        required
-      ></v-text-field>
+        <v-select
+            v-model="data.region"
+            :items="regions"
+            label="Region"
+        ></v-select>
 
-      <v-text-field
-        type="password"
-        :disabled="serverId>0"
-        v-model="data.pass"
-        label="Password"
-        required
-      ></v-text-field>
+        <v-select
+            v-model="data.type"
+            :items="types"
+            label="Type"
+        ></v-select>
+      </div>
 
-      <v-text-field
-        :disabled="serverId>0"
-        v-model="data.port"
-        label="Port"
-        required
-      ></v-text-field>
+      <div
+        v-if="(provider=='custom')"
+      >
+        <v-text-field
+          :disabled="serverId>0"
+          v-model="data.host"
+          :rules="hostRules"
+          label="Host name/ IP Address"
+          required
+        ></v-text-field>
 
-      <v-checkbox
-        label="Webserver"
-        v-model="data.webserver"
-      ></v-checkbox>
+        <v-text-field
+          :disabled="serverId>0"
+          v-model="data.user"
+          label="Username"
+          required
+        ></v-text-field>
+
+        <v-text-field
+          type="password"
+          :disabled="serverId>0"
+          v-model="data.pass"
+          label="Password"
+          required
+        ></v-text-field>
+
+        <v-text-field
+          :disabled="serverId>0"
+          v-model="data.port"
+          label="Port"
+          required
+        ></v-text-field>
+      </div>
 
       <!--
       <v-checkbox
-        label="Mailserver"
-        v-model="data.mailserver"
+        label="Webserver"
+        v-model="data.webserver"
       ></v-checkbox>
       -->
 
@@ -120,6 +164,7 @@
       loading: false,
       valid: true,
       data: {
+        provider: '',
         name: '',
         host: '',
         user: 'root',
@@ -139,7 +184,10 @@
       serverId: 0,
       error: '',
       webserverInstalled: false,
-      progress: 0
+      progress: 0,
+      provider: '',
+      regions: [],
+      types: []
     }),
 
     created () {
@@ -186,20 +234,30 @@
             self.details = ''
 
             // subscribe to status changes
-            var source = api.installWebserver(self.serverId)
+            var source = api.event('servers/' + self.serverId + '/install')
             
             var abortFunction = function() {
                 if (source)
                     source.close()
 
                 self.dialog = false;
-                self.$router.push('/servers/' + self.serverId)
+
+                if (!self.error) {                  
+                  self.$router.push('/servers/' + self.serverId)
+                }
             }
         
             source.addEventListener('message', function(event) {
                 var result = JSON.parse(event.data)
                 console.log(result)
-                self.details += result.msg + "\n<br>"
+
+                if (result.msg) {
+                  self.details += result.msg + "\n<br>"
+                }
+
+                if (result.error) {
+                  self.error = result.error
+                }
 
                 if (result.progress) {
                   self.progress = result.progress
@@ -222,22 +280,22 @@
               if(self.data.webserver && !self.webserverInstalled) {
                 installWebserver()
               } else {
-                self.$router.push('/servers/' + self.serverId)
+                self.$router.push('/servers/' + self.serverId + '/summary')
               }
             })
             .catch(function (error) {
               console.log(error)
             })
           } else {
-            api.createServer(this.data)
+            api.post('servers/create', this.data)
             .then(function (response) {
               console.log(response)
               
               if (!response.data.success) {
                 self.error = response.data.error;
                 self.dialog = false
-              } else if(response.data.server_id) {
-                self.serverId = response.data.server_id
+              } else if(response.data.id) {
+                self.serverId = response.data.id
 
                 if (self.data.webserver) {
                   installWebserver()
@@ -252,6 +310,58 @@
             })
           }
         }
+      },
+      getOptions(provider, authPrompt) {
+        var self = this
+
+        api.post('providers?cmd=options', {provider: provider})
+        .then(function (response) {
+          console.log(response)
+          //self.items = response.data.items
+
+          if (response.data.require_auth && authPrompt) {
+            //$(window).on('authorized', getOptions);
+            var child = window.open('https://serverwand.com/account/services/' + provider)
+
+            var interval = setInterval(function() {
+                if (child.closed) {
+                    clearInterval(interval)
+                    self.getOptions(provider, true)
+                    return
+                }
+            }, 500)
+          } else if(!response.data.require_auth) {
+            self.regions = response.data.options.regions;
+            self.types = response.data.options.types;
+            /*
+            $( "#region" ).children('option').remove();
+            $( "#region" ).append( '<option value=""></option>' );
+            
+            items = data.options.regions;
+            items.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} ); 
+            $.each(items, function( index, item ) {
+              var selected = item.selected ? 'selected' : '';
+              $( "#region" ).append( '<option value="'+item.value+'" '+selected+'>'+item.name+'</option>' );
+            });
+      
+            $( "#image" ).children('option').remove();
+            $( "#image" ).append( '<option value=""></option>' );
+            
+            items = data.options.images;
+            items.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} ); 
+            $.each(items, function( index, item ) {
+              var selected = item.selected ? 'selected' : '';
+              $( "#image" ).append( '<option value="'+item.value+'" '+selected+'>'+item.name+'</option>' );
+            });
+            */
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+        .finally(function() {
+          self.loading = false
+        })
       }
     }
   }

@@ -9,17 +9,17 @@ export default {
     post(path, payload) {
         return axios.post('https://serverwand.com/api/' + path, payload);
     },
+    event(path) {
+        return new EventSource('https://serverwand.com/api/' + path, {withCredentials: true});
+    },
     summary() {
         return axios.get('https://serverwand.com/api/summary');
     },
     servers() {
-        return axios.get('https://serverwand.com/api/servers');
+        return axios.get('https://serverwand.com/api/servers/');
     },
     server(serverId) {
         return axios.get('https://serverwand.com/api/servers/' + serverId);
-    },
-    createServer(payload) {
-        return axios.post('https://serverwand.com/api/servers/create', payload);
     },
     updateServer(serverId, payload) {
         return axios.post('https://serverwand.com/api/servers/' + serverId + '/update', payload);
@@ -70,7 +70,7 @@ export default {
         return new EventSource('https://serverwand.com/api/servers/' + serverId + '/status');
     },
     domains() {
-        return axios.get('https://serverwand.com/api/domains');
+        return axios.get('https://serverwand.com/api/domains/');
     },
     domain(domainId) {
         return axios.get('https://serverwand.com/api/domains/' + domainId);
@@ -110,17 +110,5 @@ export default {
     },
     logout() {
         return axios.post('https://serverwand.com/api/auth/logout');
-    },
-    teams() {
-        return axios.get('https://serverwand.com/api/teams');
-    },
-    team(teamId) {
-        return axios.get('https://serverwand.com/api/teams/' + teamId);
-    },
-    createTeam(payload) {
-        return axios.post('https://serverwand.com/api/teams/create', payload);
-    },
-    updateTeam(teamId, payload) {
-        return axios.post('https://serverwand.com/api/teams/' + teamId + '/update', payload);
     },
 }

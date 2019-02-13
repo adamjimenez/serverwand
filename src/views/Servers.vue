@@ -84,7 +84,7 @@
         this.error = ''
         this.loading = true
  
-        api.servers()
+        api.get('servers/')
         .then(function (response) {
           console.log(response)
           self.items = response.data.items
