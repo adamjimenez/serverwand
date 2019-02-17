@@ -88,20 +88,24 @@
         this.$router.push('/servers/' + this.$route.params.id + '/edit')
       },
       deleteServer () {
-        var self = this
-        this.dialog = true
+        this.$confirm('Disconnect from ' + this.data.name + '?').then(res => {
+          if (res) {
+            var self = this
+            this.dialog = true
 
-        api.deleteServer(this.$route.params.id)
-        .then(function (response) {
-          console.log(response)
+            api.deleteServer(this.$route.params.id)
+            .then(function (response) {
+              console.log(response)
 
-          if (response.data.success) {
-            // subscribe to status changes
-            self.$router.push('/servers/')
+              if (response.data.success) {
+                // subscribe to status changes
+                self.$router.push('/servers/')
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
           }
-        })
-        .catch(function (error) {
-          console.log(error)
         })
       }
     }

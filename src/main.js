@@ -18,6 +18,17 @@ Vue.use(Vuetify, {
   }
 })
 
+import VuetifyConfirm from 'vuetify-confirm'
+Vue.use(VuetifyConfirm, {
+  buttonTrueText: 'OK',
+  buttonFalseText: 'Cancel',
+  color: 'warning',
+  icon: 'warning',
+  title: 'Confirm',
+  width: 300,
+  property: '$confirm'
+})
+
 import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 
 new Vue({

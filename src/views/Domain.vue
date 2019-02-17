@@ -598,27 +598,31 @@
         })
       },
       deleteDomain () { 
-        var self = this
-        this.error = ''
-        this.dialog = true
-        this.loading = 'delete'
+        this.$confirm('Delete ' + this.data.domain + '?').then(res => {
+          if (res) {
+            var self = this
+            this.error = ''
+            this.dialog = true
+            this.loading = 'delete'
 
-        api.deleteDomain(this.$route.params.id)
-        .then(function (response) {
-          console.log(response)
-          
-          if (response.data.error) {
-            self.error = response.data.error
-          } else {
-            self.$router.push('/domains/')
+            api.deleteDomain(this.$route.params.id)
+            .then(function (response) {
+              console.log(response)
+              
+              if (response.data.error) {
+                self.error = response.data.error
+              } else {
+                self.$router.push('/domains/')
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+            .finally(function() {
+              self.dialog = false
+              self.loading = ''
+            })
           }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.dialog = false
-          self.loading = ''
         })
       },
       submitPassword () {
@@ -717,25 +721,29 @@
         }
       },
       deleteAlias (alias) {
-        var self = this
-        this.dialog = true
-        this.error = ''
+        this.$confirm('Delete ' + alias + '?').then(res => {
+          if (res) {
+            var self = this
+            this.dialog = true
+            this.error = ''
 
-        api.deleteAlias(this.domainId, {alias: alias})
-        .then(function (response) {
-          console.log(response)
-          
-          if (!response.data.success) {
-            self.error = response.data.error;
-          } else {
-            self.fetchData()
+            api.deleteAlias(this.domainId, {alias: alias})
+            .then(function (response) {
+              console.log(response)
+              
+              if (!response.data.success) {
+                self.error = response.data.error;
+              } else {
+                self.fetchData()
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+            .finally(function() {
+              self.dialog = false
+            })
           }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.dialog = false
         })
       },
       
