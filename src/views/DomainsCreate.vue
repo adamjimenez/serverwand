@@ -42,14 +42,12 @@
         label="Password"
         required
       ></v-text-field>
-
-      <!--
-      <v-select
-        v-model="data.mailserver"
-        :items="mailservers"
-        label="Mail Server"
-      ></v-select>
-      -->
+      
+      <v-checkbox
+        v-model="dns"
+        label="Configure DNS"
+        :disabled="!data.server || dnsProviders[data.server]==''"
+      ></v-checkbox>
 
       <v-btn
         :disabled="dialog"
@@ -108,6 +106,8 @@
       passwordRules: [
       ],
       servers: [],
+      dnsProviders: {},
+      dns: true,
       dialog: false,
       details: "",
       serverId: 0,
@@ -151,6 +151,8 @@
                   text: element.name,
                   value: element.id
               });
+
+              self.dnsProviders[element.id] = element.dns
           })
         })
         .catch(function (error) {
@@ -160,39 +162,54 @@
           self.loading = false
         })
       },
-      validate () {
+      save (noAuthPrompt) {
         var self = this
+        this.error = ''
+        this.details = ''
+        this.dialog = true
 
-        if (this.$refs.form.validate()) {
-          this.details = ''
-          this.dialog = true
-          
-          if (self.domainId) {
-            api.updateDomain(this.domainId, this.data)
-            .then(function (response) {
-              console.log(response)
-              self.$router.push('/domains/' + self.domainId)
-            })
-            .catch(function (error) {
-              console.log(error)
-            })
-          } else {
-            api.createDomain(this.data)
-            .then(function (response) {
-              console.log(response)
-              if (response.data.domain_id) {
-                self.$router.push('/domains/' + response.data.domain_id)
-              } else if (response.data.error) {
+        console.log(arguments);
+
+        if (self.domainId) {
+          api.updateDomain(this.domainId, this.data)
+          .then(function (response) {
+            console.log(response)
+            self.$router.push('/domains/' + self.domainId)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+        } else {
+          api.createDomain(this.data)
+          .then(function (response) {
+            console.log(response)
+            if (response.data.domain_id) {
+              self.$router.push('/domains/' + response.data.domain_id)
+            } else if (response.data.error) {
+              if (response.data.error == 'auth' && !noAuthPrompt) {
+                var child = window.open('https://serverwand.com/account/services/' + self.dnsProviders[self.data.server])
+                var interval = setInterval(function() {
+                    if (child.closed) {
+                        clearInterval(interval)
+                        self.validate(true)
+                        return
+                    }
+                }, 500)
+              } else {
                 self.error = response.data.error
               }
-            })
-            .catch(function (error) {
-              console.log(error)
-            }).finally(function () {
-              self.dialog = false
-            })
-          }
-
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+          }).finally(function () {
+            self.dialog = false
+          })
+        }
+      },
+      validate () {
+        if (this.$refs.form.validate()) {
+          this.save();
         }
       }
     }

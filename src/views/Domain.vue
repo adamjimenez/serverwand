@@ -35,7 +35,8 @@
               <v-flex xs12>
                 <v-card tile flat>
                   <v-card-text>
-                    <strong>Warning: {{data.domain}} [{{ data.ip }}] does not resolve to server ip [{{data.server.ip}}]</strong>
+                    <strong>Warning: Domain does not point to [{{data.server.ip}}] ({{data.dns.error}})</strong>
+                    <v-btn v-if="data.dns.not_set" @click="fixDomainDns(data.domain)">Fix</v-btn>
                   </v-card-text>
                 </v-card>
               </v-flex>
@@ -242,29 +243,52 @@
         </v-tab>
 
         <v-tab-item>
+          <v-card>
             <template v-for="(item, index) in data.aliases">
-              <v-card 
+              <div
                 :key="index"
               >
-                <v-card-title primary-title>
-                    {{index}}
-                    
-                    <div v-if="item != data.server.ip">
-                      <strong>&nbsp; - {{index}} [{{ item }}] does not resolve to server ip [{{data.server.ip}}]</strong>
-                    </div>
-                    
-                    <div>
-                        <v-btn
-                          :disabled="dialog"
-                          :loading="dialog"
-                          @click="deleteAlias(index)"
-                          >
-                          Delete
-                        </v-btn>
-                    </div>
-                </v-card-title>
-              </v-card>
+                <v-layout row v-if="item.dns.ip != data.server.ip">
+                  <v-flex xs12>
+                    <v-card tile flat>
+                      <v-card-text>
+                        <strong>Warning: Domain does not point to [{{data.server.ip}}] ({{item.dns.error}})</strong>
+                        <v-btn v-if="item.dns.not_set" @click="fixAliasDns(item.domain)">Fix</v-btn>
+                      </v-card-text>
+                    </v-card>
+                  </v-flex>
+                </v-layout>
+
+                <v-layout row
+                  
+                >
+                  <v-flex xs6>
+                    <v-card tile flat>
+                      <v-card-text>
+                        {{item.domain}}
+                      </v-card-text>
+                    </v-card>
+                  </v-flex>            
+
+                  <v-flex xs6>
+                    <v-card tile flat>
+                      <v-card-text>
+                          <v-btn
+                            :disabled="dialog"
+                            :loading="dialog"
+                            @click="deleteAlias(item.domain)"
+                            >
+                            Delete
+                          </v-btn>
+                      </v-card-text>
+                    </v-card>
+                  </v-flex>                  
+                </v-layout>
+
+                <v-divider></v-divider>
+              </div>
             </template>
+          </v-card>
 
           <v-card>
             <div>
@@ -396,13 +420,19 @@
               v-model="alias.domain"
               label="Alias"
               required
-            ></v-text-field>            
+            ></v-text-field>
+            
+            <v-checkbox
+              v-model="alias.dns"
+              label="Configure DNS"
+              :disabled="data.server.dns==''"
+            ></v-checkbox>         
             
             <v-btn
               :disabled="dialog"
               :loading="dialog"
               color="success"
-              @click="saveAlias"
+              @click="submitAlias"
             >
               Save
             </v-btn>
@@ -449,7 +479,8 @@
           emailMatch: () => ('The email and password you entered don\'t match')
         },
         alias: {
-          domain: ''
+          domain: '',
+          dns: true
         },
         copyText: 'Copy',
         aliasDrawer: false
@@ -643,7 +674,10 @@
       addAlias () {
         this.aliasDrawer = true
       },
-      saveAlias () {
+      submitAlias() {
+        this.saveAlias();
+      },
+      saveAlias (noAuthPrompt) {
         var self = this
 
         if (this.alias.domain) {
@@ -651,12 +685,23 @@
           this.dialog = true
           this.error = ''
 
-          api.saveAlias(this.domainId, {alias: this.alias.domain})
+          api.saveAlias(this.domainId, {alias: this.alias.domain, dns: this.alias.dns})
           .then(function (response) {
             console.log(response)
             
             if (!response.data.success) {
-              self.error = response.data.error;
+              if (response.data.error == 'auth' && !noAuthPrompt) {
+                var child = window.open('https://serverwand.com/account/services/' + self.data.server.dns)
+                var interval = setInterval(function() {
+                    if (child.closed) {
+                        clearInterval(interval)
+                        self.saveAlias(true)
+                        return
+                    }
+                }, 500)
+              } else {
+                self.error = response.data.error
+              }
             } else {
               self.aliasDrawer = false
               self.fetchData()
@@ -672,7 +717,6 @@
         }
       },
       deleteAlias (alias) {
-
         var self = this
         this.dialog = true
         this.error = ''
@@ -694,6 +738,80 @@
           self.dialog = false
         })
       },
+      
+      fixDomainDns(domain, noAuthPrompt) {
+        var self = this
+
+        this.details = ''
+        this.dialog = true
+        this.error = ''
+
+        api.get('domains/' + self.domainId + '/fixdomaindns')
+        .then(function (response) {
+          console.log(response)
+          
+          if (!response.data.success) {
+            if (response.data.error == 'auth' && !noAuthPrompt) {
+              var child = window.open('https://serverwand.com/account/services/' + self.data.server.dns)
+              var interval = setInterval(function() {
+                  if (child.closed) {
+                      clearInterval(interval)
+                      self.fixDomainDns(domain, true)
+                      return
+                  }
+              }, 500)
+            } else {
+              self.error = response.data.error
+            }
+          } else {
+            self.fetchData()
+          }
+        })
+        .catch(function (error) {
+          console.log(error)              
+          self.dialog = false
+        })
+        .finally(function() {
+          self.dialog = false
+        })
+      },
+      
+      fixAliasDns(alias, noAuthPrompt) {
+        var self = this
+        
+        this.details = ''
+        this.dialog = true
+        this.error = ''
+
+        api.post('domains/' + self.domainId + '/fixaliasdns', {alias: alias})
+        .then(function (response) {
+          console.log(response)
+          
+          if (!response.data.success) {
+            if (response.data.error == 'auth' && !noAuthPrompt) {
+              var child = window.open('https://serverwand.com/account/services/' + self.data.server.dns)
+              var interval = setInterval(function() {
+                  if (child.closed) {
+                      clearInterval(interval)
+                      self.fixAliasDns(alias, true)
+                      return
+                  }
+              }, 500)
+            } else {
+              self.error = response.data.error
+            }
+          } else {
+            self.fetchData()
+          }
+        })
+        .catch(function (error) {
+          console.log(error)              
+          self.dialog = false
+        })
+        .finally(function() {
+          self.dialog = false
+        })
+      }
     }
   }
 </script>

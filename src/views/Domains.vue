@@ -92,10 +92,6 @@
           if (response.data.error) {
             self.error = response.data.error
 
-            if (response.data.expired) {
-              location.href = 'https://serverwand.com/pricing'
-            }
-
             return false
           }
             
@@ -109,7 +105,7 @@
         })
       },      
       goto(to) {
-        this.$router.push('domains/' + to)
+        this.$router.push('/domains/' + to)
       }
     }
   }

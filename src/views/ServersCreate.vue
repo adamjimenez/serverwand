@@ -63,12 +63,14 @@
       >
 
         <v-select
+            v-if="serverId==0"
             v-model="data.region"
             :items="regions"
             label="Region"
         ></v-select>
 
         <v-select
+            v-if="serverId==0"
             v-model="data.type"
             :items="types"
             label="Type"
@@ -115,6 +117,13 @@
         v-model="data.webserver"
       ></v-checkbox>
       -->
+
+      <v-select
+        v-model="data.dns"
+        :items="dns"
+        label="DNS provider"
+      ></v-select>
+
 
       <v-btn
         :disabled="dialog"
@@ -173,6 +182,16 @@
         webserver: true,
         mailserver: true
       },
+      dns: [{
+        text: 'Linode',
+        value: 'linode'
+      }, {
+        text: 'Digital Ocean',
+        value: 'digitalocean'
+      }, {
+        text: 'Other',
+        value: ''
+      }],
       nameRules: [
         v => !!v || 'Name is required'
       ],
@@ -271,17 +290,12 @@
           }
 
           if (self.serverId) {
-            api.updateServer(this.serverId, {
-              name: this.data.name
+            api.post('servers/' + self.serverId + '/update', {
+              name: this.data.name,
+              dns: this.data.dns
             })
             .then(function (response) {
-              console.log(response)
-
-              if(self.data.webserver && !self.webserverInstalled) {
-                installWebserver()
-              } else {
-                self.$router.push('/servers/' + self.serverId + '/summary')
-              }
+              self.$router.push('/servers/' + self.serverId + '/summary')
             })
             .catch(function (error) {
               console.log(error)
