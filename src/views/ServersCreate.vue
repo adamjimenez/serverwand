@@ -23,16 +23,22 @@
                   value="linode"                  
                   @click="getOptions('linode', true)"
                 >
-                  <span><i class="fab fa-linode"></i></span>
-                  <span>Linode</span>
+                  <v-icon left dark>fab fa-linode</v-icon>
+                  Linode
                 </v-btn>
+                <!--
                 <v-btn flat value="digitalocean">
                   <span><i class="fab fa-digital-ocean"></i></span>
-                  <span>Digital Ocean</span>
+                  <v-icon left dark>fab fa-digital-ocean</v-icon>
+                  Digital Ocean
                 </v-btn>
-                <v-btn flat value="custom">
-                  <span><i class="fas fa-server"></i></span>
-                  <span>Custom Server</span>
+                -->
+                <v-btn 
+                  flat 
+                  value="custom"
+                >
+                  <v-icon left dark>fas fa-server</v-icon>
+                  Custom Server
                 </v-btn>
               </v-btn-toggle>
             </v-flex>
@@ -47,8 +53,12 @@
       lazy-validation
     >
 
-      <v-subheader v-if="serverId==0">
+      <v-subheader v-if="data.provider=='custom' && serverId==0">
         Connect to a server which is freshly installed with Ubuntu 18.04.1 LTS.
+      </v-subheader>
+
+      <v-subheader v-if="data.provider=='linode' && serverId==0">
+        Create a new linode
       </v-subheader>
 
       <v-text-field
@@ -59,7 +69,7 @@
       ></v-text-field>
 
       <div
-        v-if="(provider!='custom')"
+        v-if="(data.provider!='custom')"
       >
 
         <v-select
@@ -78,7 +88,7 @@
       </div>
 
       <div
-        v-if="(provider=='custom')"
+        v-if="(data.provider=='custom')"
       >
         <v-text-field
           :disabled="serverId>0"
@@ -122,6 +132,7 @@
         v-model="data.dns"
         :items="dns"
         label="DNS provider"
+        v-if="(data.provider=='custom' || serverId>0)"
       ></v-select>
 
 

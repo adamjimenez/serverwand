@@ -1,3 +1,4 @@
+import '@fortawesome/fontawesome-free/css/all.css' 
 import Vue from 'vue'
 import App from './App.vue'
 
@@ -8,6 +9,7 @@ Vue.config.productionTip = false
 
 import Vuetify from 'vuetify'
 Vue.use(Vuetify, {
+  iconfont: 'fa',
   theme: {
     primary: '#A25C57',
     secondary: '#4C3148',
