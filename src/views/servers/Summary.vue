@@ -95,12 +95,30 @@
             </v-container>
 
             <v-list two-line>                
-            <v-list-tile>
-                <v-list-tile-content>
-                <v-list-tile-title v-html="`Webserver`"></v-list-tile-title>
-                <v-list-tile-sub-title v-html="data.webserver ? 'Installed' : 'Not installed'"></v-list-tile-sub-title>
-                </v-list-tile-content>
-            </v-list-tile>
+              <v-list-tile>
+                  <v-list-tile-content>
+                  <v-list-tile-title v-html="`Apache`"></v-list-tile-title>
+                  <v-list-tile-sub-title v-html="data.apache"></v-list-tile-sub-title>
+                  </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+
+            <v-list two-line>                
+              <v-list-tile>
+                  <v-list-tile-content>
+                  <v-list-tile-title v-html="`PHP`"></v-list-tile-title>
+                  <v-list-tile-sub-title v-html="data.php"></v-list-tile-sub-title>
+                  </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+
+            <v-list two-line>                
+              <v-list-tile>
+                  <v-list-tile-content>
+                  <v-list-tile-title v-html="`MariadDb`"></v-list-tile-title>
+                  <v-list-tile-sub-title v-html="data.mariadb"></v-list-tile-sub-title>
+                  </v-list-tile-content>
+              </v-list-tile>
             </v-list>
         </v-card>
     </div>

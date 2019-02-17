@@ -31,7 +31,7 @@
         <v-tab-item>
           <v-card>
 
-            <v-layout row v-if="data.ip != data.server.ip">
+            <v-layout row v-if="data.dns.ip != data.server.ip">
               <v-flex xs12>
                 <v-card tile flat>
                   <v-card-text>
