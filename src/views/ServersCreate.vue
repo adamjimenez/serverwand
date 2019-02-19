@@ -21,18 +21,19 @@
                 <v-btn 
                   flat 
                   value="linode"                  
-                  @click="getOptions('linode', true)"
+                  @click="getOptions('linode')"
                 >
                   <v-icon left dark>fab fa-linode</v-icon>
                   Linode
                 </v-btn>
-                <!--
-                <v-btn flat value="digitalocean">
-                  <span><i class="fab fa-digital-ocean"></i></span>
+                <v-btn 
+                  flat 
+                  value="digitalocean"
+                  @click="getOptions('digitalocean')"
+                >
                   <v-icon left dark>fab fa-digital-ocean</v-icon>
                   Digital Ocean
                 </v-btn>
-                -->
                 <v-btn 
                   flat 
                   value="custom"
@@ -121,20 +122,12 @@
         ></v-text-field>
       </div>
 
-      <!--
-      <v-checkbox
-        label="Webserver"
-        v-model="data.webserver"
-      ></v-checkbox>
-      -->
-
       <v-select
         v-model="data.dns"
         :items="dns"
         label="DNS provider"
         v-if="(data.provider=='custom' || serverId>0)"
       ></v-select>
-
 
       <v-btn
         :disabled="dialog"
@@ -273,7 +266,7 @@
                 self.dialog = false;
 
                 if (!self.error) {                  
-                  self.$router.push('/servers/' + self.serverId)
+                  self.$router.push('/servers/' + self.serverId + '/summary')
                 }
             }
         
@@ -336,7 +329,7 @@
           }
         }
       },
-      getOptions(provider, authPrompt) {
+      getOptions(provider, noAuthPrompt) {
         var self = this
 
         api.post('providers?cmd=options', {provider: provider})
@@ -344,7 +337,7 @@
           console.log(response)
           //self.items = response.data.items
 
-          if (response.data.require_auth && authPrompt) {
+          if (response.data.require_auth && !noAuthPrompt) {
             //$(window).on('authorized', getOptions);
             var child = window.open('https://serverwand.com/account/services/' + provider)
 
