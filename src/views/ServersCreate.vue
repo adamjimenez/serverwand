@@ -14,7 +14,7 @@
 
     <Loading :value="loading" />
 
-    <v-item-group v-if="this.serverId<=0">
+    <v-item-group v-if="!this.$route.params.id">
       <v-container grid-list-md>
         <v-layout wrap>
           <v-flex>
@@ -61,15 +61,15 @@
 
       <v-card>
         <v-card-text>
-          <p v-if="data.provider=='custom' && serverId==0">
+          <p v-if="data.provider=='custom' && !this.$route.params.id">
             Connect to a server which is freshly installed with Ubuntu 18.04 LTS
           </p>
 
-          <p v-if="data.provider=='linode' && serverId==0">
+          <p v-if="data.provider=='linode' && !this.$route.params.id">
             Create a new Linode
           </p>
 
-          <p v-if="data.provider=='digitalocean' && serverId==0">
+          <p v-if="data.provider=='digitalocean' && !this.$route.params.id">
             Create a new Droplet
           </p>
 
@@ -85,14 +85,14 @@
           >
 
             <v-select
-                v-if="serverId==0"
+                v-if="!this.$route.params.id"
                 v-model="data.region"
                 :items="regions"
                 label="Region"
             ></v-select>
 
             <v-select
-                v-if="serverId==0"
+                v-if="!this.$route.params.id"
                 v-model="data.type"
                 :items="types"
                 label="Type"
@@ -162,14 +162,17 @@
         dark
       >
         <v-card-text>
-          Please stand by
+          <v-layout row>
+              <i class="fas fa-magic fa-2x faa-horizontal animated"></i>
+              <h2 style="margin-left: 10px;">Spellcasting...</h2>
+          </v-layout>
+
           <v-progress-linear
             :indeterminate="progress==0"
             v-model="progress"
             color="white"
             class="mb-0"
           ></v-progress-linear>
-
           <div v-html="details"></div>
               
         </v-card-text>
@@ -288,7 +291,7 @@
                 console.log(result)
 
                 if (result.msg) {
-                  self.details += result.msg + "\n<br>"
+                  self.details = result.msg + '...'
                 }
 
                 if (result.error) {
