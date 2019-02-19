@@ -173,17 +173,19 @@
 
           if (response.data.error) {
             self.error = response.data.error
-
-            if (response.data.expired) {
-              location.href = 'https://serverwand.com/pricing'
-            }
-
-            return false
           }
             
-          self.data = response.data.items[0]
-          self.data.disk_perc = Math.round((1- (self.data.disk_free / self.data.disk_space)) * 100)
-          self.data.mem_perc = Math.round((1- (self.data.mem_free / self.data.mem_total)) * 100)
+          if (response.data.items[0]) {
+            self.data = response.data.items[0]
+          }
+
+          if (self.data.disk_space) {
+            self.data.disk_perc = Math.round((1- (self.data.disk_free / self.data.disk_space)) * 100)
+          }
+
+          if (self.data.mem_total) {
+            self.data.mem_perc = Math.round((1- (self.data.mem_free / self.data.mem_total)) * 100)
+          }
         })
         .catch(function (error) {
           console.log(error)

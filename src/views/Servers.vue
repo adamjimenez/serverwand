@@ -97,7 +97,7 @@
         })
       },
       goto(to) {
-        this.$router.push('servers/' + to + '/summary')
+        this.$router.push('/servers/' + to + '/summary')
       }
     }
   }
