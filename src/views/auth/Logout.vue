@@ -45,7 +45,7 @@
             location.href = 'https://serverwand.com/login'
             return false
           } else {
-            self.error = response.data.error;
+            self.error = response.data.error
           }
         })
         .catch(function (error) {

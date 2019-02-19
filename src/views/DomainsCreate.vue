@@ -7,11 +7,11 @@
     {{error}}
     </v-alert> 
 
-    <v-subheader>
-      Domain details
-    </v-subheader>
-
     <Loading :value="loading" />
+
+    <v-subheader>
+      <h1>Domain details</h1>
+    </v-subheader>
 
     <v-form
       v-if="!loading"
@@ -20,43 +20,52 @@
       lazy-validation
     >
 
-      <v-text-field
-        :disabled="domainId>0"
-        v-model="data.domain"
-        :rules="domainRules"
-        label="Domain"
-        required
-      ></v-text-field>
+      <v-card>
+        <v-card-text>
 
-      <v-select
-        :disabled="domainId>0"
-        v-model="data.server"
-        :items="servers"
-        label="Server"
-      ></v-select>
+          <v-text-field
+            :disabled="domainId>0"
+            v-model="data.domain"
+            :rules="domainRules"
+            label="Domain"
+            required
+          ></v-text-field>
 
-      <v-text-field
-        type="password"
-        v-model="data.password"
-        :rules="passwordRules"
-        label="Password"
-        required
-      ></v-text-field>
-      
-      <v-checkbox
-        v-model="dns"
-        label="Configure DNS"
-        :disabled="!data.server || dnsProviders[data.server]==''"
-      ></v-checkbox>
+          <v-select
+            :disabled="domainId>0"
+            v-model="data.server"
+            :items="servers"
+            label="Server"
+            :rules="[(v) => !!v || 'Server is required']"
+            required
+          ></v-select>
 
-      <v-btn
-        :disabled="dialog"
-        :loading="dialog"
-        color="success"
-        @click="validate"
-      >
-        Save
-      </v-btn>
+          <v-text-field
+            type="password"
+            v-model="data.password"
+            :rules="passwordRules"
+            label="Password"
+            required
+          ></v-text-field>
+          
+          <v-checkbox
+            v-model="dns"
+            label="Configure DNS"
+            :disabled="!data.server || dnsProviders[data.server]==''"
+          ></v-checkbox>
+
+          <v-btn
+            :disabled="dialog"
+            :loading="dialog"
+            color="success"
+            @click="validate"
+          >
+            Save
+          </v-btn>
+
+        </v-card-text>
+      </v-card>
+
     </v-form>
 
     <v-dialog

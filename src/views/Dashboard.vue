@@ -42,8 +42,10 @@
         <v-list v-else>
           <v-list-tile>
             <v-list-tile-content>
-              <v-list-tile-title>                
-                No items to display
+              <v-list-tile-title>
+                <router-link to="/servers/create">
+                    Add a server
+                </router-link>
               </v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
@@ -81,8 +83,10 @@
         <v-list v-else>
           <v-list-tile>
             <v-list-tile-content>
-              <v-list-tile-title>                
-                No items to display
+              <v-list-tile-title>
+                <router-link to="/domains/create">
+                    Add a domain
+                </router-link>
               </v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>

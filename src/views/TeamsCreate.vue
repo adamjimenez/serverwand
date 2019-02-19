@@ -7,11 +7,11 @@
     {{error}}
     </v-alert> 
 
-    <v-subheader>
-      Team details
-    </v-subheader>
-
     <Loading :value="loading" />
+
+    <v-subheader>
+      <h1>Team details</h1>
+    </v-subheader>
 
     <v-form
       v-if="!loading"
@@ -20,21 +20,27 @@
       lazy-validation
     >
 
-      <v-text-field
-        v-model="data.name"
-        :rules="nameRules"
-        label="Name"
-        required
-      ></v-text-field>
+      <v-card>
+        <v-card-text>
 
-      <v-btn
-        :disabled="dialog"
-        :loading="dialog"
-        color="success"
-        @click="validate"
-      >
-        Save
-      </v-btn>
+          <v-text-field
+            v-model="data.name"
+            :rules="nameRules"
+            label="Name"
+            required
+          ></v-text-field>
+
+          <v-btn
+            :disabled="dialog"
+            :loading="dialog"
+            color="success"
+            @click="validate"
+          >
+            Save
+          </v-btn>
+
+        </v-card-text>
+      </v-card>
     </v-form>
 
     <v-dialog

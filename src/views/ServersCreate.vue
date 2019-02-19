@@ -8,41 +8,46 @@
     </v-alert>
 
     <v-subheader>
-      Server details
+      <h1>Server details</h1>
     </v-subheader>
+
+
     <Loading :value="loading" />
 
-    <v-item-group>
+    <v-item-group v-if="this.serverId<=0">
       <v-container grid-list-md>
         <v-layout wrap>
-          <v-flex xs12 sm6 class="py-2">
-              <p>Provider</p>
-              <v-btn-toggle v-model="data.provider">
-                <v-btn 
-                  flat 
-                  value="linode"                  
-                  @click="getOptions('linode')"
-                >
-                  <v-icon left dark>fab fa-linode</v-icon>
-                  Linode
-                </v-btn>
-                <v-btn 
-                  flat 
-                  value="digitalocean"
-                  @click="getOptions('digitalocean')"
-                >
-                  <v-icon left dark>fab fa-digital-ocean</v-icon>
-                  Digital Ocean
-                </v-btn>
-                <v-btn 
-                  flat 
-                  value="custom"
-                >
-                  <v-icon left dark>fas fa-server</v-icon>
-                  Custom Server
-                </v-btn>
-              </v-btn-toggle>
-            </v-flex>
+          <v-flex>
+            <p>
+              Choose a VPS provider below or add your own custom server
+            </p>
+
+            <v-btn-toggle v-model="data.provider">
+              <v-btn 
+                flat 
+                value="linode"                  
+                @click="getOptions('linode')"
+              >
+                <v-icon left dark>fab fa-linode</v-icon>
+                Linode
+              </v-btn>
+              <v-btn 
+                flat 
+                value="digitalocean"
+                @click="getOptions('digitalocean')"
+              >
+                <v-icon left dark>fab fa-digital-ocean</v-icon>
+                Digital Ocean
+              </v-btn>
+              <v-btn 
+                flat 
+                value="custom"
+              >
+                <v-icon left dark>fas fa-server</v-icon>
+                Custom Server
+              </v-btn>
+            </v-btn-toggle>
+          </v-flex>
         </v-layout>
       </v-container>
     </v-item-group>
@@ -54,89 +59,97 @@
       lazy-validation
     >
 
-      <v-subheader v-if="data.provider=='custom' && serverId==0">
-        Connect to a server which is freshly installed with Ubuntu 18.04.1 LTS.
-      </v-subheader>
+      <v-card>
+        <v-card-text>
+          <p v-if="data.provider=='custom' && serverId==0">
+            Connect to a server which is freshly installed with Ubuntu 18.04 LTS
+          </p>
 
-      <v-subheader v-if="data.provider=='linode' && serverId==0">
-        Create a new linode
-      </v-subheader>
+          <p v-if="data.provider=='linode' && serverId==0">
+            Create a new Linode
+          </p>
 
-      <v-text-field
-        v-model="data.name"
-        :rules="nameRules"
-        label="Name"
-        required
-      ></v-text-field>
+          <p v-if="data.provider=='digitalocean' && serverId==0">
+            Create a new Droplet
+          </p>
 
-      <div
-        v-if="(data.provider!='custom')"
-      >
+          <v-text-field
+            v-model="data.name"
+            :rules="nameRules"
+            label="Name"
+            required
+          ></v-text-field>
 
-        <v-select
-            v-if="serverId==0"
-            v-model="data.region"
-            :items="regions"
-            label="Region"
-        ></v-select>
+          <div
+            v-if="(data.provider!='custom')"
+          >
 
-        <v-select
-            v-if="serverId==0"
-            v-model="data.type"
-            :items="types"
-            label="Type"
-        ></v-select>
-      </div>
+            <v-select
+                v-if="serverId==0"
+                v-model="data.region"
+                :items="regions"
+                label="Region"
+            ></v-select>
 
-      <div
-        v-if="(data.provider=='custom')"
-      >
-        <v-text-field
-          :disabled="serverId>0"
-          v-model="data.host"
-          :rules="hostRules"
-          label="Host name/ IP Address"
-          required
-        ></v-text-field>
+            <v-select
+                v-if="serverId==0"
+                v-model="data.type"
+                :items="types"
+                label="Type"
+            ></v-select>
+          </div>
 
-        <v-text-field
-          :disabled="serverId>0"
-          v-model="data.user"
-          label="Username"
-          required
-        ></v-text-field>
+          <div
+            v-if="(data.provider=='custom')"
+          >
+            <v-text-field
+              :disabled="serverId>0"
+              v-model="data.host"
+              :rules="hostRules"
+              label="Host name/ IP Address"
+              required
+            ></v-text-field>
 
-        <v-text-field
-          type="password"
-          :disabled="serverId>0"
-          v-model="data.pass"
-          label="Password"
-          required
-        ></v-text-field>
+            <v-text-field
+              :disabled="serverId>0"
+              v-model="data.user"
+              label="Username"
+              required
+            ></v-text-field>
 
-        <v-text-field
-          :disabled="serverId>0"
-          v-model="data.port"
-          label="Port"
-          required
-        ></v-text-field>
-      </div>
+            <v-text-field
+              type="password"
+              :disabled="serverId>0"
+              v-model="data.pass"
+              label="Password"
+              required
+            ></v-text-field>
 
-      <v-select
-        v-model="data.dns"
-        :items="dns"
-        label="DNS provider"
-        v-if="(data.provider=='custom' || serverId>0)"
-      ></v-select>
+            <v-text-field
+              :disabled="serverId>0"
+              v-model="data.port"
+              label="Port"
+              required
+            ></v-text-field>
+          </div>
 
-      <v-btn
-        :disabled="dialog"
-        :loading="dialog"
-        color="success"
-        @click="validate"
-      >
-        Save
-      </v-btn>
+          <v-select
+            v-model="data.dns"
+            :items="dns"
+            label="DNS provider"
+            v-if="(data.provider=='custom' || serverId>0)"
+          ></v-select>
+
+          <v-btn
+            :disabled="dialog"
+            :loading="dialog"
+            color="success"
+            @click="validate"
+          >
+            Save
+          </v-btn>
+        </v-card-text>
+      </v-card>
     </v-form>
 
     <v-dialog
