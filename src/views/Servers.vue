@@ -26,6 +26,9 @@
               :key="item.name"
               @click="goto(item.id)"
             >
+              <v-list-tile-avatar>
+                <v-icon>fas fa-server</v-icon>
+              </v-list-tile-avatar>
 
               <v-list-tile-content>
                 <v-list-tile-title v-html="item.name"></v-list-tile-title>

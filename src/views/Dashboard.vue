@@ -30,10 +30,13 @@
               :key="item.name"
               @click="goto('/servers/' + item.id + '/summary')"
             >
+              <v-list-tile-avatar>
+                <v-icon>fas fa-server</v-icon>
+              </v-list-tile-avatar>
 
               <v-list-tile-content>
-                <v-list-tile-title v-html="item.name"></v-list-tile-title>
-                <v-list-tile-sub-title v-html="item.hostname"></v-list-tile-sub-title>
+                <v-list-tile-title>{{item.name}}</v-list-tile-title>
+                <v-list-tile-sub-title>{{item.hostname}}</v-list-tile-sub-title>
               </v-list-tile-content>
             </v-list-tile>
           </template>
@@ -71,6 +74,9 @@
               :key="item.name"
               @click="goto('/domains/' + item.id)"
             >
+              <v-list-tile-avatar>
+                <v-icon>fas fa-globe</v-icon>
+              </v-list-tile-avatar>
 
               <v-list-tile-content>
                 <v-list-tile-title v-html="item.domain"></v-list-tile-title>

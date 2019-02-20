@@ -11,6 +11,8 @@
       <Loading :value="fetching" />
       
       <v-subheader v-if="!fetching">
+        <v-icon left>fas fa-globe</v-icon>
+
         {{ data.domain }}
                       
         <a v-bind:href="'http://' + data.domain" target="_blank">
@@ -506,7 +508,7 @@
           console.log(response)
 
           if (response.data.error) {
-            error = response.data.error
+            self.error = response.data.error
           } else if (response.data.success) {
             self.fetchData();
           }

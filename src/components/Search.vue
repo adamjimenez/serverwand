@@ -8,6 +8,23 @@
     @input="afterselection" 
     ref="autocomplete"
     >
+      <template
+        slot="item"
+        slot-scope="data"
+      >
+        <template v-if="typeof data.item !== 'object'">
+          <v-list-tile-content v-text="data.item"></v-list-tile-content>
+        </template>
+        <template v-else>
+          <v-list-tile-avatar>
+            <v-icon>{{data.item.avatar}}</v-icon>
+          </v-list-tile-avatar>
+          <v-list-tile-content>
+            <v-list-tile-title>{{data.item.text}}</v-list-tile-title>
+            <!--<v-list-tile-sub-title v-html="data.item.group"></v-list-tile-sub-title>-->
+          </v-list-tile-content>
+        </template>
+      </template>
     </v-autocomplete>
 </template>
 
@@ -38,7 +55,26 @@
           response.data.items.forEach(element => {
               self.items.push({
                   text: element.domain,
-                  value: '/domains/' + element.id
+                  value: '/domains/' + element.id,
+                  avatar: 'fas fa-globe'
+              });
+          })
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+        .finally(function() {
+          self.loading = false
+        })
+ 
+        api.servers()
+        .then(function (response) {
+          console.log(response)
+          response.data.items.forEach(element => {
+              self.items.push({
+                  text: element.name,
+                  value: '/servers/' + element.id,
+                  avatar: 'fas fa-server'
               });
           })
         })

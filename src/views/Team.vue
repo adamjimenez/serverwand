@@ -11,7 +11,8 @@
         <Loading :value="fetching" />
         
         <v-subheader v-if="!fetching">
-        {{ data.name }}
+          <v-icon left>fas fa-users</v-icon>
+          <h1>{{ data.name }}</h1>
         </v-subheader>
 
         <v-tabs>
