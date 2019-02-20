@@ -69,7 +69,7 @@
         this.error = ''
         this.fetching = true
  
-        api.server(this.serverId)
+        api.get('servers/' + this.serverId)
         .then(function (response) {
           console.log(response)
 

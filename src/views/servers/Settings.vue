@@ -42,7 +42,7 @@
           users: {}
         },
         details: '',
-        fetching: true,
+        fetching: false,
         serverId: 0
       }
     },
@@ -56,9 +56,11 @@
       fetchData () {        
         var self = this
         this.error = ''
+
+        /*
         this.fetching = true
  
-        api.server(this.serverId)
+        api.get('servers/' + this.serverId)
         .then(function (response) {
           console.log(response)
 
@@ -76,6 +78,7 @@
         .finally(function() {
           self.fetching = false
         })
+        */
       },
       editServer () { 
         this.$router.push('/servers/' + this.$route.params.id + '/edit')

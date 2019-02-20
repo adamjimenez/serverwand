@@ -190,7 +190,7 @@
         this.error = ''
         this.fetching = true
  
-        api.server(this.serverId)
+        api.get('servers/' + this.serverId + '/summary')
         .then(function (response) {
           console.log(response)
 
@@ -198,8 +198,8 @@
             self.error = response.data.error
           }
             
-          if (response.data.items[0]) {
-            self.data = response.data.items[0]
+          if (response.data.item) {
+            self.data = response.data.item
           }
 
           if (self.data.disk_space) {

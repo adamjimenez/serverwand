@@ -128,7 +128,7 @@
         this.error = ''
         this.fetching = true
  
-        api.server(this.serverId)
+        api.get('servers/' + this.serverId + '/systemusers')
         .then(function (response) {
           console.log(response)
 
@@ -137,9 +137,7 @@
             return false
           }
             
-          self.data = response.data.items[0]
-          self.data.disk_perc = Math.round((1- (self.data.disk_free / self.data.disk_space)) * 100)
-          self.data.mem_perc = Math.round((1- (self.data.mem_free / self.data.mem_total)) * 100)
+          self.data = response.data.item
         })
         .catch(function (error) {
           console.log(error)
