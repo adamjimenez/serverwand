@@ -75,4 +75,16 @@
 
 <style>
 a {text-decoration: none;}
+
+.v-navigation-drawer  .v-list__tile--link {
+  border-left-width: 5px;
+  border-left-style: solid;
+  border-left-color: transparent;
+}
+
+.v-navigation-drawer  .v-list__tile--active {
+  border-left-style: solid;
+  border-left-width: 5px;
+  border-left-color: inherit;
+}
 </style>
