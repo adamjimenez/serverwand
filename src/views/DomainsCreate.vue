@@ -55,8 +55,8 @@
           ></v-checkbox>
 
           <v-btn
-            :disabled="dialog"
-            :loading="dialog"
+            :disabled="loading"
+            :loading="loading"
             color="success"
             @click="validate"
           >
@@ -68,28 +68,6 @@
 
     </v-form>
 
-    <v-dialog
-      v-model="dialog"
-      persistent
-      width="300"
-    >
-      <v-card
-        color="primary"
-        dark
-      >
-        <v-card-text>
-          Please stand by
-          <v-progress-linear
-            indeterminate
-            color="white"
-            class="mb-0"
-          ></v-progress-linear>
-
-          <div v-html="details"></div>
-              
-        </v-card-text>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
@@ -117,7 +95,6 @@
       servers: [],
       dnsProviders: {},
       dns: true,
-      dialog: false,
       details: "",
       serverId: 0,
       error: ''
@@ -175,7 +152,7 @@
         var self = this
         this.error = ''
         this.details = ''
-        this.dialog = true
+        this.loading = true
 
         console.log(arguments);
 
@@ -212,7 +189,7 @@
           .catch(function (error) {
             console.log(error)
           }).finally(function () {
-            self.dialog = false
+            self.loading = false
           })
         }
       },

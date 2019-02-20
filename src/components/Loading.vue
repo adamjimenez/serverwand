@@ -1,25 +1,27 @@
 <template>
 <v-layout row justify-center>
   <v-dialog v-model="value" full-width persistent content content-class="centered-dialog">
-    <v-container fill-height>
-      <v-layout column justify-center align-center>
-        <radar-spinner :animation-duration="1500" :size="64" :color="progressColor" />
-        <h1 v-if="message != null">{{message}}</h1>
-      </v-layout>
+    <v-container fill-height
+    >
+      <v-card
+        color="primary"
+        dark
+      >
+        <v-card-text>
+          <v-layout row>
+              <i class="fas fa-magic fa-2x faa-horizontal animated"></i>
+              <h2 style="margin-left: 10px;">{{message}}</h2>
+          </v-layout>              
+        </v-card-text>
+      </v-card>
     </v-container>
   </v-dialog>
 </v-layout>
 </template>
 
 <script>
-import {
-  RadarSpinner
-} from 'epic-spinners'
 export default {
   name: "Loading",
-  components: {
-    RadarSpinner
-  },
   data: function() {
     return {}
   },
@@ -30,11 +32,7 @@ export default {
     },
     message: {
       type: String,
-      default: "Please wait..."
-    },
-    progressColor: {
-      type: String,
-      default: '#FFFFFF'
+      default: "Summoning..."
     },
   },
 }
@@ -42,10 +40,8 @@ export default {
 
 <style>
 .v-dialog.centered-dialog {
-  background: #282c2dad;
   box-shadow: none;
   border-radius: 0;
   width: auto;
-  color: whitesmoke;
 }
 </style>

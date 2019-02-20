@@ -21,7 +21,6 @@
       <v-tabs
         value="!fetching"
       >
-
         <v-tab
           ripple
         >
@@ -31,7 +30,7 @@
         <v-tab-item>
           <v-card>
 
-            <v-layout row v-if="data.dns.ip != data.server.ip">
+            <v-layout row v-if="data.server && data.dns && data.dns.ip != data.server.ip">
               <v-flex xs12>
                 <v-card tile flat>
                   <v-card-text>
@@ -274,8 +273,8 @@
                     <v-card tile flat>
                       <v-card-text>
                           <v-btn
-                            :disabled="dialog"
-                            :loading="dialog"
+                            :disabled="fetching"
+                            :loading="fetching"
                             @click="deleteAlias(item.domain)"
                             >
                             Delete
@@ -362,7 +361,7 @@
           <v-card>
             <v-card-title primary-title>
               <v-btn
-                :disabled="dialog"
+                :disabled="fetching"
                 :loading="loading=='delete'"
                 @click="deleteDomain"
                 >
@@ -373,35 +372,7 @@
         </v-tab-item>
 
       </v-tabs>
-      
-
     </v-flex>
-
-    <v-dialog
-      v-model="dialog"
-      hide-overlay
-      persistent
-      width="300"
-    >
-      <v-card
-        color="primary"
-        dark
-      >
-        <v-card-text>
-          Please stand by
-          <v-progress-linear
-            indeterminate
-            color="white"
-            class="mb-0"
-          ></v-progress-linear>
-
-          <div v-html="details"></div>
-              
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-
-
 
     <v-navigation-drawer
       v-model="aliasDrawer"
@@ -429,8 +400,8 @@
             ></v-checkbox>         
             
             <v-btn
-              :disabled="dialog"
-              :loading="dialog"
+              :disabled="fetching"
+              :loading="fetching"
               color="success"
               @click="submitAlias"
             >
@@ -462,7 +433,6 @@
         data: {
           server: {}
         },
-        dialog: false,
         details: '',
         fetching: true,
         passwordPanel: [false],
@@ -528,7 +498,7 @@
       toggleSSL () { 
         var self = this
         this.error = ''
-        this.dialog = true
+        this.fetching = true
         this.loading = 'ssl'
 
         api.setSSL(this.$route.params.id, {status: this.data.ssl})
@@ -545,14 +515,14 @@
           console.log(error)
         })
         .finally(function() {
-          self.dialog = false
+          self.fetching = false
           self.loading = ''
         })
       },
       addDatabase () { 
         var self = this
         this.error = ''
-        this.dialog = true
+        this.fetching = true
         self.loading = 'database'
 
         api.saveDatabase(this.$route.params.id, {})
@@ -569,14 +539,14 @@
           console.log(error)
         })
         .finally(function() {
-          self.dialog = false
+          self.fetching = false
           self.loading = ''
         })
       },
       installWordpress () { 
         var self = this
         this.error = ''
-        this.dialog = true
+        this.fetching = true
         this.loading = 'wordpress'
 
         api.installWordpress(this.$route.params.id)
@@ -593,7 +563,7 @@
           console.log(error)
         })
         .finally(function() {
-          self.dialog = false
+          self.fetching = false
           self.loading = ''
         })
       },
@@ -602,7 +572,7 @@
           if (res) {
             var self = this
             this.error = ''
-            this.dialog = true
+            this.fetching = true
             this.loading = 'delete'
 
             api.deleteDomain(this.$route.params.id)
@@ -619,7 +589,7 @@
               console.log(error)
             })
             .finally(function() {
-              self.dialog = false
+              self.fetching = false
               self.loading = ''
             })
           }
@@ -631,7 +601,7 @@
 
         if (this.$refs.passwordForm.validate()) {
           this.details = ''
-          this.dialog = true
+          this.fetching = true
           
           api.updateDomain(self.domainId, {password: self.password})
           .then(function (response) {
@@ -644,7 +614,7 @@
             console.log(error)
           })
           .finally(function() {
-            self.dialog = false
+            self.fetching = false
             self.loading = ''
             self.passwordPanel = [false]
           })
@@ -656,7 +626,7 @@
 
         if (this.$refs.dbPasswordForm.validate()) {
           this.details = ''
-          this.dialog = true
+          this.fetching = true
           
           api.saveDatabase(self.domainId, {password: self.dbPassword})
           .then(function (response) {
@@ -669,7 +639,7 @@
             console.log(error)
           })
           .finally(function() {
-            self.dialog = false
+            self.fetching = false
             self.loading = ''
             self.dbPasswordPanel = [false]
           })
@@ -686,7 +656,7 @@
 
         if (this.alias.domain) {
           this.details = ''
-          this.dialog = true
+          this.fetching = true
           this.error = ''
 
           api.saveAlias(this.domainId, {alias: this.alias.domain, dns: this.alias.dns})
@@ -713,10 +683,10 @@
           })
           .catch(function (error) {
             console.log(error)              
-            self.dialog = false
+            self.fetching = false
           })
           .finally(function() {
-            self.dialog = false
+            self.fetching = false
           })
         }
       },
@@ -724,7 +694,7 @@
         this.$confirm('Delete ' + alias + '?').then(res => {
           if (res) {
             var self = this
-            this.dialog = true
+            this.fetching = true
             this.error = ''
 
             api.deleteAlias(this.domainId, {alias: alias})
@@ -741,7 +711,7 @@
               console.log(error)
             })
             .finally(function() {
-              self.dialog = false
+              self.fetching = false
             })
           }
         })
@@ -751,7 +721,7 @@
         var self = this
 
         this.details = ''
-        this.dialog = true
+        this.fetching = true
         this.error = ''
 
         api.get('domains/' + self.domainId + '/fixdomaindns')
@@ -777,10 +747,10 @@
         })
         .catch(function (error) {
           console.log(error)              
-          self.dialog = false
+          self.fetching = false
         })
         .finally(function() {
-          self.dialog = false
+          self.fetching = false
         })
       },
       
@@ -788,7 +758,7 @@
         var self = this
         
         this.details = ''
-        this.dialog = true
+        this.fetching = true
         this.error = ''
 
         api.post('domains/' + self.domainId + '/fixaliasdns', {alias: alias})
@@ -814,10 +784,10 @@
         })
         .catch(function (error) {
           console.log(error)              
-          self.dialog = false
+          self.fetching = false
         })
         .finally(function() {
-          self.dialog = false
+          self.fetching = false
         })
       }
     }

@@ -18,8 +18,8 @@
                 </div>
                 <div>
                     <v-btn
-                    :disabled="dialog"
-                    :loading="dialog"
+                    :disabled="fetching"
+                    :loading="fetching"
                     @click="deleteUser(item.name)"
                     >
                     Delete
@@ -48,36 +48,36 @@
             temporary
             right
         >
-            <v-card>
-                <v-card-title>
-                System user
-                </v-card-title>
+          <v-card>
+              <v-card-title>
+              System user
+              </v-card-title>
 
-                <v-card-text>
-                <v-text-field
-                    v-model="system_user.user"
-                    label="User"
-                    required
-                ></v-text-field>
-                
-                <v-text-field              
-                    v-model="system_user.password"
-                    type="password"
-                    label="Password"
-                    required
-                    browser-autocomplete="new-password"
-                ></v-text-field>
-                
-                <v-btn
-                    :disabled="dialog"
-                    :loading="dialog"
-                    color="success"
-                    @click="saveUser"
-                >
-                    Save
-                </v-btn>
-                </v-card-text>
-            </v-card>
+              <v-card-text>
+              <v-text-field
+                  v-model="system_user.user"
+                  label="User"
+                  required
+              ></v-text-field>
+              
+              <v-text-field              
+                  v-model="system_user.password"
+                  type="password"
+                  label="Password"
+                  required
+                  browser-autocomplete="new-password"
+              ></v-text-field>
+              
+              <v-btn
+                  :disabled="fetching"
+                  :loading="fetching"
+                  color="success"
+                  @click="saveUser"
+              >
+                  Save
+              </v-btn>
+              </v-card-text>
+          </v-card>
         </v-navigation-drawer>
     </div>
 </template>
@@ -92,7 +92,6 @@
     },
     data () {
       return {
-        loading: false,
         error: '',
         data: {
           users: {}
@@ -101,7 +100,6 @@
           user: '',
           password: ''
         },
-        dialog: false,
         details: '',
         fetching: true,
         userDrawer: false,
@@ -136,11 +134,6 @@
 
           if (response.data.error) {
             self.error = response.data.error
-
-            if (response.data.expired) {
-              location.href = 'https://serverwand.com/pricing'
-            }
-
             return false
           }
             
@@ -164,7 +157,7 @@
       },
       deleteUser(user) {
         var self = this
-        this.dialog = true
+        this.fetching = true
         this.error = ''
 
         api.deleteSystemUser(this.serverId, {user: user})
@@ -181,7 +174,7 @@
           console.log(error)
         })
         .finally(function() {
-          self.dialog = false
+          self.fetching = false
         })
       },
       saveUser () {
@@ -189,7 +182,7 @@
 
         if (this.system_user.user && this.system_user.password) {
           this.details = ''
-          this.dialog = true
+          this.fetching = true
           this.error = ''
 
           api.saveSystemUser(this.serverId, this.system_user)
@@ -205,10 +198,10 @@
           })
           .catch(function (error) {
             console.log(error)              
-            self.dialog = false
+            self.fetching = false
           })
           .finally(function() {
-            self.dialog = false
+            self.fetching = false
           })
         }
       }

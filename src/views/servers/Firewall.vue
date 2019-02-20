@@ -23,8 +23,8 @@
                     
                     <div>
                         <v-btn
-                        :disabled="dialog"
-                        :loading="dialog"
+                        :disabled="fetching"
+                        :loading="fetching"
                         @click="deleteItem(item.id)"
                         >
                         Delete
@@ -89,8 +89,8 @@
                         ></v-text-field>                    
                         
                         <v-btn
-                            :disabled="dialog"
-                            :loading="dialog"
+                            :disabled="fetching"
+                            :loading="fetching"
                             color="success"
                             @click="saveItem"
                         >
@@ -118,7 +118,6 @@
         active: false,
         items: {},
         item: {},
-        dialog: false,
         details: '',
         fetching: true,
         drawer: false,
@@ -166,7 +165,7 @@
       },
       toggle() {
         var self = this
-        this.dialog = true
+        this.fetching = true
         this.error = ''
 
         api.setFirewallStatus(this.serverId, {status: this.active})
@@ -183,7 +182,7 @@
           console.log(error)
         })
         .finally(function() {
-          self.dialog = false
+          self.fetching = false
         })
       },
       addItem() {
@@ -191,7 +190,7 @@
       },
       deleteItem(id) {
         var self = this
-        this.dialog = true
+        this.fetching = true
         this.error = ''
 
         api.deleteFirewallRule(this.serverId, {id: id})
@@ -208,7 +207,7 @@
           console.log(error)
         })
         .finally(function() {
-          self.dialog = false
+          self.fetching = false
         })
       },
       saveItem () {
@@ -216,7 +215,7 @@
         this.error = ''
 
         if (this.$refs.form.validate()) {
-          this.dialog = true
+          this.fetching = true
           
           api.saveFirewallRule(self.serverId, this.item)
           .then(function (response) {
@@ -232,7 +231,7 @@
             console.log(error)
           })
           .finally(function() {
-            self.dialog = false
+            self.fetching = false
             self.loading = ''
           })
         }

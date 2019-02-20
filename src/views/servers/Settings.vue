@@ -13,8 +13,8 @@
               </div>
               <div>
                   <v-btn
-                      :disabled="dialog"
-                      :loading="dialog"
+                      :disabled="fetching"
+                      :loading="fetching"
                       @click="deleteServer"
                       >
                       Disconnect
@@ -41,7 +41,6 @@
         data: {
           users: {}
         },
-        dialog: false,
         details: '',
         fetching: true,
         serverId: 0
@@ -85,7 +84,7 @@
         this.$confirm('Disconnect from server ' + this.data.name + '?').then(res => {
           if (res) {
             var self = this
-            this.dialog = true
+            this.fetching = true
 
             api.deleteServer(this.$route.params.id)
             .then(function (response) {

@@ -64,7 +64,6 @@
           mon: v => (v=='*' || (v>=1 && v<12) ) || '1-12 or *',
           dow: v => (v=='*' || (v>=1 && v<7) ) || '1-7 or *',
         },
-        dialog: false,
         details: '',
         fetching: true,
         userDrawer: false,
@@ -127,11 +126,6 @@
 
           if (response.data.error) {
             self.error = response.data.error
-
-            if (response.data.expired) {
-              location.href = 'https://serverwand.com/pricing'
-            }
-
             return false
           }
             
@@ -151,7 +145,7 @@
       },
       deleteServer () {
         var self = this
-        this.dialog = true
+        this.fetching = true
 
         api.deleteServer(this.$route.params.id)
         .then(function (response) {
@@ -175,7 +169,7 @@
       },
       deleteUser(user) {
         var self = this
-        this.dialog = true
+        this.fetching = true
         this.error = ''
 
         api.deleteSystemUser(this.serverId, {user: user})
@@ -192,7 +186,7 @@
           console.log(error)
         })
         .finally(function() {
-          self.dialog = false
+          self.dialfetchingog = false
         })
       },
       saveUser () {
@@ -200,7 +194,7 @@
 
         if (this.system_user.user && this.system_user.password) {
           this.details = ''
-          this.dialog = true
+          this.fetching = true
           this.error = ''
 
           api.saveSystemUser(this.serverId, this.system_user)
@@ -216,10 +210,10 @@
           })
           .catch(function (error) {
             console.log(error)              
-            self.dialog = false
+            self.fetching = false
           })
           .finally(function() {
-            self.dialog = false
+            self.fetching = false
           })
         }
       },
@@ -250,7 +244,7 @@
       },
       deleteCronjob(line) {
         var self = this
-        this.dialog = true
+        this.fetching = true
         this.error = ''
 
         api.deleteCronjob(this.serverId, {line: line})
@@ -267,7 +261,7 @@
           console.log(error)
         })
         .finally(function() {
-          self.dialog = false
+          self.fetching = false
         })
       },
       saveCronjob() {
@@ -275,7 +269,7 @@
         this.error = ''
 
         if (this.$refs.cronjobForm.validate()) {
-          this.dialog = true
+          this.fetching = true
           
           api.saveCronjob(self.serverId, this.cronjob)
           .then(function (response) {
@@ -291,7 +285,7 @@
             console.log(error)
           })
           .finally(function() {
-            self.dialog = false
+            self.fetching = false
             self.loading = ''
           })
         }

@@ -139,7 +139,6 @@
         data: {
           users: {}
         },
-        dialog: false,
         details: '',
         fetching: true,
         serverId: 0
