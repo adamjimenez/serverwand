@@ -15,11 +15,6 @@
           <h1>{{ data.name }}</h1>
         </v-subheader>
 
-        <v-subheader v-if="!fetching">
-          <p>IP address: {{data.ip}} ({{ data.location }})</p>          
-          <p style="margin-left: 20px;">Kernel version: {{ data.kernel }}</p>
-        </v-subheader>
-
         <v-tabs>
           <v-tab :to="'/servers/' + serverId + '/summary'">Summary</v-tab>
           <v-tab :to="'/servers/' + serverId + '/cronjobs'">Cronjobs</v-tab>

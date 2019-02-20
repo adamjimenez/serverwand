@@ -3,11 +3,10 @@
         <v-btn
         icon
         slot="activator"
-        color="primary"
         @click="copy(val)"
         @mouseleave="resetCopyText()"
         >
-        <v-icon>file_copy</v-icon>
+          <v-icon small>file_copy</v-icon>
         </v-btn>
         
         <span>{{ copyText }}</span>

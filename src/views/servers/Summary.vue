@@ -97,6 +97,28 @@
             <v-list two-line>                
               <v-list-tile>
                   <v-list-tile-content>
+                    <v-list-tile-title v-html="`IP address`"></v-list-tile-title>
+                    <v-list-tile-sub-title>
+                      {{data.ip}} <Copy :val="data.domain" />
+                    </v-list-tile-sub-title>
+                  </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+
+            <v-list two-line>                
+              <v-list-tile>
+                  <v-list-tile-content>
+                    <v-list-tile-title v-html="`Kernel version`"></v-list-tile-title>
+                    <v-list-tile-sub-title>
+                      {{ data.kernel }}
+                    </v-list-tile-sub-title>
+                  </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+
+            <v-list two-line>                
+              <v-list-tile>
+                  <v-list-tile-content>
                   <v-list-tile-title v-html="`Apache`"></v-list-tile-title>
                   <v-list-tile-sub-title v-html="data.apache"></v-list-tile-sub-title>
                   </v-list-tile-content>
@@ -127,10 +149,12 @@
 <script>
   import api from '../../services/api'
   import Loading from '../../components/Loading'
+  import Copy from '../../components/Copy'
 
   export default {
     components: {
-      Loading
+      Loading,
+      Copy
     },
     data () {
       return {

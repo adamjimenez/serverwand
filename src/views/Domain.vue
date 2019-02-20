@@ -16,8 +16,9 @@
         {{ data.domain }}
                       
         <a v-bind:href="'http://' + data.domain" target="_blank">
-          <i class="material-icons">open_in_new</i>
+          <v-icon right>open_in_new</v-icon>
         </a>
+        
       </v-subheader>
 
       <v-tabs
