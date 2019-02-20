@@ -10,7 +10,7 @@
           dark
         >
             Create
-             <v-icon dark>{{isOpen ? 'expand_more' : 'expand_less'}}</v-icon>
+             <v-icon dark>{{isOpen ? 'expand_less' : 'expand_more'}}</v-icon>
         </v-btn>
         <v-list>
           <v-list-tile avatar

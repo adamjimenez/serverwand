@@ -161,7 +161,12 @@
         loading: false,
         error: '',
         data: {
-          users: {}
+          disk_free: 0,
+          disk_space: 0,
+          disk_perc: 0,
+          mem_free: 0,
+          mem_total: 0,
+          mem_perc: 0
         },
         details: '',
         fetching: true,

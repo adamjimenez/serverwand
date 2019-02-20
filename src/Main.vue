@@ -1,10 +1,11 @@
 <template>
   <div class="page-container">
-    <v-app>
+    <v-app :dark="dark">
       <v-navigation-drawer 
         app
         v-model="drawer"
       >
+      <v-layout column fill-height>
         <v-toolbar flat>
           <v-list>
             <v-list-tile>
@@ -21,8 +22,6 @@
           </v-list>
         </v-toolbar>
 
-        <v-divider></v-divider>
-
         <v-list dense class="pt-0">
           <v-list-tile
             v-for="item in items"
@@ -34,8 +33,34 @@
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
+        <v-spacer></v-spacer>
+        <v-list>
+          <v-layout row justify-center>
+            <v-flex xs2>
+              <v-card flat>
+                <v-card-text>Light</v-card-text>
+              </v-card>
+            </v-flex>
+            <v-flex xs2>
+              <v-card flat>
+                <v-card-text>
+                  <v-switch
+                    v-model="dark"
+                  ></v-switch>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+            <v-flex xs2>
+              <v-card flat>
+                <v-card-text>Dark</v-card-text>
+              </v-card>
+            </v-flex>
+          </v-layout>
+        </v-list>
+      </v-layout>
+      
       </v-navigation-drawer>
-      <v-toolbar app>
+      <v-toolbar app flat>
         <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         <CreateMenu />
         <Search />
@@ -64,6 +89,7 @@
     },
     data () {
       return {
+        dark: false,
         drawer: null,
         items: [
           { title: 'Dashboard', to: '/dashboard' },
@@ -72,6 +98,21 @@
           { title: 'Teams', to: '/teams' },
         ]
       }
+    },
+    mounted() {
+      if (localStorage.dark) {
+        this.dark = true
+      }
+    },
+    watch: {
+      dark(newDark) {
+        if (newDark) {
+          localStorage.dark = 1
+        } else {
+          delete localStorage.dark
+        }
+
+      }
     }
   }
 </script>
@@ -79,15 +120,20 @@
 <style>
 a {text-decoration: none;}
 
-.v-navigation-drawer  .v-list__tile--link {
+.v-navigation-drawer .v-list__tile--link {
   border-left-width: 5px;
   border-left-style: solid;
   border-left-color: transparent;
 }
 
-.v-navigation-drawer  .v-list__tile--active {
+.v-navigation-drawer .v-list__tile--active {
   border-left-style: solid;
   border-left-width: 5px;
   border-left-color: inherit;
+}
+
+.v-navigation-drawer .v-input--switch {
+  margin: 0;
+  padding: 0;
 }
 </style>
