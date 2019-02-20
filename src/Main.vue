@@ -9,9 +9,12 @@
           <v-list>
             <v-list-tile>
               <v-list-tile-title class="title">
-                <router-link to="/dashboard">              
-                <i class="fas fa-magic"></i>
-                ServerWand
+                <router-link to="/dashboard"> 
+                  <v-icon 
+                    left
+                    color="primary"
+                  >fas fa-magic</v-icon>
+                  <strong>SERVERWAND</strong>
                 </router-link>
               </v-list-tile-title>
             </v-list-tile>
