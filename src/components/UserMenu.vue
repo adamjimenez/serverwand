@@ -1,5 +1,5 @@
 <template>
-    <v-menu offset-y>
+    <v-menu offset-y left>
         <v-avatar
             slot="activator"
         >
