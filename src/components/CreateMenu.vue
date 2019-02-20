@@ -1,11 +1,16 @@
 <template>
-    <v-menu offset-y>
+    <v-menu 
+      offset-y
+      v-model="isOpen"
+    >
         <v-btn
-            slot="activator"
-            color="primary"
-            dark
+          value:="menu"
+          slot="activator"
+          color="primary"
+          dark
         >
             Create
+             <v-icon dark>{{isOpen ? 'expand_more' : 'expand_less'}}</v-icon>
         </v-btn>
         <v-list>
             <v-list-tile
@@ -22,6 +27,7 @@
 <script>
   export default {
     data: () => ({
+      isOpen: false,
       items: [
         { title: 'Server', to: '/servers/create' },
         { title: 'Domain', to: '/domains/create' },
