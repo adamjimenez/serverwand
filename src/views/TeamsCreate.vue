@@ -31,8 +31,8 @@
           ></v-text-field>
 
           <v-btn
-            :disabled="dialog"
-            :loading="dialog"
+            :disabled="loading"
+            :loading="loading"
             color="success"
             @click="validate"
           >
@@ -42,29 +42,6 @@
         </v-card-text>
       </v-card>
     </v-form>
-
-    <v-dialog
-      v-model="dialog"
-      persistent
-      width="300"
-    >
-      <v-card
-        color="primary"
-        dark
-      >
-        <v-card-text>
-          Please stand by
-          <v-progress-linear
-            indeterminate
-            color="white"
-            class="mb-0"
-          ></v-progress-linear>
-
-          <div v-html="details"></div>
-              
-        </v-card-text>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
@@ -85,7 +62,6 @@
       nameRules: [
         v => !!v || 'Name is required'
       ],
-      dialog: false,
       details: "",
       serverId: 0,
       error: ''
@@ -124,7 +100,7 @@
 
         if (this.$refs.form.validate()) {
             this.details = ''
-            this.dialog = true          
+            this.loading = true          
           
             api.post('teams/' + self.id, this.data)
             .then(function (response) {
@@ -138,7 +114,7 @@
             .catch(function (error) {
                 console.log(error)
             }).finally(function () {
-                self.dialog = false
+                self.loading = false
             })
         }
       }

@@ -23,30 +23,6 @@
 
     </v-flex>
 
-    <v-dialog
-      v-model="dialog"
-      hide-overlay
-      persistent
-      width="300"
-    >
-      <v-card
-        color="primary"
-        dark
-      >
-        <v-card-text>
-          Please stand by
-          <v-progress-linear
-            indeterminate
-            color="white"
-            class="mb-0"
-          ></v-progress-linear>
-
-          <div v-html="details"></div>
-              
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-
   </v-layout>  
 </template>
 
@@ -65,7 +41,6 @@
         error: null,
         data: {
         },
-        dialog: false,
         details: '',
         fetching: true,
         rules: {
