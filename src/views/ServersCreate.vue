@@ -15,41 +15,37 @@
     <Loading :value="loading" />
 
     <v-item-group v-if="!this.$route.params.id">
-      <v-container grid-list-md>
-        <v-layout wrap>
-          <v-flex>
-            <p>
-              Choose a VPS provider below or add your own custom server
-            </p>
+        <v-subheader>
+          Choose a VPS provider below or add your own custom server
+        </v-subheader>
 
-            <v-btn-toggle v-model="data.provider">
-              <v-btn 
-                flat 
-                value="linode"                  
-                @click="getOptions('linode')"
-              >
-                <v-icon left dark>fab fa-linode</v-icon>
-                Linode
-              </v-btn>
-              <v-btn 
-                flat 
-                value="digitalocean"
-                @click="getOptions('digitalocean')"
-              >
-                <v-icon left dark>fab fa-digital-ocean</v-icon>
-                Digital Ocean
-              </v-btn>
-              <v-btn 
-                flat 
-                value="custom"
-              >
-                <v-icon left dark>fas fa-server</v-icon>
-                Custom Server
-              </v-btn>
-            </v-btn-toggle>
-          </v-flex>
-        </v-layout>
-      </v-container>
+        <v-btn-toggle v-model="data.provider">
+          <v-btn 
+            flat 
+            value="linode"                  
+            @click="getOptions('linode')"
+          >
+            <v-icon left dark>fab fa-linode</v-icon>
+            Linode
+          </v-btn>
+
+          <v-btn 
+            flat 
+            value="digitalocean"
+            @click="getOptions('digitalocean')"
+          >
+            <v-icon left dark>fab fa-digital-ocean</v-icon>
+            Digital Ocean
+          </v-btn>
+
+          <v-btn 
+            flat 
+            value="custom"
+          >
+            <v-icon left dark>fas fa-server</v-icon>
+            Custom Server
+          </v-btn>
+        </v-btn-toggle>
     </v-item-group>
 
     <v-form
