@@ -37,7 +37,7 @@
               <v-flex xs12>
                 <v-card tile flat>
                   <v-card-text>
-                    <strong>Warning: Domain does not point to [{{data.server.ip}}] ({{data.dns.error}})</strong>
+                    <strong>Warning: Domain does not point to: {{data.server.ip}} <Copy :val="data.server.ip" /> ({{data.dns.error}})</strong>
                     <v-btn v-if="data.dns.not_set" @click="fixDomainDns(data.domain)">Fix</v-btn>
                   </v-card-text>
                 </v-card>
@@ -254,7 +254,7 @@
                   <v-flex xs12>
                     <v-card tile flat>
                       <v-card-text>
-                        <strong>Warning: Domain does not point to [{{data.server.ip}}] ({{item.dns.error}})</strong>
+                        <strong>Warning: Domain does not point to: {{data.server.ip}} <Copy :val="data.server.ip" /> ({{item.dns.error}})</strong>
                         <v-btn v-if="item.dns.not_set" @click="fixAliasDns(item.domain)">Fix</v-btn>
                       </v-card-text>
                     </v-card>
@@ -434,6 +434,7 @@
         post: null,
         error: null,
         data: {
+          disk_usage: 0,
           server: {}
         },
         details: '',

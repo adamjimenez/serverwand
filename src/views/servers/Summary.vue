@@ -99,7 +99,7 @@
                   <v-list-tile-content>
                     <v-list-tile-title v-html="`IP address`"></v-list-tile-title>
                     <v-list-tile-sub-title>
-                      {{data.ip}} <Copy :val="data.domain" />
+                      {{data.ip}} <Copy :val="data.ip" />
                     </v-list-tile-sub-title>
                   </v-list-tile-content>
               </v-list-tile>
