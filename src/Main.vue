@@ -37,23 +37,25 @@
         <v-list>
           <v-layout row justify-center>
             <v-flex xs2>
-              <v-card flat>
-                <v-card-text>Light</v-card-text>
-              </v-card>
+              <p class="text-xs-right" style="margin-top: 18px;">
+                Light
+              </p>
             </v-flex>
-            <v-flex xs2>
+            <v-flex xs3>
               <v-card flat>
                 <v-card-text>
-                  <v-switch
-                    v-model="dark"
-                  ></v-switch>
+                  <p class="text-xs-center">
+                    <v-switch
+                      v-model="dark"
+                    ></v-switch>
+                  </p>
                 </v-card-text>
               </v-card>
             </v-flex>
             <v-flex xs2>
-              <v-card flat>
-                <v-card-text>Dark</v-card-text>
-              </v-card>
+              <p class="text-xs-left" style="margin-top: 18px;">
+                Dark
+              </p>
             </v-flex>
           </v-layout>
         </v-list>
@@ -135,5 +137,9 @@ a {text-decoration: none;}
 .v-navigation-drawer .v-input--switch {
   margin: 0;
   padding: 0;
+}
+
+.v-navigation-drawer .v-input--selection-controls .v-input__control {
+  margin-left: 3px;
 }
 </style>
