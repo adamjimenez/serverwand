@@ -343,6 +343,7 @@
       },
       getOptions(provider, noAuthPrompt) {
         var self = this
+        this.loading = true
 
         api.post('providers?cmd=options', {provider: provider})
         .then(function (response) {
