@@ -143,6 +143,7 @@
         })
       },
       addItem () {
+        this.server.name = ''
         this.drawer = true
       },
       saveItem () {

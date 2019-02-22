@@ -124,6 +124,7 @@
         })
       },
       addItem () {
+        this.member.email = ''
         this.drawer = true
       },
       saveItem () {

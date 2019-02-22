@@ -650,6 +650,7 @@
         }
       },
       addAlias () {
+        this.alias.domain = ''
         this.aliasDrawer = true
       },
       submitAlias() {

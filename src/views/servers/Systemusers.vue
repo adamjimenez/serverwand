@@ -147,6 +147,7 @@
         })
       },
       addUser() {
+        this.system_user.user = ''
         this.userDrawer = true
       },
       editUser(user) {
