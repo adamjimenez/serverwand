@@ -63,7 +63,7 @@
                     <v-card-text>
                         <v-text-field
                             v-model="item.port"
-                            label="Port"
+                            label="Port range"
                             required
                             :rules="[rules.required, rules.port]"
                         ></v-text-field>
@@ -126,7 +126,7 @@
         action: ['allow', 'deny'],
         rules: {
           required: value => !!value || 'Required.',
-          port: v => (v>=1 && v<65535) || '1-65535',
+          port: v => (!v || /^\d+(-\d+)?$/.test(v)) ||  '1-65535',
           ip: v => (!v || /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(v)) || 'Invalid IP address',
         },
       }
@@ -186,6 +186,7 @@
         })
       },
       addItem() {
+        this.item = {}
         this.drawer = true
       },
       deleteItem(id) {
