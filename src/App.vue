@@ -19,7 +19,7 @@
         const originalRequest = error.config;
 
         if (!error.response || error.response.status === 401 && !originalRequest._retry) {
-          //location.href = 'https://serverwand.com/login'
+          location.href = 'https://serverwand.com/login'
           return false
         }
       
