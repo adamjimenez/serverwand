@@ -1,11 +1,16 @@
 <template>
-  <router-view></router-view>
+  <div>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
   import axios from 'axios'
 
   export default {
+    data: () => ({
+    }),
+    
     created () {
 
       axios.interceptors.response.use(function (response) {
@@ -14,7 +19,7 @@
         const originalRequest = error.config;
 
         if (!error.response || error.response.status === 401 && !originalRequest._retry) {
-          location.href = 'https://serverwand.com/login'
+          //location.href = 'https://serverwand.com/login'
           return false
         }
       

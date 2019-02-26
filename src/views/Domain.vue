@@ -47,7 +47,7 @@
             <v-layout row>
               <v-flex xs12>
                 <v-card tile flat>
-                  <v-card-text>                            
+                  <v-card-text>                         
                     {{ data.domain }}
                   </v-card-text>
                 </v-card>

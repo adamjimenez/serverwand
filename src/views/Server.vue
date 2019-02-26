@@ -77,8 +77,8 @@
             self.error = response.data.error
           }
             
-          if (response.data.items[0]) {
-            self.data = response.data.items[0]
+          if (response.data.item) {
+            self.data = response.data.item
           }
         })
         .catch(function (error) {

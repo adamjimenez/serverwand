@@ -1,70 +1,74 @@
 <template>
-    <div>
-        <Loading :value="fetching" />
+  <div>
+    <Loading :value="fetching" />
 
-        <template v-for="(item, index) in data.servers">
-            <v-card 
-            :key="index"
-            >
-            <v-card-title primary-title>
-                {{item.name}}
-                
-                <div>
-                    <v-btn
-                        :disabled="dialog"
-                        :loading="dialog"
-                        @click="deleteItem(item.id)"
-                        >
-                        Delete
-                    </v-btn>
-                </div>
-            </v-card-title>
-            </v-card>
-        </template>
-
-        <v-card>
+    <template v-for="(item, index) in data.servers">
+      <v-card 
+      :key="index"
+      >
+        <v-card-title primary-title>
+            {{item.name}}
+            
             <div>
-              <v-card-title primary-title>
                 <v-btn
-                @click="addItem()"
-                >
-                Add server
-                </v-btn>
-              </v-card-title>
-            </div>
-        </v-card>
-
-        <v-navigation-drawer
-            app
-            v-model="drawer"
-            absolute
-            temporary
-            right
-        >
-            <v-card>
-                <v-card-title>
-                Server
-                </v-card-title>
-
-                <v-card-text>
-                    <v-select
-                        v-model="data.server"
-                        :items="servers"
-                        label="Server"
-                    ></v-select>   
-                    
-                    <v-btn
                     :disabled="dialog"
                     :loading="dialog"
-                    color="success"
-                    @click="saveItem"
+                    @click="deleteItem(item.id)"
                     >
-                    Save
-                    </v-btn>
-                </v-card-text>
-            </v-card>
-        </v-navigation-drawer>
-    </div>
+                    Delete
+                </v-btn>
+            </div>
+        </v-card-title>
+      </v-card>
+    </template>
+
+    <v-card>
+      <div>
+        <v-card-title primary-title>
+          <v-btn
+          @click="addItem()"
+          >
+            Add server
+          </v-btn>
+        </v-card-title>
+      </div>
+    </v-card>
+
+    <v-navigation-drawer
+        app
+        v-model="drawer"
+        absolute
+        temporary
+        right
+    >
+      <v-card>
+        <v-card-title>
+          Server
+        </v-card-title>
+
+        <v-card-text>
+          <v-select
+          v-model="data.server"
+          :items="servers"
+          label="Server"
+          ></v-select>   
+          
+          <v-btn
+          :disabled="dialog"
+          :loading="dialog"
+          color="success"
+          @click="saveItem"
+          >
+            Save
+          </v-btn>          
+          
+          <p v-if="useMasterPassword" style="font-size: 12px; margin-top: 20px;">
+            Note: Server keys shared with other users will not be encrypted with your master password  
+          </p>
+        </v-card-text>
+      </v-card>
+    </v-navigation-drawer>
+  </div>
 </template>
 
 <script>
@@ -93,7 +97,8 @@
         server: {
           name: ''
         },
-        drawer: false
+        drawer: false,
+        useMasterPassword: false
       }
     },
     created () {
@@ -140,6 +145,11 @@
         })
         .finally(function() {
           self.loading = false
+        })
+
+        api.profile()
+        .then(function (response) {
+          self.useMasterPassword = response.data.profile.prefs.useMasterPassword
         })
       },
       addItem () {

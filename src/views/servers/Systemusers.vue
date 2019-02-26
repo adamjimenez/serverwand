@@ -50,32 +50,32 @@
         >
           <v-card>
               <v-card-title>
-              System user
+                System user
               </v-card-title>
 
               <v-card-text>
-              <v-text-field
-                  v-model="system_user.user"
-                  label="User"
-                  required
-              ></v-text-field>
-              
-              <v-text-field              
-                  v-model="system_user.password"
-                  type="password"
-                  label="Password"
-                  required
-                  browser-autocomplete="new-password"
-              ></v-text-field>
-              
-              <v-btn
-                  :disabled="fetching"
-                  :loading="fetching"
-                  color="success"
-                  @click="saveUser"
-              >
-                  Save
-              </v-btn>
+                <v-text-field
+                    v-model="system_user.user"
+                    label="User"
+                    required
+                ></v-text-field>
+                
+                <v-text-field              
+                    v-model="system_user.password"
+                    type="password"
+                    label="Password"
+                    required
+                    browser-autocomplete="new-password"
+                ></v-text-field>
+                
+                <v-btn
+                    :disabled="fetching"
+                    :loading="fetching"
+                    color="success"
+                    @click="saveUser"
+                >
+                    Save
+                </v-btn>
               </v-card-text>
           </v-card>
         </v-navigation-drawer>

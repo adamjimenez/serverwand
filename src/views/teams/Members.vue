@@ -1,70 +1,74 @@
 <template>
-    <div>
-        <Loading :value="fetching" />
+  <div>
+    <Loading :value="fetching" />
 
-        <template v-for="(item, index) in data.members">
-            <v-card 
-            :key="index"
-            >
-            <v-card-title primary-title>
-                {{item.email}}
-                
-                <div>
-                    <v-btn
-                        :disabled="dialog"
-                        :loading="dialog"
-                        @click="deleteItem(item.user)"
-                        >
-                        Delete
-                    </v-btn>
-                </div>
-            </v-card-title>
-            </v-card>
-        </template>
-
-        <v-card>
+    <template v-for="(item, index) in data.members">
+      <v-card 
+      :key="index"
+      >
+        <v-card-title primary-title>
+            {{item.email}}
+            
             <div>
-              <v-card-title primary-title>
                 <v-btn
-                @click="addItem()"
-                >
-                Add member
-                </v-btn>
-              </v-card-title>
-            </div>
-        </v-card>
-
-        <v-navigation-drawer
-            app
-            v-model="drawer"
-            absolute
-            temporary
-            right
-        >
-            <v-card>
-                <v-card-title>
-                Member
-                </v-card-title>
-
-                <v-card-text>
-                    <v-text-field
-                    v-model="member.email"
-                    label="Email"
-                    required
-                    ></v-text-field>            
-                    
-                    <v-btn
                     :disabled="dialog"
-                    :loading="dialog"
-                    color="success"
-                    @click="saveItem"
+                  :loading="dialog"
+                    @click="deleteItem(item.user)"
                     >
-                    Save
-                    </v-btn>
-                </v-card-text>
-            </v-card>
-        </v-navigation-drawer>
-    </div>
+                    Delete
+                </v-btn>
+            </div>
+        </v-card-title>
+      </v-card>
+    </template>
+
+    <v-card>
+      <div>
+        <v-card-title primary-title>
+          <v-btn
+          @click="addItem()"
+          >
+          Add member
+          </v-btn>
+        </v-card-title>
+      </div>
+    </v-card>
+
+    <v-navigation-drawer
+        app
+        v-model="drawer"
+        absolute
+        temporary
+        right
+    >
+      <v-card>
+        <v-card-title>
+        Member
+        </v-card-title>
+
+        <v-card-text>
+          <v-text-field
+          v-model="member.email"
+          label="Email"
+          required
+          ></v-text-field>            
+          
+          <v-btn
+          :disabled="dialog"
+          :loading="dialog"
+          color="success"
+          @click="saveItem"
+          >
+          Save
+          </v-btn>
+          
+          <p v-if="useMasterPassword" style="font-size: 12px; margin-top: 20px;">
+            Note: Server keys shared with other users will not be encrypted with your master password  
+          </p>
+        </v-card-text>
+      </v-card>
+    </v-navigation-drawer>
+  </div>
 </template>
 
 <script>
@@ -92,7 +96,8 @@
         member: {
           email: ''
         },
-        drawer: false
+        drawer: false,
+        useMasterPassword: false
       }
     },
     created () {
@@ -121,6 +126,11 @@
         })
         .finally(function() {
           self.fetching = false
+        })
+
+        api.profile()
+        .then(function (response) {
+          self.useMasterPassword = response.data.profile.prefs.useMasterPassword
         })
       },
       addItem () {
