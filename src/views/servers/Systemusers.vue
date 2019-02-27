@@ -1,5 +1,12 @@
 <template>
     <div>
+        <v-alert
+          :value="error.length>0"
+          type="error"
+        >
+        {{error}}
+        </v-alert>
+      
         <Loading :value="fetching" />
 
         <template v-for="(item, index) in data.users">
@@ -148,6 +155,7 @@
       },
       addUser() {
         this.system_user.user = ''
+        this.system_user.password = ''
         this.userDrawer = true
       },
       editUser(user) {
@@ -165,14 +173,13 @@
           
           if (!response.data.success) {
             self.error = response.data.error;
+            self.fetching = false
           } else {
             self.fetchData()
           }
         })
         .catch(function (error) {
           console.log(error)
-        })
-        .finally(function() {
           self.fetching = false
         })
       },
@@ -190,16 +197,14 @@
             
             if (!response.data.success) {
               self.error = response.data.error;
+              self.fetching = false
             } else {
               self.userDrawer = false
               self.fetchData()
             }
           })
           .catch(function (error) {
-            console.log(error)              
-            self.fetching = false
-          })
-          .finally(function() {
+            console.log(error)
             self.fetching = false
           })
         }

@@ -1,5 +1,12 @@
 <template>
     <div>
+        <v-alert
+          :value="error.length>0"
+          type="error"
+        >
+        {{error}}
+        </v-alert>
+        
         <Loading :value="fetching" />
 
         <template v-for="(item, index) in data.cronjobs">
