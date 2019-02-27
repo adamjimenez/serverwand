@@ -90,9 +90,6 @@ export default {
     saveDatabase(domainId, payload) {
         return axios.post('https://serverwand.com/api/domains/' + domainId + '/savedatabase', payload);
     },
-    installWordpress(domainId) {
-        return axios.get('https://serverwand.com/api/domains/' + domainId + '/installwordpress');
-    },
     login(payload) {
         return axios.post('https://serverwand.com/api/auth/login', payload);
     },

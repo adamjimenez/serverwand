@@ -312,31 +312,58 @@
         <v-tab-item>
           <v-card>
 
-            <v-layout row>
-              <v-flex xs6>
-                <v-card tile flat>
-                  <v-card-text>Wordpress:</v-card-text>
-                </v-card>
-              </v-flex>
-              <v-flex xs6>
-                <v-card tile flat>
-                  <v-card-text>
-                    <v-btn
-                      v-if="data.wordpress === false"
-                      :disabled="loading!=''"
-                      :loading="loading=='wordpress'"
-                      @click="installWordpress"
-                      >
-                      Install wordpress
-                    </v-btn>
-
-                    <div v-else>
-                      {{ data.wordpress }}
-                    </div>
-                  </v-card-text>
-                </v-card>
-              </v-flex>
+            <v-layout row v-if="data.app && data.app.name">
+              <v-card tile flat>
+                <v-card-text>
+                  {{ data.app.name }}
+                  {{ data.app.version }}
+                </v-card-text>
+              </v-card>
             </v-layout>
+
+            <div v-else>
+              <v-layout row>
+                <v-flex xs6>
+                  <v-card tile flat>
+                    <v-card-text>Wordpress:</v-card-text>
+                  </v-card>
+                </v-flex>
+                <v-flex xs6>
+                  <v-card tile flat>
+                    <v-card-text>
+                        <v-btn
+                          :disabled="loading"
+                          :loading="loading"
+                          @click="install('wordpress')"
+                          >
+                          Install Wordpress
+                        </v-btn>
+                    </v-card-text>
+                  </v-card>
+                </v-flex>
+              </v-layout>
+
+              <v-layout row>
+                <v-flex xs6>
+                  <v-card tile flat>
+                    <v-card-text>Joomla:</v-card-text>
+                  </v-card>
+                </v-flex>
+                <v-flex xs6>
+                  <v-card tile flat>
+                    <v-card-text>
+                        <v-btn
+                          :disabled="loading"
+                          :loading="loading"
+                          @click="install('joomla')"
+                          >
+                          Install Joomla
+                        </v-btn>
+                    </v-card-text>
+                  </v-card>
+                </v-flex>
+              </v-layout>
+            </div>
             
           </v-card>
         </v-tab-item>
@@ -429,13 +456,14 @@
     },
     data () {
       return {
-        loading: '',
+        loading: false,
         domainId: null,
         post: null,
         error: null,
         data: {
           disk_usage: 0,
-          server: {}
+          server: {},
+          app: {}
         },
         details: '',
         fetching: true,
@@ -503,7 +531,7 @@
         var self = this
         this.error = ''
         this.fetching = true
-        this.loading = 'ssl'
+        this.loading = true
 
         api.setSSL(this.$route.params.id, {status: this.data.ssl})
         .then(function (response) {
@@ -520,14 +548,14 @@
         })
         .finally(function() {
           self.fetching = false
-          self.loading = ''
+          self.loading = false
         })
       },
       addDatabase () { 
         var self = this
         this.error = ''
         this.fetching = true
-        self.loading = 'database'
+        self.loading = true
 
         api.saveDatabase(this.$route.params.id, {})
         .then(function (response) {
@@ -544,31 +572,31 @@
         })
         .finally(function() {
           self.fetching = false
-          self.loading = ''
+          self.loading = false
         })
       },
-      installWordpress () { 
+      install (app) { 
         var self = this
         this.error = ''
         this.fetching = true
-        this.loading = 'wordpress'
+        this.loading = true
 
-        api.installWordpress(this.$route.params.id)
+        api.get('domains/' + this.$route.params.id + '/install/' + app)
         .then(function (response) {
           console.log(response)
           
           if (response.data.error) {
             self.error = response.data.error
+            self.fetching = false
+            self.loading = false
           } else {
             self.fetchData();
           }
         })
         .catch(function (error) {
           console.log(error)
-        })
-        .finally(function() {
           self.fetching = false
-          self.loading = ''
+          self.loading = false
         })
       },
       deleteDomain () { 
@@ -577,7 +605,7 @@
             var self = this
             this.error = ''
             this.fetching = true
-            this.loading = 'delete'
+            this.loading = true
 
             api.deleteDomain(this.$route.params.id)
             .then(function (response) {
@@ -594,7 +622,7 @@
             })
             .finally(function() {
               self.fetching = false
-              self.loading = ''
+              self.loading = false
             })
           }
         })
@@ -619,7 +647,7 @@
           })
           .finally(function() {
             self.fetching = false
-            self.loading = ''
+            self.loading = false
             self.passwordPanel = [false]
           })
         }
@@ -644,7 +672,7 @@
           })
           .finally(function() {
             self.fetching = false
-            self.loading = ''
+            self.loading = false
             self.dbPasswordPanel = [false]
           })
         }
