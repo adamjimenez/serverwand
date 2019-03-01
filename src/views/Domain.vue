@@ -363,6 +363,49 @@
                   </v-card>
                 </v-flex>
               </v-layout>
+
+              <v-layout row>
+                <v-flex xs6>
+                  <v-card tile flat>
+                    <v-card-text>Drupal:</v-card-text>
+                  </v-card>
+                </v-flex>
+                <v-flex xs6>
+                  <v-card tile flat>
+                    <v-card-text>
+                        <v-btn
+                          :disabled="loading"
+                          :loading="loading"
+                          @click="install('drupal')"
+                          >
+                          Install Drupal
+                        </v-btn>
+                    </v-card-text>
+                  </v-card>
+                </v-flex>
+              </v-layout>
+
+              <v-layout row>
+                <v-flex xs6>
+                  <v-card tile flat>
+                    <v-card-text>Magento:</v-card-text>
+                  </v-card>
+                </v-flex>
+                <v-flex xs6>
+                  <v-card tile flat>
+                    <v-card-text>
+                        <v-btn
+                          :disabled="loading"
+                          :loading="loading"
+                          @click="install('magento')"
+                          >
+                          Install Magento
+                        </v-btn>
+                    </v-card-text>
+                  </v-card>
+                </v-flex>
+              </v-layout>
+
             </div>
             
           </v-card>
