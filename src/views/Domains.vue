@@ -35,7 +35,7 @@
 
               <v-list-tile-content>
                 <v-list-tile-title v-html="item.domain"></v-list-tile-title>
-                <v-list-tile-sub-title></v-list-tile-sub-title>
+                <v-list-tile-sub-title>{{servers[item.server]}}</v-list-tile-sub-title>
               </v-list-tile-content>
             </v-list-tile>
           </template>
@@ -71,7 +71,8 @@
         loading: true,
         post: null,
         error: '',
-        items: []
+        items: [],
+        servers: {}
       }
     },
     created () {
@@ -94,11 +95,17 @@
 
           if (response.data.error) {
             self.error = response.data.error
-
             return false
           }
             
           self.items = response.data.items
+ 
+          api.get('servers/')
+          .then(function (response) {
+            response.data.items.forEach(element => {
+                self.$set(self.servers, element.id, element.name)
+            })
+          })
         })
         .catch(function (error) {
           console.log(error)
