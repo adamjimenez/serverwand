@@ -1,156 +1,156 @@
 <template>
-    <div>
-        <v-alert
-          :value="error.length>0"
-          type="error"
+  <div>
+      <v-alert
+        :value="error.length>0"
+        type="error"
+      >
+      {{error}}
+      </v-alert>
+      
+      <Loading :value="fetching" />
+
+      <v-card>
+        <v-container
         >
-        {{error}}
-        </v-alert>
-        
-        <Loading :value="fetching" />
+          <v-layout>
+            <v-flex xs12 sm3>
+              <div class="feature">
+                  <div>
+                  <div class="icon">
+                      <i class="fas fa-microchip"></i>
+                  </div>
 
-        <v-card>
-            <v-container
-            >
-            <v-layout>
-                <v-flex xs12 sm3>
-                <div class="feature">
-                    <div>
-                    <div class="icon">
-                        <i class="fas fa-microchip"></i>
-                    </div>
+                  <div class="label">
+                      CPU
+                  </div>
+                  </div>
+                  
+                  <div style="clear: both; font-size: 12px;">
+                  <div style="font-size: 20px;">{{data.cores}} core<span v-if="data.cores>1">s</span></div>
+                  {{data.cpu}}
+                  </div>
+              </div>
+            </v-flex>
 
-                    <div class="label">
-                        CPU
-                    </div>
-                    </div>
-                    
-                    <div style="clear: both; font-size: 12px;">
-                    <div style="font-size: 20px;">{{data.cores}} core<span v-if="data.cores>1">s</span></div>
-                    {{data.cpu}}
-                    </div>
-                </div>
-                </v-flex>
+            <v-flex xs12 sm3>              
+              <div class="feature">
+                  <div>
+                  <div class="icon">
+                      <i class="fas fa-memory"></i>
+                  </div>
 
-                <v-flex xs12 sm3>              
-                <div class="feature">
-                    <div>
-                    <div class="icon">
-                        <i class="fas fa-memory"></i>
-                    </div>
+                  <div class="label">
+                      Memory Usage
+                  </div>
+                  </div>
+                  
+                  <div style="clear: both;">
+                      <v-list-tile-title>
+                          <v-progress-linear 
+                          v-model="data.mem_perc"
+                          height="20"
+                          ></v-progress-linear>
+                      </v-list-tile-title>
+                      <v-list-tile-sub-title v-html="format(data.mem_free)+'  free of '+format(data.mem_total)"></v-list-tile-sub-title>
+                  </div>
+              </div>
+            </v-flex>
 
-                    <div class="label">
-                        Memory Usage
-                    </div>
-                    </div>
-                    
-                    <div style="clear: both;">
-                        <v-list-tile-title>
-                            <v-progress-linear 
-                            v-model="data.mem_perc"
-                            height="20"
-                            ></v-progress-linear>
-                        </v-list-tile-title>
-                        <v-list-tile-sub-title v-html="format(data.mem_free)+'  free of '+format(data.mem_total)"></v-list-tile-sub-title>
-                    </div>
-                </div>
-                </v-flex>
+            <v-flex xs12 sm3>              
+              <div class="feature">
+                  <div>
+                  <div class="icon">
+                      <i class="fas fa-hdd"></i>
+                  </div>
 
-                <v-flex xs12 sm3>              
-                <div class="feature">
-                    <div>
-                    <div class="icon">
-                        <i class="fas fa-hdd"></i>
-                    </div>
+                  <div class="label">
+                      Disk Usage
+                  </div>
+                  </div>
+                  
+                  <div style="clear: both;">
+                      <v-list-tile-title>
+                          <v-progress-linear 
+                          v-model="data.disk_perc"
+                          height="20"
+                          ></v-progress-linear>
+                      </v-list-tile-title>
+                      <v-list-tile-sub-title v-html="format(data.disk_free)+'  free of '+format(data.disk_space)"></v-list-tile-sub-title>
+                  </div>
+              </div>
+            </v-flex>
 
-                    <div class="label">
-                        Disk Usage
-                    </div>
-                    </div>
-                    
-                    <div style="clear: both;">
-                        <v-list-tile-title>
-                            <v-progress-linear 
-                            v-model="data.disk_perc"
-                            height="20"
-                            ></v-progress-linear>
-                        </v-list-tile-title>
-                        <v-list-tile-sub-title v-html="format(data.disk_free)+'  free of '+format(data.disk_space)"></v-list-tile-sub-title>
-                    </div>
-                </div>
-                </v-flex>
+            <v-flex xs12 sm3>              
+              <div class="feature" style="border-right: 0;">
+                  <div>
+                  <div class="icon">
+                      <i class="fas fa-clock"></i>
+                  </div>
 
-                <v-flex xs12 sm3>              
-                <div class="feature" style="border-right: 0;">
-                    <div>
-                    <div class="icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
+                  <div class="label">
+                      Uptime
+                  </div>
+                  </div>
+                  
+                  <div style="clear: both; font-size: 14px;">
+                  {{data.uptime}}
+                  </div>
+              </div>
+            </v-flex>
 
-                    <div class="label">
-                        Uptime
-                    </div>
-                    </div>
-                    
-                    <div style="clear: both; font-size: 14px;">
-                    {{data.uptime}}
-                    </div>
-                </div>
-                </v-flex>
+          </v-layout>
+        </v-container>
 
-            </v-layout>
-            </v-container>
+        <v-list two-line>                
+          <v-list-tile>
+              <v-list-tile-content>
+                <v-list-tile-title v-html="`IP address`"></v-list-tile-title>
+                <v-list-tile-sub-title>
+                  {{data.ip}} <Copy :val="data.ip" />
+                </v-list-tile-sub-title>
+              </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
 
-            <v-list two-line>                
-              <v-list-tile>
-                  <v-list-tile-content>
-                    <v-list-tile-title v-html="`IP address`"></v-list-tile-title>
-                    <v-list-tile-sub-title>
-                      {{data.ip}} <Copy :val="data.ip" />
-                    </v-list-tile-sub-title>
-                  </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
+        <v-list two-line>                
+          <v-list-tile>
+              <v-list-tile-content>
+                <v-list-tile-title v-html="`Kernel version`"></v-list-tile-title>
+                <v-list-tile-sub-title>
+                  {{ data.kernel }}
+                </v-list-tile-sub-title>
+              </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
 
-            <v-list two-line>                
-              <v-list-tile>
-                  <v-list-tile-content>
-                    <v-list-tile-title v-html="`Kernel version`"></v-list-tile-title>
-                    <v-list-tile-sub-title>
-                      {{ data.kernel }}
-                    </v-list-tile-sub-title>
-                  </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
+        <v-list two-line>                
+          <v-list-tile>
+              <v-list-tile-content>
+              <v-list-tile-title v-html="`Apache`"></v-list-tile-title>
+              <v-list-tile-sub-title v-html="data.apache"></v-list-tile-sub-title>
+              </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
 
-            <v-list two-line>                
-              <v-list-tile>
-                  <v-list-tile-content>
-                  <v-list-tile-title v-html="`Apache`"></v-list-tile-title>
-                  <v-list-tile-sub-title v-html="data.apache"></v-list-tile-sub-title>
-                  </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
+        <v-list two-line>                
+          <v-list-tile>
+              <v-list-tile-content>
+              <v-list-tile-title v-html="`PHP`"></v-list-tile-title>
+              <v-list-tile-sub-title v-html="data.php"></v-list-tile-sub-title>
+              </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
 
-            <v-list two-line>                
-              <v-list-tile>
-                  <v-list-tile-content>
-                  <v-list-tile-title v-html="`PHP`"></v-list-tile-title>
-                  <v-list-tile-sub-title v-html="data.php"></v-list-tile-sub-title>
-                  </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
-
-            <v-list two-line>                
-              <v-list-tile>
-                  <v-list-tile-content>
-                  <v-list-tile-title v-html="`MariadDb`"></v-list-tile-title>
-                  <v-list-tile-sub-title v-html="data.mariadb"></v-list-tile-sub-title>
-                  </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
-        </v-card>
-    </div>
+        <v-list two-line>                
+          <v-list-tile>
+              <v-list-tile-content>
+              <v-list-tile-title v-html="`MariadDb`"></v-list-tile-title>
+              <v-list-tile-sub-title v-html="data.mariadb"></v-list-tile-sub-title>
+              </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+    </v-card>
+  </div>
 </template>
 
 <script>
@@ -236,10 +236,6 @@
 <style>
 .serverstatus {
   all: initial;
-}
-
-* {
-  all: unset;
 }
 
 .feature {
