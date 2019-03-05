@@ -136,6 +136,17 @@
             v-if="(data.provider=='custom' || serverId>0)"
           ></v-select>
 
+          <v-checkbox
+            v-model="data.webserver"
+            label="Webserver"
+            readonly
+          ></v-checkbox>
+          
+          <v-checkbox
+            v-model="data.mailserver"
+            label="Mailserver"
+          ></v-checkbox>
+
           <v-btn
             :disabled="dialog"
             :loading="dialog"
@@ -196,7 +207,7 @@
         pass: '',
         port: '22',
         webserver: true,
-        mailserver: true
+        mailserver: false
       },
       dns: [{
         text: 'Linode',
@@ -218,7 +229,6 @@
       details: "",
       serverId: 0,
       error: '',
-      webserverInstalled: false,
       progress: 0,
       provider: '',
       regions: [],
@@ -240,13 +250,12 @@
         this.error = ''
         this.loading = true
  
-        api.server(this.serverId)
+        api.get('servers/' + this.serverId)
         .then(function (response) {
           console.log(response)
 
           if (self.serverId) {
             self.data = response.data.items[0]
-            self.webserverInstalled = self.data.webserver
           }
         })
         .catch(function (error) {
@@ -264,7 +273,7 @@
           this.dialog = true
           this.error = ''
 
-          function installWebserver() {
+          function install() {
             self.dialog = true
             self.details = ''
 
@@ -306,12 +315,13 @@
           }
 
           if (self.serverId) {
-            api.post('servers/' + self.serverId + '/update', {
-              name: this.data.name,
-              dns: this.data.dns
-            })
+            api.post('servers/' + self.serverId + '/update', this.data)
             .then(function (response) {
-              self.$router.push('/servers/' + self.serverId + '/summary')
+              if (response.data.install) {
+                install()
+              } else {
+                self.$router.push('/servers/' + self.serverId + '/summary')
+              }
             })
             .catch(function (error) {
               console.log(error)
@@ -327,8 +337,8 @@
               } else if(response.data.id) {
                 self.serverId = response.data.id
 
-                if (self.data.webserver) {
-                  installWebserver()
+                if (self.serverId) {
+                  install()
                 }
               }
             })
@@ -348,10 +358,8 @@
         api.post('providers?cmd=options', {provider: provider})
         .then(function (response) {
           console.log(response)
-          //self.items = response.data.items
 
           if (response.data.require_auth && !noAuthPrompt) {
-            //$(window).on('authorized', getOptions);
             var child = window.open('https://serverwand.com/account/services/' + provider)
 
             var interval = setInterval(function() {
@@ -364,27 +372,6 @@
           } else if(!response.data.require_auth) {
             self.regions = response.data.options.regions;
             self.types = response.data.options.types;
-            /*
-            $( "#region" ).children('option').remove();
-            $( "#region" ).append( '<option value=""></option>' );
-            
-            items = data.options.regions;
-            items.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} ); 
-            $.each(items, function( index, item ) {
-              var selected = item.selected ? 'selected' : '';
-              $( "#region" ).append( '<option value="'+item.value+'" '+selected+'>'+item.name+'</option>' );
-            });
-      
-            $( "#image" ).children('option').remove();
-            $( "#image" ).append( '<option value=""></option>' );
-            
-            items = data.options.images;
-            items.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} ); 
-            $.each(items, function( index, item ) {
-              var selected = item.selected ? 'selected' : '';
-              $( "#image" ).append( '<option value="'+item.value+'" '+selected+'>'+item.name+'</option>' );
-            });
-            */
           }
         })
         .catch(function (error) {

@@ -236,9 +236,10 @@
 <style>
 .serverstatus {
   all: initial;
-  * {
-    all: unset;
-  }
+}
+
+* {
+  all: unset;
 }
 
 .feature {

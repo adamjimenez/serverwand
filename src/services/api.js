@@ -18,14 +18,8 @@ export default {
     servers() {
         return axios.get('https://serverwand.com/api/servers/');
     },
-    server(serverId) {
-        return axios.get('https://serverwand.com/api/servers/' + serverId);
-    },
     updateServer(serverId, payload) {
         return axios.post('https://serverwand.com/api/servers/' + serverId + '/update', payload);
-    },
-    installWebserver(serverId) {
-        return new EventSource('https://serverwand.com/api/servers/' + serverId + '/installwebserver', {withCredentials: true});
     },
     deleteServer(serverId) {
         return axios.get('https://serverwand.com/api/servers/' + serverId + '/delete');
@@ -80,9 +74,6 @@ export default {
     },
     updateDomain(domainId, payload) {
         return axios.post('https://serverwand.com/api/domains/' + domainId + '/update', payload);
-    },
-    setSSL(domainId, payload) {
-        return axios.post('https://serverwand.com/api/domains/' + domainId + '/setssl', payload);
     },
     deleteDomain(domainId) {
         return axios.get('https://serverwand.com/api/domains/' + domainId + '/delete');

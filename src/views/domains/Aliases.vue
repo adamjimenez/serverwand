@@ -1,0 +1,304 @@
+<template>
+  <div>
+    <v-alert
+    :value="error.length>0"
+    type="error"
+    >
+    {{error}}
+    </v-alert>
+
+    <Loading :value="fetching" />
+    
+
+    <v-card>
+        <template v-for="(item, index) in data.aliases">
+            <div
+            :key="index"
+            >
+                <v-layout row v-if="item.dns.ip != data.server.ip">
+                    <v-flex xs12>
+                    <v-card tile flat>
+                        <v-card-text>
+                        <strong>Warning: Domain does not point to: {{data.server.ip}} <Copy :val="data.server.ip" /> ({{item.dns.error}})</strong>
+                        <v-btn v-if="item.dns.not_set" @click="fixAliasDns(item.domain)">Fix</v-btn>
+                        </v-card-text>
+                    </v-card>
+                    </v-flex>
+                </v-layout>
+
+                <v-layout row
+                    
+                >
+                    <v-flex xs6>
+                    <v-card tile flat>
+                        <v-card-text>
+                        {{item.domain}}
+                        </v-card-text>
+                    </v-card>
+                    </v-flex>            
+
+                    <v-flex xs6>
+                    <v-card tile flat>
+                        <v-card-text>
+                            <v-btn
+                            :disabled="fetching"
+                            :loading="fetching"
+                            @click="deleteAlias(item.domain)"
+                            >
+                            Delete
+                            </v-btn>
+                        </v-card-text>
+                    </v-card>
+                    </v-flex>                  
+                </v-layout>
+
+                <v-divider></v-divider>
+            </div>
+        </template>
+    </v-card>
+
+    <v-card>
+        <div>
+            <v-btn
+                @click="addAlias()"
+            >
+                Add domain alias
+            </v-btn>
+        </div>
+    </v-card>
+
+    <v-navigation-drawer
+      v-model="aliasDrawer"
+      absolute
+      temporary
+      right
+    >
+
+      <v-card>
+          <v-card-title>
+            Domain alias
+          </v-card-title>
+
+          <v-card-text>
+            <v-text-field
+              v-model="alias.domain"
+              label="Alias"
+              required
+            ></v-text-field>
+            
+            <v-checkbox
+              v-model="alias.dns"
+              label="Configure DNS"
+              :disabled="data.server.dns==''"
+            ></v-checkbox>         
+            
+            <v-btn
+              :disabled="fetching"
+              :loading="fetching"
+              color="success"
+              @click="submitAlias"
+            >
+              Save
+            </v-btn>
+          </v-card-text>
+      </v-card>
+
+    </v-navigation-drawer>
+  </div>  
+</template>
+
+<script>
+  import api from '../../services/api'
+  import Loading from '../../components/Loading'
+  import Copy from '../../components/Copy'
+
+  export default {
+    components: {
+      Loading,
+      Copy
+    },
+    data () {
+      return {
+        loading: false,
+        domainId: null,
+        post: null,
+        error: null,
+        data: {
+          disk_usage: 0,
+          server: {},
+          app: {}
+        },
+        details: '',
+        fetching: true,
+        passwordPanel: [false],
+        passwordFormValid: true,
+        rules: {
+          required: value => !!value || 'Required.',
+          min: v => v.length >= 8 || 'Min 8 characters',
+          emailMatch: () => ('The email and password you entered don\'t match')
+        },
+        alias: {
+          domain: '',
+          dns: true
+        },
+        copyText: 'Copy',
+        aliasDrawer: false
+      }
+    },
+    created () {
+      // fetch the data when the view is created and the data is
+      // already being observed
+      this.fetchData()
+    },
+    watch: {
+      // call again the method if the route changes
+      '$route': 'fetchData'
+    },
+    methods: {
+      format: function(size) {
+        if (size === '' || size === -1) {
+          return ''
+        }
+
+        var si
+        for(si = 0; size >= 1024; size /= 1024, si++) {}
+
+        return '' + Math.round(size) + 'KMGT'.substr(si, 1)
+      },
+      fetchData () {        
+        var self = this
+        this.error = ''
+        this.fetching = true
+        this.domainId = this.$route.params.id
+ 
+        api.get('domains/' + this.domainId + '/aliases')
+        .then(function (response) {
+          console.log(response)
+            
+          self.data = response.data.items[0]
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+        .finally(function() {
+          self.fetching = false
+        })
+      },
+      addAlias () {
+        this.alias.domain = ''
+        this.aliasDrawer = true
+      },
+      submitAlias() {
+        this.saveAlias();
+      },
+      saveAlias (noAuthPrompt) {
+        var self = this
+
+        if (this.alias.domain) {
+          this.details = ''
+          this.fetching = true
+          this.error = ''
+
+          api.saveAlias(this.domainId, {alias: this.alias.domain, dns: this.alias.dns})
+          .then(function (response) {
+            console.log(response)
+            
+            if (!response.data.success) {
+              if (response.data.error == 'auth' && !noAuthPrompt) {
+                var child = window.open('https://serverwand.com/account/services/' + self.data.server.dns)
+                var interval = setInterval(function() {
+                    if (child.closed) {
+                        clearInterval(interval)
+                        self.saveAlias(true)
+                        return
+                    }
+                }, 500)
+              } else {
+                self.error = response.data.error
+              }
+            } else {
+              self.aliasDrawer = false
+              self.fetchData()
+            }
+          })
+          .catch(function (error) {
+            console.log(error)              
+            self.fetching = false
+          })
+          .finally(function() {
+            self.fetching = false
+          })
+        }
+      },
+      deleteAlias (alias) {
+        this.$confirm('Delete ' + alias + '?').then(res => {
+          if (res) {
+            var self = this
+            this.fetching = true
+            this.error = ''
+
+            api.deleteAlias(this.domainId, {alias: alias})
+            .then(function (response) {
+              console.log(response)
+              
+              if (!response.data.success) {
+                self.error = response.data.error;
+              } else {
+                self.fetchData()
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+            .finally(function() {
+              self.fetching = false
+            })
+          }
+        })
+      },
+      
+      fixAliasDns(alias, noAuthPrompt) {
+        var self = this
+        
+        this.details = ''
+        this.fetching = true
+        this.error = ''
+
+        api.post('domains/' + self.domainId + '/fixaliasdns', {alias: alias})
+        .then(function (response) {
+          console.log(response)
+          
+          if (!response.data.success) {
+            if (response.data.error == 'auth' && !noAuthPrompt) {
+              var child = window.open('https://serverwand.com/account/services/' + self.data.server.dns)
+              var interval = setInterval(function() {
+                  if (child.closed) {
+                      clearInterval(interval)
+                      self.fixAliasDns(alias, true)
+                      return
+                  }
+              }, 500)
+            } else {
+              self.error = response.data.error
+            }
+          } else {
+            self.fetchData()
+          }
+        })
+        .catch(function (error) {
+          console.log(error)              
+          self.fetching = false
+        })
+        .finally(function() {
+          self.fetching = false
+        })
+      }
+    }
+  }
+</script>
+
+<style>
+.v-expansion-panel__header {
+  padding: 10px 16px;
+}
+</style>

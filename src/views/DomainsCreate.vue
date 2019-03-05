@@ -160,7 +160,7 @@
           api.updateDomain(this.domainId, this.data)
           .then(function (response) {
             console.log(response)
-            self.$router.push('/domains/' + self.domainId)
+            self.$router.push('/domains/' + self.domainId + '/summary')
           })
           .catch(function (error) {
             console.log(error)
@@ -170,7 +170,7 @@
           .then(function (response) {
             console.log(response)
             if (response.data.domain_id) {
-              self.$router.push('/domains/' + response.data.domain_id)
+              self.$router.push('/domains/' + response.data.domain_id + '/summary')
             } else if (response.data.error) {
               if (response.data.error == 'auth' && !noAuthPrompt) {
                 var child = window.open('https://serverwand.com/account/services/' + self.dnsProviders[self.data.server])

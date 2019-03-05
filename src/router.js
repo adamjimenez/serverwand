@@ -71,6 +71,30 @@ export default new Router({
           component: () => import(/* webpackChunkName: "domain" */ './views/Domain.vue')
         },
         {
+          path: '/domains/:id',
+          name: 'domain',
+          component: () => import(/* webpackChunkName: "server" */ './views/Domain.vue'),
+          children: [{
+            path: '/domains/:id/summary',
+            component: () => import('./views/domains/Summary.vue')
+          }, {
+            path: '/domains/:id/database',
+            component: () => import('./views/domains/Database.vue')
+          }, {
+            path: '/domains/:id/aliases',
+            component: () => import('./views/domains/Aliases.vue')
+          }, {
+            path: '/domains/:id/email',
+            component: () => import('./views/domains/Email.vue')
+          }, {
+            path: '/domains/:id/apps',
+            component: () => import('./views/domains/Apps.vue')
+          }, {
+            path: '/domains/:id/settings',
+            component: () => import('./views/domains/Settings.vue')
+          }]
+        },
+        {
           path: '/domains/:id/edit',
           name: 'domain-edit',
           component: () => import(/* webpackChunkName: "domain-edit" */ './views/DomainsCreate.vue')

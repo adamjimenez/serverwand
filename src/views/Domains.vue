@@ -115,7 +115,7 @@
         })
       },      
       goto(to) {
-        this.$router.push('/domains/' + to)
+        this.$router.push('/domains/' + to + '/summary')
       }
     }
   }

@@ -72,7 +72,7 @@
             <v-list-tile
               v-else
               :key="item.name"
-              @click="goto('/domains/' + item.id)"
+              @click="goto('/domains/' + item.id + '/summary')"
             >
               <v-list-tile-avatar>
                 <v-icon>fas fa-globe</v-icon>
