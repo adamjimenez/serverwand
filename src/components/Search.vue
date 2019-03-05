@@ -55,7 +55,7 @@
           response.data.items.forEach(element => {
               self.items.push({
                   text: element.domain,
-                  value: '/domains/' + element.id,
+                  value: '/domains/' + element.id + '/summary',
                   avatar: 'fas fa-globe'
               });
           })
@@ -73,7 +73,7 @@
           response.data.items.forEach(element => {
               self.items.push({
                   text: element.name,
-                  value: '/servers/' + element.id,
+                  value: '/servers/' + element.id + '/summary',
                   avatar: 'fas fa-server'
               });
           })
