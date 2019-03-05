@@ -68,8 +68,7 @@
     }),
 
     created () {
-      // fetch the data when the view is created and the data is
-      // already being observed
+      document.title = 'Team details'
       this.id = this.$route.params.id
       this.fetchData()
     },

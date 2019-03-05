@@ -64,7 +64,6 @@
         var self = this
         this.error = ''
 
-        /*
         this.fetching = true
  
         api.get('servers/' + this.serverId)
@@ -74,9 +73,10 @@
           if (response.data.error) {
             self.error = response.data.error
           }
-            
-          if (response.data.items[0]) {
-            self.data = response.data.items[0]
+
+          if (response.data.item) {
+            self.data = response.data.item
+            document.title = 'Settings' + ' | ' + self.data.name
           }
         })
         .catch(function (error) {
@@ -85,7 +85,6 @@
         .finally(function() {
           self.fetching = false
         })
-        */
       },
       editServer () { 
         this.$router.push('/servers/' + this.$route.params.id + '/edit')

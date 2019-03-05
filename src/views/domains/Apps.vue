@@ -187,6 +187,7 @@
           console.log(response)
             
           self.data = response.data.item
+          document.title = 'Apps' + ' | ' + self.data.domain
         })
         .catch(function (error) {
           console.log(error)

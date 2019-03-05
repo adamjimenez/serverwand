@@ -73,8 +73,7 @@
       }
     },
     created () {
-      // fetch the data when the view is created and the data is
-      // already being observed
+      document.title = 'Teams'
       this.fetchData()
     },
     watch: {

@@ -145,6 +145,7 @@
           }
             
           self.data = response.data.item
+          document.title = 'System users' + ' | ' + self.data.name
         })
         .catch(function (error) {
           console.log(error)

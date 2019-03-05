@@ -236,8 +236,7 @@
     }),
 
     created () {
-      // fetch the data when the view is created and the data is
-      // already being observed
+      document.title = 'Server details'
       if (this.$route.params.id) {
         this.serverId = this.$route.params.id
       }

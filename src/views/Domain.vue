@@ -61,8 +61,7 @@
       }
     },
     created () {
-      // fetch the data when the view is created and the data is
-      // already being observed
+      document.title = 'Domain'
       this.fetchData()
     },
     watch: {
@@ -79,8 +78,9 @@
         api.get('domains/' + this.domainId)
         .then(function (response) {
           console.log(response)
-            
+
           self.data = response.data.item
+          document.title = self.data.domain
         })
         .catch(function (error) {
           console.log(error)

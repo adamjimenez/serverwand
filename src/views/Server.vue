@@ -48,8 +48,7 @@
       }
     },
     created () {
-      // fetch the data when the view is created and the data is
-      // already being observed
+      document.title = 'Server'
       this.serverId = this.$route.params.id
       this.fetchData()
     },
@@ -79,6 +78,7 @@
             
           if (response.data.item) {
             self.data = response.data.item
+            document.title = self.data.name
           }
         })
         .catch(function (error) {

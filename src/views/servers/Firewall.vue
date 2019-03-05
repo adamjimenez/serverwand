@@ -162,6 +162,8 @@
           
           self.active = response.data.active
           self.items = response.data.rules
+          self.data = response.data.item
+          document.title = 'Firewall' + ' | ' + self.data.name
         })
         .catch(function (error) {
           console.log(error)

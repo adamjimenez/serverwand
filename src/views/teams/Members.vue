@@ -120,6 +120,7 @@
         .then(function (response) {
           console.log(response)            
           self.data = response.data.item
+          document.title = 'Members' + ' | ' + self.data.name
         })
         .catch(function (error) {
           console.log(error)

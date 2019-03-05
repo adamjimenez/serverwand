@@ -195,6 +195,7 @@
           console.log(response)
             
           self.data = response.data.item
+          document.title = 'Summary' + ' | ' + self.data.domain
         })
         .catch(function (error) {
           console.log(error)

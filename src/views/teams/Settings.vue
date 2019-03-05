@@ -63,6 +63,7 @@
         .then(function (response) {
           console.log(response)            
           self.data = response.data.item
+          document.title = 'Settings' + ' | ' + self.data.name
         })
         .catch(function (error) {
           console.log(error)

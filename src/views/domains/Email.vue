@@ -216,6 +216,7 @@
           console.log(response)
             
           self.data = response.data.item
+          document.title = 'Email' + ' | ' + self.data.domain
         })
         .catch(function (error) {
           console.log(error)

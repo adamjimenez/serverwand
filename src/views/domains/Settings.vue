@@ -92,6 +92,7 @@
           console.log(response)
             
           self.data = response.data.item
+          document.title = 'Settings' + ' | ' + self.data.domain
         })
         .catch(function (error) {
           console.log(error)

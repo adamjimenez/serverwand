@@ -175,7 +175,8 @@
         .then(function (response) {
           console.log(response)
             
-          self.data = response.data.items[0]
+          self.data = response.data.item
+          document.title = 'Aliases' + ' | ' + self.data.domain
         })
         .catch(function (error) {
           console.log(error)

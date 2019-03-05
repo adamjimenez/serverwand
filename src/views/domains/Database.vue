@@ -163,6 +163,7 @@
           console.log(response)
             
           self.data = response.data.item
+          document.title = 'Database' + ' | ' + self.data.domain
         })
         .catch(function (error) {
           console.log(error)

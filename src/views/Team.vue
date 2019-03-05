@@ -55,10 +55,9 @@
       }
     },
     created () {
-        // fetch the data when the view is created and the data is
-        // already being observed      
-        this.id = this.$route.params.id
-        this.fetchData()
+      document.title = 'Team'
+      this.id = this.$route.params.id
+      this.fetchData()
     },
     watch: {
       // call again the method if the route changes
@@ -74,6 +73,7 @@
         .then(function (response) {
           console.log(response)            
           self.data = response.data.item
+          document.title = self.data.name
         })
         .catch(function (error) {
           console.log(error)

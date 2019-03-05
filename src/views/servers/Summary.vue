@@ -221,6 +221,8 @@
           if (self.data.mem_total) {
             self.data.mem_perc = Math.round((1- (self.data.mem_free / self.data.mem_total)) * 100)
           }
+
+          document.title = 'Summary' + ' | ' + self.data.name
         })
         .catch(function (error) {
           console.log(error)

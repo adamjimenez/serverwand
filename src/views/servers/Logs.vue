@@ -109,7 +109,7 @@
         this.error = ''
         this.fetching = true
  
-        api.server(this.serverId)
+        api.get('servers/' + this.serverId)
         .then(function (response) {
           console.log(response)
 
@@ -117,10 +117,9 @@
             self.error = response.data.error
             return false
           }
-            
-          self.data = response.data.items[0]
-          self.data.disk_perc = Math.round((1- (self.data.disk_free / self.data.disk_space)) * 100)
-          self.data.mem_perc = Math.round((1- (self.data.mem_free / self.data.mem_total)) * 100)
+          
+          self.data = response.data.item
+          document.title = 'Logs' + ' | ' + self.data.name
         })
         .catch(function (error) {
           console.log(error)
