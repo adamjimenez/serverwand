@@ -106,15 +106,15 @@
             .then(function (response) {
                 console.log(response)
                 if (response.data.id) {
-                self.$router.push('/teams/' + response.data.id + '/members')
+                  self.$router.push('/teams/' + response.data.id + '/members')
                 } else if (response.data.error) {
-                self.error = response.data.error
+                  self.error = response.data.error
                 }
             })
             .catch(function (error) {
-                console.log(error)
+              console.log(error)
             }).finally(function () {
-                self.loading = false
+              self.loading = false
             })
         }
       }

@@ -57,31 +57,47 @@
       fetchData () {        
         var self = this
         this.error = ''
-        this.fetching = false
+        this.fetching = true
+ 
+        api.get('teams/' + this.id)
+        .then(function (response) {
+          console.log(response)            
+          self.data = response.data.item
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+        .finally(function() {
+          self.fetching = false
+        })
       },
       editItem () { 
         this.$router.push('/teams/' + this.$route.params.id + '/edit')
       },
       deleteItem () {
-        var self = this
-        this.dialog = true
+        this.$confirm('Delete ' + this.data.name + '?').then(res => {
+          if (res) {
+            var self = this
+            this.dialog = true
 
-        api.post('teams/' + this.id, {delete: 1})
-        .then(function (response) {
-            console.log(response)
-          
-            if (response.data.error) {
-                self.error = response.data.error
-            } else {
-                self.$router.push('/teams/')
-            }
-        })
-        .catch(function (error) {
-            console.log(error)
-        })
-        .finally(function() {
-            self.dialog = false
-            self.loading = ''
+            api.post('teams/' + this.id, {delete: 1})
+            .then(function (response) {
+                console.log(response)
+              
+                if (response.data.error) {
+                    self.error = response.data.error
+                } else {
+                    self.$router.push('/teams/')
+                }
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+            .finally(function() {
+                self.dialog = false
+                self.loading = ''
+            })
+          }
         })
       }
     }
