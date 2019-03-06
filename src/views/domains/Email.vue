@@ -41,8 +41,8 @@
               <v-flex xs12>
                 <v-card tile flat>
                   <v-card-text>
-                    <p>IMAP server: imap.domain.com</p>
-                    <p>SMTP server: smtp.domain.com</p>
+                    <p>IMAP server: {{data.server.hostname}}:143</p>
+                    <p>SMTP server: {{data.server.hostname}}:25</p>
                   </v-card-text>
                 </v-card>
               </v-flex>
