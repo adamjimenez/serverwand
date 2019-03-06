@@ -254,7 +254,7 @@
           console.log(response)
 
           if (self.serverId) {
-            self.data = response.data.items[0]
+            self.data = response.data.item
           }
         })
         .catch(function (error) {

@@ -9,7 +9,6 @@
 
     <Loading :value="fetching" />
     
-
     <v-card>
         <template v-for="(item, index) in data.aliases">
             <div
@@ -26,9 +25,7 @@
                     </v-flex>
                 </v-layout>
 
-                <v-layout row
-                    
-                >
+                <v-layout row>
                     <v-flex xs6>
                     <v-card tile flat>
                         <v-card-text>
@@ -90,7 +87,7 @@
               v-model="alias.dns"
               label="Configure DNS"
               :disabled="data.server.dns==''"
-            ></v-checkbox>         
+            ></v-checkbox>
             
             <v-btn
               :disabled="fetching"

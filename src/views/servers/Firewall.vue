@@ -1,113 +1,113 @@
 <template>
-    <div>
-        <v-alert
-          :value="error.length>0"
-          type="error"
-        >
-        {{error}}
-        </v-alert>
-        
-        <Loading :value="fetching" />
+  <div>
+    <v-alert
+      :value="error.length>0"
+      type="error"
+    >
+      {{error}}
+    </v-alert>
+    
+    <Loading :value="fetching" />
 
-        <v-card>
+    <v-card>
+      <div>
+        <v-card-title primary-title>
+            <v-switch
+                v-model="active"
+                label="Active"
+                @change="toggle()"
+            ></v-switch>
+        </v-card-title>
+      </div>
+    </v-card>
+
+    <template v-for="(item, index) in items">
+      <v-card 
+          :key="index"
+      >
+        <v-card-title primary-title>
+            {{item.port}}/{{item.protocol}} {{item.action}} {{item.from}} {{item.v6 ? 'IPV6' : ''}}
+            
             <div>
-                <v-card-title primary-title>
-                    <v-switch
-                        v-model="active"
-                        label="Active"
-                        @change="toggle()"
-                    ></v-switch>
-                </v-card-title>
-            </div>
-        </v-card>
-
-        <template v-for="(item, index) in items">
-            <v-card 
-                :key="index"
-            >
-                <v-card-title primary-title>
-                    {{item.port}}/{{item.protocol}} {{item.action}} {{item.from}} {{item.v6 ? 'IPV6' : ''}}
-                    
-                    <div>
-                        <v-btn
-                        :disabled="fetching"
-                        :loading="fetching"
-                        @click="deleteItem(item.id)"
-                        >
-                        Delete
-                        </v-btn>
-                    </div>
-                </v-card-title>
-            </v-card>
-        </template>
-
-        <v-card>
-            <div>
-              <v-card-title primary-title>
                 <v-btn
-                @click="addItem()"
+                :disabled="fetching"
+                :loading="fetching"
+                @click="deleteItem(item.id)"
                 >
-                Add rule
+                Delete
                 </v-btn>
-              </v-card-title>
             </div>
-        </v-card>
+        </v-card-title>
+      </v-card>
+    </template>
 
-        <v-navigation-drawer
-            app
-            v-model="drawer"
-            temporary
-            right
+    <v-card>
+      <div>
+        <v-card-title primary-title>
+          <v-btn
+          @click="addItem()"
+          >
+          Add rule
+          </v-btn>
+        </v-card-title>
+      </div>
+    </v-card>
+
+    <v-navigation-drawer
+        app
+        v-model="drawer"
+        temporary
+        right
+    >
+      <v-card>
+        <v-form
+            ref="form"
         >
-            <v-card>
-                <v-form
-                    ref="form"
-                >
-                    <v-card-title>
-                    Firewall rule
-                    </v-card-title>
+          <v-card-title>
+          Firewall rule
+          </v-card-title>
 
-                    <v-card-text>
-                        <v-text-field
-                            v-model="item.port"
-                            label="Port range"
-                            required
-                            :rules="[rules.required, rules.port]"
-                        ></v-text-field>
+          <v-card-text>
+              <v-text-field
+                  v-model="item.port"
+                  label="Port range"
+                  required
+                  :rules="[rules.required, rules.port]"
+              ></v-text-field>
 
-                        <v-select
-                            v-model="item.protocol"
-                            :items="protocol"
-                            label="Protocol"
-                            required
-                        ></v-select>
+              <v-select
+                  v-model="item.protocol"
+                  :items="protocol"
+                  label="Protocol"
+                  required
+              ></v-select>
 
-                        <v-select
-                            v-model="item.action"
-                            :items="action"
-                            label="Action"
-                            required
-                        ></v-select>
+              <v-select
+                  v-model="item.action"
+                  :items="action"
+                  label="Action"
+                  required
+              ></v-select>
 
-                        <v-text-field
-                            v-model="item.from"
-                            label="From"
-                            :rules="[rules.ip]"
-                        ></v-text-field>                    
-                        
-                        <v-btn
-                            :disabled="fetching"
-                            :loading="fetching"
-                            color="success"
-                            @click="saveItem"
-                        >
-                            Save
-                        </v-btn>
-                    </v-card-text>                
-                </v-form>
-            </v-card>
-        </v-navigation-drawer>
-    </div>
+              <v-text-field
+                  v-model="item.from"
+                  label="From"
+                  :rules="[rules.ip]"
+              ></v-text-field>                    
+              
+              <v-btn
+                  :disabled="fetching"
+                  :loading="fetching"
+                  color="success"
+                  @click="saveItem"
+              >
+                  Save
+              </v-btn>
+          </v-card-text>                
+        </v-form>
+      </v-card>
+    </v-navigation-drawer>
+  </div>
 </template>
 
 <script>

@@ -20,6 +20,7 @@
           <v-tab :to="'/servers/' + serverId + '/cronjobs'">Cronjobs</v-tab>
           <v-tab :to="'/servers/' + serverId + '/systemusers'">System users</v-tab>
           <v-tab :to="'/servers/' + serverId + '/firewall'">Firewall</v-tab>
+          <v-tab :to="'/servers/' + serverId + '/mail'" v-if="data.mailserver">Mail</v-tab>
           <v-tab :to="'/servers/' + serverId + '/logs'">Logs</v-tab>
           <v-tab :to="'/servers/' + serverId + '/settings'">Settings</v-tab>
         </v-tabs>
@@ -53,16 +54,6 @@
       this.fetchData()
     },
     methods: {
-      format: function(size) {
-        if (size === '' || size === -1) {
-          return ''
-        }
-
-        var si
-        for(si = 0; size >= 1024; size /= 1024, si++) {}
-
-        return '' + Math.round(size) + 'KMGT'.substr(si, 1)
-      },
       fetchData () {        
         var self = this
         this.error = ''

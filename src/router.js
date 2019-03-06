@@ -40,14 +40,17 @@ export default new Router({
             path: '/servers/:id/systemusers',
             component: () => import('./views/servers/Systemusers.vue')
           }, {
+            path: '/servers/:id/firewall',
+            component: () => import('./views/servers/Firewall.vue')
+          }, {
+            path: '/servers/:id/mail',
+            component: () => import('./views/servers/Mail.vue')
+          }, {
             path: '/servers/:id/settings',
             component: () => import('./views/servers/Settings.vue')
           }, {
             path: '/servers/:id/logs',
             component: () => import('./views/servers/Logs.vue')
-          }, {
-            path: '/servers/:id/firewall',
-            component: () => import('./views/servers/Firewall.vue')
           }]
         },
         {
