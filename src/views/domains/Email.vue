@@ -10,6 +10,18 @@
         <Loading :value="fetching" />
 
         <v-card>
+
+          <v-layout row v-if="data.server && data.dns && data.dns.MX != data.server.hostname">
+            <v-flex xs12>
+              <v-card tile flat>
+                  <v-card-text>
+                  <strong>Warning: Domain MX does not point to: {{data.server.hostname}} <Copy :val="data.server.hostname" /> ({{data.dns.error}})</strong>
+                  <v-btn v-if="data.dns.not_set" @click="fixDomainDns(data.domain)">Fix</v-btn>
+                  </v-card-text>
+              </v-card>
+            </v-flex>
+          </v-layout>
+
           <div>
             <v-card-title primary-title>
               <v-switch
@@ -22,20 +34,6 @@
         </v-card>
 
         <v-card>
-          <!--
-          <div>
-            <v-layout row v-if="!data.server.ip">
-                <v-flex xs12>
-                <v-card tile flat>
-                    <v-card-text>
-                      <strong>Warning: Domain does not point to: {{data.server.ip}} <Copy :val="data.server.ip" /> ({{item.dns.error}})</strong>
-                      <v-btn v-if="item.dns.not_set" @click="fixAliasDns(item.domain)">Fix</v-btn>
-                    </v-card-text>
-                </v-card>
-                </v-flex>
-            </v-layout>
-          </div>
-          -->
           <div>
             <v-layout row>
               <v-flex xs12>
@@ -173,7 +171,9 @@
         error: null,
         data: {
           email: false,
-          emails: []
+          emails: [],
+          server: {},
+          records: {}
         },
         email: {},
         fetching: true,
@@ -184,7 +184,8 @@
         },
         copyText: 'Copy',
         drawer: false,
-        userReadonly: false
+        userReadonly: false,
+        timer: null
       }
     },
     created () {
@@ -210,15 +211,20 @@
       fetchData () {        
         var self = this
         this.error = ''
-        this.fetching = true
-        this.domainId = this.$route.params.id
- 
+        this.domainId = this.$route.params.id 
+        clearTimeout(self.timer)
+
         api.get('domains/' + this.domainId + '/email')
         .then(function (response) {
           console.log(response)
             
           self.data = response.data.item
           document.title = 'Email' + ' | ' + self.data.domain
+
+          if (self.data.dns.updating) {
+            console.log('checking dns')
+            self.timer = setTimeout(self.fetchData, 60000)
+          }
         })
         .catch(function (error) {
           console.log(error)
@@ -311,6 +317,37 @@
           }
         })
       },
+      fixDomainDns(domain, noAuthPrompt) {
+        var self = this
+        this.error = ''
+        this.fetching = true
+
+        api.get('domains/' + self.domainId + '/fixmx')
+        .then(function (response) {
+          console.log(response)
+          
+          if (!response.data.success) {
+            if (response.data.error == 'auth' && !noAuthPrompt) {
+              var child = window.open('https://serverwand.com/account/services/' + self.data.server.dns)
+              var interval = setInterval(function() {
+                  if (child.closed) {
+                      clearInterval(interval)
+                      self.fixDomainDns(domain, true)
+                      return
+                  }
+              }, 500)
+            } else {
+              self.error = response.data.error
+              self.fetching = false
+            }
+          } else {
+            self.fetchData()
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      }
     }
   }
 </script>

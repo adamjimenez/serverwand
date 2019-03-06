@@ -14,7 +14,7 @@
             <div
             :key="index"
             >
-                <v-layout row v-if="item.dns.ip != data.server.ip">
+                <v-layout row v-if="item.dns.A != data.server.ip">
                     <v-flex xs12>
                     <v-card tile flat>
                         <v-card-text>
@@ -139,7 +139,8 @@
           dns: true
         },
         copyText: 'Copy',
-        aliasDrawer: false
+        aliasDrawer: false,
+        timer: null
       }
     },
     created () {
@@ -165,8 +166,8 @@
       fetchData () {        
         var self = this
         this.error = ''
-        this.fetching = true
         this.domainId = this.$route.params.id
+        clearTimeout(self.timer)
  
         api.get('domains/' + this.domainId + '/aliases')
         .then(function (response) {
@@ -174,6 +175,14 @@
             
           self.data = response.data.item
           document.title = 'Aliases' + ' | ' + self.data.domain
+
+          self.data.aliases.forEach(element => {
+            if (element.dns.updating) {
+              console.log('checking dns')
+              self.timer = setTimeout(self.fetchData, 60000)
+              return
+            }
+          })
         })
         .catch(function (error) {
           console.log(error)

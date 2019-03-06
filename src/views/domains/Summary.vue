@@ -11,7 +11,7 @@
 
     <v-card>
 
-      <v-layout row v-if="data.server && data.dns && data.dns.ip != data.server.ip">
+      <v-layout row v-if="data.server && data.dns && data.dns.A != data.server.ip">
         <v-flex xs12>
           <v-card tile flat>
               <v-card-text>
@@ -161,7 +161,8 @@
           dns: true
         },
         copyText: 'Copy',
-        aliasDrawer: false
+        aliasDrawer: false,
+        timer: null
       }
     },
     created () {
@@ -187,8 +188,8 @@
       fetchData () {        
         var self = this
         this.error = ''
-        this.fetching = true
         this.domainId = this.$route.params.id
+        clearTimeout(self.timer)
  
         api.get('domains/' + this.domainId + '/summary')
         .then(function (response) {
@@ -196,6 +197,11 @@
             
           self.data = response.data.item
           document.title = 'Summary' + ' | ' + self.data.domain
+
+          if (self.data.dns.updating) {
+            console.log('checking dns')
+            self.timer = setTimeout(self.fetchData, 60000)
+          }
         })
         .catch(function (error) {
           console.log(error)
@@ -228,6 +234,42 @@
             self.passwordPanel = [false]
           })
         }
+      },
+      fixDomainDns(domain, noAuthPrompt) {
+        var self = this
+        this.details = ''
+        this.dialog = true
+        this.error = ''
+        this.fetching = true
+
+        api.get('domains/' + self.domainId + '/fixdns')
+        .then(function (response) {
+          console.log(response)
+          
+          if (!response.data.success) {
+            if (response.data.error == 'auth' && !noAuthPrompt) {
+              var child = window.open('https://serverwand.com/account/services/' + self.data.server.dns)
+              var interval = setInterval(function() {
+                  if (child.closed) {
+                      clearInterval(interval)
+                      self.fixDomainDns(domain, true)
+                      return
+                  }
+              }, 500)
+            } else {
+              self.error = response.data.error
+            }
+          } else {
+            self.fetchData()
+          }
+        })
+        .catch(function (error) {
+          console.log(error)              
+          self.dialog = false
+        })
+        .finally(function() {
+          self.dialog = false
+        })
       }
     }
   }
