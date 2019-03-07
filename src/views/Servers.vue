@@ -15,14 +15,8 @@
         
         <v-list two-line v-if="items.length">
           <template v-for="(item, index) in items">
-            <v-divider
-              v-if="item.divider"
-              :inset="item.inset"
-              :key="index"
-            ></v-divider>
-
             <v-list-tile
-              v-else
+              v-if="index >= (page-1)*items_per_page && index < page*items_per_page"
               :key="item.name"
               @click="goto(item.id)"
             >
@@ -50,6 +44,16 @@
           </v-list-tile>
         </v-list>
 
+        <div 
+          v-if="items.length > items_per_page"
+          class="text-xs-center"
+        >
+          <v-pagination
+            v-model="page"
+            :length="items.length / items_per_page"
+          ></v-pagination>
+        </div>
+
       </v-card>
     </v-flex>
 
@@ -67,9 +71,10 @@
     data () {
       return {
         loading: true,
-        post: null,
         error: null,
-        items: []
+        items: [],
+        page: 1,
+        items_per_page: 10
       }
     },
     created () {
