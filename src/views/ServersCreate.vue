@@ -16,7 +16,7 @@
 
     <v-item-group v-if="!this.$route.params.id">
         <v-subheader>
-          Choose a VPS provider below or add your own custom server
+          Choose a VPS provider below or add a custom server
         </v-subheader>
 
         <v-btn-toggle v-model="data.provider">
@@ -58,7 +58,8 @@
       <v-card>
         <v-card-text>
           <p v-if="data.provider=='custom' && !this.$route.params.id">
-            Connect to a server which is freshly installed with Ubuntu 18.04 LTS
+            Configure a server which is freshly installed with Ubuntu 18.04 LTS<br>
+            Once configured, root login will be disabled for increased security
           </p>
 
           <p v-if="data.provider=='linode' && !this.$route.params.id">
