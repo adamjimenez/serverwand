@@ -26,7 +26,10 @@
 
               <v-list-tile-content>
                 <v-list-tile-title v-html="item.name"></v-list-tile-title>
-                <v-list-tile-sub-title v-html="item.hostname"></v-list-tile-sub-title>
+                <v-list-tile-sub-title>
+                  {{item.members}} member{{item.members!=1 ? 's' : ''}},
+                  {{item.servers}} server{{item.servers!=1 ? 's' : ''}}
+                </v-list-tile-sub-title>
               </v-list-tile-content>
             </v-list-tile>
           </template>

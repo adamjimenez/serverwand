@@ -19,14 +19,7 @@
 
         <v-list two-line v-if="servers.length">
           <template v-for="(item, index) in servers">
-            <v-divider
-              v-if="item.divider"
-              :inset="item.inset"
-              :key="index"
-            ></v-divider>
-
             <v-list-tile
-              v-else
               :key="item.name"
               @click="goto('/servers/' + item.id + '/summary')"
             >
@@ -80,7 +73,7 @@
 
               <v-list-tile-content>
                 <v-list-tile-title v-html="item.domain"></v-list-tile-title>
-                <v-list-tile-sub-title></v-list-tile-sub-title>
+                <v-list-tile-sub-title>{{serverOptions[item.server]}}</v-list-tile-sub-title>
               </v-list-tile-content>
             </v-list-tile>
           </template>
@@ -120,7 +113,8 @@
         post: null,
         error: '',
         servers: [],
-        domains: []
+        domains: [],
+        serverOptions: {}
       }
     },
     created () {
@@ -151,8 +145,16 @@
             return false
           }
 
-          self.servers = response.data.servers
           self.domains = response.data.domains
+
+          api.get('servers/')
+          .then(function (response) {
+              self.servers = response.data.items
+
+              response.data.items.forEach(element => {
+                  self.$set(self.serverOptions, element.id, element.name)
+              })
+          })
         })
         .catch(function (error) {
           console.log(error)
