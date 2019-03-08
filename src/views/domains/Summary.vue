@@ -23,18 +23,6 @@
       </v-layout>
 
       <v-layout row>
-        <v-flex xs12>
-          <v-card tile flat>
-              <v-card-text>                         
-              {{ data.domain }}
-              </v-card-text>
-          </v-card>
-        </v-flex>
-      </v-layout>
-      
-      <v-divider></v-divider>
-
-      <v-layout row>
         <v-flex xs6>
           <v-card tile flat>
               <v-card-text>Disk Usage:</v-card-text>
