@@ -71,11 +71,6 @@ export default new Router({
         {
           path: '/domains/:id',
           name: 'domain',
-          component: () => import(/* webpackChunkName: "domain" */ './views/Domain.vue')
-        },
-        {
-          path: '/domains/:id',
-          name: 'domain',
           component: () => import(/* webpackChunkName: "server" */ './views/Domain.vue'),
           children: [{
             path: '/domains/:id/summary',
@@ -101,11 +96,6 @@ export default new Router({
           path: '/domains/:id/edit',
           name: 'domain-edit',
           component: () => import(/* webpackChunkName: "domain-edit" */ './views/DomainsCreate.vue')
-        },
-        {
-          path: '/settings/profile',
-          name: 'profile',
-          component: () => import(/* webpackChunkName: "profile" */ './views/settings/Profile.vue')
         }, {
           path: '/teams',
           component: () => import('./views/Teams.vue')
@@ -131,6 +121,17 @@ export default new Router({
             component: () => import('./views/teams/Settings.vue')
           }]
         },
+        {
+          path: '/settings',
+          component: () => import(/* webpackChunkName: "profile" */ './views/Settings.vue'),
+          children: [{
+            path: '/settings/profile',
+            component: () => import('./views/settings/Profile.vue')
+          }, {
+            path: '/settings/api',
+            component: () => import('./views/settings/Api.vue')
+          }]
+        }
       ]
     },
     {
