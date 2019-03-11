@@ -1,26 +1,36 @@
 <template>
   <v-layout row>
     <v-flex>
-        <v-alert
-        :value="error.length>0"
-        type="error"
-        >
-        {{error}}
-        </v-alert>
+      <v-alert
+      :value="error.length>0"
+      type="error"
+      >
+       {{error}}
+      </v-alert>
 
-        <Loading :value="fetching" />
-        
-        <v-subheader v-if="!fetching">
-          <v-icon left>fas fa-users</v-icon>
-          <h1>{{ data.name }}</h1>
-        </v-subheader>
+      <Loading :value="fetching" />
 
-        <v-tabs>
-            <v-tab :to="'/teams/' + id + '/members'">Members</v-tab>
-            <v-tab :to="'/teams/' + id + '/servers'">Servers</v-tab>
-            <v-tab :to="'/teams/' + id + '/settings'">Settings</v-tab>
-        </v-tabs>
-        <router-view></router-view>      
+      <v-list two-line v-if="!fetching">
+        <v-list-tile>
+          <v-list-tile-avatar>
+            <v-icon left>fas fa-users</v-icon>
+          </v-list-tile-avatar>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{ data.name }}
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+
+      <v-tabs>
+          <v-tab :to="'/teams/' + id + '/members'">Members</v-tab>
+          <v-tab :to="'/teams/' + id + '/servers'">Servers</v-tab>
+          <v-tab :to="'/teams/' + id + '/settings'">Settings</v-tab>
+      </v-tabs>
+      <router-view></router-view>
 
     </v-flex>
 
@@ -40,8 +50,7 @@
         loading: '',
         id: null,
         error: null,
-        data: {
-        },
+        data: {},
         details: '',
         fetching: true,
         rules: {

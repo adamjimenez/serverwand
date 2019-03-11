@@ -8,18 +8,27 @@
       {{error}}
       </v-alert>
 
-      <Loading :value="fetching" />
+      <Loading :value="fetching" />      
       
-      <v-subheader v-if="!fetching">
-        <v-icon left>fas fa-globe</v-icon>
-
-        {{ data.domain }}
-                      
-        <a v-bind:href="'http://' + data.domain" target="_blank">
-          <v-icon right>open_in_new</v-icon>
-        </a>
-        
-      </v-subheader>
+      <v-list two-line v-if="!fetching">
+        <v-list-tile>
+          <v-list-tile-avatar>
+            <v-icon left>fas fa-globe</v-icon>
+          </v-list-tile-avatar>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{ data.domain }}
+              
+              <a v-bind:href="'http://' + data.domain" target="_blank">
+                <v-icon right>open_in_new</v-icon>
+              </a> 
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
+              {{data.server.name}}
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>      
 
       <v-tabs>
         <v-tab :to="'/domains/' + domainId + '/summary'">Summary</v-tab>

@@ -21,7 +21,7 @@
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title>{{data.item.text}}</v-list-tile-title>
-            <!--<v-list-tile-sub-title v-html="data.item.group"></v-list-tile-sub-title>-->
+            <v-list-tile-sub-title v-html="data.item.subtitle"></v-list-tile-sub-title>
           </v-list-tile-content>
         </template>
       </template>
@@ -34,7 +34,8 @@
   export default {
     data: () => ({
       model: null,
-      items: []
+      items: [],
+      servers: []
     }),
 
     created () {
@@ -55,6 +56,7 @@
           response.data.items.forEach(element => {
               self.items.push({
                   text: element.domain,
+                  subtitle: self.servers[element.server],
                   value: '/domains/' + element.id + '/summary',
                   avatar: 'fas fa-globe'
               });
@@ -67,12 +69,15 @@
           self.loading = false
         })
  
-        api.servers()
+        api.get('servers/')
         .then(function (response) {
           console.log(response)
           response.data.items.forEach(element => {
+              self.$set(self.servers, element.id, element.name)
+
               self.items.push({
                   text: element.name,
+                  subtitle: element.hostname,
                   value: '/servers/' + element.id + '/summary',
                   avatar: 'fas fa-server'
               });
