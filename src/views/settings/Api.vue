@@ -71,20 +71,38 @@
         </v-card-text>
       </v-card>
     </v-navigation-drawer>
+
+    <v-dialog
+      v-model="dialog"
+      width="630"
+    >
+      <v-card
+        color="primary"
+        dark
+      >
+        <v-card-text>
+          <div>
+              Api key: {{ details }}              
+              <Copy :val="details" />
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
   import api from '../../services/api'
   import Loading from '../../components/Loading'
+  import Copy from '../../components/Copy'
 
   export default {
     components: {
-      Loading
+      Loading,
+      Copy
     },
     data () {
       return {
-        loading: '',
         error: null,
         data: {
             label: '',
@@ -136,7 +154,6 @@
       saveItem () {
         var self = this
         this.details = ''
-        this.dialog = true
         this.error = ''
 
         api.post('apikeys', this.data)
@@ -146,25 +163,20 @@
             if (!response.data.success) {
                 self.error = response.data.error
             } else {
-                self.error = 'Api key: ' + response.data.api_key
+                self.dialog = true
+                self.details = response.data.api_key
 
                 self.drawer = false
                 self.fetchData()
             }
         })
         .catch(function (error) {
-            console.log(error)              
-            self.dialog = false
-        })
-        .finally(function() {
-            self.dialog = false
+            console.log(error)
         })
       },
       deleteItem (id) { 
         var self = this
         this.error = ''
-        this.dialog = true
-        this.loading = 'delete'
 
         api.post('apikeys', {delete: 1, api_key: id})
         .then(function (response) {
@@ -178,10 +190,6 @@
         })
         .catch(function (error) {
           console.log(error)
-        })
-        .finally(function() {
-          self.dialog = false
-          self.loading = ''
         })
       }
     }
