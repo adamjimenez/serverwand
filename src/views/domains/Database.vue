@@ -83,7 +83,7 @@
                 <v-icon slot="actions" color="primary">$vuetify.icons.expand</v-icon>
                 <div slot="header">Reset db password</div>
                 <v-card tile flat>
-                  <v-card-text class="grey lighten-3">                                
+                  <v-card-text>
                   <v-text-field
                       v-model="dbPassword"
                       :append-icon="showDbPassword ? 'visibility_off' : 'visibility'"
@@ -96,7 +96,7 @@
                       @click:append="showDbPassword = !showDbPassword"
                   ></v-text-field>
                   </v-card-text>
-                  <v-card-actions class="grey lighten-3">
+                  <v-card-actions>
                   <v-btn color="primary" flat @click="submitDbPassword">Submit</v-btn>
                   </v-card-actions>
                 </v-card>

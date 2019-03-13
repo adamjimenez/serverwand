@@ -87,7 +87,7 @@
                 <v-icon slot="actions" color="primary">$vuetify.icons.expand</v-icon>
                 <div slot="header">Reset password</div>
                 <v-card tile flat>
-                <v-card-text class="grey lighten-3">                                
+                <v-card-text>                                
                     <v-text-field
                     v-model="password"
                     :append-icon="showPassword ? 'visibility_off' : 'visibility'"
@@ -100,7 +100,7 @@
                     @click:append="showPassword = !showPassword"
                     ></v-text-field>
                 </v-card-text>
-                <v-card-actions class="grey lighten-3">
+                <v-card-actions>
                     <v-btn color="primary" flat @click="submitPassword">Submit</v-btn>
                 </v-card-actions>
                 </v-card>
