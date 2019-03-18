@@ -30,7 +30,6 @@
         document.body.appendChild(el)
         el.setAttribute('id', 'clipboard')
         el.value = text
-        el.focus()
         el.select()
 	      document.execCommand("Copy")
         el.parentNode.removeChild(el)

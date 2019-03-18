@@ -50,7 +50,7 @@
         this.error = this.post = null
         this.loading = true
  
-        api.domains()
+        api.get('domains/')
         .then(function (response) {
           console.log(response)
           response.data.items.forEach(element => {
