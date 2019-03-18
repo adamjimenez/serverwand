@@ -278,7 +278,16 @@
             self.details = ''
 
             // subscribe to status changes
-            var source = api.event('servers/' + self.serverId + '/install')
+            var url = 'servers/' + self.serverId + '/install?';
+            if (self.data.webserver) {
+              url += 'webserver=1'
+            }
+
+            if (self.data.mailserver) {
+              url += 'mailserver=1'
+            }
+
+            var source = api.event(url)
             
             var abortFunction = function() {
                 if (source)
@@ -317,11 +326,7 @@
           if (self.serverId) {
             api.post('servers/' + self.serverId + '/update', this.data)
             .then(function (response) {
-              if (response.data.install) {
-                install()
-              } else {
-                self.$router.push('/servers/' + self.serverId + '/summary')
-              }
+              install()
             })
             .catch(function (error) {
               console.log(error)
@@ -345,8 +350,6 @@
             .catch(function (error) {
               console.log(error)              
               self.dialog = false
-            })
-            .finally(function() {
             })
           }
         }

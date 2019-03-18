@@ -166,8 +166,8 @@
         rules: {
           required: value => !!value || 'Required.',
           alpha: v => /^[a-zA-Z\-]+$/g.test(v) || 'Must contain a-z characters only',
-          minute: v => /^[0-9,]+$/g.test(v) || '0-59 or *',
-          hour: v => (v=='*' || (v>=0 && v<24) ) || '0-23 or *',
+          minute: v => /^[0-9,/*]+$/g.test(v) || '0-59 or *',
+          hour: v => /^[0-9,/*]+$/g.test(v) || '0-23 or *',
           dom: v => (v=='*' || (v>=1 && v<=31) ) || '1-31 or *',
           mon: v => (v=='*' || (v>=1 && v<12) ) || '1-12 or *',
           dow: v => (v=='*' || (v>=1 && v<7) ) || '1-7 or *',
