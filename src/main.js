@@ -31,6 +31,8 @@ Vue.use(VuetifyConfirm, {
 
 import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 
+Vue.prototype.$eventHub = new Vue(); // Global event bus
+
 new Vue({
   el: '#app',
   router,

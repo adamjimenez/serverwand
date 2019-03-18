@@ -169,6 +169,7 @@
           .then(function (response) {
             console.log(response)
             if (response.data.domain_id) {
+              self.$eventHub.$emit('itemsChanged')
               self.$router.push('/domains/' + response.data.domain_id + '/summary')
             } else if (response.data.error) {
               if (response.data.error == 'auth' && !noAuthPrompt) {

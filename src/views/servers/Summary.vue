@@ -186,36 +186,36 @@
       </v-list>
     </v-card>
 
-        <v-navigation-drawer
-            app
-            v-model="drawer"
-            absolute
-            temporary
-            right
-        >
-          <v-card>
-              <v-card-title>
-                Set Hostname
-              </v-card-title>
+    <v-navigation-drawer
+        app
+        v-model="drawer"
+        absolute
+        temporary
+        right
+    >
+      <v-card>
+          <v-card-title>
+            Set Hostname
+          </v-card-title>
 
-              <v-card-text>
-                <v-text-field
-                    v-model="hostname"
-                    label="Hostname"
-                    required
-                ></v-text-field>
-                
-                <v-btn
-                    :disabled="fetching"
-                    :loading="fetching"
-                    color="success"
-                    @click="save"
-                >
-                    Save
-                </v-btn>
-              </v-card-text>
-          </v-card>
-        </v-navigation-drawer>
+          <v-card-text>
+            <v-text-field
+                v-model="hostname"
+                label="Hostname"
+                required
+            ></v-text-field>
+            
+            <v-btn
+                :disabled="fetching"
+                :loading="fetching"
+                color="success"
+                @click="save"
+            >
+                Save
+            </v-btn>
+          </v-card-text>
+      </v-card>
+    </v-navigation-drawer>
   </div>
 </template>
 

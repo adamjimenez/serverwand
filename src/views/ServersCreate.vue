@@ -295,7 +295,8 @@
 
                 self.dialog = false;
 
-                if (!self.error) {                  
+                if (!self.error) { 
+                  self.$eventHub.$emit('itemsChanged')
                   self.$router.push('/servers/' + self.serverId + '/summary')
                 }
             }
