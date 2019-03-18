@@ -66,9 +66,9 @@
 
     <v-navigation-drawer
       v-model="aliasDrawer"
-      absolute
       temporary
       right
+      app
     >
 
       <v-card>

@@ -51,7 +51,6 @@
       <v-navigation-drawer
         app
         v-model="cronjobDrawer"
-        absolute
         temporary
         right
       >
@@ -165,7 +164,7 @@
         cronjobs: [],
         rules: {
           required: value => !!value || 'Required.',
-          alpha: v => /^[a-zA-Z\-]+$/g.test(v) || 'Must contain a-z characters only',
+          alpha: v => /^[a-zA-Z-]+$/g.test(v) || 'Must contain a-z characters only',
           minute: v => /^[0-9,/*]+$/g.test(v) || '0-59 or *',
           hour: v => /^[0-9,/*]+$/g.test(v) || '0-23 or *',
           dom: v => (v=='*' || (v>=1 && v<=31) ) || '1-31 or *',
@@ -174,7 +173,6 @@
         },
         details: '',
         fetching: true,
-        userDrawer: false,
         cronjobDrawer: false,
         serverId: 0,
         logs: [{
@@ -213,16 +211,6 @@
       this.fetchData()
     },
     methods: {
-      format: function(size) {
-        if (size === '' || size === -1) {
-          return ''
-        }
-
-        var si
-        for(si = 0; size >= 1024; size /= 1024, si++) {}
-
-        return '' + Math.round(size) + 'KMGT'.substr(si, 1)
-      },
       fetchData () {        
         var self = this
         this.error = ''
@@ -246,101 +234,7 @@
         .finally(function() {
           self.fetching = false
         })
-      },
-      editServer () { 
-        this.$router.push('/servers/' + this.$route.params.id + '/edit')
-      },
-      deleteServer () {
-        var self = this
-        this.fetching = true
-
-        api.deleteServer(this.$route.params.id)
-        .then(function (response) {
-          console.log(response)
-
-          if (response.data.success) {
-            // subscribe to status changes
-            self.$router.push('/servers/')
-          }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-      },
-      addUser() {
-        this.userDrawer = true
-      },
-      editUser(user) {
-        this.system_user.user = user
-        this.userDrawer = true
-      },
-      deleteUser(user) {
-        var self = this
-        this.fetching = true
-        this.error = ''
-
-        api.deleteSystemUser(this.serverId, {user: user})
-        .then(function (response) {
-          console.log(response)
-          
-          if (!response.data.success) {
-            self.error = response.data.error;
-          } else {
-            self.fetchData()
-          }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.fetching = false
-        })
-      },
-      saveUser () {
-        var self = this
-
-        if (this.system_user.user && this.system_user.password) {
-          this.details = ''
-          this.fetching = true
-          this.error = ''
-
-          api.saveSystemUser(this.serverId, this.system_user)
-          .then(function (response) {
-            console.log(response)
-            
-            if (!response.data.success) {
-              self.error = response.data.error;
-            } else {
-              self.userDrawer = false
-              self.fetchData()
-            }
-          })
-          .catch(function (error) {
-            console.log(error)              
-            self.fetching = false
-          })
-          .finally(function() {
-            self.fetching = false
-          })
-        }
-      },
-      fetchLog (log) {
-        var self = this
-
-        if (log) {
-          self.log = log
-        } else if (!self.log) {
-          return
-        }
-
-        this.logContent = 'loading..'
-
-        api.fetchLog(this.serverId, {log: self.log})
-        .then(function (response) {
-          console.log(response)
-          self.logContent = response.data.content
-        })
-      },      
+      },     
       addCronjob() {
         this.cronjob = {}
         this.cronjobDrawer = true

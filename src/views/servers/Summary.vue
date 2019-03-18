@@ -12,93 +12,108 @@
     <v-card>
       <v-container
       >
-        <v-layout>
-          <v-flex xs12 sm3>
-            <div class="feature">
-                <div>
-                <div class="icon">
-                    <i class="fas fa-microchip"></i>
-                </div>
+         <v-layout row wrap>
+          <v-flex xs12 sm6 md3>
+            <v-card>
+              <div class="feature">
+                <v-card-text>
+                  <div>
+                    <div class="icon">
+                      <i class="fas fa-microchip"></i>
+                    </div>
 
-                <div class="label">
-                    CPU
-                </div>
-                </div>
-                
-                <div style="clear: both; font-size: 12px;">
-                <div style="font-size: 20px;">{{data.cores}} core<span v-if="data.cores>1">s</span></div>
-                {{data.cpu}}
-                </div>
-            </div>
+                    <div class="label">
+                      CPU
+                    </div>
+                  </div>
+                  
+                  <div style="clear: both; font-size: 12px;">
+                    <div style="font-size: 20px;">{{data.cores}} core<span v-if="data.cores>1">s</span></div>
+                    {{data.cpu}}
+                  </div>
+                </v-card-text>
+              </div>
+            </v-card>
           </v-flex>
 
-          <v-flex xs12 sm3>              
-            <div class="feature">
-                <div>
-                <div class="icon">
-                    <i class="fas fa-memory"></i>
-                </div>
+          <v-flex xs12 sm6 md3>
+            <v-card>
+              <div class="feature">
+                <v-card-text>
+                  <div>
+                    <div class="icon">
+                        <i class="fas fa-memory"></i>
+                    </div>
 
-                <div class="label">
-                    Memory Usage
-                </div>
-                </div>
-                
-                <div style="clear: both;">
-                    <v-list-tile-title>
-                        <v-progress-linear 
-                        v-model="data.mem_perc"
-                        height="20"
-                        ></v-progress-linear>
-                    </v-list-tile-title>
-                    <v-list-tile-sub-title v-html="format(data.mem_free)+'  free of '+format(data.mem_total)"></v-list-tile-sub-title>
-                </div>
-            </div>
+                    <div class="label">
+                        Memory Usage
+                    </div>
+                  </div>
+                  
+                  <div style="clear: both;">
+                      <v-list-tile-title>
+                          <v-progress-linear 
+                          v-model="data.mem_perc"
+                          height="20"
+                          ></v-progress-linear>
+                      </v-list-tile-title>
+                      <v-list-tile-sub-title v-html="format(data.mem_free)+'  free of '+format(data.mem_total)"></v-list-tile-sub-title>
+                  </div>
+                </v-card-text>
+              </div>
+            </v-card>
           </v-flex>
 
-          <v-flex xs12 sm3>              
-            <div class="feature">
-                <div>
-                <div class="icon">
-                    <i class="fas fa-hdd"></i>
-                </div>
+          <v-flex xs12 sm6 md3>
+            <v-card>
+              <div class="feature">
+                <v-card-text>
+                  <div>
+                    <div class="icon">
+                        <i class="fas fa-hdd"></i>
+                    </div>
 
-                <div class="label">
-                    Disk Usage
-                </div>
-                </div>
-                
-                <div style="clear: both;">
-                    <v-list-tile-title>
-                        <v-progress-linear 
-                        v-model="data.disk_perc"
-                        height="20"
-                        ></v-progress-linear>
-                    </v-list-tile-title>
-                    <v-list-tile-sub-title v-html="format(data.disk_free)+'  free of '+format(data.disk_space)"></v-list-tile-sub-title>
-                </div>
-            </div>
+                    <div class="label">
+                        Disk Usage
+                    </div>
+                  </div>
+                  
+                  <div style="clear: both;">
+                      <v-list-tile-title>
+                          <v-progress-linear 
+                          v-model="data.disk_perc"
+                          height="20"
+                          ></v-progress-linear>
+                      </v-list-tile-title>
+                      <v-list-tile-sub-title v-html="format(data.disk_free)+'  free of '+format(data.disk_space)"></v-list-tile-sub-title>
+                  </div>
+                </v-card-text>
+              </div>
+            </v-card>
           </v-flex>
 
-          <v-flex xs12 sm3>              
-            <div class="feature" style="border-right: 0;">
-                <div>
-                <div class="icon">
-                    <i class="fas fa-clock"></i>
-                </div>
+          <v-flex xs12 sm6 md3>
+            <v-card>
+              <div class="feature">
+                <v-card-text>
+                  <div>
+                    <div class="icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
 
-                <div class="label">
-                    Uptime
-                </div>
-                </div>
-                
-                <div style="clear: both; font-size: 14px;">
-                {{data.uptime}}
-                </div>
-            </div>
+                    <div class="label">
+                        Uptime
+                    </div>
+                  </div>
+                  
+                  <div style="clear: both; font-size: 14px;">
+                  {{data.uptime}}
+                  </div>
+                </v-card-text>
+              </div>
+            </v-card>
           </v-flex>
-
-        </v-layout>
+         </v-layout>
       </v-container>
 
       <v-list two-line>                
@@ -189,7 +204,6 @@
     <v-navigation-drawer
         app
         v-model="drawer"
-        absolute
         temporary
         right
     >
@@ -333,10 +347,7 @@
 }
 
 .feature {
-  margin: 0 5px;
-  padding: 15px 15px;
   min-height: 140px;
-  border-right: 1px solid #ccc;
 }
 .icon {
   font-size: 30px; float: left;

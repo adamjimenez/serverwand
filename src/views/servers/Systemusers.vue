@@ -51,7 +51,6 @@
         <v-navigation-drawer
             app
             v-model="userDrawer"
-            absolute
             temporary
             right
         >

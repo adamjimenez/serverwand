@@ -149,7 +149,6 @@
           dns: true
         },
         copyText: 'Copy',
-        aliasDrawer: false,
         timer: null
       }
     },

@@ -37,7 +37,6 @@
     <v-navigation-drawer
         app
         v-model="drawer"
-        absolute
         temporary
         right
     >
