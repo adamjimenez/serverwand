@@ -50,7 +50,7 @@
         >
           <v-pagination
             v-model="page"
-            :length="items.length / items_per_page"
+            :length="pages"
           ></v-pagination>
         </div>
 
@@ -74,6 +74,7 @@
         error: null,
         items: [],
         page: 1,
+        pages: 1,
         items_per_page: 10
       }
     },
@@ -95,6 +96,7 @@
         .then(function (response) {
           console.log(response)
           self.items = response.data.items
+          self.pages = self.items.length ? Math.ceil(self.items.length / self.items_per_page) : 1
         })
         .catch(function (error) {
           console.log(error)

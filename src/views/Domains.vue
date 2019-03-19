@@ -106,7 +106,7 @@
             }
         })
 
-        this.filtered.length ? this.filtered.length / this.items_per_page : 1
+        this.pages = this.filtered.length ? Math.ceil(this.filtered.length / this.items_per_page) : 1
       }
     },
     methods: {
@@ -128,6 +128,8 @@
           response.data.items.forEach(element => {
               self.filtered.push(element)
           })
+
+          self.pages = self.filtered.length ? Math.ceil(self.filtered.length / self.items_per_page) : 1
  
           api.get('servers/')
           .then(function (response) {
