@@ -280,3 +280,9 @@
     }
   }
 </script>
+
+<style>
+pre {
+  overflow: scroll;
+}
+</style>

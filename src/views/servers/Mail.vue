@@ -11,8 +11,9 @@
 
     <v-card>
         <v-list
-            subheader
-            two-line
+          subheader
+          two-line
+          v-if="items.length"
         >
             <template v-for="(item, index) in items">
                 <v-list-tile
@@ -30,6 +31,9 @@
                 </v-list-tile>
             </template>
         </v-list>
+        <v-card-text v-else>
+          Queue empty
+        </v-card-text>
     </v-card>
 
     <v-card>

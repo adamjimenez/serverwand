@@ -19,37 +19,39 @@
           Choose a VPS provider below or add a custom server
         </v-subheader>
 
-        <v-btn-toggle v-model="data.provider">
-          <v-btn 
-            flat 
-            value="linode"                  
-            @click="getOptions('linode')"
-          >
-            <v-icon left dark>fab fa-linode</v-icon>
-            Linode
-          </v-btn>
+        <v-menu 
+          offset-y
+          v-model="isOpen"
+        >
+            <v-btn
+              value:="menu"
+              slot="activator"
+              color="primary"
+              dark
+            >
+                {{provider}}
+                <v-icon dark>{{isOpen ? 'expand_less' : 'expand_more'}}</v-icon>
+            </v-btn>
+            <v-list>
+              <v-list-tile avatar
+              v-for="(item, index) in items"
+              :key="index"
+              @click="getOptions(item.value)"
+              >          
+                <v-list-tile-avatar>
+                  <v-icon>{{item.avatar}}</v-icon>
+                </v-list-tile-avatar>
 
-          <v-btn 
-            flat 
-            value="digitalocean"
-            @click="getOptions('digitalocean')"
-          >
-            <v-icon left dark>fab fa-digital-ocean</v-icon>
-            Digital Ocean
-          </v-btn>
-
-          <v-btn 
-            flat 
-            value="custom"
-          >
-            <v-icon left dark>fas fa-server</v-icon>
-            Custom Server
-          </v-btn>
-        </v-btn-toggle>
+                <v-list-tile-content>
+                  <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+        </v-menu>
     </v-item-group>
 
     <v-form
-      v-if="(data.provider!='')"
+      v-if="data.provider"
       ref="form"
       v-model="valid"
       lazy-validation
@@ -231,9 +233,15 @@
       serverId: 0,
       error: '',
       progress: 0,
-      provider: '',
       regions: [],
-      types: []
+      types: [],
+      items: [
+        { title: 'Linode', value: 'linode', avatar: 'fab fa-linode' },
+        { title: 'DigitalOcean', value: 'digitalocean', avatar: 'fab fa-digital-ocean' },
+        { title: 'Custom server', value: 'custom', avatar: 'fas fa-server' }
+      ],
+      isOpen: false,
+      provider: 'Choose'
     }),
 
     created () {
@@ -280,11 +288,11 @@
             // subscribe to status changes
             var url = 'servers/' + self.serverId + '/install?';
             if (self.data.webserver) {
-              url += 'webserver=1'
+              url += 'webserver=1&'
             }
 
             if (self.data.mailserver) {
-              url += 'mailserver=1'
+              url += 'mailserver=1&'
             }
 
             var source = api.event(url)
@@ -356,6 +364,13 @@
         }
       },
       getOptions(provider, noAuthPrompt) {
+        this.data.provider = provider
+        this.provider = provider
+
+        if (provider=='custom') {
+          return
+        }
+
         var self = this
         this.loading = true
 
