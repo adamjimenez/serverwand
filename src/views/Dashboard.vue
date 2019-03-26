@@ -28,8 +28,10 @@
               </v-list-tile-avatar>
 
               <v-list-tile-content>
-                <v-list-tile-title>{{item.name}}</v-list-tile-title>
-                <v-list-tile-sub-title>{{item.hostname}}</v-list-tile-sub-title>
+                <router-link :to="'/summary/' + item.id + '/summary'"> 
+                  <v-list-tile-title>{{item.name}}</v-list-tile-title>
+                  <v-list-tile-sub-title>{{item.hostname}}</v-list-tile-sub-title>
+                </router-link>
               </v-list-tile-content>
             </v-list-tile>
           </template>
@@ -65,15 +67,16 @@
             <v-list-tile
               v-else
               :key="item.name"
-              @click="goto('/domains/' + item.id + '/summary')"
             >
               <v-list-tile-avatar>
                 <v-icon>fas fa-globe</v-icon>
               </v-list-tile-avatar>
 
               <v-list-tile-content>
-                <v-list-tile-title v-html="item.domain"></v-list-tile-title>
-                <v-list-tile-sub-title>{{serverOptions[item.server]}}</v-list-tile-sub-title>
+                <router-link :to="'/domains/' + item.id + '/summary'"> 
+                  <v-list-tile-title v-html="item.domain"></v-list-tile-title>
+                  <v-list-tile-sub-title>{{serverOptions[item.server]}}</v-list-tile-sub-title>
+                </router-link>
               </v-list-tile-content>
             </v-list-tile>
           </template>
@@ -162,10 +165,13 @@
         .finally(function() {
           self.loading = false
         })
-      },
-      goto(to) {
-        this.$router.push(to)
       }
     }
   }
 </script>
+
+<style>
+a {
+  color: inherit;
+}
+</style>

@@ -18,15 +18,16 @@
             <v-list-tile
               v-if="index >= (page-1)*items_per_page && index < page*items_per_page"
               :key="item.name"
-              @click="goto(item.id)"
             >
               <v-list-tile-avatar>
                 <v-icon>fas fa-server</v-icon>
               </v-list-tile-avatar>
 
               <v-list-tile-content>
-                <v-list-tile-title v-html="item.name"></v-list-tile-title>
-                <v-list-tile-sub-title v-html="item.hostname"></v-list-tile-sub-title>
+                <router-link :to="'/servers/' + item.id + '/summary'"> 
+                  <v-list-tile-title v-html="item.name"></v-list-tile-title>
+                  <v-list-tile-sub-title v-html="item.hostname"></v-list-tile-sub-title>
+                </router-link>
               </v-list-tile-content>
             </v-list-tile>
           </template>
@@ -104,10 +105,13 @@
         .finally(function() {
           self.loading = false
         })
-      },
-      goto(to) {
-        this.$router.push('/servers/' + to + '/summary')
       }
     }
   }
 </script>
+
+<style>
+a {
+  color: inherit;
+}
+</style>

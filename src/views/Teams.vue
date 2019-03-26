@@ -18,18 +18,19 @@
             <v-list-tile
               v-if="index >= (page-1)*items_per_page && index < page*items_per_page"
               :key="item.name"
-              @click="goto(item.id)"
             >
               <v-list-tile-avatar>
                 <v-icon>fas fa-users</v-icon>
               </v-list-tile-avatar>
 
               <v-list-tile-content>
-                <v-list-tile-title v-html="item.name"></v-list-tile-title>
-                <v-list-tile-sub-title>
-                  {{item.members}} member{{item.members!=1 ? 's' : ''}},
-                  {{item.servers}} server{{item.servers!=1 ? 's' : ''}}
-                </v-list-tile-sub-title>
+                <router-link :to="'/domains/' + item.id + '/summary'"> 
+                  <v-list-tile-title v-html="item.name"></v-list-tile-title>
+                  <v-list-tile-sub-title>
+                    {{item.members}} member{{item.members!=1 ? 's' : ''}},
+                    {{item.servers}} server{{item.servers!=1 ? 's' : ''}}
+                  </v-list-tile-sub-title>
+                </router-link>
               </v-list-tile-content>
             </v-list-tile>
           </template>
@@ -40,7 +41,7 @@
             <v-list-tile-content>
               <v-list-tile-title>
                 <router-link to="/teams/create">
-                    Add a team
+                  Add a team
                 </router-link>
               </v-list-tile-title>
             </v-list-tile-content>
@@ -107,10 +108,14 @@
         .finally(function() {
           self.loading = false
         })
-      },
-      goto(to) {
-        this.$router.push('/teams/' + to + '/members')
       }
     }
   }
 </script>
+
+
+<style>
+a {
+  color: inherit;
+}
+</style>

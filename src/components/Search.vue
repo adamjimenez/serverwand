@@ -4,7 +4,6 @@
     :items="items"
     label="Search"
     persistent-hint
-    @change="goto"
     @input="afterselection" 
     ref="autocomplete"
     >
@@ -19,9 +18,11 @@
           <v-list-tile-avatar>
             <v-icon>{{data.item.avatar}}</v-icon>
           </v-list-tile-avatar>
-          <v-list-tile-content>
-            <v-list-tile-title>{{data.item.text}}</v-list-tile-title>
-            <v-list-tile-sub-title v-html="data.item.subtitle"></v-list-tile-sub-title>
+          <v-list-tile-content>            
+            <router-link :to="data.item.value"> 
+              <v-list-tile-title>{{data.item.text}}</v-list-tile-title>
+              <v-list-tile-sub-title v-html="data.item.subtitle"></v-list-tile-sub-title>
+            </router-link>
           </v-list-tile-content>
         </template>
       </template>
@@ -91,9 +92,6 @@
         .finally(function() {
           self.loading = false
         })
-      },
-      goto(to) {
-        this.$router.push(to)
       },
       afterselection(item){
         this.$nextTick(() => {
