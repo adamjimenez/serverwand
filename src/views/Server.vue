@@ -33,6 +33,7 @@
         <v-tab :to="'/servers/' + serverId + '/firewall'">Firewall</v-tab>
         <v-tab :to="'/servers/' + serverId + '/mail'" v-if="data.mailserver">Mail</v-tab>
         <v-tab :to="'/servers/' + serverId + '/logs'">Logs</v-tab>
+        <v-tab :to="'/servers/' + serverId + '/backups'">Backups</v-tab>
         <v-tab :to="'/servers/' + serverId + '/settings'">Settings</v-tab>
       </v-tabs>
       <router-view></router-view>

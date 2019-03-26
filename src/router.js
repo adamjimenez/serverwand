@@ -46,6 +46,9 @@ export default new Router({
             path: '/servers/:id/mail',
             component: () => import('./views/servers/Mail.vue')
           }, {
+            path: '/servers/:id/backups',
+            component: () => import('./views/servers/Backups.vue')
+          }, {
             path: '/servers/:id/settings',
             component: () => import('./views/servers/Settings.vue')
           }, {

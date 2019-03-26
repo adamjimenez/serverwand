@@ -27,8 +27,16 @@
                   </div>
                 </div>
                 <div v-else>
-                  Directory not empty
+                  <v-subheader>
+                    Directory contains files
+                  </v-subheader>
                 </div>
+
+                <v-btn
+                  @click="download()"
+                >
+                  Download site
+                </v-btn>
             </v-card-text>
           </v-card>
       </v-layout>
@@ -301,6 +309,27 @@
             self.fetching = false
           })
         }
+      },
+      download() {
+        var self = this
+        this.fetching = true
+        
+        api.get('domains/' + this.domainId + '/download')
+        .then(function (response) {
+          console.log(response)
+          
+          if (!response.data.success) {
+            self.error = response.data.error
+          } else {
+            window.open(response.data.download_url)
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+        .finally(function() {
+          self.fetching = false
+        })
       }
     }
   }
