@@ -10,16 +10,52 @@
     <Loading :value="fetching" />
   
     <v-card>
-      <v-layout row v-if="data.app && data.app.name">
+      <v-layout row v-if="data.app">
           <v-card tile flat>
-          <v-card-text>
-              {{ data.app.name }}
-              {{ data.app.version }}
-          </v-card-text>
+            <v-card-text>
+                <div v-if="data.app.name">
+                  <h2>{{ data.app.name }}</h2>
+                  <p>{{ data.app.version }}</p>
+
+                  <div v-if="data.app.name=='git'">
+                    <h3>web hook url</h3>
+
+                    <p>
+                      {{data.app.webhook_url}}
+                      <Copy :val="data.app.webhook_url" />
+                    </p>
+                  </div>
+                </div>
+                <div v-else>
+                  Directory not empty
+                </div>
+            </v-card-text>
           </v-card>
       </v-layout>
 
       <div v-else>
+
+          <v-layout row>
+            <v-flex xs6>
+              <v-card tile flat>
+                <v-card-text>Git:</v-card-text>
+              </v-card>
+            </v-flex>
+            <v-flex xs6>
+              <v-card tile flat>
+              <v-card-text>
+                  <v-btn
+                      :disabled="loading"
+                      :loading="loading"
+                      @click="install('git')"
+                      >
+                      Install Git Repo
+                  </v-btn>
+              </v-card-text>
+              </v-card>
+            </v-flex>
+          </v-layout>
+
           <v-layout row>
             <v-flex xs6>
               <v-card tile flat>
@@ -65,7 +101,7 @@
           <v-layout row>
             <v-flex xs6>
                 <v-card tile flat>
-                <v-card-text>Drupal:</v-card-text>
+                  <v-card-text>Drupal:</v-card-text>
                 </v-card>
             </v-flex>
             <v-flex xs6>
@@ -86,7 +122,7 @@
           <v-layout row>
             <v-flex xs6>
                 <v-card tile flat>
-                <v-card-text>Magento:</v-card-text>
+                  <v-card-text>Magento:</v-card-text>
                 </v-card>
             </v-flex>
             <v-flex xs6>
@@ -107,7 +143,7 @@
           <v-layout row>
             <v-flex xs6>
                 <v-card tile flat>
-                <v-card-text>Roundcubemail:</v-card-text>
+                  <v-card-text>Roundcubemail:</v-card-text>
                 </v-card>
             </v-flex>
             <v-flex xs6>
@@ -127,6 +163,37 @@
 
       </div>
     </v-card>
+
+    <v-navigation-drawer
+      v-model="drawer"
+      temporary
+      right
+      app
+    >
+      <v-card>
+          <v-card-title>
+            Git
+          </v-card-title>
+
+          <v-card-text>
+            <v-text-field
+              v-model="data.git_url"
+              label="Git URL"
+              required
+            ></v-text-field>
+                        
+            <v-btn
+              :disabled="fetching"
+              :loading="fetching"
+              color="success"
+              @click="submitGit()"
+            >
+              Save
+            </v-btn>
+          </v-card-text>
+      </v-card>
+    </v-navigation-drawer>
+
   </div>
 </template>
 
@@ -144,16 +211,10 @@
       return {
         loading: false,
         domainId: null,
-        post: null,
         error: null,
-        data: {
-          disk_usage: 0,
-          server: {},
-          app: {}
-        },
-        details: '',
+        data: {},
         fetching: true,
-        copyText: 'Copy'
+        drawer: false
       }
     },
     created () {
@@ -166,16 +227,6 @@
       '$route': 'fetchData'
     },
     methods: {
-      format: function(size) {
-        if (size === '' || size === -1) {
-          return ''
-        }
-
-        var si
-        for(si = 0; size >= 1024; size /= 1024, si++) {}
-
-        return '' + Math.round(size) + 'KMGT'.substr(si, 1)
-      },
       fetchData () {        
         var self = this
         this.error = ''
@@ -196,7 +247,12 @@
           self.fetching = false
         })
       },
-      install (app) { 
+      install (app) {
+        if (app === 'git') {
+          this.drawer = true
+          return
+        }
+
         var self = this
         this.error = ''
         this.fetching = true
@@ -219,6 +275,32 @@
           self.fetching = false
           self.loading = false
         })
+      },
+      submitGit () {
+        var self = this
+
+        if (this.data.git_url) {
+          this.fetching = true
+          this.error = ''
+
+          api.post('domains/' + this.domainId + '/install', {git_url: this.data.git_url})
+          .then(function (response) {
+            console.log(response)
+            
+            if (!response.data.success) {
+              self.error = response.data.error
+            } else {
+              self.drawer = false
+              self.fetchData()
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+          .finally(function() {
+            self.fetching = false
+          })
+        }
       }
     }
   }

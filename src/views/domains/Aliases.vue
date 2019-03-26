@@ -65,12 +65,11 @@
     </v-card>
 
     <v-navigation-drawer
-      v-model="aliasDrawer"
+      v-model="drawer"
       temporary
       right
       app
     >
-
       <v-card>
           <v-card-title>
             Domain alias
@@ -99,7 +98,6 @@
             </v-btn>
           </v-card-text>
       </v-card>
-
     </v-navigation-drawer>
   </div>  
 </template>
@@ -139,7 +137,7 @@
           dns: true
         },
         copyText: 'Copy',
-        aliasDrawer: false,
+        drawer: false,
         timer: null
       }
     },
@@ -193,7 +191,7 @@
       },
       addAlias () {
         this.alias.domain = ''
-        this.aliasDrawer = true
+        this.drawer = true
       },
       submitAlias() {
         this.saveAlias();
@@ -224,7 +222,7 @@
                 self.error = response.data.error
               }
             } else {
-              self.aliasDrawer = false
+              self.drawer = false
               self.fetchData()
             }
           })

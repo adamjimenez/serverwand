@@ -15,8 +15,8 @@
         <v-flex xs12>
           <v-card tile flat>
               <v-card-text>
-              <strong>Warning: Domain does not point to: {{data.server.ip}} <Copy :val="data.server.ip" /> ({{data.dns.error}})</strong>
-              <v-btn v-if="data.dns.not_set" @click="fixDomainDns(data.domain)">Fix</v-btn>
+                <strong>Warning: Domain does not point to: {{data.server.ip}} <Copy :val="data.server.ip" /> ({{data.dns.error}})</strong>
+                <v-btn v-if="data.dns.not_set" @click="fixDomainDns(data.domain)">Fix</v-btn>
               </v-card-text>
           </v-card>
         </v-flex>
@@ -31,7 +31,7 @@
           <v-flex xs6>
           <v-card tile flat>
               <v-card-text>
-              {{ format(data.disk_usage) }}
+                {{ format(data.disk_usage) }}
               </v-card-text>
           </v-card>
         </v-flex>
@@ -48,7 +48,7 @@
           <v-flex xs6>
           <v-card tile flat>
               <v-card-text>
-              {{data.domain}}
+                {{data.domain}}
               <Copy :val="data.domain" />
               </v-card-text>
           </v-card>
@@ -66,8 +66,8 @@
           <v-flex xs6>
           <v-card tile flat>
               <v-card-text>
-              {{data.domain}}
-              <Copy :val="data.domain" />
+                {{data.domain}}
+                <Copy :val="data.domain" />
               </v-card-text>
           </v-card>
         </v-flex>
@@ -87,7 +87,7 @@
                 <v-icon slot="actions" color="primary">$vuetify.icons.expand</v-icon>
                 <div slot="header">Reset password</div>
                 <v-card tile flat>
-                <v-card-text>                                
+                  <v-card-text>                                
                     <v-text-field
                     v-model="password"
                     :append-icon="showPassword ? 'visibility_off' : 'visibility'"
@@ -99,10 +99,10 @@
                     counter
                     @click:append="showPassword = !showPassword"
                     ></v-text-field>
-                </v-card-text>
-                <v-card-actions>
-                    <v-btn color="primary" flat @click="submitPassword">Submit</v-btn>
-                </v-card-actions>
+                  </v-card-text>
+                  <v-card-actions>
+                      <v-btn color="primary" flat @click="submitPassword">Submit</v-btn>
+                  </v-card-actions>
                 </v-card>
             </v-expansion-panel-content>
         </v-expansion-panel>
