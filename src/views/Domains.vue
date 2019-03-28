@@ -14,54 +14,49 @@
           <div class="headline">Domains</div>
         </v-card-title>
 
-        <v-card-text>
-          <v-select
-          v-model="server"
-          :items="server_opts"
-          label="Server"
-          ></v-select>  
-        </v-card-text>
+        <v-card tile flat>
+          <v-card-text>
+            <v-select
+              v-model="server"
+              :items="server_opts"
+              label="Server"
+            ></v-select>
+          </v-card-text>
+        </v-card>
 
         <Loading :value="loading" />
 
-        <v-list two-line v-if="filtered.length">
-          <template v-for="(item, index) in filtered">
-            <v-list-tile
-              v-if="index >= (page-1)*items_per_page && index < page*items_per_page"
-              :key="item.name"
-            >              
-                <v-list-tile-avatar>
-                  <v-icon>fas fa-globe</v-icon>
-                </v-list-tile-avatar>
-
-                <v-list-tile-content>
-                  <router-link :to="'/domains/' + item.id + '/summary'"> 
-                    <v-list-tile-title v-html="item.domain"></v-list-tile-title>
-                    <v-list-tile-sub-title>{{servers[item.server]}}</v-list-tile-sub-title>
-                  </router-link>
-                </v-list-tile-content>
-            </v-list-tile>
-          </template>
-        </v-list>
-
-        <v-list v-else>
-          <v-list-tile>
-            <v-list-tile-content>
-              <v-list-tile-title>
-                <router-link to="/domains/create">
-                    Add a domain
-                </router-link>
-              </v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
-
-        <div 
-          v-if="filtered.length > items_per_page"
-          class="text-xs-center"
+        <v-data-table
+          :headers="headers"
+          :items="filtered"
+          hide-actions
+          :pagination.sync="pagination"
+          class="results"
         >
-          <v-pagination
-            v-model="page"
+          <template v-slot:items="filtered">
+            <td>
+              <v-list-tile>
+                  <v-list-tile-avatar>
+                    <v-icon>fas fa-globe</v-icon>
+                  </v-list-tile-avatar>
+
+                  <router-link :to="'/domains/' + filtered.item.id + '/summary'"> 
+                    <v-list-tile-title v-html="filtered.item.domain"></v-list-tile-title>
+                    <v-list-tile-sub-title>{{servers[filtered.item.server]}}</v-list-tile-sub-title>
+                  </router-link>
+              </v-list-tile>
+            </td>
+            <td>
+              {{filtered.item.ip}}
+            </td>
+            <td>
+              {{filtered.item.mx}}
+            </td>
+          </template>
+        </v-data-table>
+        <div class="text-xs-center pt-2">
+          <v-pagination 
+            v-model="pagination.page" 
             :length="pages"
           ></v-pagination>
         </div>
@@ -90,7 +85,28 @@
         pages: 1,
         items_per_page: 10,
         server: null,
-        server_opts: []
+        server_opts: [],
+        searchPanel: [false],
+
+        search: '',
+        pagination: {
+          rowsPerPage: 10
+        },
+        selected: [],
+        headers: [
+          {
+            text: 'Domain ',
+            value: 'domain'
+          },
+          {
+            text: 'IP ',
+            value: 'ip'
+          },
+          {
+            text: 'MX ',
+            value: 'mx'
+          }
+        ]
       }
     },
     created () {
@@ -156,7 +172,7 @@
 </script>
 
 <style>
-a {
-  color: inherit;
+.results a {
+  color: inherit !important;
 }
 </style>

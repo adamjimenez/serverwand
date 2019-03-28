@@ -17,10 +17,10 @@
                 <v-layout row v-if="item.dns.A != data.server.ip">
                     <v-flex xs12>
                     <v-card tile flat>
-                        <v-card-text>
-                        <strong>Warning: Domain does not point to: {{data.server.ip}} <Copy :val="data.server.ip" /> ({{item.dns.error}})</strong>
+                      <v-card-text>
+                        <strong>DNS mismatch: {{item.dns.A}} != {{data.server.ip}}</strong>
                         <v-btn v-if="item.dns.not_set" @click="fixAliasDns(item.domain)">Fix</v-btn>
-                        </v-card-text>
+                      </v-card-text>
                     </v-card>
                     </v-flex>
                 </v-layout>
@@ -254,8 +254,6 @@
             })
             .catch(function (error) {
               console.log(error)
-            })
-            .finally(function() {
               self.fetching = false
             })
           }

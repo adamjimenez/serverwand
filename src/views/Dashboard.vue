@@ -17,7 +17,7 @@
         </v-card-title>
 
 
-        <v-list two-line v-if="servers.length">
+        <v-list two-line v-if="servers.length" class="results">
           <template v-for="(item, index) in servers">
             <v-list-tile
               :key="item.name"
@@ -56,7 +56,7 @@
           <div class="headline">Domains</div>
         </v-card-title>
 
-        <v-list two-line v-if="domains.length">
+        <v-list two-line v-if="domains.length" class="results">
           <template v-for="(item, index) in domains">
             <v-divider
               v-if="item.divider"
@@ -171,7 +171,7 @@
 </script>
 
 <style>
-a {
+.results a {
   color: inherit;
 }
 </style>

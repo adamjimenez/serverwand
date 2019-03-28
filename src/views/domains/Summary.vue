@@ -15,7 +15,7 @@
         <v-flex xs12>
           <v-card tile flat>
               <v-card-text>
-                <strong>Warning: Domain does not point to: {{data.server.ip}} <Copy :val="data.server.ip" /> ({{data.dns.error}})</strong>
+                <strong>DNS mismtach: {{data.dns.A}} != {{data.server.ip}}</strong>
                 <v-btn v-if="data.dns.not_set" @click="fixDomainDns(data.domain)">Fix</v-btn>
               </v-card-text>
           </v-card>
