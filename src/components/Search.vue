@@ -1,11 +1,11 @@
 <template>
     <v-autocomplete
-    v-model="model"
-    :items="items"
-    label="Search"
-    persistent-hint
-    @input="afterselection" 
-    ref="autocomplete"
+      v-model="model"
+      :items="items"
+      label="Search"
+      persistent-hint
+      @input="afterselection" 
+      ref="autocomplete"
     >
       <template
         slot="item"
@@ -18,7 +18,7 @@
           <v-list-tile-avatar>
             <v-icon>{{data.item.avatar}}</v-icon>
           </v-list-tile-avatar>
-          <v-list-tile-content>            
+          <v-list-tile-content class="results">
             <router-link :to="data.item.value"> 
               <v-list-tile-title>{{data.item.text}}</v-list-tile-title>
               <v-list-tile-sub-title v-html="data.item.subtitle"></v-list-tile-sub-title>
@@ -103,3 +103,9 @@
     }
   }
 </script>
+
+<style>
+.results a {
+  color: inherit !important;
+}
+</style>

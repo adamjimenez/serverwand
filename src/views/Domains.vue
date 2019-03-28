@@ -52,6 +52,9 @@
             <td>
               {{filtered.item.mx}}
             </td>
+            <td>
+              {{format(filtered.item.usage)}}
+            </td>
           </template>
         </v-data-table>
         <div class="text-xs-center pt-2">
@@ -105,6 +108,10 @@
           {
             text: 'MX ',
             value: 'mx'
+          },
+          {
+            text: 'Usage ',
+            value: 'usage'
           }
         ]
       }
@@ -127,6 +134,16 @@
       }
     },
     methods: {
+      format: function(size) {
+        if (size === '' || size === -1) {
+          return ''
+        }
+
+        var si
+        for(si = 0; size >= 1024; size /= 1024, si++) {}
+
+        return '' + Math.round(size) + 'KMGT'.substr(si, 1)
+      },
       fetchData () {        
         var self = this;
         this.error = ''
@@ -174,5 +191,8 @@
 <style>
 .results a {
   color: inherit !important;
+}
+.results .v-list__tile__sub-title {
+  opacity: 0.7;
 }
 </style>
