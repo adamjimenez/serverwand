@@ -14,7 +14,7 @@
 
     <Loading :value="loading" />
 
-    <v-item-group v-if="!this.$route.params.id">
+    <v-item-group v-if="!serverId">
         <v-subheader>
           Choose a VPS provider below or add a custom server
         </v-subheader>
@@ -51,7 +51,7 @@
     </v-item-group>
 
     <v-form
-      v-if="data.provider"
+      v-if="data.provider || serverId"
       ref="form"
       v-model="valid"
       lazy-validation
@@ -59,16 +59,16 @@
 
       <v-card>
         <v-card-text>
-          <p v-if="data.provider=='custom' && !this.$route.params.id">
+          <p v-if="data.provider=='custom' && !serverId">
             Configure a server which is freshly installed with Ubuntu 18.04 LTS<br>
             Once configured, root login will be disabled for increased security
           </p>
 
-          <p v-if="data.provider=='linode' && !this.$route.params.id">
+          <p v-if="data.provider=='linode' && !serverId">
             Create a new Linode
           </p>
 
-          <p v-if="data.provider=='digitalocean' && !this.$route.params.id">
+          <p v-if="data.provider=='digitalocean' && !serverId">
             Create a new Droplet
           </p>
 
@@ -84,14 +84,14 @@
           >
 
             <v-select
-                v-if="!this.$route.params.id"
+                v-if="!serverId"
                 v-model="data.region"
                 :items="regions"
                 label="Region"
             ></v-select>
 
             <v-select
-                v-if="!this.$route.params.id"
+                v-if="!serverId"
                 v-model="data.type"
                 :items="types"
                 label="Type"

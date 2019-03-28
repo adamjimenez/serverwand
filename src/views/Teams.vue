@@ -13,7 +13,7 @@
 
         <Loading :value="loading" />
         
-        <v-list two-line v-if="items.length">
+        <v-list two-line v-if="items.length" class="results">
           <template v-for="(item, index) in items">
             <v-list-tile
               v-if="index >= (page-1)*items_per_page && index < page*items_per_page"
@@ -115,7 +115,7 @@
 
 
 <style>
-a {
+.results a {
   color: inherit;
 }
 </style>
