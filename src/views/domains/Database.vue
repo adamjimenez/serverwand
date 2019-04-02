@@ -30,7 +30,7 @@
                 <form :action="'http://' + data.server.ip + '/phpmyadmin/'" method="post" target="_blank">
                   <input type="hidden" name="pma_username" :value="data.db_name">
                   <button type="submit">
-                    PhpMyadAdmin
+                    PhpMyAdmin
                     <v-icon right>open_in_new</v-icon>
                   </button>
                 </form>

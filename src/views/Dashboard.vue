@@ -21,14 +21,13 @@
           <template v-for="(item, index) in servers">
             <v-list-tile
               :key="item.name"
-              @click="goto('/servers/' + item.id + '/summary')"
             >
               <v-list-tile-avatar>
                 <v-icon>fas fa-server</v-icon>
               </v-list-tile-avatar>
 
               <v-list-tile-content>
-                <router-link :to="'/summary/' + item.id + '/summary'"> 
+                <router-link :to="'/servers/' + item.id + '/summary'"> 
                   <v-list-tile-title>{{item.name}}</v-list-tile-title>
                   <v-list-tile-sub-title>{{item.hostname}}</v-list-tile-sub-title>
                 </router-link>
