@@ -18,12 +18,33 @@
                   <p>{{ data.app.version }}</p>
 
                   <div v-if="data.app.name=='git'">
-                    <h3>web hook url</h3>
+                    <v-layout row>
+                      <v-flex xs6>
+                        <v-text-field
+                          v-model="data.app.ssh_key"
+                          label="SSH key"
+                          readonly
+                        ></v-text-field>
+                      </v-flex>
+                      <v-flex xs6>
+                        <Copy :val="data.app.ssh_key" />
+                      </v-flex>
+                    </v-layout>
+                  </div>
 
-                    <p>
-                      {{data.app.webhook_url}}
-                      <Copy :val="data.app.webhook_url" />
-                    </p>
+                  <div v-if="data.app.name=='git'">
+                    <v-layout row>
+                      <v-flex xs6>
+                        <v-text-field
+                          v-model="data.app.webhook_url"
+                          label="web hook url"
+                          readonly
+                        ></v-text-field>
+                      </v-flex>
+                      <v-flex xs6>
+                        <Copy :val="data.app.webhook_url" />
+                      </v-flex>
+                    </v-layout>
                   </div>
                 </div>
                 <div v-else>
