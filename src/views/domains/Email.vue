@@ -58,9 +58,9 @@
                 <v-flex xs6>
                   <v-card tile flat>
                     <v-card-text>
-                      {{item.user}}
+                      {{item.user}} ({{ format(item.disk_usage) }})
                       <div v-if="item.destination">
-                      <v-icon left>fas fa-long-arrow-alt-right</v-icon> {{item.destination}}
+                        <v-icon left>fas fa-long-arrow-alt-right</v-icon> {{item.destination}}
                       </div>
                     </v-card-text>
                   </v-card>
