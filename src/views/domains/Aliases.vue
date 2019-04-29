@@ -204,13 +204,19 @@
           this.fetching = true
           this.error = ''
 
+          var child
+          if (!noAuthPrompt) {
+            child = window.open('/loading')
+          }
+
           api.saveAlias(this.domainId, {alias: this.alias.domain, dns: this.alias.dns})
           .then(function (response) {
             console.log(response)
             
             if (!response.data.success) {
               if (response.data.error == 'auth' && !noAuthPrompt) {
-                var child = window.open('https://serverwand.com/account/services/' + self.data.server.dns)
+                child.location = 'https://serverwand.com/account/services/' + self.data.server.dns
+
                 var interval = setInterval(function() {
                     if (child.closed) {
                         clearInterval(interval)
@@ -222,6 +228,9 @@
                 self.error = response.data.error
               }
             } else {
+              if (child) {
+                child.close()
+              }
               self.drawer = false
               self.fetchData()
             }

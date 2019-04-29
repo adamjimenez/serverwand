@@ -24,7 +24,7 @@
               </v-list-tile-avatar>
 
               <v-list-tile-content>
-                <router-link :to="'/domains/' + item.id + '/summary'"> 
+                <router-link :to="'/teams/' + item.id + '/members'"> 
                   <v-list-tile-title v-html="item.name"></v-list-tile-title>
                   <v-list-tile-sub-title>
                     {{item.members}} member{{item.members!=1 ? 's' : ''}},

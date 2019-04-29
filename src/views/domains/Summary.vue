@@ -229,13 +229,19 @@
         this.error = ''
         this.fetching = true
 
+        var child
+        if (!noAuthPrompt) {
+            child = window.open('/loading')
+        }
+
         api.get('domains/' + self.domainId + '/fixdns')
         .then(function (response) {
           console.log(response)
           
           if (!response.data.success) {
             if (response.data.error == 'auth' && !noAuthPrompt) {
-              var child = window.open('https://serverwand.com/account/services/' + self.data.server.dns)
+              child.location = 'https://serverwand.com/account/services/' + self.data.server.dns
+
               var interval = setInterval(function() {
                   if (child.closed) {
                       clearInterval(interval)
@@ -247,6 +253,9 @@
               self.error = response.data.error
             }
           } else {
+            if (child) {
+              child.close()
+            }
             self.fetchData()
           }
         })

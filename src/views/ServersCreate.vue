@@ -142,7 +142,6 @@
           <v-checkbox
             v-model="data.webserver"
             label="Webserver"
-            readonly
           ></v-checkbox>
           
           <v-checkbox
@@ -371,15 +370,21 @@
           return
         }
 
+        var child
+        if (!noAuthPrompt) {
+          child = window.open('loading')
+        }
         var self = this
         this.loading = true
+        self.regions = []
+        self.types = []
 
         api.post('providers?cmd=options', {provider: provider})
         .then(function (response) {
           console.log(response)
 
           if (response.data.require_auth && !noAuthPrompt) {
-            var child = window.open('https://serverwand.com/account/services/' + provider)
+            child.location = 'https://serverwand.com/account/services/' + provider
 
             var interval = setInterval(function() {
                 if (child.closed) {
@@ -389,11 +394,17 @@
                 }
             }, 500)
           } else if(!response.data.require_auth) {
-            self.regions = response.data.options.regions;
-            self.types = response.data.options.types;
+            if (child) {
+              child.close()
+            }
+            self.regions = response.data.options.regions
+            self.types = response.data.options.types
           }
         })
         .catch(function (error) {
+          if (child) {
+            child.close()
+          }
           console.log(error)
         })
         .finally(function() {

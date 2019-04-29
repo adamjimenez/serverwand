@@ -163,5 +163,9 @@ export default new Router({
         },
       ]
     },
+    {
+      path: '/loading',
+      component: () => import('./views/Loading.vue')
+    },
   ]
 })
