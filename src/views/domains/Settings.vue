@@ -24,9 +24,20 @@
     <v-card>
       <v-card-title primary-title>
         <v-btn
+          @click="download()"
+        >
+          Download site
+        </v-btn>
+      </v-card-title>
+    </v-card>
+
+    <v-card>
+      <v-card-title primary-title>
+        <v-btn
         :disabled="fetching"
         :loading="loading=='delete'"
         @click="deleteDomain"
+        color="error"
         >
         Delete Domain
         </v-btn>
@@ -151,6 +162,27 @@
               self.loading = false
             })
           }
+        })
+      },
+      download() {
+        var self = this
+        this.fetching = true
+        
+        api.get('domains/' + this.domainId + '/download')
+        .then(function (response) {
+          console.log(response)
+          
+          if (!response.data.success) {
+            self.error = response.data.error
+          } else {
+            window.open(response.data.download_url)
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+        .finally(function() {
+          self.fetching = false
         })
       }
     }

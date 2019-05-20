@@ -52,12 +52,6 @@
                     Directory contains files
                   </v-subheader>
                 </div>
-
-                <v-btn
-                  @click="download()"
-                >
-                  Download site
-                </v-btn>
             </v-card-text>
           </v-card>
       </v-layout>
@@ -67,7 +61,7 @@
           <v-layout row>
             <v-flex xs6>
               <v-card tile flat>
-                <v-card-text>Git:</v-card-text>
+                <v-card-text>Git Repo:</v-card-text>
               </v-card>
             </v-flex>
             <v-flex xs6>
@@ -78,7 +72,7 @@
                       :loading="loading"
                       @click="install('git')"
                       >
-                      Install Git Repo
+                      Install
                   </v-btn>
               </v-card-text>
               </v-card>
@@ -99,7 +93,7 @@
                       :loading="loading"
                       @click="install('wordpress')"
                       >
-                      Install Wordpress
+                      Install
                   </v-btn>
               </v-card-text>
               </v-card>
@@ -120,7 +114,7 @@
                         :loading="loading"
                         @click="install('joomla')"
                         >
-                        Install Joomla
+                        Install
                     </v-btn>
                 </v-card-text>
                 </v-card>
@@ -141,7 +135,7 @@
                         :loading="loading"
                         @click="install('drupal')"
                         >
-                        Install Drupal
+                        Install
                     </v-btn>
                 </v-card-text>
                 </v-card>
@@ -162,7 +156,7 @@
                         :loading="loading"
                         @click="install('magento')"
                         >
-                        Install Magento
+                        Install
                     </v-btn>
                 </v-card-text>
                 </v-card>
@@ -183,7 +177,7 @@
                         :loading="loading"
                         @click="install('roundcubemail')"
                         >
-                        Install Roundcubemail
+                        Install
                     </v-btn>
                 </v-card-text>
                 </v-card>
@@ -330,27 +324,6 @@
             self.fetching = false
           })
         }
-      },
-      download() {
-        var self = this
-        this.fetching = true
-        
-        api.get('domains/' + this.domainId + '/download')
-        .then(function (response) {
-          console.log(response)
-          
-          if (!response.data.success) {
-            self.error = response.data.error
-          } else {
-            window.open(response.data.download_url)
-          }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.fetching = false
-        })
       }
     }
   }
