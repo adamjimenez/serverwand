@@ -50,6 +50,16 @@
       </v-expansion-panel>
 
       <v-card-text>
+        <v-subheader>Preferences</v-subheader>
+
+        <v-checkbox
+          v-model="data.emails"
+          label="Receive email updates"
+          @click="toggleEmails()"
+        ></v-checkbox>
+      </v-card-text>
+
+      <v-card-text>
         <v-subheader>Security</v-subheader>
 
         <v-checkbox
@@ -297,6 +307,32 @@
         })
 
         //this.fetchData()
+      },
+      toggleEmails() {
+        var self = this
+        this.loading = true
+
+        if (self.mp.password) {
+          masterPassword = sha256(self.mp.password)
+        }
+
+        api.post('settings/profile', {
+          emails: self.data.emails
+        })
+        .then(function (response) {
+          console.log(response)
+          if (response.data.success) {
+              self.fetchData()
+          } else {
+              self.error = response.data.error;
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+        .finally(function (error) {
+          self.loading = false
+        })
       }
     }
   }
