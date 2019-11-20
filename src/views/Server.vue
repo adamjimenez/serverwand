@@ -1,5 +1,5 @@
 <template>
-  <v-layout>
+  <v-layout row>
     <v-flex>
       <v-alert
         :value="error.length>0"

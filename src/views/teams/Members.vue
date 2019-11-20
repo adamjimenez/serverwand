@@ -23,11 +23,12 @@
 
               <v-list-item-action>
                 <v-btn
-                :disabled="fetching"
-                :loading="fetching"
-                @click="deleteItem(item.user)"
+                  icon
+                  :disabled="fetching"
+                  :loading="fetching"
+                  @click="deleteItem(item.user)"
                 >
-                  Delete
+                  <v-icon small>delete</v-icon>
                 </v-btn>
               </v-list-item-action>
             </template>
@@ -182,27 +183,31 @@
         }
       },
       deleteItem (user) { 
-        var self = this
-        this.error = ''
-        this.dialog = true
-        this.loading = 'delete'
+        this.$confirm('Delete member?').then(res => {
+          if (res) {
+            var self = this
+            this.error = ''
+            this.dialog = true
+            this.loading = 'delete'
 
-        api.post('teams/' + this.id + '/members', {delete: 1, user: user})
-        .then(function (response) {
-          console.log(response)
-          
-          if (response.data.error) {
-            self.error = response.data.error
-          } else {
-            self.fetchData()
+            api.post('teams/' + this.id + '/members', {delete: 1, user: user})
+            .then(function (response) {
+              console.log(response)
+              
+              if (response.data.error) {
+                self.error = response.data.error
+              } else {
+                self.fetchData()
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+            .finally(function() {
+              self.dialog = false
+              self.loading = ''
+            })
           }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.dialog = false
-          self.loading = ''
         })
       }
     }

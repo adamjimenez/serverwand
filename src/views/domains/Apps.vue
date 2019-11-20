@@ -74,22 +74,13 @@
           <v-list-item
             :key="`item-${i}`"
             :value="item"
+            @click="install(item.name)"
           >
               <v-list-item-content>
                 <v-list-item-title>
                   {{item.label}}
                 </v-list-item-title>
               </v-list-item-content>
-
-              <v-list-item-action>
-                <v-btn
-                    :disabled="loading"
-                    :loading="loading"
-                    @click="install(item.name)"
-                    >
-                    Install
-                </v-btn>
-              </v-list-item-action>
           </v-list-item>
         </template>
 
@@ -209,27 +200,31 @@
           return
         }
 
-        var self = this
-        this.error = ''
-        this.fetching = true
-        this.loading = true
+        this.$confirm('Install ' + app + '?').then(res => {
+          if (res) {
+            var self = this
+            this.error = ''
+            this.fetching = true
+            this.loading = true
 
-        api.get('domains/' + this.$route.params.id + '/install/' + app)
-        .then(function (response) {
-          console.log(response)
-          
-          if (response.data.error) {
-            self.error = response.data.error
-            self.fetching = false
-            self.loading = false
-          } else {
-            self.fetchData();
+            api.get('domains/' + this.$route.params.id + '/install/' + app)
+            .then(function (response) {
+              console.log(response)
+              
+              if (response.data.error) {
+                self.error = response.data.error
+                self.fetching = false
+                self.loading = false
+              } else {
+                self.fetchData();
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+              self.fetching = false
+              self.loading = false
+            })
           }
-        })
-        .catch(function (error) {
-          console.log(error)
-          self.fetching = false
-          self.loading = false
         })
       },
       submitGit () {

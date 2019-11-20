@@ -34,12 +34,12 @@
     <v-card>
       <v-card-title primary-title>
         <v-btn
-        :disabled="fetching"
-        :loading="loading=='delete'"
-        @click="deleteDomain"
-        color="error"
+          :disabled="fetching"
+          :loading="loading=='delete'"
+          @click="deleteDomain"
+          color="error"
         >
-        Delete Domain
+          Delete Domain
         </v-btn>
       </v-card-title>
     </v-card>

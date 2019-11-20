@@ -26,6 +26,17 @@
                 <v-list-item-title>{{item.name}}</v-list-item-title>
                 <v-list-item-subtitle>{{format(item.size)}}</v-list-item-subtitle>
               </v-list-item-content>
+
+              <v-list-item-action>
+                <v-btn
+                  icon
+                  @click="deleteBackup()"
+                  :disabled="!selected"
+                >
+                  <v-icon small>delete</v-icon>
+                </v-btn>
+              </v-list-item-action>
+
             </template>
           </v-list-item>
         </template>
@@ -38,19 +49,6 @@
 
   </v-card>
 </template>
-
-    <v-card>
-        <div>
-          <v-card-title primary-title>
-            <v-btn
-                @click="deleteBackup()"
-                :disabled="!selected"
-            >
-                Delete
-            </v-btn>
-          </v-card-title>
-        </div>
-    </v-card>
 
   </div>
 </template>
@@ -125,25 +123,27 @@
         })
       },
       deleteBackup() {
-        var self = this
-        self.fetching = true
+        this.$confirm('Delete backup?').then(res => {
+          if (res) {
+            var self = this
+            self.fetching = true
 
-        var ids = []
-        this.items.forEach(element => {
-            if (element.selected) {
-                ids.push(element.name)
-            }
-        })
+            var ids = []
+            this.items.forEach(element => {
+                if (element.selected) {
+                    ids.push(element.name)
+                }
+            })
 
-        api.post('servers/' + this.serverId + '/deletebackup', {ids: ids})
-        .then(function () {
-            self.fetchData()
-        })
-        .catch(function (error) {
-          console.log(error)
-          self.fetching = false
-        })
-        .finally(function() {
+            api.post('servers/' + this.serverId + '/deletebackup', {ids: ids})
+            .then(function () {
+                self.fetchData()
+            })
+            .catch(function (error) {
+              console.log(error)
+              self.fetching = false
+            })
+          }
         })
       }
     }

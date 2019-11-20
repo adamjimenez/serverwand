@@ -42,11 +42,12 @@
 
               <v-list-item-action>
                 <v-btn
-                :disabled="fetching"
-                :loading="fetching"
-                @click="deleteItem(item.id)"
+                  icon
+                  :disabled="fetching"
+                  :loading="fetching"
+                  @click="deleteItem(item.id)"
                 >
-                  Delete
+                  <v-icon small>delete</v-icon>
                 </v-btn>
               </v-list-item-action>
             </template>
@@ -215,25 +216,29 @@
         this.drawer = true
       },
       deleteItem(id) {
-        var self = this
-        this.fetching = true
-        this.error = ''
+        this.$confirm('Delete rule?').then(res => {
+          if (res) {        
+            var self = this
+            this.fetching = true
+            this.error = ''
 
-        api.deleteFirewallRule(this.serverId, {id: id})
-        .then(function (response) {
-          console.log(response)
-          
-          if (!response.data.success) {
-            self.error = response.data.error;
-          } else {
-            self.fetchData()
+            api.deleteFirewallRule(this.serverId, {id: id})
+            .then(function (response) {
+              console.log(response)
+              
+              if (!response.data.success) {
+                self.error = response.data.error;
+              } else {
+                self.fetchData()
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+            .finally(function() {
+              self.fetching = false
+            })
           }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.fetching = false
         })
       },
       saveItem () {

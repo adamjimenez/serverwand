@@ -20,6 +20,7 @@
           <v-list-item
             :key="`item-${i}`"
             :value="item"
+            @click="editItem(item.name)"
           >
             <template v-slot:default="{ active, toggle }">
               <v-list-item-content>
@@ -30,18 +31,13 @@
 
               <v-list-item-action>
                 <v-btn
-                @click="editItem(item.name)"
+                  icon
+                  :disabled="fetching"
+                  :loading="fetching"
+                  @click="deleteItem(item.name)"
+                  @click.stop
                 >
-                  Edit
-                </v-btn>
-              </v-list-item-action>
-              <v-list-item-action>
-                <v-btn
-                :disabled="fetching"
-                :loading="fetching"
-                @click="deleteItem(item.name)"
-                >
-                  Delete
+                  <v-icon small>delete</v-icon>
                 </v-btn>
               </v-list-item-action>
             </template>
@@ -56,19 +52,19 @@
             <div>
               <v-card-title primary-title>
                 <v-btn
-                @click="addItem()"
+                  @click="addItem()"
                 >
-                Add system user
+                  Add system user
                 </v-btn>
               </v-card-title>
             </div>
         </v-card>
 
         <v-navigation-drawer
-            app
-            v-model="userDrawer"
-            temporary
-            right
+          app
+          v-model="userDrawer"
+          temporary
+          right
         >
           <v-card>
               <v-card-title>
@@ -77,26 +73,26 @@
 
               <v-card-text>
                 <v-text-field
-                    v-model="system_user.user"
-                    label="User"
-                    required
+                  v-model="system_user.user"
+                  label="User"
+                  required
                 ></v-text-field>
                 
                 <v-text-field              
-                    v-model="system_user.password"
-                    type="password"
-                    label="Password"
-                    required
-                    autocomplete="new-password"
+                  v-model="system_user.password"
+                  type="password"
+                  label="Password"
+                  required
+                  autocomplete="new-password"
                 ></v-text-field>
                 
                 <v-btn
-                    :disabled="fetching"
-                    :loading="fetching"
-                    color="success"
-                    @click="saveUser"
+                  :disabled="fetching"
+                  :loading="fetching"
+                  color="success"
+                  @click="saveUser"
                 >
-                    Save
+                  Save
                 </v-btn>
               </v-card-text>
           </v-card>
@@ -179,25 +175,31 @@
         this.userDrawer = true
       },
       deleteItem(user) {
-        var self = this
-        this.fetching = true
-        this.error = ''
+        this.$confirm('Delete ' + user + '?').then(res => {
+          if (res) {
+            var self = this
+            this.fetching = true
+            this.error = ''
 
-        api.deleteSystemUser(this.serverId, {user: user})
-        .then(function (response) {
-          console.log(response)
-          
-          if (!response.data.success) {
-            self.error = response.data.error;
-            self.fetching = false
-          } else {
-            self.fetchData()
+            api.deleteSystemUser(this.serverId, {user: user})
+            .then(function (response) {
+              console.log(response)
+              
+              if (!response.data.success) {
+                self.error = response.data.error;
+                self.fetching = false
+              } else {
+                self.fetchData()
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+              self.fetching = false
+            })
           }
         })
-        .catch(function (error) {
-          console.log(error)
-          self.fetching = false
-        })
+
+        return false
       },
       saveUser () {
         var self = this

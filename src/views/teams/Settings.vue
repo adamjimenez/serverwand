@@ -14,11 +14,12 @@
 
         <div class="ma-3">
           <v-btn
-              :disabled="dialog"
-              :loading="dialog"
-              @click="deleteItem"
-              >
-              Delete
+            :disabled="dialog"
+            :loading="dialog"
+            @click="deleteItem"
+            color="error"
+          >
+            Delete
           </v-btn>
         </div>
       </v-col>

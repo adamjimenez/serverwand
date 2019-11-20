@@ -17,29 +17,30 @@
       <v-col>
         <div class="ma-3">
             <v-btn
-                @click="editServer"
-                >
-                  Edit
+              @click="editServer"
+            >
+              Edit
             </v-btn>
         </div>
 
         <div class="ma-3">
             <v-btn
-                :disabled="fetching"
-                :loading="fetching"
-                @click="deleteServer"
-                >
-                 Disconnect
+              :disabled="fetching"
+              :loading="fetching"
+              @click="reboot"
+            >
+              Reboot
             </v-btn>
         </div>
 
         <div class="ma-3">
             <v-btn
-                :disabled="fetching"
-                :loading="fetching"
-                @click="reboot"
-                >
-                 Reboot
+              :disabled="fetching"
+              :loading="fetching"
+              @click="deleteServer"
+              color="error"
+            >
+              Disconnect
             </v-btn>
         </div>
       </v-col>

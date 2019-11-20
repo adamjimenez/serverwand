@@ -27,7 +27,7 @@
                     </div>
                   </div>
                   
-                  <div style="clear: both; font-size: 12px;">
+                  <div class="pt-3" style="clear: both; font-size: 12px;">
                     <div style="font-size: 20px;">{{data.cores}} core<span v-if="data.cores>1">s</span></div>
                     {{data.cpu}}
                   </div>
@@ -50,7 +50,7 @@
                     </div>
                   </div>
                   
-                  <div style="clear: both;">
+                  <div class="pt-3" style="clear: both;">
                       <v-list-item-title>
                           <v-progress-linear 
                           v-model="data.mem_perc"
@@ -78,7 +78,7 @@
                     </div>
                   </div>
                   
-                  <div style="clear: both;">
+                  <div class="pt-3" style="clear: both;">
                       <v-list-item-title>
                           <v-progress-linear 
                           v-model="data.disk_perc"
@@ -106,7 +106,7 @@
                     </div>
                   </div>
                   
-                  <div style="clear: both; font-size: 14px;">
+                  <div class="pt-3" style="clear: both; font-size: 14px;">
                   {{data.uptime}}
                   </div>
                 </v-card-text>
@@ -116,104 +116,117 @@
          </v-layout>
       </v-container>
 
-      <v-list two-line>                
-        <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title v-html="`Updates`"></v-list-item-title>
-              <v-list-item-subtitle>
-                {{data.updates}} updates, {{data.security_updates}} security updates
-                <span v-if="data.reboot_required">(reboot required)</span>
-              </v-list-item-subtitle>
-            </v-list-item-content>
-        </v-list-item>
-      </v-list>
+      <v-layout row class="mx-1">
+        <v-flex xs6>
+          <v-card>
 
-      <v-list two-line>                
-        <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title v-html="`Hostname`"></v-list-item-title>
-              <v-list-item-subtitle>
-                {{data.hostname}}
-                <Copy :val="data.hostname" />
+            <v-list two-line>
+              <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title v-html="`Updates`"></v-list-item-title>
+                    <v-list-item-subtitle>
+                      {{data.updates}} updates, {{data.security_updates}} security updates
+                      <span v-if="data.reboot_required">(reboot required)</span>
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+              </v-list-item>
+            </v-list>
 
-                <v-tooltip top>
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      v-on="on"
-                      icon
-                      slot="activator"
-                      @click="drawer=true"
-                    >
-                      <v-icon small>fas fa-edit</v-icon>
-                    </v-btn>
-                  
-                    <span>Edit</span>
-                  </template>
-                </v-tooltip>
-              </v-list-item-subtitle>
-            </v-list-item-content>
-        </v-list-item>
-      </v-list>
+            <v-list two-line>
+              <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title v-html="`Hostname`"></v-list-item-title>
+                    <v-list-item-subtitle>
+                      {{data.hostname}}
+                      <Copy :val="data.hostname" />
 
-      <v-list two-line>                
-        <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title v-html="`IP address`"></v-list-item-title>
-              <v-list-item-subtitle>
-                {{data.ip}} <Copy :val="data.ip" />
-              </v-list-item-subtitle>
-            </v-list-item-content>
-        </v-list-item>
-      </v-list>
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on }">
+                          <v-btn
+                            v-on="on"
+                            icon
+                            @click="drawer=true"
+                          >
+                            <v-icon small>fas fa-edit</v-icon>
+                          </v-btn>
+                        </template>                        
+                        <span>Edit</span>
+                      </v-tooltip>
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+              </v-list-item>
+            </v-list>
 
-      <v-list two-line>                
-        <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title v-html="`IPv6 address`"></v-list-item-title>
-              <v-list-item-subtitle>
-                {{data.ipv6}} <Copy :val="data.ipv6" />
-              </v-list-item-subtitle>
-            </v-list-item-content>
-        </v-list-item>
-      </v-list>
+            <v-list two-line>
+              <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title v-html="`IP address`"></v-list-item-title>
+                    <v-list-item-subtitle>
+                      {{data.ip}} <Copy :val="data.ip" />
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+              </v-list-item>
+            </v-list>
 
-      <v-list two-line>                
-        <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title v-html="`Kernel version`"></v-list-item-title>
-              <v-list-item-subtitle>
-                {{ data.kernel }}
-              </v-list-item-subtitle>
-            </v-list-item-content>
-        </v-list-item>
-      </v-list>
+            <v-list two-line>
+              <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title v-html="`IPv6 address`"></v-list-item-title>
+                    <v-list-item-subtitle>
+                      {{data.ipv6}} <Copy :val="data.ipv6" />
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+              </v-list-item>
+            </v-list>
 
-      <v-list two-line>                
-        <v-list-item>
-            <v-list-item-content>
-            <v-list-item-title v-html="`Apache`"></v-list-item-title>
-            <v-list-item-subtitle v-html="data.apache"></v-list-item-subtitle>
-            </v-list-item-content>
-        </v-list-item>
-      </v-list>
+          </v-card>
+        </v-flex>
 
-      <v-list two-line>                
-        <v-list-item>
-            <v-list-item-content>
-            <v-list-item-title v-html="`PHP`"></v-list-item-title>
-            <v-list-item-subtitle v-html="data.php"></v-list-item-subtitle>
-            </v-list-item-content>
-        </v-list-item>
-      </v-list>
+        <v-flex xs6>
+          <v-card>
 
-      <v-list two-line>                
-        <v-list-item>
-            <v-list-item-content>
-            <v-list-item-title v-html="`MariadDb`"></v-list-item-title>
-            <v-list-item-subtitle v-html="data.mariadb"></v-list-item-subtitle>
-            </v-list-item-content>
-        </v-list-item>
-      </v-list>
+            <v-list two-line>
+              <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title v-html="`Kernel version`"></v-list-item-title>
+                    <v-list-item-subtitle>
+                      {{ data.kernel }}
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+              </v-list-item>
+            </v-list>
+
+            <v-list two-line>
+              <v-list-item>
+                  <v-list-item-content>
+                  <v-list-item-title v-html="`Apache`"></v-list-item-title>
+                  <v-list-item-subtitle v-html="data.apache"></v-list-item-subtitle>
+                  </v-list-item-content>
+              </v-list-item>
+            </v-list>
+
+            <v-list two-line>
+              <v-list-item>
+                  <v-list-item-content>
+                  <v-list-item-title v-html="`PHP`"></v-list-item-title>
+                  <v-list-item-subtitle v-html="data.php"></v-list-item-subtitle>
+                  </v-list-item-content>
+              </v-list-item>
+            </v-list>
+
+            <v-list two-line>
+              <v-list-item>
+                  <v-list-item-content>
+                  <v-list-item-title v-html="`MariadDb`"></v-list-item-title>
+                  <v-list-item-subtitle v-html="data.mariadb"></v-list-item-subtitle>
+                  </v-list-item-content>
+              </v-list-item>
+            </v-list>
+            
+          </v-card>
+        </v-flex>
+
+      </v-layout>
     </v-card>
 
     <v-navigation-drawer

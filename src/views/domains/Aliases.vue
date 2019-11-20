@@ -47,11 +47,12 @@
 
               <v-list-item-action>
                 <v-btn
-                :disabled="fetching"
-                :loading="fetching"
-                @click="deleteAlias(item.domain)"
+                  icon
+                  :disabled="fetching"
+                  :loading="fetching"
+                  @click="deleteAlias(item.domain)"
                 >
-                  Delete
+                  <v-icon small>delete</v-icon>
                 </v-btn>
               </v-list-item-action>
             </template>

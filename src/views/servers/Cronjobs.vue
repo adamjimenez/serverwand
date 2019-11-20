@@ -20,6 +20,7 @@
           <v-list-item
             :key="`item-${i}`"
             :value="item"
+            @click="editItem(item)"
           >
             <template v-slot:default="{ active, toggle }">
               <v-list-item-content>
@@ -31,18 +32,13 @@
 
               <v-list-item-action>
                 <v-btn
-                @click="editItem(item)"
+                  icon
+                  :disabled="fetching"
+                  :loading="fetching"
+                  @click="deleteItem(item.line)"
+                  @click.stop
                 >
-                  Edit
-                </v-btn>
-              </v-list-item-action>
-              <v-list-item-action>
-                <v-btn
-                :disabled="fetching"
-                :loading="fetching"
-                @click="deleteItem(item.line)"
-                >
-                  Delete
+                  <v-icon small>delete</v-icon>
                 </v-btn>
               </v-list-item-action>
             </template>
@@ -268,24 +264,28 @@
         this.cronjobDrawer = true
       },
       deleteItem(line) {
-        var self = this
-        this.fetching = true
-        this.error = ''
+        this.$confirm('Delete cron job?').then(res => {
+          if (res) {
+            var self = this
+            this.fetching = true
+            this.error = ''
 
-        api.deleteCronjob(this.serverId, {line: line})
-        .then(function (response) {
-          console.log(response)
-          
-          if (!response.data.success) {
-            self.fetching = false
-            self.error = response.data.error;
-          } else {
-            self.fetchData()
+            api.deleteCronjob(this.serverId, {line: line})
+            .then(function (response) {
+              console.log(response)
+              
+              if (!response.data.success) {
+                self.fetching = false
+                self.error = response.data.error;
+              } else {
+                self.fetchData()
+              }
+            })
+            .catch(function (error) {
+              self.fetching = false
+              console.log(error)
+            })
           }
-        })
-        .catch(function (error) {
-          self.fetching = false
-          console.log(error)
         })
       },
       saveCronjob() {

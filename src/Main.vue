@@ -171,16 +171,6 @@
     created () {      
       var self = this
 
-      this.$vuetify.theme.themes.light.primary = '#A25C57'
-      this.$vuetify.theme.themes.light.secondary = '#4C3148'
-      this.$vuetify.theme.themes.light.accent = '#A25C57'
-      this.$vuetify.theme.themes.light.error = '#b71c1c'
-
-      this.$vuetify.theme.themes.dark.primary = '#A25C57'
-      this.$vuetify.theme.themes.dark.secondary = '#4C3148'
-      this.$vuetify.theme.themes.dark.accent = '#A25C57'
-      this.$vuetify.theme.themes.dark.error = '#b71c1c'
-
       axios.interceptors.response.use(function (response) {
         if (!response) {
           return false
