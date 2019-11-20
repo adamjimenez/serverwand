@@ -9,12 +9,12 @@
         {{error}}
       </v-alert> 
 
-      <v-card>
+      <v-card flat>
         <v-card-title primary-title>
           <div class="headline">Domains</div>
         </v-card-title>
 
-        <v-card tile flat>
+        <v-card flat>
           <v-card-text>
             <v-select
               v-model="server"
@@ -29,40 +29,32 @@
         <v-data-table
           :headers="headers"
           :items="filtered"
-          hide-actions
-          :pagination.sync="pagination"
           class="results"
         >
-          <template v-slot:items="filtered">
-            <td>
-              <v-list-tile>
-                  <v-list-tile-avatar>
-                    <v-icon>fas fa-globe</v-icon>
-                  </v-list-tile-avatar>
+          <template v-slot:body="prop">
+            <tr v-for="item in prop.items" :key="item.id">
+              <td class="text-start">
+                <v-list-item>
+                    <v-icon class="mr-3">fas fa-globe</v-icon>
 
-                  <router-link :to="'/domains/' + filtered.item.id + '/summary'"> 
-                    <v-list-tile-title v-html="filtered.item.domain"></v-list-tile-title>
-                    <v-list-tile-sub-title>{{servers[filtered.item.server]}}</v-list-tile-sub-title>
-                  </router-link>
-              </v-list-tile>
-            </td>
-            <td>
-              {{filtered.item.ip}}
-            </td>
-            <td>
-              {{filtered.item.mx}}
-            </td>
-            <td>
-              {{format(filtered.item.usage)}}
-            </td>
+                    <router-link :to="'/domains/' + item.id + '/summary'"> 
+                      <v-list-item-title v-html="item.domain"></v-list-item-title>
+                      <v-list-item-subtitle>{{servers[item.server]}}</v-list-item-subtitle>
+                    </router-link>
+                </v-list-item>
+              </td>
+              <td class="text-start">
+                {{item.ip}}
+              </td>
+              <td class="text-start">
+                {{item.mx}}
+              </td>
+              <td class="text-start">
+                {{format(item.usage)}}
+              </td>
+            </tr>
           </template>
         </v-data-table>
-        <div class="text-xs-center pt-2">
-          <v-pagination 
-            v-model="pagination.page" 
-            :length="pages"
-          ></v-pagination>
-        </div>
         
       </v-card>
     </v-flex>
@@ -84,17 +76,11 @@
         filtered: [],
         items: [],
         servers: {},
-        page: 1,
-        pages: 1,
-        items_per_page: 10,
         server: null,
         server_opts: [],
         searchPanel: [false],
 
         search: '',
-        pagination: {
-          rowsPerPage: 10
-        },
         selected: [],
         headers: [
           {
@@ -129,8 +115,6 @@
               this.filtered.push(element)
             }
         })
-
-        this.pages = this.filtered.length ? Math.ceil(this.filtered.length / this.items_per_page) : 1
       }
     },
     methods: {
@@ -162,8 +146,6 @@
           response.data.items.forEach(element => {
               self.filtered.push(element)
           })
-
-          self.pages = self.filtered.length ? Math.ceil(self.filtered.length / self.items_per_page) : 1
  
           api.get('servers/')
           .then(function (response) {

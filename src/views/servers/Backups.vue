@@ -9,41 +9,46 @@
     
     <Loading :value="fetching" />
 
-    <v-card>
-        <v-list
-          subheader
-          two-line
-          v-if="items.length"
-        >
-            <template v-for="(item, index) in items">
-                <v-list-tile
-                    @click=""
-                    :key="item.id"                    
-                >
-                    <v-list-tile-action>
-                        <v-checkbox v-model="item.selected"></v-checkbox>
-                    </v-list-tile-action>
+<template>
+  <v-card
+    class="mx-auto"
+  >
+    <v-list v-if="items.length>0">
+      <v-list-item-group>
+        <template v-for="(item, i) in items">
 
-                    <v-list-tile-content @click="item.selected = !item.selected">
-                        <v-list-tile-title>{{item.name}}</v-list-tile-title>
-                        <v-list-tile-sub-title>{{format(item.size)}}</v-list-tile-sub-title>
-                    </v-list-tile-content>
-                </v-list-tile>
+          <v-list-item
+            :key="`item-${i}`"
+            :value="item"
+          >
+            <template v-slot:default="{ active, toggle }">
+              <v-list-item-content>
+                <v-list-item-title>{{item.name}}</v-list-item-title>
+                <v-list-item-subtitle>{{format(item.size)}}</v-list-item-subtitle>
+              </v-list-item-content>
             </template>
-        </v-list>
-        <v-card-text v-else>
-          Empty
-        </v-card-text>
-    </v-card>
+          </v-list-item>
+        </template>
+      </v-list-item-group>
+    </v-list>
+
+    <v-card-text v-else>
+      Empty
+    </v-card-text>
+
+  </v-card>
+</template>
 
     <v-card>
         <div>
+          <v-card-title primary-title>
             <v-btn
                 @click="deleteBackup()"
                 :disabled="!selected"
             >
                 Delete
             </v-btn>
+          </v-card-title>
         </div>
     </v-card>
 
@@ -131,7 +136,7 @@
         })
 
         api.post('servers/' + this.serverId + '/deletebackup', {ids: ids})
-        .then(function (response) {
+        .then(function () {
             self.fetchData()
         })
         .catch(function (error) {

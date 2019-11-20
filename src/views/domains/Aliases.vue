@@ -8,59 +8,69 @@
     </v-alert>
 
     <Loading :value="fetching" />
-    
-    <v-card>
-        <template v-for="(item, index) in data.aliases">
-            <div
-            :key="index"
-            >
-                <v-layout row v-if="item.dns.A != data.server.ip">
-                    <v-flex xs12>
-                    <v-card tile flat>
-                      <v-card-text>
-                        <strong>DNS mismatch: {{item.dns.A}} != {{data.server.ip}}</strong>
-                        <v-btn v-if="item.dns.not_set" @click="fixAliasDns(item.domain)">Fix</v-btn>
-                      </v-card-text>
-                    </v-card>
-                    </v-flex>
-                </v-layout>
 
-                <v-layout row>
-                    <v-flex xs6>
-                    <v-card tile flat>
-                        <v-card-text>
-                        {{item.domain}}
-                        </v-card-text>
-                    </v-card>
-                    </v-flex>            
+<template>
+  <v-card
+    class="mx-auto"
+  >
+    <v-list>
+      <v-list-item-group>
+        <template v-for="(item, i) in data.aliases">
 
-                    <v-flex xs6>
-                    <v-card tile flat>
-                        <v-card-text>
-                            <v-btn
-                            :disabled="fetching"
-                            :loading="fetching"
-                            @click="deleteAlias(item.domain)"
-                            >
-                            Delete
-                            </v-btn>
-                        </v-card-text>
-                    </v-card>
-                    </v-flex>                  
-                </v-layout>
+          <v-list-item
+            :key="`item-${i}`"
+            :value="item"
+          >
+            <template v-slot:default="{ active, toggle }">
 
-                <v-divider></v-divider>
-            </div>
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{item.domain}}
+                </v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-action v-if="item.dns.A != data.server.ip">
+                <v-tooltip top>
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      v-on="on"
+                      icon
+                      @click="fixAliasDns(item.domain)"
+                    >
+                      <v-icon small>build</v-icon>
+                    </v-btn>
+                  </template>
+                    
+                  <span>Fix DNS mismatch ({{item.dns.A}} => {{data.server.ip}})</span>
+                </v-tooltip>
+              </v-list-item-action>
+
+              <v-list-item-action>
+                <v-btn
+                :disabled="fetching"
+                :loading="fetching"
+                @click="deleteAlias(item.domain)"
+                >
+                  Delete
+                </v-btn>
+              </v-list-item-action>
+            </template>
+          </v-list-item>
         </template>
-    </v-card>
+      </v-list-item-group>
+    </v-list>
+  </v-card>
+</template>
 
     <v-card>
         <div>
-            <v-btn
-                @click="addAlias()"
-            >
-                Add domain alias
-            </v-btn>
+            <v-card-title primary-title>
+              <v-btn
+                  @click="addAlias()"
+              >
+                  Add domain alias
+              </v-btn>
+            </v-card-title>
         </div>
     </v-card>
 
@@ -105,12 +115,10 @@
 <script>
   import api from '../../services/api'
   import Loading from '../../components/Loading'
-  import Copy from '../../components/Copy'
 
   export default {
     components: {
-      Loading,
-      Copy
+      Loading
     },
     data () {
       return {
@@ -136,7 +144,6 @@
           domain: '',
           dns: true
         },
-        copyText: 'Copy',
         drawer: false,
         timer: null
       }

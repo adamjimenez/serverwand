@@ -9,26 +9,43 @@
 
     <Loading :value="fetching" />
 
-    <template v-for="(item, index) in items">
-      <v-card 
-      :key="index"
-      >
-        <v-card-title primary-title>
-            {{item.label}}<br>
-            {{item.api_key}}
-            
-            <div>
+<template>
+  <v-card
+    class="mx-auto"
+  >
+    <v-list>
+      <v-list-item-group>
+        <template v-for="(item, i) in items">
+
+          <v-list-item
+            :key="`item-${i}`"
+            :value="item"
+          >
+            <template v-slot:default="{ active, toggle }">
+
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{item.label}}<br>
+                  {{item.api_key}}
+                </v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-action>
                 <v-btn
-                    :disabled="dialog"
-                    :loading="dialog"
-                    @click="deleteItem(item.id)"
-                    >
-                    Delete
+                  :disabled="dialog"
+                  :loading="dialog"
+                  @click="deleteItem(item.id)"
+                >
+                  Delete
                 </v-btn>
-            </div>
-        </v-card-title>
-      </v-card>
-    </template>
+              </v-list-item-action>
+            </template>
+          </v-list-item>
+        </template>
+      </v-list-item-group>
+    </v-list>
+  </v-card>
+</template>
 
     <v-card>
       <div>

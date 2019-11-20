@@ -9,182 +9,96 @@
 
     <Loading :value="fetching" />
   
-    <v-card>
-      <v-layout row v-if="data.app">
-          <v-card tile flat>
-            <v-card-text>
-                <div v-if="data.app.name">
-                  <h2>{{ data.app.name }}</h2>
-                  <p>{{ data.app.version }}</p>
+    <v-card
+      class="mx-auto"
+    >
+      <v-layout v-if="data.app">
+          <div v-if="data.app.name" style="flex: 1">
+            <v-list-item-content class="ma-3">
+              <v-list-item-title>
+                <h2>{{ data.app.name }}</h2>
+                <p>{{ data.app.version }}</p>
+              </v-list-item-title>
+            </v-list-item-content>
 
-                  <div v-if="data.app.name=='git'">
-                    <v-layout row>
-                      <v-flex xs6>
-                        <v-text-field
-                          v-model="data.app.ssh_key"
-                          label="SSH key"
-                          readonly
-                        ></v-text-field>
-                      </v-flex>
-                      <v-flex xs6>
-                        <Copy :val="data.app.ssh_key" />
-                      </v-flex>
-                    </v-layout>
-                  </div>
+            <div v-if="data.app.name=='git'">
+              <v-container>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      v-model="data.app.ssh_key"
+                      label="SSH key"
+                      readonly
+                    ></v-text-field>
+                  </v-col>
 
-                  <div v-if="data.app.name=='git'">
-                    <v-layout row>
-                      <v-flex xs6>
-                        <v-text-field
-                          v-model="data.app.webhook_url"
-                          label="web hook url"
-                          readonly
-                        ></v-text-field>
-                      </v-flex>
-                      <v-flex xs6>
-                        <Copy :val="data.app.webhook_url" />
-                      </v-flex>
-                    </v-layout>
-                  </div>
-                </div>
-                <div v-else>
-                  <v-subheader>
-                    Directory contains files
-                  </v-subheader>
-                </div>
-            </v-card-text>
-          </v-card>
+                  <v-col>
+                    <Copy :val="data.app.ssh_key" />
+                  </v-col>
+                </v-row>
+
+                <v-row>
+                  <v-col>                      
+                    <v-text-field
+                      v-model="data.app.webhook_url"
+                      label="web hook url"
+                      readonly
+                    ></v-text-field>
+                  </v-col>
+
+                  <v-col>
+                    <Copy :val="data.app.webhook_url" />
+                  </v-col>
+                </v-row>
+                
+              </v-container>
+            </div>
+          </div>
+          <div v-else>
+            <v-subheader>
+              Directory contains files
+            </v-subheader>
+          </div>
       </v-layout>
 
       <div v-else>
 
-          <v-layout row>
-            <v-flex xs6>
-              <v-card tile flat>
-                <v-card-text>Git Repo:</v-card-text>
-              </v-card>
-            </v-flex>
-            <v-flex xs6>
-              <v-card tile flat>
-              <v-card-text>
-                  <v-btn
-                      :disabled="loading"
-                      :loading="loading"
-                      @click="install('git')"
-                      >
-                      Install
-                  </v-btn>
-              </v-card-text>
-              </v-card>
-            </v-flex>
-          </v-layout>
+<template>
+  <v-card
+    class="mx-auto"
+  >
+    <v-list>
+      <v-list-item-group>
 
-          <v-layout row>
-            <v-flex xs6>
-              <v-card tile flat>
-              <v-card-text>Wordpress:</v-card-text>
-              </v-card>
-            </v-flex>
-            <v-flex xs6>
-              <v-card tile flat>
-              <v-card-text>
-                  <v-btn
-                      :disabled="loading"
-                      :loading="loading"
-                      @click="install('wordpress')"
-                      >
-                      Install
-                  </v-btn>
-              </v-card-text>
-              </v-card>
-            </v-flex>
-          </v-layout>
+        <template v-for="(item, i) in apps">
+          <v-list-item
+            :key="`item-${i}`"
+            :value="item"
+          >
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{item.label}}
+                </v-list-item-title>
+              </v-list-item-content>
 
-          <v-layout row>
-            <v-flex xs6>
-                <v-card tile flat>
-                <v-card-text>Joomla:</v-card-text>
-                </v-card>
-            </v-flex>
-            <v-flex xs6>
-                <v-card tile flat>
-                <v-card-text>
-                    <v-btn
-                        :disabled="loading"
-                        :loading="loading"
-                        @click="install('joomla')"
-                        >
-                        Install
-                    </v-btn>
-                </v-card-text>
-                </v-card>
-            </v-flex>
-          </v-layout>
+              <v-list-item-action>
+                <v-btn
+                    :disabled="loading"
+                    :loading="loading"
+                    @click="install(item.name)"
+                    >
+                    Install
+                </v-btn>
+              </v-list-item-action>
+          </v-list-item>
+        </template>
 
-          <v-layout row>
-            <v-flex xs6>
-                <v-card tile flat>
-                  <v-card-text>Drupal:</v-card-text>
-                </v-card>
-            </v-flex>
-            <v-flex xs6>
-                <v-card tile flat>
-                <v-card-text>
-                    <v-btn
-                        :disabled="loading"
-                        :loading="loading"
-                        @click="install('drupal')"
-                        >
-                        Install
-                    </v-btn>
-                </v-card-text>
-                </v-card>
-            </v-flex>
-          </v-layout>
+      </v-list-item-group>
+    </v-list>
+  </v-card>
+</template>
 
-          <v-layout row>
-            <v-flex xs6>
-                <v-card tile flat>
-                  <v-card-text>Magento:</v-card-text>
-                </v-card>
-            </v-flex>
-            <v-flex xs6>
-                <v-card tile flat>
-                <v-card-text>
-                    <v-btn
-                        :disabled="loading"
-                        :loading="loading"
-                        @click="install('magento')"
-                        >
-                        Install
-                    </v-btn>
-                </v-card-text>
-                </v-card>
-            </v-flex>
-          </v-layout>
-
-          <v-layout row>
-            <v-flex xs6>
-                <v-card tile flat>
-                  <v-card-text>Roundcubemail:</v-card-text>
-                </v-card>
-            </v-flex>
-            <v-flex xs6>
-                <v-card tile flat>
-                <v-card-text>
-                    <v-btn
-                        :disabled="loading"
-                        :loading="loading"
-                        @click="install('roundcubemail')"
-                        >
-                        Install
-                    </v-btn>
-                </v-card-text>
-                </v-card>
-            </v-flex>
-          </v-layout>
-
-      </div>
+       </div>
     </v-card>
 
     <v-navigation-drawer
@@ -237,7 +151,26 @@
         error: null,
         data: {},
         fetching: true,
-        drawer: false
+        drawer: false,
+        apps: [{
+          name: 'git',
+          label: 'Git repo'
+        }, {
+          name: 'wordpress',
+          label: 'Wordpress'
+        }, {
+          name: 'joomla',
+          label: 'Joomla'
+        }, {
+          name: 'drupal',
+          label: 'Drupal'
+        }, {
+          name: 'magento',
+          label: 'Magento'
+        }, {
+          name: 'Roundcubemail',
+          label: 'Roundcube mail'
+        }]
       }
     },
     created () {

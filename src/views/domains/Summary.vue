@@ -9,7 +9,7 @@
 
     <Loading :value="fetching" />    
 
-    <v-card>
+    <v-card class="pa-3">
 
       <v-layout row v-if="data.server && data.dns && data.dns.A != data.server.ip">
         <v-flex xs12>
@@ -75,18 +75,18 @@
       
       <v-divider></v-divider>
 
-      <v-form
-        ref="passwordForm"
-        v-model="passwordFormValid"
-      >
+      <v-expansion-panels>
         <v-expansion-panel
-        v-model="passwordPanel"
-        expand
+          v-model="passwordPanel"
+          expand
         >
-            <v-expansion-panel-content>
-                <v-icon slot="actions" color="primary">$vuetify.icons.expand</v-icon>
-                <div slot="header">Reset password</div>
-                <v-card tile flat>
+          <v-expansion-panel-header class="pa-1">Reset password</v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <v-form
+                ref="passwordForm"
+                v-model="passwordFormValid"
+              >
+                <v-card flat>
                   <v-card-text>                                
                     <v-text-field
                     v-model="password"
@@ -101,12 +101,13 @@
                     ></v-text-field>
                   </v-card-text>
                   <v-card-actions>
-                      <v-btn color="primary" flat @click="submitPassword">Submit</v-btn>
+                      <v-btn color="primary" @click="submitPassword">Submit</v-btn>
                   </v-card-actions>
-                </v-card>
-            </v-expansion-panel-content>
+                </v-card>   
+            </v-form>
+          </v-expansion-panel-content>
         </v-expansion-panel>
-      </v-form>
+      </v-expansion-panels>
 
     </v-card>
   </div>  
@@ -270,9 +271,3 @@
     }
   }
 </script>
-
-<style>
-.v-expansion-panel__header {
-  padding: 10px 16px;
-}
-</style>

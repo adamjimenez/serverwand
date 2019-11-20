@@ -1,4 +1,5 @@
 <template>
+  <div style="flex: 1; padding: 0 10px; margin-bottom: -20px">
     <v-autocomplete
       v-model="model"
       :items="items"
@@ -12,21 +13,22 @@
         slot-scope="data"
       >
         <template v-if="typeof data.item !== 'object'">
-          <v-list-tile-content v-text="data.item"></v-list-tile-content>
+          <v-list-item-content v-text="data.item"></v-list-item-content>
         </template>
         <template v-else>
-          <v-list-tile-avatar>
+          <v-list-item-avatar>
             <v-icon>{{data.item.avatar}}</v-icon>
-          </v-list-tile-avatar>
-          <v-list-tile-content class="results">
+          </v-list-item-avatar>
+          <v-list-item-content class="results">
             <router-link :to="data.item.value"> 
-              <v-list-tile-title>{{data.item.text}}</v-list-tile-title>
-              <v-list-tile-sub-title v-html="data.item.subtitle"></v-list-tile-sub-title>
+              <v-list-item-title>{{data.item.text}}</v-list-item-title>
+              <v-list-item-subtitle v-html="data.item.subtitle"></v-list-item-subtitle>
             </router-link>
-          </v-list-tile-content>
+          </v-list-item-content>
         </template>
       </template>
     </v-autocomplete>
+  </div>
 </template>
 
 <script>
@@ -93,7 +95,7 @@
           self.loading = false
         })
       },
-      afterselection(item){
+      afterselection(){
         this.$nextTick(() => {
           console.log(this)
           this.model = null           

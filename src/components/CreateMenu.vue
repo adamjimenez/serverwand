@@ -3,30 +3,32 @@
       offset-y
       v-model="isOpen"
     >
+      <template v-slot:activator="{ on }">
         <v-btn
+          v-on="on"
           value:="menu"
-          slot="activator"
           color="primary"
           dark
         >
             Create
-             <v-icon dark>{{isOpen ? 'expand_less' : 'expand_more'}}</v-icon>
+            <v-icon dark>{{isOpen ? 'expand_less' : 'expand_more'}}</v-icon>
         </v-btn>
-        <v-list>
-          <v-list-tile avatar
+      </template>
+      <v-list>
+        <v-list-item
           v-for="(item, index) in items"
           :key="index"
           @click="goto(item.to)"
-          >          
-            <v-list-tile-avatar>
-              <v-icon>{{item.avatar}}</v-icon>
-            </v-list-tile-avatar>
+        >          
+          <v-list-item-avatar>
+            <v-icon>{{item.avatar}}</v-icon>
+          </v-list-item-avatar>
 
-            <v-list-tile-content>
-              <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
     </v-menu>
 </template>
 

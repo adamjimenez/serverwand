@@ -23,30 +23,33 @@
           offset-y
           v-model="isOpen"
         >
+          <template v-slot:activator="{ on }">
             <v-btn
+              v-on="on"
               value:="menu"
               slot="activator"
               color="primary"
-              dark
+              class="mx-3"
             >
                 {{provider}}
                 <v-icon dark>{{isOpen ? 'expand_less' : 'expand_more'}}</v-icon>
             </v-btn>
-            <v-list>
-              <v-list-tile avatar
+          </template>
+          <v-list>
+            <v-list-item
               v-for="(item, index) in items"
               :key="index"
               @click="getOptions(item.value)"
-              >          
-                <v-list-tile-avatar>
-                  <v-icon>{{item.avatar}}</v-icon>
-                </v-list-tile-avatar>
+            >          
+              <v-list-item-avatar>
+                <v-icon>{{item.avatar}}</v-icon>
+              </v-list-item-avatar>
 
-                <v-list-tile-content>
-                  <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
+              <v-list-item-content>
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
         </v-menu>
     </v-item-group>
 
@@ -55,6 +58,7 @@
       ref="form"
       v-model="valid"
       lazy-validation
+      class="ma-3"
     >
 
       <v-card>
@@ -272,69 +276,70 @@
           self.loading = false
         })
       },
+      install () {  
+        var self = this
+        
+        self.dialog = true
+        self.details = ''
+
+        // subscribe to status changes
+        var url = 'servers/' + self.serverId + '/install?';
+        if (self.data.webserver) {
+          url += 'webserver=1&'
+        }
+
+        if (self.data.mailserver) {
+          url += 'mailserver=1&'
+        }
+
+        var source = api.event(url)
+        
+        var abortFunction = function() {
+            if (source)
+                source.close()
+
+            self.dialog = false;
+
+            if (!self.error) { 
+              self.$eventHub.$emit('itemsChanged')
+              self.$router.push('/servers/' + self.serverId + '/summary')
+            }
+        }
+    
+        source.addEventListener('message', function(event) {
+            var result = JSON.parse(event.data)
+            console.log(result)
+
+            if (result.msg) {
+              self.details = result.msg + '...'
+            }
+
+            if (result.error) {
+              self.error = result.error
+            }
+
+            if (result.progress) {
+              self.progress = result.progress
+            }
+        }, false)
+    
+        source.addEventListener('error', function(event) {
+            if (event.eventPhase == 2)
+                abortFunction()
+        }, false)
+      },
       validate () {
         var self = this
 
         if (this.$refs.form.validate()) {
           this.details = ''
           this.dialog = true
-          this.error = ''
-
-          function install() {
-            self.dialog = true
-            self.details = ''
-
-            // subscribe to status changes
-            var url = 'servers/' + self.serverId + '/install?';
-            if (self.data.webserver) {
-              url += 'webserver=1&'
-            }
-
-            if (self.data.mailserver) {
-              url += 'mailserver=1&'
-            }
-
-            var source = api.event(url)
-            
-            var abortFunction = function() {
-                if (source)
-                    source.close()
-
-                self.dialog = false;
-
-                if (!self.error) { 
-                  self.$eventHub.$emit('itemsChanged')
-                  self.$router.push('/servers/' + self.serverId + '/summary')
-                }
-            }
-        
-            source.addEventListener('message', function(event) {
-                var result = JSON.parse(event.data)
-                console.log(result)
-
-                if (result.msg) {
-                  self.details = result.msg + '...'
-                }
-
-                if (result.error) {
-                  self.error = result.error
-                }
-
-                if (result.progress) {
-                  self.progress = result.progress
-                }
-            }, false)
-        
-            source.addEventListener('error', function(event) {
-                if (event.eventPhase == 2)
-                    abortFunction()
-            }, false)
-          }
+          this.error = '' 
 
           if (self.serverId) {
             api.post('servers/' + self.serverId + '/update', this.data)
-            .then(function (response) {
-              install()
+            .then(function () {
+              self.install()
             })
             .catch(function (error) {
               console.log(error)
@@ -351,7 +356,7 @@
                 self.serverId = response.data.id
 
                 if (self.serverId) {
-                  install()
+                  self.install()
                 }
               }
             })

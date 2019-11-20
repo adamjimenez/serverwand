@@ -11,23 +11,23 @@
       <Loading :value="fetching" />      
       
       <v-list two-line v-if="!fetching">
-        <v-list-tile>
-          <v-list-tile-avatar>
+        <v-list-item>
+          <v-list-item-avatar>
             <v-icon left>fas fa-globe</v-icon>
-          </v-list-tile-avatar>
-          <v-list-tile-content>
-            <v-list-tile-title>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>
               {{ data.domain }}
               
               <a v-bind:href="'http://' + data.domain" target="_blank">
                 <v-icon right>open_in_new</v-icon>
               </a> 
-            </v-list-tile-title>
-            <v-list-tile-sub-title>
+            </v-list-item-title>
+            <v-list-item-subtitle>
               {{data.server.name}}
-            </v-list-tile-sub-title>
-          </v-list-tile-content>
-        </v-list-tile>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>      
 
       <v-tabs>
@@ -47,12 +47,10 @@
 <script>
   import api from '../services/api'
   import Loading from '../components/Loading'
-  import Copy from '../components/Copy'
 
   export default {
     components: {
-      Loading,
-      Copy
+      Loading
     },
     data () {
       return {
@@ -65,7 +63,6 @@
         },
         details: '',
         fetching: true,
-        copyText: 'Copy',
         aliasDrawer: false
       }
     },
@@ -101,9 +98,3 @@
     }
   }
 </script>
-
-<style>
-.v-expansion-panel__header {
-  padding: 10px 16px;
-}
-</style>

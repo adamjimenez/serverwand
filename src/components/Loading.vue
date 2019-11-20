@@ -1,6 +1,6 @@
 <template>
 <v-layout row justify-center>
-  <v-dialog v-model="value" full-width persistent content content-class="centered-dialog">
+  <v-dialog v-model="value" persistent content content-class="centered-dialog">
     <v-container fill-height
     >
       <v-card

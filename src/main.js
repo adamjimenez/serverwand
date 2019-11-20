@@ -1,22 +1,13 @@
 import '@fortawesome/fontawesome-free/css/all.css' 
 import Vue from 'vue'
 import App from './App.vue'
-
 import router from './router'
+import Vuetify from 'vuetify'
 //import './registerServiceWorker'
 
 Vue.config.productionTip = false
 
-import Vuetify from 'vuetify'
-Vue.use(Vuetify, {
-  iconfont: 'fa',
-  theme: {
-    primary: '#A25C57',
-    secondary: '#4C3148',
-    accent: '#A25C57',
-    error: '#b71c1c'
-  }
-})
+Vue.use(Vuetify)
 
 import VuetifyConfirm from 'vuetify-confirm'
 Vue.use(VuetifyConfirm, {
@@ -36,5 +27,6 @@ Vue.prototype.$eventHub = new Vue(); // Global event bus
 new Vue({
   el: '#app',
   router,
+  vuetify: new Vuetify(),
   render: h => h(App)
 })

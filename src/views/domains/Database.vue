@@ -9,9 +9,8 @@
 
     <Loading :value="fetching" />
       
-    <v-card>
-        <v-layout row v-if="data.db_name==false">
-          <v-flex xs12>
+    <v-card class="pa-3">
+        <div v-if="data.db_name==false">
             <v-btn
                 :disabled="loading!=''"
                 :loading="loading=='database'"
@@ -19,8 +18,7 @@
                 >
                 Add Database
             </v-btn>
-          </v-flex>
-        </v-layout>
+        </div>
 
         <div v-else>
           <v-layout row>

@@ -9,38 +9,54 @@
       
         <Loading :value="fetching" />
 
-        <template v-for="(item, index) in data.users">
-        <v-card 
-            :key="index"
-        >
-            <v-card-title primary-title>
-                {{item.name}}
-                
-                <div>
-                    <v-btn
-                    @click="editUser(item.name)"
-                    >
-                    Edit
-                    </v-btn>
-                </div>
-                <div>
-                    <v-btn
-                    :disabled="fetching"
-                    :loading="fetching"
-                    @click="deleteUser(item.name)"
-                    >
-                    Delete
-                    </v-btn>
-                </div>
-            </v-card-title>
-        </v-card>
+<template>
+  <v-card
+    class="mx-auto"
+  >
+    <v-list>
+      <v-list-item-group>
+        <template v-for="(item, i) in data.users">
+
+          <v-list-item
+            :key="`item-${i}`"
+            :value="item"
+          >
+            <template v-slot:default="{ active, toggle }">
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{item.name}}
+                </v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-action>
+                <v-btn
+                @click="editItem(item.name)"
+                >
+                  Edit
+                </v-btn>
+              </v-list-item-action>
+              <v-list-item-action>
+                <v-btn
+                :disabled="fetching"
+                :loading="fetching"
+                @click="deleteItem(item.name)"
+                >
+                  Delete
+                </v-btn>
+              </v-list-item-action>
+            </template>
+          </v-list-item>
         </template>
+      </v-list-item-group>
+    </v-list>
+  </v-card>
+</template>
 
         <v-card>
             <div>
               <v-card-title primary-title>
                 <v-btn
-                @click="addUser()"
+                @click="addItem()"
                 >
                 Add system user
                 </v-btn>
@@ -71,7 +87,7 @@
                     type="password"
                     label="Password"
                     required
-                    browser-autocomplete="new-password"
+                    autocomplete="new-password"
                 ></v-text-field>
                 
                 <v-btn
@@ -153,16 +169,16 @@
           self.fetching = false
         })
       },
-      addUser() {
+      addItem() {
         this.system_user.user = ''
         this.system_user.password = ''
         this.userDrawer = true
       },
-      editUser(user) {
+      editItem(user) {
         this.system_user.user = user
         this.userDrawer = true
       },
-      deleteUser(user) {
+      deleteItem(user) {
         var self = this
         this.fetching = true
         this.error = ''

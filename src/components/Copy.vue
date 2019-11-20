@@ -1,22 +1,23 @@
 <template>
     <v-tooltip top>
+      <template v-slot:activator="{ on }">
         <v-btn
-        icon
-        slot="activator"
-        @click="copy(val)"
-        @mouseleave="resetCopyText()"
+          v-on="on"
+          icon
+          @click="copy(val)"
+          @mouseleave="resetCopyText()"
         >
           <v-icon small>file_copy</v-icon>
         </v-btn>
-        
-        <span>{{ copyText }}</span>
+      </template>
+      <span>{{ copyText }}</span>
     </v-tooltip>
 </template>
 
 <script>
   export default {
     props: {
-        val: ''
+      val: null
     },
     data () {
       return {
@@ -31,7 +32,7 @@
         el.setAttribute('id', 'clipboard')
         el.value = text
         el.select()
-	      document.execCommand("Copy")
+        document.execCommand("Copy")
         el.parentNode.removeChild(el)
         
         self.copyText = 'Copied'

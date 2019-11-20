@@ -1,39 +1,35 @@
 <template>
-    <div>
-        <Loading :value="fetching" />
+  <v-card
+    class="mx-auto"
+  >
+    <v-row>
+      <v-col>
+        <div class="ma-3">
+          <v-btn
+              @click="editItem"
+              >
+              Edit Name
+          </v-btn>
+        </div>
 
-        <v-card>
-            <v-card-title primary-title>
-              <div>
-                  <v-btn
-                      @click="editItem"
-                      >
-                      Edit
-                  </v-btn>
-              </div>
-              <div>
-                  <v-btn
-                      :disabled="dialog"
-                      :loading="dialog"
-                      @click="deleteItem"
-                      >
-                      Delete
-                  </v-btn>
-              </div>
-            </v-card-title>
-        </v-card>
-
-    </div>
+        <div class="ma-3">
+          <v-btn
+              :disabled="dialog"
+              :loading="dialog"
+              @click="deleteItem"
+              >
+              Delete
+          </v-btn>
+        </div>
+      </v-col>
+    </v-row>
+  </v-card>
 </template>
 
 <script>
   import api from '../../services/api'
-  import Loading from '../../components/Loading'
 
   export default {
-    components: {
-      Loading
-    },
     data () {
       return {
         loading: false,

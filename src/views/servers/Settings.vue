@@ -9,26 +9,43 @@
         
         <Loading :value="fetching" />
 
-        <v-card>
-            <v-card-title primary-title>
-              <div>
-                  <v-btn
-                      @click="editServer"
-                      >
-                      Edit
-                  </v-btn>
-              </div>
-              <div>
-                  <v-btn
-                      :disabled="fetching"
-                      :loading="fetching"
-                      @click="deleteServer"
-                      >
-                      Disconnect
-                  </v-btn>
-              </div>
-            </v-card-title>
-        </v-card>
+<template>
+  <v-card
+    class="mx-auto"
+  >
+    <v-row>
+      <v-col>
+        <div class="ma-3">
+            <v-btn
+                @click="editServer"
+                >
+                  Edit
+            </v-btn>
+        </div>
+
+        <div class="ma-3">
+            <v-btn
+                :disabled="fetching"
+                :loading="fetching"
+                @click="deleteServer"
+                >
+                 Disconnect
+            </v-btn>
+        </div>
+
+        <div class="ma-3">
+            <v-btn
+                :disabled="fetching"
+                :loading="fetching"
+                @click="reboot"
+                >
+                 Reboot
+            </v-btn>
+        </div>
+      </v-col>
+    </v-row>
+  </v-card>
+</template>
 
     </div>
 </template>
@@ -102,6 +119,25 @@
               if (response.data.success) {
                 // subscribe to status changes
                 self.$router.push('/servers/')
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+          }
+        })
+      },
+      reboot () {
+        this.$confirm('Reboot server?').then(res => {
+          if (res) {
+            this.fetching = true
+
+            api.get('servers/' + this.serverId + '/reboot')
+            .then(function (response) {
+              console.log(response)
+
+              if (response.data.success) {
+                this.$router.push('/servers')
               }
             })
             .catch(function (error) {

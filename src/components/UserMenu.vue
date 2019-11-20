@@ -1,19 +1,23 @@
 <template>
     <v-menu offset-y left>
-        <v-avatar
-            slot="activator"
+      <template v-slot:activator="{ on }">
+        <v-btn
+          icon
+          v-on="on"
+          value:="menu"
         >
             <i class="material-icons">account_circle</i>
-        </v-avatar>
-        <v-list>
-            <v-list-tile
+        </v-btn>
+      </template>
+      <v-list>
+          <v-list-item
             v-for="(item, index) in items"
             :key="index"
             @click="goto(item.to)"
-            >
-            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-            </v-list-tile>
-        </v-list>
+          >
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+      </v-list>
     </v-menu>
 </template>
 

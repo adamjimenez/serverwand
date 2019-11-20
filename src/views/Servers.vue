@@ -15,34 +15,34 @@
         
         <v-list two-line v-if="items.length" class="results">
           <template v-for="(item, index) in items">
-            <v-list-tile
+            <v-list-item
               v-if="index >= (page-1)*items_per_page && index < page*items_per_page"
               :key="item.name"
             >
-              <v-list-tile-avatar>
+              <v-list-item-avatar>
                 <v-icon>fas fa-server</v-icon>
-              </v-list-tile-avatar>
+              </v-list-item-avatar>
 
-              <v-list-tile-content>
+              <v-list-item-content>
                 <router-link :to="'/servers/' + item.id + '/summary'"> 
-                  <v-list-tile-title v-html="item.name"></v-list-tile-title>
-                  <v-list-tile-sub-title v-html="item.hostname"></v-list-tile-sub-title>
+                  <v-list-item-title v-html="item.name"></v-list-item-title>
+                  <v-list-item-subtitle v-html="item.hostname"></v-list-item-subtitle>
                 </router-link>
-              </v-list-tile-content>
-            </v-list-tile>
+              </v-list-item-content>
+            </v-list-item>
           </template>
         </v-list>
 
         <v-list v-else>
-          <v-list-tile>
-            <v-list-tile-content>
-              <v-list-tile-title>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>
                 <router-link to="/servers/create">
                     Add a server
                 </router-link>
-              </v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
 
         <div 
@@ -56,9 +56,9 @@
         </div>
 
       </v-card>
-    </v-flex>
 
-  </v-layout>  
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>

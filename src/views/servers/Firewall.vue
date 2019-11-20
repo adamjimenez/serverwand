@@ -21,25 +21,41 @@
       </div>
     </v-card>
 
-    <template v-for="(item, index) in items">
-      <v-card 
-          :key="index"
-      >
-        <v-card-title primary-title>
-            {{item.port}}/{{item.protocol}} {{item.action}} {{item.from}} {{item.v6 ? 'IPV6' : ''}}
-            
-            <div>
+<template>
+  <v-card
+    class="mx-auto"
+  >
+    <v-list>
+      <v-list-item-group>
+        <template v-for="(item, i) in items">
+
+          <v-list-item
+            :key="`item-${i}`"
+            :value="item"
+          >
+            <template v-slot:default="{ active, toggle }">
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{item.port}}/{{item.protocol}} {{item.action}} {{item.from}} {{item.v6 ? 'IPV6' : ''}}
+                </v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-action>
                 <v-btn
                 :disabled="fetching"
                 :loading="fetching"
                 @click="deleteItem(item.id)"
                 >
-                Delete
+                  Delete
                 </v-btn>
-            </div>
-        </v-card-title>
-      </v-card>
-    </template>
+              </v-list-item-action>
+            </template>
+          </v-list-item>
+        </template>
+      </v-list-item-group>
+    </v-list>
+  </v-card>
+</template>
 
     <v-card>
       <div>

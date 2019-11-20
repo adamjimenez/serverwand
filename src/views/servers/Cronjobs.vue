@@ -9,38 +9,55 @@
         
         <Loading :value="fetching" />
 
-        <template v-for="(item, index) in data.cronjobs">
-        <v-card 
-            :key="index"
-        >
-            <v-card-title primary-title>
-                {{item.command}}
-                
-                <div>
-                    <v-btn
-                    @click="editCronjob(item)"
-                    >
-                    Edit
-                    </v-btn>
-                </div>
-                <div>
-                    <v-btn
-                    :disabled="fetching"
-                    :loading="fetching"
-                    @click="deleteCronjob(item.line)"
-                    >
-                    Delete
-                    </v-btn>
-                </div>
-            </v-card-title>
-        </v-card>
+<template>
+  <v-card
+    class="mx-auto"
+  >
+    <v-list>
+      <v-list-item-group>
+        <template v-for="(item, i) in data.cronjobs">
+
+          <v-list-item
+            :key="`item-${i}`"
+            :value="item"
+          >
+            <template v-slot:default="{ active, toggle }">
+              <v-list-item-content>
+                <v-list-item-title>
+                  <v-icon v-if="item.active===false">block</v-icon>
+                  {{item.command}}
+                </v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-action>
+                <v-btn
+                @click="editItem(item)"
+                >
+                  Edit
+                </v-btn>
+              </v-list-item-action>
+              <v-list-item-action>
+                <v-btn
+                :disabled="fetching"
+                :loading="fetching"
+                @click="deleteItem(item.line)"
+                >
+                  Delete
+                </v-btn>
+              </v-list-item-action>
+            </template>
+          </v-list-item>
         </template>
+      </v-list-item-group>
+    </v-list>
+  </v-card>
+</template>
 
         <v-card>
             <div>
               <v-card-title primary-title>
                 <v-btn
-                @click="addCronjob()"
+                @click="addItem()"
                 >
                 Add cron job
                 </v-btn>
@@ -63,6 +80,12 @@
             </v-card-title>
 
             <v-card-text>
+
+              <v-switch
+                  v-model="cronjob.active"
+                  label="Active"
+              ></v-switch>
+
               <v-text-field
                 v-model="cronjob.line"
                 label="Line"
@@ -152,6 +175,7 @@
           password: ''
         },
         cronjob: {
+          active: true,
           name: '',
           user: '',
           command: '',
@@ -235,15 +259,15 @@
           self.fetching = false
         })
       },     
-      addCronjob() {
+      addItem() {
         this.cronjob = {}
         this.cronjobDrawer = true
       },
-      editCronjob(cronjob) {
-        this.cronjob = cronjob
+      editItem(cronjob) {
+        this.cronjob = JSON.parse(JSON.stringify(cronjob))
         this.cronjobDrawer = true
       },
-      deleteCronjob(line) {
+      deleteItem(line) {
         var self = this
         this.fetching = true
         this.error = ''

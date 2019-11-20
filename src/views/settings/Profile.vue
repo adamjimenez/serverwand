@@ -25,53 +25,50 @@
         ></v-text-field>
       </v-card-text>
 
-      <v-expansion-panel
-        v-model="passwordPanel"
-        expand
-      >
-        <v-expansion-panel-content>
-          <v-icon slot="actions" color="primary">$vuetify.icons.expand</v-icon>
-          <div slot="header">Reset password</div>
-          <v-card tile flat>
-            <v-card-text class="grey lighten-3">                                
-              <v-text-field
-                type="password"
-                v-model="data.password"
-                :rules="passwordRules"
-                label="Password"
-                required
-              ></v-text-field>
-            </v-card-text>
-            <v-card-actions class="grey lighten-3">
-              <v-btn color="primary" flat @click="validate">Submit</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+      <v-expansion-panels>
+        <v-expansion-panel
+          v-model="passwordPanel"
+          expand
+        >
+          <v-expansion-panel-header>Reset password</v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <v-card tile flat>
+              <v-card-text>                                
+                <v-text-field
+                  type="password"
+                  v-model="data.password"
+                  :rules="passwordRules"
+                  label="Password"
+                  required
+                ></v-text-field>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="primary" @click="validate">Submit</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
 
-      <v-card-text>
-        <v-subheader>Preferences</v-subheader>
+      <v-card-subtitle>Preferences</v-card-subtitle>
+      <v-checkbox
+        v-model="data.emails"
+        label="Receive email updates"
+        @click="toggleEmails()"
+        class="mx-3 my-0"
+      ></v-checkbox>
 
-        <v-checkbox
-          v-model="data.emails"
-          label="Receive email updates"
-          @click="toggleEmails()"
-        ></v-checkbox>
-      </v-card-text>
+      <v-card-subtitle>Security</v-card-subtitle>
+      <v-checkbox
+        v-model="useMasterPassword"
+        label="Use a master password"
+        @click="toggleMasterPassword()"
+        class="mx-3 my-0"
+      ></v-checkbox>
 
-      <v-card-text>
-        <v-subheader>Security</v-subheader>
-
-        <v-checkbox
-          v-model="useMasterPassword"
-          label="Use a master password"
-          @click="toggleMasterPassword()"
-        ></v-checkbox>
-
-        <v-card-actions>
-          <v-btn @click="changeMasterPassword()" :disabled="!useMasterPassword">Change master password</v-btn>
-        </v-card-actions>
-      </v-card-text>
+      <v-card-actions>
+        <v-btn @click="changeMasterPassword()" :disabled="!useMasterPassword">Change master password</v-btn>
+      </v-card-actions>
     </v-card>
 
     <v-dialog v-model="masterPasswordDialog" persistent max-width="600px">
@@ -88,7 +85,7 @@
               type="password"
               label="Current password"
               required
-              browser-autocomplete="new-password"
+              autocomplete="new-password"
               :disabled="!data.prefs.useMasterPassword"
           ></v-text-field>
         
@@ -97,7 +94,7 @@
               type="password"
               label="Enter new password"
               required
-              browser-autocomplete="new-password"
+              autocomplete="new-password"
           ></v-text-field>
         
           <v-text-field
@@ -105,7 +102,7 @@
               type="password"
               label="Re-enter password"
               required
-              browser-autocomplete="new-password"
+              autocomplete="new-password"
           ></v-text-field>
 
           <p>Please make sure you remember the Master Password you have set. If you forget your Master Password you will be unable to access any of the information protected by it.</p>          
@@ -113,8 +110,8 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="masterPasswordDialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" flat @click="saveMasterPassword()" :disabled="!mp.password || mp.password != mp.confirm || (data.prefs.useMasterPassword && !mp.current)">Save</v-btn>
+          <v-btn color="blue darken-1" @click="masterPasswordDialog = false">Close</v-btn>
+          <v-btn color="blue darken-1" @click="saveMasterPassword()" :disabled="!mp.password || mp.password != mp.confirm || (data.prefs.useMasterPassword && !mp.current)">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -144,8 +141,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="removePasswordDialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" flat @click="removeMasterPassword()">Save</v-btn>
+          <v-btn color="blue darken-1" @click="removePasswordDialog = false">Close</v-btn>
+          <v-btn color="blue darken-1" @click="removeMasterPassword()">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -155,7 +152,7 @@
 
 <script>
   import api from '../../services/api'
-  import { sha256, sha224 } from 'js-sha256'
+  import { sha256 } from 'js-sha256'
 
   export default {
     data: () => ({
@@ -228,7 +225,7 @@
           .catch(function (error) {
             console.log(error)
           })
-          .finally(function (error) {
+          .finally(function () {
             self.dialog = false
             self.loading = false
           })
@@ -270,7 +267,7 @@
         .catch(function (error) {
           console.log(error)
         })
-        .finally(function (error) {
+        .finally(function () {
           self.dialog = false
           self.loading = false
         })
@@ -302,7 +299,7 @@
         .catch(function (error) {
           console.log(error)
         })
-        .finally(function (error) {
+        .finally(function () {
           self.loading = false
         })
 
@@ -311,10 +308,6 @@
       toggleEmails() {
         var self = this
         this.loading = true
-
-        if (self.mp.password) {
-          masterPassword = sha256(self.mp.password)
-        }
 
         api.post('settings/profile', {
           emails: self.data.emails
@@ -330,7 +323,7 @@
         .catch(function (error) {
           console.log(error)
         })
-        .finally(function (error) {
+        .finally(function () {
           self.loading = false
         })
       }

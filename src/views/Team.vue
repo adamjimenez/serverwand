@@ -11,18 +11,18 @@
       <Loading :value="fetching" />
 
       <v-list two-line v-if="!fetching">
-        <v-list-tile>
-          <v-list-tile-avatar>
+        <v-list-item>
+          <v-list-item-avatar>
             <v-icon left>fas fa-users</v-icon>
-          </v-list-tile-avatar>
-          <v-list-tile-content>
-            <v-list-tile-title>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>
               {{ data.name }}
-            </v-list-tile-title>
-            <v-list-tile-sub-title>
-            </v-list-tile-sub-title>
-          </v-list-tile-content>
-        </v-list-tile>
+            </v-list-item-title>
+            <v-list-item-subtitle>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
 
       <v-tabs>

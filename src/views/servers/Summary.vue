@@ -9,7 +9,7 @@
     
     <Loading :value="fetching" />
 
-    <v-card>
+    <v-card class="pa-3">
       <v-container
       >
          <v-layout row wrap>
@@ -51,13 +51,13 @@
                   </div>
                   
                   <div style="clear: both;">
-                      <v-list-tile-title>
+                      <v-list-item-title>
                           <v-progress-linear 
                           v-model="data.mem_perc"
                           height="20"
                           ></v-progress-linear>
-                      </v-list-tile-title>
-                      <v-list-tile-sub-title v-html="format(data.mem_free)+'  free of '+format(data.mem_total)"></v-list-tile-sub-title>
+                      </v-list-item-title>
+                      <v-list-item-subtitle v-html="format(data.mem_free)+'  free of '+format(data.mem_total)"></v-list-item-subtitle>
                   </div>
                 </v-card-text>
               </div>
@@ -79,13 +79,13 @@
                   </div>
                   
                   <div style="clear: both;">
-                      <v-list-tile-title>
+                      <v-list-item-title>
                           <v-progress-linear 
                           v-model="data.disk_perc"
                           height="20"
                           ></v-progress-linear>
-                      </v-list-tile-title>
-                      <v-list-tile-sub-title v-html="format(data.disk_free)+'  free of '+format(data.disk_space)"></v-list-tile-sub-title>
+                      </v-list-item-title>
+                      <v-list-item-subtitle v-html="format(data.disk_free)+'  free of '+format(data.disk_space)"></v-list-item-subtitle>
                   </div>
                 </v-card-text>
               </div>
@@ -117,98 +117,102 @@
       </v-container>
 
       <v-list two-line>                
-        <v-list-tile>
-            <v-list-tile-content>
-              <v-list-tile-title v-html="`Updates`"></v-list-tile-title>
-              <v-list-tile-sub-title>
-                {{data.updates}} updates ({{data.security_updates}} security updates)
-              </v-list-tile-sub-title>
-            </v-list-tile-content>
-        </v-list-tile>
+        <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title v-html="`Updates`"></v-list-item-title>
+              <v-list-item-subtitle>
+                {{data.updates}} updates, {{data.security_updates}} security updates
+                <span v-if="data.reboot_required">(reboot required)</span>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+        </v-list-item>
       </v-list>
 
       <v-list two-line>                
-        <v-list-tile>
-            <v-list-tile-content>
-              <v-list-tile-title v-html="`Hostname`"></v-list-tile-title>
-              <v-list-tile-sub-title>
+        <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title v-html="`Hostname`"></v-list-item-title>
+              <v-list-item-subtitle>
                 {{data.hostname}}
                 <Copy :val="data.hostname" />
 
                 <v-tooltip top>
-                  <v-btn
-                  icon
-                  slot="activator"
-                  @click="drawer=true"
-                  >
-                    <v-icon small>fas fa-edit</v-icon>
-                  </v-btn>
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      v-on="on"
+                      icon
+                      slot="activator"
+                      @click="drawer=true"
+                    >
+                      <v-icon small>fas fa-edit</v-icon>
+                    </v-btn>
                   
-                  <span>Edit</span>
+                    <span>Edit</span>
+                  </template>
                 </v-tooltip>
-              </v-list-tile-sub-title>
-            </v-list-tile-content>
-        </v-list-tile>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+        </v-list-item>
       </v-list>
 
       <v-list two-line>                
-        <v-list-tile>
-            <v-list-tile-content>
-              <v-list-tile-title v-html="`IP address`"></v-list-tile-title>
-              <v-list-tile-sub-title>
+        <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title v-html="`IP address`"></v-list-item-title>
+              <v-list-item-subtitle>
                 {{data.ip}} <Copy :val="data.ip" />
-              </v-list-tile-sub-title>
-            </v-list-tile-content>
-        </v-list-tile>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+        </v-list-item>
       </v-list>
 
       <v-list two-line>                
-        <v-list-tile>
-            <v-list-tile-content>
-              <v-list-tile-title v-html="`IPv6 address`"></v-list-tile-title>
-              <v-list-tile-sub-title>
+        <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title v-html="`IPv6 address`"></v-list-item-title>
+              <v-list-item-subtitle>
                 {{data.ipv6}} <Copy :val="data.ipv6" />
-              </v-list-tile-sub-title>
-            </v-list-tile-content>
-        </v-list-tile>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+        </v-list-item>
       </v-list>
 
       <v-list two-line>                
-        <v-list-tile>
-            <v-list-tile-content>
-              <v-list-tile-title v-html="`Kernel version`"></v-list-tile-title>
-              <v-list-tile-sub-title>
+        <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title v-html="`Kernel version`"></v-list-item-title>
+              <v-list-item-subtitle>
                 {{ data.kernel }}
-              </v-list-tile-sub-title>
-            </v-list-tile-content>
-        </v-list-tile>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+        </v-list-item>
       </v-list>
 
       <v-list two-line>                
-        <v-list-tile>
-            <v-list-tile-content>
-            <v-list-tile-title v-html="`Apache`"></v-list-tile-title>
-            <v-list-tile-sub-title v-html="data.apache"></v-list-tile-sub-title>
-            </v-list-tile-content>
-        </v-list-tile>
+        <v-list-item>
+            <v-list-item-content>
+            <v-list-item-title v-html="`Apache`"></v-list-item-title>
+            <v-list-item-subtitle v-html="data.apache"></v-list-item-subtitle>
+            </v-list-item-content>
+        </v-list-item>
       </v-list>
 
       <v-list two-line>                
-        <v-list-tile>
-            <v-list-tile-content>
-            <v-list-tile-title v-html="`PHP`"></v-list-tile-title>
-            <v-list-tile-sub-title v-html="data.php"></v-list-tile-sub-title>
-            </v-list-tile-content>
-        </v-list-tile>
+        <v-list-item>
+            <v-list-item-content>
+            <v-list-item-title v-html="`PHP`"></v-list-item-title>
+            <v-list-item-subtitle v-html="data.php"></v-list-item-subtitle>
+            </v-list-item-content>
+        </v-list-item>
       </v-list>
 
       <v-list two-line>                
-        <v-list-tile>
-            <v-list-tile-content>
-            <v-list-tile-title v-html="`MariadDb`"></v-list-tile-title>
-            <v-list-tile-sub-title v-html="data.mariadb"></v-list-tile-sub-title>
-            </v-list-tile-content>
-        </v-list-tile>
+        <v-list-item>
+            <v-list-item-content>
+            <v-list-item-title v-html="`MariadDb`"></v-list-item-title>
+            <v-list-item-subtitle v-html="data.mariadb"></v-list-item-subtitle>
+            </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-card>
 
@@ -274,10 +278,11 @@
       }
     },
     created () {
-      // fetch the data when the view is created and the data is
-      // already being observed
-      this.serverId = this.$route.params.id
       this.fetchData()
+    },
+    watch: {
+      // call again the method if the route changes
+      '$route': 'fetchData'
     },
     methods: {
       format: function(size) {
@@ -294,6 +299,7 @@
         var self = this
         this.error = ''
         this.fetching = true
+        this.serverId = this.$route.params.id
  
         api.get('servers/' + this.serverId + '/summary')
         .then(function (response) {

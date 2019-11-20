@@ -30,8 +30,14 @@
 </script>
 
 <style>
+/*
 .v-subheader {
   padding: 0;
+}
+*/
+
+body {
+  overflow: hidden;
 }
 </style>
 

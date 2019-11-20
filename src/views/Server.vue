@@ -11,19 +11,19 @@
       <Loading :value="fetching" />
 
       <v-list two-line v-if="!fetching">
-        <v-list-tile>
-          <v-list-tile-avatar>
+        <v-list-item>
+          <v-list-item-avatar>
             <v-icon left>fas fa-server</v-icon>
-          </v-list-tile-avatar>
-          <v-list-tile-content>
-            <v-list-tile-title>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>
               {{ data.name }}
-            </v-list-tile-title>
-            <v-list-tile-sub-title>
+            </v-list-item-title>
+            <v-list-item-subtitle>
               {{data.hostname}}
-            </v-list-tile-sub-title>
-          </v-list-tile-content>
-        </v-list-tile>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
 
       <v-tabs>
@@ -61,15 +61,19 @@
       }
     },
     created () {
-      document.title = 'Server'
-      this.serverId = this.$route.params.id
       this.fetchData()
+    },
+    watch: {
+      // call again the method if the route changes
+      '$route': 'fetchData'
     },
     methods: {
       fetchData () {        
+        document.title = 'Server'
         var self = this
         this.error = ''
         this.fetching = true
+        this.serverId = this.$route.params.id
  
         api.get('servers/' + this.serverId)
         .then(function (response) {

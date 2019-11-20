@@ -1,79 +1,84 @@
 <template>
   <div class="page-container">
-    <v-app :dark="dark">
+    <v-app>
       <v-navigation-drawer 
         app
         v-model="drawer"
       >
-      <v-layout column fill-height>
-        <v-toolbar flat>
-          <v-list>
-            <v-list-tile>
-              <v-list-tile-title class="title">
-                <router-link to="/dashboard"> 
-                  <v-icon 
-                    left
-                    color="primary"
-                  >fas fa-magic</v-icon>
-                  <strong>SERVERWAND</strong>
-                </router-link>
-              </v-list-tile-title>
-            </v-list-tile>
-          </v-list>
-        </v-toolbar>
 
-        <v-list dense class="pt-0">
-          <v-list-tile
-            v-for="item in items"
-            :key="item.title"
-            :to="item.to"
-          >
-            <v-list-tile-content>
-              <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
-        <v-spacer></v-spacer>
-        <v-list>
-          <v-layout row justify-center>
-            <v-flex xs2>
-              <p class="text-xs-right" style="margin-top: 18px;">
-                Light
-              </p>
-            </v-flex>
-            <v-flex xs3>
-              <v-card flat>
-                <v-card-text>
-                  <p class="text-xs-center">
-                    <v-switch
-                      v-model="dark"
-                    ></v-switch>
-                  </p>
-                </v-card-text>
-              </v-card>
-            </v-flex>
-            <v-flex xs2>
-              <p class="text-xs-left" style="margin-top: 18px;">
-                Dark
-              </p>
-            </v-flex>
-          </v-layout>
-        </v-list>
-      </v-layout>
-      
+        <v-layout column fill-height>
+          <v-toolbar flat max-height="50">
+            <v-list>
+              <v-list-item>
+                <v-list-item-title class="title">
+                  <router-link to="/dashboard"> 
+                    <v-icon 
+                      left
+                      color="primary"
+                    >fas fa-magic</v-icon>
+                    <strong>SERVERWAND</strong>
+                  </router-link>
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-toolbar>
+
+          <v-list dense class="pt-0">
+            <v-list-item
+              v-for="item in items"
+              :key="item.title"
+              :to="item.to"
+            >
+              <v-list-item-content>
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+          <v-spacer></v-spacer>
+          <v-list>
+            <v-layout row justify-center>
+              <v-flex xs2>
+                <p class="text-xs-right" style="margin-top: 18px;">
+                  Light
+                </p>
+              </v-flex>
+              <v-flex xs3>
+                <v-card flat>
+                  <v-card-text>
+                    <p class="text-xs-center">
+                      <v-switch
+                        v-model="dark"
+                      ></v-switch>
+                    </p>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+              <v-flex xs2>
+                <p class="text-xs-left" style="margin-top: 18px;">
+                  Dark
+                </p>
+              </v-flex>
+            </v-layout>
+          </v-list>
+        </v-layout>
+        
       </v-navigation-drawer>
-      <v-toolbar app flat>
-        <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+
+      <v-app-bar app flat>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <CreateMenu />
         <Search />
         <UserMenu />
-      </v-toolbar>
+      </v-app-bar>
+
       <v-content>
-        <v-container fluid>
+        <v-container fluid class="py-0">
           <router-view></router-view>
         </v-container>
       </v-content>
+      
       <v-footer app></v-footer>
+
     </v-app>
 
     <v-dialog v-model="masterPasswordDialog" persistent max-width="600px">
@@ -121,6 +126,7 @@
           ></v-text-field>
         
         </v-card-text>
+        
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" flat @click="resetKeyDialog = false">Close</v-btn>
@@ -137,7 +143,7 @@
   import UserMenu from './components/UserMenu'
   import api from './services/api'
   import axios from 'axios'
-  import { sha256, sha224 } from 'js-sha256'
+  import { sha256 } from 'js-sha256'
 
   export default {
     components: {
@@ -162,8 +168,18 @@
         masterPassword: '',
       }
     },
-    created () {
+    created () {      
       var self = this
+
+      this.$vuetify.theme.themes.light.primary = '#A25C57'
+      this.$vuetify.theme.themes.light.secondary = '#4C3148'
+      this.$vuetify.theme.themes.light.accent = '#A25C57'
+      this.$vuetify.theme.themes.light.error = '#b71c1c'
+
+      this.$vuetify.theme.themes.dark.primary = '#A25C57'
+      this.$vuetify.theme.themes.dark.secondary = '#4C3148'
+      this.$vuetify.theme.themes.dark.accent = '#A25C57'
+      this.$vuetify.theme.themes.dark.error = '#b71c1c'
 
       axios.interceptors.response.use(function (response) {
         if (!response) {
@@ -196,14 +212,17 @@
     mounted() {
       if (localStorage.dark) {
         this.dark = true
+        this.$vuetify.theme.dark = true
       }
     },
     watch: {
       dark(newDark) {
         if (newDark) {
           localStorage.dark = 1
+          this.$vuetify.theme.dark = true
         } else {
           delete localStorage.dark
+          this.$vuetify.theme.dark = false
         }
       }
     },
@@ -225,7 +244,7 @@
         .catch(function (error) {
           console.log(error)
         })
-        .finally(function (error) {
+        .finally(function () {
           self.dialog = false
           self.loading = false
         })
@@ -248,7 +267,7 @@
         .catch(function (error) {
           console.log(error)
         })
-        .finally(function (error) {
+        .finally(function () {
           self.resetKeyDialog = false
           self.loading = false
         })

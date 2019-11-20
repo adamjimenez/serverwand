@@ -11,94 +11,107 @@
       <Loading :value="loading" />
 
       <v-card>
-
+        
         <v-card-title primary-title>
-          <div class="headline">Servers</div>
+          <div class="headline">Dashboard</div>
         </v-card-title>
 
+        <v-layout row class="mx-1">
+          <v-flex xs6>
+            <v-card>
 
-        <v-list two-line v-if="servers.length" class="results">
-          <template v-for="(item, index) in servers">
-            <v-list-tile
-              :key="item.name"
-            >
-              <v-list-tile-avatar>
-                <v-icon>fas fa-server</v-icon>
-              </v-list-tile-avatar>
+              <v-card-title>
+                Servers
+              </v-card-title>
 
-              <v-list-tile-content>
-                <router-link :to="'/servers/' + item.id + '/summary'"> 
-                  <v-list-tile-title>{{item.name}}</v-list-tile-title>
-                  <v-list-tile-sub-title>{{item.hostname}}</v-list-tile-sub-title>
-                </router-link>
-              </v-list-tile-content>
-            </v-list-tile>
-          </template>
-        </v-list>
+              <v-list two-line v-if="servers.length" class="results">
+                <template v-for="(item) in servers">
+                  <v-list-item
+                    :key="item.name"
+                  >
+                    <v-list-item-avatar>
+                      <v-icon>fas fa-server</v-icon>
+                    </v-list-item-avatar>
 
-        <v-list v-else>
-          <v-list-tile>
-            <v-list-tile-content>
-              <v-list-tile-title>
-                <router-link to="/servers/create">
-                    Add a server
-                </router-link>
-              </v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
+                    <v-list-item-content>
+                      <router-link :to="'/servers/' + item.id + '/summary'"> 
+                        <v-list-item-title>{{item.name}}</v-list-item-title>
+                        <v-list-item-subtitle>{{item.hostname}}</v-list-item-subtitle>
+                      </router-link>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+              </v-list>
 
-      </v-card>
+              <v-list v-else>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      <router-link to="/servers/create">
+                          Add a server
+                      </router-link>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
 
-      <v-card>
-        <v-card-title primary-title>
-          <div class="headline">Domains</div>
-        </v-card-title>
+            </v-card>
+          </v-flex>
 
-        <v-list two-line v-if="domains.length" class="results">
-          <template v-for="(item, index) in domains">
-            <v-divider
-              v-if="item.divider"
-              :inset="item.inset"
-              :key="index"
-            ></v-divider>
+          <v-flex xs6>
+            <v-card>
 
-            <v-list-tile
-              v-else
-              :key="item.name"
-            >
-              <v-list-tile-avatar>
-                <v-icon>fas fa-globe</v-icon>
-              </v-list-tile-avatar>
+              <v-card-title>
+                Domains
+              </v-card-title>
 
-              <v-list-tile-content>
-                <router-link :to="'/domains/' + item.id + '/summary'"> 
-                  <v-list-tile-title v-html="item.domain"></v-list-tile-title>
-                  <v-list-tile-sub-title>{{serverOptions[item.server]}}</v-list-tile-sub-title>
-                </router-link>
-              </v-list-tile-content>
-            </v-list-tile>
-          </template>
-        </v-list>
+              <v-list two-line v-if="domains.length" class="results">
+                <template v-for="(item, index) in domains">
+                  <v-divider
+                    v-if="item.divider"
+                    :inset="item.inset"
+                    :key="index"
+                  ></v-divider>
 
-        <v-list v-else>
-          <v-list-tile>
-            <v-list-tile-content>
-              <v-list-tile-title>
-                <router-link to="/domains/create">
-                    Add a domain
-                </router-link>
-              </v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
+                  <v-list-item
+                    v-else
+                    :key="item.name"
+                  >
+                    <v-list-item-avatar>
+                      <v-icon>fas fa-globe</v-icon>
+                    </v-list-item-avatar>
+
+                    <v-list-item-content>
+                      <router-link :to="'/domains/' + item.id + '/summary'"> 
+                        <v-list-item-title v-html="item.domain"></v-list-item-title>
+                        <v-list-item-subtitle>{{serverOptions[item.server]}}</v-list-item-subtitle>
+                      </router-link>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+              </v-list>
+
+              <v-list v-else>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      <router-link to="/domains/create">
+                          Add a domain
+                      </router-link>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+
+
+            </v-card>
+          </v-flex>
+        </v-layout>
 
       </v-card>
 
     </v-flex>
-
-
-  </v-layout>  
+  </v-layout>
 </template>
 
 <script>

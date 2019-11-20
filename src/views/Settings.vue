@@ -1,19 +1,20 @@
 <template>
-    <v-layout>
-      <v-flex>
-      
-        <v-subheader>
-          <v-icon left>fas fa-user</v-icon>
-          <h1>Settings</h1>
-        </v-subheader>
+  <v-layout row>
+    <v-flex>
 
+      <v-card>        
+        <v-card-title primary-title>
+          <div class="headline">Settings</div>
+        </v-card-title>
+      
         <v-tabs>
           <v-tab :to="'/settings/profile'">Profile</v-tab>
           <v-tab :to="'/settings/api'">API</v-tab>
         </v-tabs>
-        <router-view></router-view>
-      </v-flex>
+        <router-view></router-view>      
+      </v-card>
 
-    </v-layout>
+    </v-flex>
+  </v-layout>
 </template>
 
