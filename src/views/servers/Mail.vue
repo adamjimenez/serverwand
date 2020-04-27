@@ -7,9 +7,11 @@
       {{error}}
     </v-alert>
     
-    <Loading :value="fetching" />
+    <Loading :value="loading" />
 
-    <v-card>
+    <v-card
+      :loading="fetching"
+    >
         <v-list
           subheader
           two-line
@@ -64,7 +66,8 @@
         items: [],
         data: {},
         details: '',
-        fetching: true,
+        loading: false,
+        fetching: false,
         serverId: 0,
         selected: false
       }
@@ -92,7 +95,7 @@
       fetchData () {        
         var self = this
         this.error = ''
-        this.fetching = true
+        // this.fetching = true
  
         api.get('servers/' + this.serverId + '/messages')
         .then(function (response) {
@@ -131,7 +134,7 @@
             }
         })
 
-        api.post('servers/' + this.serverId + '/deletemessages', {ids: ids})
+        api.post('servers/' + this.serverId + '/messages', {ids: ids})
         .then(function (response) {
             self.fetchData()
         })

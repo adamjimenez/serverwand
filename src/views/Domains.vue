@@ -9,7 +9,12 @@
         {{error}}
       </v-alert> 
 
-      <v-card flat>
+      <Loading :value="loading" />
+
+      <v-card 
+        flat
+        :loading="fetching"
+      >
         <v-card-title primary-title>
           <div class="headline">Domains</div>
         </v-card-title>
@@ -23,8 +28,6 @@
             ></v-select>
           </v-card-text>
         </v-card>
-
-        <Loading :value="loading" />
 
         <v-data-table
           :headers="headers"
@@ -71,7 +74,8 @@
     },
     data () {
       return {
-        loading: true,
+        fetching: false,
+        loading: false,
         error: '',
         filtered: [],
         items: [],
@@ -131,6 +135,7 @@
       fetchData () {        
         var self = this;
         this.error = ''
+        this.fetching = true
  
         api.get('domains/')
         .then(function (response) {
@@ -163,7 +168,7 @@
           console.log(error)
         })
         .finally(function() {
-          self.loading = false
+          self.fetching = false
         })
       }
     }

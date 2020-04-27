@@ -7,11 +7,12 @@
     {{error}}
     </v-alert>
 
-    <Loading :value="fetching" />
+    <Loading :value="loading" />
 
 <template>
   <v-card
     class="mx-auto"
+    :loading="fetching"
   >
     <v-list>
       <v-list-item-group>
@@ -123,7 +124,6 @@
     },
     data () {
       return {
-        loading: false,
         domainId: null,
         post: null,
         error: null,
@@ -133,7 +133,8 @@
           app: {}
         },
         details: '',
-        fetching: true,
+        loading: false,
+        fetching: false,
         passwordPanel: [false],
         passwordFormValid: true,
         rules: {
@@ -174,6 +175,8 @@
         this.error = ''
         this.domainId = this.$route.params.id
         clearTimeout(self.timer)
+
+        this.fetching = true
  
         api.get('domains/' + this.domainId + '/aliases')
         .then(function (response) {
@@ -217,7 +220,7 @@
             child = window.open('/loading')
           }
 
-          api.saveAlias(this.domainId, {alias: this.alias.domain, dns: this.alias.dns})
+          api.post('domains/' + this.domainId + '/aliases', {alias: this.alias.domain, dns: this.alias.dns})
           .then(function (response) {
             console.log(response)
             
@@ -259,7 +262,7 @@
             this.fetching = true
             this.error = ''
 
-            api.deleteAlias(this.domainId, {alias: alias})
+            api.post('domains/' + this.domainId + '/aliases', {delete: 1, alias: alias})
             .then(function (response) {
               console.log(response)
               

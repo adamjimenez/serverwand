@@ -7,10 +7,11 @@
     {{error}}
     </v-alert>
 
-    <Loading :value="fetching" />
+    <Loading :value="loading" />
   
     <v-card
       class="mx-auto"
+      :loading="fetching"
     >
       <v-layout v-if="data.app">
           <div v-if="data.app.name" style="flex: 1">
@@ -137,11 +138,11 @@
     },
     data () {
       return {
-        loading: false,
         domainId: null,
         error: null,
         data: {},
-        fetching: true,
+        loading: false,
+        fetching: false,
         drawer: false,
         apps: [{
           name: 'git',
@@ -207,20 +208,20 @@
             this.fetching = true
             this.loading = true
 
-            api.get('domains/' + this.$route.params.id + '/install/' + app)
+            api.post('domains/' + this.$route.params.id + '/apps', {app: app})
             .then(function (response) {
               console.log(response)
               
               if (response.data.error) {
                 self.error = response.data.error
-                self.fetching = false
-                self.loading = false
               } else {
                 self.fetchData();
               }
             })
             .catch(function (error) {
               console.log(error)
+            })
+            .finally(function() {
               self.fetching = false
               self.loading = false
             })
@@ -234,7 +235,7 @@
           this.fetching = true
           this.error = ''
 
-          api.post('domains/' + this.domainId + '/install', {git_url: this.data.git_url})
+          api.post('domains/' + this.domainId + '/apps', {git_url: this.data.git_url})
           .then(function (response) {
             console.log(response)
             

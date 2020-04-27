@@ -7,11 +7,12 @@
       {{error}}
     </v-alert>
     
-    <Loading :value="fetching" />
+    <Loading :value="loading" />
 
 <template>
   <v-card
     class="mx-auto"
+    :loading="fetching"
   >
     <v-list v-if="items.length>0">
       <v-list-item-group>
@@ -67,7 +68,8 @@
         items: [],
         data: {},
         details: '',
-        fetching: true,
+        loading: false,
+        fetching: false,
         serverId: 0,
         selected: false
       }
@@ -135,7 +137,7 @@
                 }
             })
 
-            api.post('servers/' + this.serverId + '/deletebackup', {ids: ids})
+            api.post('servers/' + this.serverId + '/backups', {ids: ids})
             .then(function () {
                 self.fetchData()
             })

@@ -5,13 +5,15 @@
       <div v-if="error" class="error">
         {{ error }}
       </div>
+
+      <Loading :value="loading" />
     
-      <v-card>
+      <v-card
+        :loading="fetching"
+      >
         <v-card-title primary-title>
           <div class="headline">Servers</div>
         </v-card-title>
-
-        <Loading :value="loading" />
         
         <v-list two-line v-if="items.length" class="results">
           <template v-for="(item, index) in items">
@@ -71,7 +73,8 @@
     },
     data () {
       return {
-        loading: true,
+        loading: false,
+        fetching: false,
         error: null,
         items: [],
         page: 1,
@@ -91,7 +94,7 @@
       fetchData () {        
         var self = this
         this.error = ''
-        this.loading = true
+        this.fetching = true
  
         api.get('servers/')
         .then(function (response) {
@@ -103,7 +106,7 @@
           console.log(error)
         })
         .finally(function() {
-          self.loading = false
+          self.fetching = false
         })
       }
     }

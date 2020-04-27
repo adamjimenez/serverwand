@@ -1,10 +1,11 @@
 <template>
   <div>
-    <Loading :value="fetching" />
+    <Loading :value="loading" />
 
 <template>
   <v-card
     class="mx-auto"
+    :loading="fetching"
   >
     <v-list>
       <v-list-item-group>
@@ -97,14 +98,13 @@
     },
     data () {
       return {
-        loading: '',
+        fetching: false,
+        loading: false,
         id: null,
         error: null,
-        data: {
-        },
+        data: {},
         dialog: false,
         details: '',
-        fetching: true,
         rules: {
           required: value => !!value || 'Required.',
           min: v => v.length >= 8 || 'Min 8 characters',
@@ -162,7 +162,7 @@
           this.dialog = true
           this.error = ''
 
-          api.post('teams/' + this.id + '/members', {email: this.member.email})
+          api.post('teams/' + this.id, {email: this.member.email})
           .then(function (response) {
             console.log(response)
             
@@ -188,9 +188,9 @@
             var self = this
             this.error = ''
             this.dialog = true
-            this.loading = 'delete'
+            this.loading = true
 
-            api.post('teams/' + this.id + '/members', {delete: 1, user: user})
+            api.post('teams/' + this.id, {delete: 1, user: user})
             .then(function (response) {
               console.log(response)
               
@@ -205,7 +205,7 @@
             })
             .finally(function() {
               self.dialog = false
-              self.loading = ''
+              self.loading = false
             })
           }
         })

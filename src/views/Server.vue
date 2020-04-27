@@ -8,8 +8,6 @@
         {{error}}
       </v-alert> 
 
-      <Loading :value="fetching" />
-
       <v-list two-line v-if="!fetching">
         <v-list-item>
           <v-list-item-avatar>
@@ -28,6 +26,7 @@
 
       <v-tabs>
         <v-tab :to="'/servers/' + serverId + '/summary'">Summary</v-tab>
+        <v-tab :to="'/servers/' + serverId + '/services'">Services</v-tab>
         <v-tab :to="'/servers/' + serverId + '/cronjobs'">Cronjobs</v-tab>
         <v-tab :to="'/servers/' + serverId + '/systemusers'">System users</v-tab>
         <v-tab :to="'/servers/' + serverId + '/firewall'">Firewall</v-tab>
@@ -44,12 +43,8 @@
 
 <script>
   import api from '../services/api'
-  import Loading from '../components/Loading'
 
   export default {
-    components: {
-      Loading
-    },
     data () {
       return {
         error: '',
@@ -57,7 +52,7 @@
           users: {}
         },
         details: '',
-        fetching: true
+        fetching: false
       }
     },
     created () {
@@ -72,7 +67,7 @@
         document.title = 'Server'
         var self = this
         this.error = ''
-        this.fetching = true
+        // this.fetching = true
         this.serverId = this.$route.params.id
  
         api.get('servers/' + this.serverId)

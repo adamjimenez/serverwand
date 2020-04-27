@@ -7,7 +7,7 @@
       >
 
         <v-layout column fill-height>
-          <v-toolbar flat max-height="50">
+          <v-toolbar flat max-height="64">
             <v-list>
               <v-list-item>
                 <v-list-item-title class="title">
@@ -43,7 +43,7 @@
                 </p>
               </v-flex>
               <v-flex xs3>
-                <v-card flat>
+                <v-card flat class="themeSwitchContainer">
                   <v-card-text>
                     <p class="text-xs-center">
                       <v-switch
@@ -267,26 +267,30 @@
 </script>
 
 <style>
-a {text-decoration: none;}
+  a {text-decoration: none;}
 
-.v-navigation-drawer .v-list__tile--link {
-  border-left-width: 5px;
-  border-left-style: solid;
-  border-left-color: transparent;
-}
+  .v-navigation-drawer .v-list__tile--link {
+    border-left-width: 5px;
+    border-left-style: solid;
+    border-left-color: transparent;
+  }
 
-.v-navigation-drawer .v-list__tile--active {
-  border-left-style: solid;
-  border-left-width: 5px;
-  border-left-color: inherit;
-}
+  .v-navigation-drawer .v-list__tile--active {
+    border-left-style: solid;
+    border-left-width: 5px;
+    border-left-color: inherit;
+  }
 
-.v-navigation-drawer .v-input--switch {
-  margin: 0;
-  padding: 0;
-}
+  .v-navigation-drawer .v-input--switch {
+    margin: 0;
+    padding: 0;
+  }
 
-.v-navigation-drawer .v-input--selection-controls .v-input__control {
-  margin-left: 3px;
-}
+  .v-navigation-drawer .v-input--selection-controls .v-input__control {
+    margin-left: 3px;
+  }
+
+  .v-navigation-drawer .themeSwitchContainer {
+    background-color: transparent;
+  }
 </style>

@@ -110,9 +110,9 @@
       fetchData () {        
         var self = this
         this.error = ''
-        this.loading = true
+        this.loading = false
 
-        api.domain(this.domainId)
+        api.get('domains/' + this.domainId)
         .then(function (response) {
           console.log(response)
 
@@ -127,7 +127,7 @@
           self.loading = false
         })
  
-        api.servers()
+        api.get('servers/')
         .then(function (response) {
           console.log(response)
             

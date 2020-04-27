@@ -7,9 +7,12 @@
       {{error}}
     </v-alert>
 
-    <Loading :value="fetching" />
+    <Loading :value="loading" />
 
-    <v-card>
+    <v-card
+      class="mx-auto"
+      :loading="fetching"
+    >
       <div>
         <v-card-title primary-title>
           <v-switch
@@ -68,7 +71,7 @@
           app: {}
         },
         details: '',
-        fetching: true,
+        fetching: false,
         copyText: 'Copy'
       }
     },
@@ -118,7 +121,7 @@
         this.fetching = true
         this.loading = true
 
-        api.post('domains/' + this.$route.params.id  + '/setssl', {status: this.data.ssl})
+        api.post('domains/' + this.$route.params.id  + '/settings', {save: 1, ssl: this.data.ssl})
         .then(function (response) {
           console.log(response)
 

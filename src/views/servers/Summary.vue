@@ -7,9 +7,7 @@
     {{error}}
     </v-alert>
     
-    <Loading :value="fetching" />
-
-    <v-card class="pa-3">
+    <v-card class="pa-3" :loading="fetching">
       <v-container
       >
          <v-layout row wrap>
@@ -53,8 +51,8 @@
                   <div class="pt-3" style="clear: both;">
                       <v-list-item-title>
                           <v-progress-linear 
-                          v-model="data.mem_perc"
-                          height="20"
+                            v-model="data.mem_perc"
+                            height="20"
                           ></v-progress-linear>
                       </v-list-item-title>
                       <v-list-item-subtitle v-html="format(data.mem_free)+'  free of '+format(data.mem_total)"></v-list-item-subtitle>
@@ -81,8 +79,8 @@
                   <div class="pt-3" style="clear: both;">
                       <v-list-item-title>
                           <v-progress-linear 
-                          v-model="data.disk_perc"
-                          height="20"
+                            v-model="data.disk_perc"
+                            height="20"
                           ></v-progress-linear>
                       </v-list-item-title>
                       <v-list-item-subtitle v-html="format(data.disk_free)+'  free of '+format(data.disk_space)"></v-list-item-subtitle>
@@ -227,6 +225,17 @@
         </v-flex>
 
       </v-layout>
+
+
+
+      <v-container
+      >
+         <v-layout row wrap>
+          <svg width="100%" viewBox="0 0 1060 980" v-html="data.graph">
+          </svg>
+         </v-layout>
+      </v-container>
+
     </v-card>
 
     <v-navigation-drawer
@@ -258,6 +267,7 @@
           </v-card-text>
       </v-card>
     </v-navigation-drawer>
+    
   </div>
 </template>
 
@@ -273,7 +283,6 @@
     },
     data () {
       return {
-        loading: false,
         error: '',
         data: {
           disk_free: 0,
@@ -281,11 +290,12 @@
           disk_perc: 0,
           mem_free: 0,
           mem_total: 0,
-          mem_perc: 0
+          mem_perc: 0,
+          graph: ''
         },
         hostname: '',
         details: '',
-        fetching: true,
+        fetching: false,
         serverId: 0,
         drawer: false
       }

@@ -7,9 +7,12 @@
     {{error}}
     </v-alert>
 
-    <Loading :value="fetching" />    
+    <Loading :value="loading" />    
 
-    <v-card class="pa-3">
+    <v-card 
+      class="pa-3"
+      :loading="fetching"
+    >
 
       <v-layout row v-if="data.server && data.dns && data.dns.A != data.server.ip">
         <v-flex xs12>
@@ -125,7 +128,6 @@
     },
     data () {
       return {
-        loading: false,
         domainId: null,
         post: null,
         error: null,
@@ -135,7 +137,8 @@
           app: {}
         },
         details: '',
-        fetching: true,
+        loading: false,
+        fetching: false,
         passwordPanel: [false],
         passwordFormValid: true,
         showPassword: false,
@@ -178,6 +181,7 @@
         this.error = ''
         this.domainId = this.$route.params.id
         clearTimeout(self.timer)
+        this.fetching = true
  
         api.get('domains/' + this.domainId + '/summary')
         .then(function (response) {

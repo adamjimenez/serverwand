@@ -7,11 +7,12 @@
         {{error}}
         </v-alert>
         
-        <Loading :value="fetching" />
+        <Loading :value="loading" />
 
 <template>
   <v-card
     class="mx-auto"
+    :loading="fetching"
   >
     <v-list>
       <v-list-item-group>
@@ -192,7 +193,8 @@
           dow: v => /^[0-9,/*]+$/g.test(v) || '1-7 or *',
         },
         details: '',
-        fetching: true,
+        fetching: false,
+        loading: false,
         cronjobDrawer: false,
         serverId: 0,
         logs: [{
@@ -270,7 +272,7 @@
             this.fetching = true
             this.error = ''
 
-            api.deleteCronjob(this.serverId, {line: line})
+            api.post('servers/' + this.serverId + '/cronjobs', {line: line})
             .then(function (response) {
               console.log(response)
               
@@ -295,7 +297,7 @@
         if (this.$refs.cronjobForm.validate()) {
           this.fetching = true
           
-          api.saveCronjob(self.serverId, this.cronjob)
+          api.post('servers/' + this.serverId + '/cronjobs', this.cronjob)
           .then(function (response) {
             console.log(response)
             if (response.data.error) {

@@ -1,15 +1,18 @@
 <template>
     <div>
         <v-alert
-        :value="error.length>0"
-        type="error"
+          :value="error.length>0"
+          type="error"
         >
-        {{error}}
+          {{error}}
         </v-alert>
 
-        <Loading :value="fetching" />
+        <Loading :value="loading" />
 
-        <v-card>
+        <v-card
+          class="mx-auto"
+          :loading="fetching"
+        >
 
           <v-layout row v-if="data.server && data.dns && data.dns.MX != data.server.hostname">
             <v-flex xs12>
@@ -22,38 +25,31 @@
             </v-flex>
           </v-layout>
 
-          <div>
-            <v-card-title primary-title>
-              <v-switch
-                  v-model="data.email"
-                  label="Email"
-                  @change="toggleEmail()"
-              ></v-switch>
-            </v-card-title>
-          </div>
-        </v-card>
+          <v-card-title primary-title>
+            <v-switch
+                v-model="data.email"
+                label="Email"
+                @change="toggleEmail()"
+            ></v-switch>
+          </v-card-title>
 
-        <v-card>
-          <div>
-            <v-layout row>
-              <v-flex xs12>
-                <v-card tile flat>
-                  <v-card-text>
-                    <p>IMAP server: {{data.server.hostname}}:143</p>
-                    <p>SMTP server: {{data.server.hostname}}:25</p>
-                  </v-card-text>
-                </v-card>
-              </v-flex>
-            </v-layout>
-          </div>
-        </v-card>
+      </v-card>
 
-        <v-card>
+      <v-card
+          class="mx-auto"
+      >
+        <v-card-text>
+          <p>IMAP server: {{data.server.hostname}}:143</p>
+          <p>SMTP server: {{data.server.hostname}}:25</p>
+        </v-card-text>
+      </v-card>
+
+      <v-card>
           <template v-for="(item, index) in data.emails">
             <div
             :key="index"
             >
-              <v-layout row
+              <v-layout
               >
                 <v-flex xs6>
                   <v-card tile flat>
@@ -70,17 +66,17 @@
                   <v-card tile flat>
                     <v-card-text>
                       <v-btn
-                      :disabled="fetching"
-                      :loading="fetching"
-                      @click="editEmail(index)"
+                        :disabled="fetching"
+                        :loading="fetching"
+                        @click="editEmail(index)"
                       >
                       Edit
                       </v-btn>
 
                       <v-btn
-                      :disabled="fetching"
-                      :loading="fetching"
-                      @click="deleteEmail(item.user)"
+                        :disabled="fetching"
+                        :loading="fetching"
+                        @click="deleteEmail(item.user)"
                       >
                       Delete
                       </v-btn>
@@ -92,25 +88,25 @@
               <v-divider></v-divider>
             </div>
           </template>
-        </v-card>
+      </v-card>
 
-        <v-card>
-          <div>
-            <v-btn
-                @click="addEmail()"
-            >
-              Add email
-            </v-btn>
-          </div>
-        </v-card>        
+      <v-card>
+        <v-card-text>
+          <v-btn
+              @click="addEmail()"
+          >
+            Add email
+          </v-btn>
+        </v-card-text>
+      </v-card>        
 
 
-        <v-navigation-drawer
+      <v-navigation-drawer
         v-model="drawer"
         absolute
         temporary
         right
-        >
+      >
 
           <v-card>
             <v-card-title>
@@ -149,7 +145,7 @@
             </v-card-text>
           </v-card>
 
-        </v-navigation-drawer>
+      </v-navigation-drawer>
     </div>  
 </template>
 
@@ -165,7 +161,6 @@
     },
     data () {
       return {
-        loading: false,
         domainId: null,
         post: null,
         error: null,
@@ -176,7 +171,8 @@
           records: {}
         },
         email: {},
-        fetching: true,
+        fetching: false,
+        loading: false,
         rules: {
           required: value => !!value || 'Required.',
           min: v => v.length >= 8 || 'Min 8 characters',
@@ -213,6 +209,7 @@
         this.error = ''
         this.domainId = this.$route.params.id 
         clearTimeout(self.timer)
+        this.fetching = true
 
         api.get('domains/' + this.domainId + '/email')
         .then(function (response) {
@@ -236,10 +233,9 @@
       toggleEmail () { 
         var self = this
         this.error = ''
-        this.fetching = true
         this.loading = true
 
-        api.post('domains/' + this.$route.params.id  + '/setemail', {status: this.data.email})
+        api.post('domains/' + this.domainId  + '/email', {update: 1, status: this.data.email})
         .then(function (response) {
           console.log(response)
 
@@ -271,16 +267,16 @@
         var self = this
 
         if (this.email.user) {
-          this.fetching = true
+          this.loading = true
           this.error = ''
 
-          api.post('domains/' + this.domainId + '/saveemail', this.email)
+          api.post('domains/' + this.domainId + '/email', this.email)
           .then(function (response) {
             console.log(response)
             
             if (!response.data.success) {
               self.error = response.data.error
-              self.fetching = false
+              self.loading = false
             } else {
               self.drawer = false
               self.fetchData()
@@ -288,7 +284,7 @@
           })
           .catch(function (error) {
             console.log(error)
-            self.fetching = false
+            self.loading = false
           })
         }
       },
@@ -296,23 +292,23 @@
         this.$confirm('Delete ' + user + '?').then(res => {
           if (res) {
             var self = this
-            this.fetching = true
+            this.loading = true
             this.error = ''
 
-            api.post('domains/' + this.domainId + '/deleteemail', {user: user})
+            api.post('domains/' + this.domainId + '/email', {delete: 1, user: user})
             .then(function (response) {
               console.log(response)
               
               if (!response.data.success) {
                 self.error = response.data.error
-                self.fetching = false
+                self.loading = false
               } else {
                 self.fetchData()
               }
             })
             .catch(function (error) {
               console.log(error)
-              self.fetching = false
+              self.loading = false
             })
           }
         })
@@ -320,7 +316,7 @@
       fixDomainDns(domain, noAuthPrompt) {
         var self = this
         this.error = ''
-        this.fetching = true
+        this.loading = true
 
         var child
         if (!noAuthPrompt) {
@@ -344,7 +340,7 @@
               }, 500)
             } else {
               self.error = response.data.error
-              self.fetching = false
+              self.loading = false
             }
           } else {
             if (child) {

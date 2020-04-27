@@ -61,7 +61,6 @@
     },
     data () {
       return {
-        loading: false,
         error: '',
         data: {
           users: {}
@@ -82,7 +81,7 @@
         var self = this
         this.error = ''
 
-        this.fetching = true
+        //this.fetching = true
  
         api.get('servers/' + this.serverId)
         .then(function (response) {

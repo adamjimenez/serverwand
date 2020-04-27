@@ -7,11 +7,12 @@
         {{error}}
         </v-alert>
       
-        <Loading :value="fetching" />
+        <Loading :value="loading" />
 
 <template>
   <v-card
     class="mx-auto"
+    :loading="fetching"
   >
     <v-list>
       <v-list-item-group>
@@ -20,7 +21,7 @@
           <v-list-item
             :key="`item-${i}`"
             :value="item"
-            @click="editItem(item.name)"
+            @click="editItem(item)"
           >
             <template v-slot:default="{ active, toggle }">
               <v-list-item-content>
@@ -32,8 +33,8 @@
               <v-list-item-action>
                 <v-btn
                   icon
-                  :disabled="fetching"
-                  :loading="fetching"
+                  :disabled="loading"
+                  :loading="loading"
                   @click="deleteItem(item.name)"
                   @click.stop
                 >
@@ -73,7 +74,7 @@
 
               <v-card-text>
                 <v-text-field
-                  v-model="system_user.user"
+                  v-model="system_user.name"
                   label="User"
                   required
                 ></v-text-field>
@@ -86,9 +87,16 @@
                   autocomplete="new-password"
                 ></v-text-field>
                 
+                <v-text-field
+                  v-if="system_user.key"
+                  v-model="system_user.key"
+                  label="SSH key"
+                  readonly
+                ></v-text-field>
+                
                 <v-btn
                   :disabled="fetching"
-                  :loading="fetching"
+                  :loading="loading"
                   color="success"
                   @click="saveUser"
                 >
@@ -116,10 +124,12 @@
         },
         system_user: {
           user: '',
-          password: ''
+          password: '',
+          key: ''
         },
         details: '',
-        fetching: true,
+        loading: false,
+        fetching: false,
         userDrawer: false,
         serverId: 0
       }
@@ -166,12 +176,13 @@
         })
       },
       addItem() {
-        this.system_user.user = ''
+        this.system_user.name = ''
         this.system_user.password = ''
+        this.system_user.key = ''
         this.userDrawer = true
       },
       editItem(user) {
-        this.system_user.user = user
+        this.system_user = user
         this.userDrawer = true
       },
       deleteItem(user) {
@@ -181,7 +192,7 @@
             this.fetching = true
             this.error = ''
 
-            api.deleteSystemUser(this.serverId, {user: user})
+            api.post('servers/' + this.serverId + '/systemusers', {user: user})
             .then(function (response) {
               console.log(response)
               
@@ -204,12 +215,12 @@
       saveUser () {
         var self = this
 
-        if (this.system_user.user && this.system_user.password) {
+        if (this.system_user.name && this.system_user.password) {
           this.details = ''
           this.fetching = true
           this.error = ''
 
-          api.saveSystemUser(this.serverId, this.system_user)
+          api.post('servers/' + this.serverId + '/systemusers', this.system_user)
           .then(function (response) {
             console.log(response)
             

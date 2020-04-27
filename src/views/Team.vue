@@ -52,7 +52,7 @@
         error: null,
         data: {},
         details: '',
-        fetching: true,
+        fetching: false,
         rules: {
           required: value => !!value || 'Required.',
           min: v => v.length >= 8 || 'Min 8 characters',
@@ -76,7 +76,7 @@
       fetchData () {        
         var self = this
         this.error = ''
-        this.fetching = true
+        // this.fetching = true
  
         api.get('teams/' + this.id)
         .then(function (response) {

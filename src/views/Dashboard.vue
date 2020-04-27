@@ -5,12 +5,15 @@
         :value="error.length>0"
         type="error"
       >
-      {{error}}
+        {{error}}
       </v-alert> 
 
       <Loading :value="loading" />
 
-      <v-card>
+      <v-card
+        class="mx-auto"
+        :loading="fetching"
+      >
         
         <v-card-title primary-title>
           <div class="headline">Dashboard</div>
@@ -20,9 +23,9 @@
           <v-flex xs6>
             <v-card>
 
-              <v-card-title>
+              <v-card-subtitle class="pb-0">
                 Servers
-              </v-card-title>
+              </v-card-subtitle>
 
               <v-list two-line v-if="servers.length" class="results">
                 <template v-for="(item) in servers">
@@ -61,9 +64,9 @@
           <v-flex xs6>
             <v-card>
 
-              <v-card-title>
+              <v-card-subtitle class="pb-0">
                 Domains
-              </v-card-title>
+              </v-card-subtitle>
 
               <v-list two-line v-if="domains.length" class="results">
                 <template v-for="(item, index) in domains">
@@ -124,7 +127,8 @@
     },
     data () {
       return {
-        loading: true,
+        fetching: false,
+        loading: false,
         post: null,
         error: '',
         servers: [],
@@ -144,9 +148,9 @@
       fetchData () {        
         var self = this
         this.error = ''
-        this.loading = true
+        this.fetching = true
  
-        api.summary()
+        api.get('summary')
         .then(function (response) {
           console.log(response)
 
@@ -175,7 +179,7 @@
           console.log(error)
         })
         .finally(function() {
-          self.loading = false
+          self.fetching = false
         })
       }
     }

@@ -54,7 +54,6 @@
     },
     data () {
       return {
-        loading: false,
         domainId: null,
         post: null,
         error: null,
@@ -62,7 +61,7 @@
           server: {}
         },
         details: '',
-        fetching: true,
+        fetching: false,
         aliasDrawer: false
       }
     },
@@ -78,7 +77,7 @@
       fetchData () {        
         var self = this
         this.error = ''
-        this.fetching = true
+        // this.fetching = true
         this.domainId = this.$route.params.id
  
         api.get('domains/' + this.domainId)

@@ -7,7 +7,7 @@
       {{error}}
     </v-alert>
     
-    <Loading :value="fetching" />
+    <Loading :value="loading" />
 
     <v-card>
       <div>
@@ -24,6 +24,7 @@
 <template>
   <v-card
     class="mx-auto"
+    :loading="fetching"
   >
     <v-list>
       <v-list-item-group>
@@ -143,7 +144,7 @@
         items: {},
         item: {},
         details: '',
-        fetching: true,
+        fetching: false,
         drawer: false,
         serverId: 0,
         protocol: ['tcp', 'udp'],
@@ -167,7 +168,7 @@
         this.error = ''
         this.fetching = true
  
-        api.firewall(this.serverId)
+        api.get('servers/' + this.serverId + '/firewall')
         .then(function (response) {
           console.log(response)
 
@@ -194,7 +195,7 @@
         this.fetching = true
         this.error = ''
 
-        api.setFirewallStatus(this.serverId, {status: this.active})
+        api.post('servers/' + this.serverId + '/firewall', {status: this.active})
         .then(function (response) {
           console.log(response)
           
@@ -222,7 +223,7 @@
             this.fetching = true
             this.error = ''
 
-            api.deleteFirewallRule(this.serverId, {id: id})
+            api.post('servers/' + this.serverId + '/firewall', {id: id})
             .then(function (response) {
               console.log(response)
               
@@ -248,7 +249,7 @@
         if (this.$refs.form.validate()) {
           this.fetching = true
           
-          api.saveFirewallRule(self.serverId, this.item)
+          api.post('servers/' + this.serverId + '/firewall', this.item)
           .then(function (response) {
             console.log(response)
             if (response.data.error) {
