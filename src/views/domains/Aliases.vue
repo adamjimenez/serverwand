@@ -144,7 +144,7 @@
         },
         alias: {
           domain: '',
-          dns: true
+          dns: false
         },
         drawer: false,
         timer: null
@@ -216,7 +216,7 @@
           this.error = ''
 
           var child
-          if (!noAuthPrompt) {
+          if (!noAuthPrompt && this.alias.dns) {
             child = window.open('/loading')
           }
 
