@@ -11,7 +11,7 @@
 
 <template>
   <v-card
-    class="mx-auto" 
+    class="pa-3"
     :loading="fetching"
   >
     <v-list>

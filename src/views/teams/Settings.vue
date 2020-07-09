@@ -3,31 +3,33 @@
     <Loading :value="loading" />
 
     <v-card
-      class="mx-auto"
+      class="pa-3"
       :loading="fetching"
     >
-      <v-row>
-        <v-col>
-          <div class="ma-3">
-            <v-btn
-              @click="editItem"
-              >
-              Edit Name
-            </v-btn>
-          </div>
 
-          <div class="ma-3">
-            <v-btn
-              :disabled="dialog"
-              :loading="dialog"
-              @click="deleteItem"
-              color="error"
+      <v-card>
+        <v-card-title primary-title>
+          <v-btn
+            @click="editItem"
             >
-              Delete
-            </v-btn>
-          </div>
-        </v-col>
-      </v-row>
+            Edit Name
+          </v-btn>
+        </v-card-title>
+      </v-card>
+
+      <v-card>
+        <v-card-title primary-title>
+          <v-btn
+            :disabled="dialog"
+            :loading="dialog"
+            @click="deleteItem"
+            color="error"
+          >
+            Delete
+          </v-btn>
+        </v-card-title>
+      </v-card>
+
     </v-card>
 
     <v-navigation-drawer

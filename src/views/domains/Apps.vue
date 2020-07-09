@@ -10,7 +10,7 @@
     <Loading :value="loading" />
   
     <v-card
-      class="mx-auto"
+      class="pa-3"
       :loading="fetching"
     >
       <v-layout v-if="data.app">
@@ -23,7 +23,7 @@
             </v-list-item-content>
 
             <div v-if="data.app.name=='git'">
-              <v-container>
+              <v-container class="ma-0">
                 <v-row>
                   <v-col>
                     <v-text-field

@@ -10,7 +10,7 @@
     <Loading :value="loading" />
 
     <v-card
-      class="mx-auto"
+      class="pa-3"
       :loading="fetching"
     >
       <div>
