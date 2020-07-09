@@ -14,7 +14,18 @@
       :loading="fetching"
     >
 
-      <v-layout row v-if="data.server && data.dns && data.dns.A != data.server.ip">
+      <v-layout row v-if="authRequired">
+        <v-flex xs12>
+          <v-card tile flat>
+              <v-card-text>
+                <strong>DNS auth required: </strong>
+                <v-btn @click="authPrompt()">Fix</v-btn>
+              </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+
+      <v-layout row v-if="!authRequired && data.server && data.dns && data.dns.A != data.server.ip">
         <v-flex xs12>
           <v-card tile flat>
               <v-card-text>
@@ -153,7 +164,8 @@
           dns: true
         },
         copyText: 'Copy',
-        timer: null
+        timer: null,
+        authRequired: false
       }
     },
     created () {
@@ -227,50 +239,34 @@
           })
         }
       },
-      fixDomainDns(domain, noAuthPrompt) {
+      fixDomainDns() {
         var self = this
-        this.details = ''
-        this.dialog = true
         this.error = ''
-        this.fetching = true
+        this.loading = true
 
-        var child
-        if (!noAuthPrompt) {
-            child = window.open('/loading')
-        }
-
-        api.get('domains/' + self.domainId + '/fixdns')
+        api.post('domains/' + self.domainId + '/fixdns', {})
         .then(function (response) {
           console.log(response)
+
+          self.loading = false
           
           if (!response.data.success) {
-            if (response.data.error == 'auth' && !noAuthPrompt) {
-              child.location = 'https://serverwand.com/account/services/' + self.data.server.dns
-
-              var interval = setInterval(function() {
-                  if (child.closed) {
-                      clearInterval(interval)
-                      self.fixDomainDns(domain, true)
-                      return
-                  }
-              }, 500)
+            if (response.data.error == 'auth') {
+              self.authRequired = true
             } else {
               self.error = response.data.error
             }
           } else {
-            if (child) {
-              child.close()
-            }
             self.fetchData()
           }
         })
         .catch(function (error) {
-          console.log(error)              
-          self.dialog = false
+          console.log(error)
         })
-        .finally(function() {
-          self.dialog = false
-        })
+      },
+      authPrompt() {
+        this.authRequired = false
+        window.open('https://serverwand.com/account/services/' + this.data.server.dns)
       }
     }
   }

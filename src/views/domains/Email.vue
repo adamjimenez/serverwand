@@ -14,12 +14,34 @@
           :loading="fetching"
         >
 
-          <v-layout row v-if="data.server && data.dns && data.dns.MX != data.server.hostname">
+          <v-layout row v-if="authRequired">
+            <v-flex xs12>
+              <v-card tile flat>
+                  <v-card-text>
+                    <strong>DNS auth required: </strong>
+                    <v-btn @click="authPrompt()">Fix</v-btn>
+                  </v-card-text>
+              </v-card>
+            </v-flex>
+          </v-layout>
+
+          <v-layout row v-if="!authRequired && data.server && data.dns && data.dns.MX != data.server.hostname">
             <v-flex xs12>
               <v-card tile flat>
                   <v-card-text>
                     <strong>MX mismatch:  {{data.dns.MX}} != {{data.server.hostname}}</strong>
                     <v-btn v-if="data.dns.not_set" @click="fixDomainDns(data.domain)">Fix</v-btn>
+                  </v-card-text>
+              </v-card>
+            </v-flex>
+          </v-layout>
+
+          <v-layout row v-if="!authRequired && data.server && data.dkim && data.dkim.not_set">
+            <v-flex xs12>
+              <v-card tile flat>
+                  <v-card-text>
+                    <strong>Missing DKIM</strong>
+                    <v-btn v-if="data.dkim.not_set" @click="fixDkim(data.domain)">Fix</v-btn>
                   </v-card-text>
               </v-card>
             </v-flex>
@@ -35,6 +57,7 @@
 
       </v-card>
 
+<!--
       <v-card
           class="mx-auto"
       >
@@ -43,52 +66,50 @@
           <p>SMTP server: {{data.server.hostname}}:25</p>
         </v-card-text>
       </v-card>
+-->
 
-      <v-card>
-          <template v-for="(item, index) in data.emails">
-            <div
-            :key="index"
-            >
-              <v-layout
-              >
-                <v-flex xs6>
-                  <v-card tile flat>
-                    <v-card-text>
-                      {{item.user}} ({{ format(item.disk_usage) }})
-                      <div v-if="item.destination">
-                        <v-icon left>fas fa-long-arrow-alt-right</v-icon> {{item.destination}}
-                      </div>
-                    </v-card-text>
-                  </v-card>
-                </v-flex>            
 
-                <v-flex xs6>
-                  <v-card tile flat>
-                    <v-card-text>
-                      <v-btn
-                        :disabled="fetching"
-                        :loading="fetching"
-                        @click="editEmail(index)"
-                      >
-                      Edit
-                      </v-btn>
+  <v-card
+    class="mx-auto"
+  >
+    <v-list>
+      <v-list-item-group>
+        <template v-for="(item, i) in data.emails">
 
-                      <v-btn
-                        :disabled="fetching"
-                        :loading="fetching"
-                        @click="deleteEmail(item.user)"
-                      >
-                      Delete
-                      </v-btn>
-                    </v-card-text>
-                  </v-card>
-                </v-flex>
-              </v-layout>
+          <v-list-item
+            :key="`item-${i}`"
+            :value="item"
+            @click="editEmail(i)"
+          >
+            <template v-slot:default>
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{item.user}}
+                  <span v-if="item.destination">
+                    <v-icon>fas fa-long-arrow-alt-right</v-icon> {{item.destination}}
+                  </span>
+                </v-list-item-title>
+                <v-list-item-subtitle>{{ format(item.disk_usage) }}</v-list-item-subtitle>
+              </v-list-item-content>
 
-              <v-divider></v-divider>
-            </div>
-          </template>
-      </v-card>
+              <v-list-item-action>
+                <v-btn
+                  icon
+                  :disabled="fetching"
+                  :loading="fetching"
+                  @click="deleteEmail(item.user)"
+                  @click.stop
+                >
+                  <v-icon small>delete</v-icon>
+                </v-btn>
+              </v-list-item-action>
+            </template>
+          </v-list-item>
+        </template>
+      </v-list-item-group>
+    </v-list>
+  </v-card>
+
 
       <v-card>
         <v-card-text>
@@ -179,7 +200,8 @@
         copyText: 'Copy',
         drawer: false,
         userReadonly: false,
-        timer: null
+        timer: null,
+        authRequired: false
       }
     },
     created () {
@@ -198,18 +220,18 @@
         }
 
         var si
-        for(si = 0; size >= 1024; size /= 1024, si++) {}
+        for(si = 0; size >= 1024; size /= 1024, si++)
 
         return '' + Math.round(size) + 'KMGT'.substr(si, 1)
       },
-      fetchData () {        
+      fetchData () {
         var self = this
         this.error = ''
         this.domainId = this.$route.params.id 
         clearTimeout(self.timer)
         this.fetching = true
 
-        api.get('domains/' + this.domainId + '/email')
+        api.get('domains/' + this.domainId + '/email?v=' + Date.now())
         .then(function (response) {
           console.log(response)
             
@@ -311,45 +333,59 @@
           }
         })
       },
-      fixDomainDns(domain, noAuthPrompt) {
+      fixDomainDns() {
         var self = this
         this.error = ''
         this.loading = true
 
-        var child
-        if (!noAuthPrompt) {
-            child = window.open('/loading')
-        }
-
-        api.get('domains/' + self.domainId + '/fixmx')
+        api.post('domains/' + self.domainId + '/fixmx', {})
         .then(function (response) {
           console.log(response)
+
+          self.loading = false
           
           if (!response.data.success) {
-            if (response.data.error == 'auth' && !noAuthPrompt) {
-              child.location = 'https://serverwand.com/account/services/' + self.data.server.dns
-
-              var interval = setInterval(function() {
-                  if (child.closed) {
-                      clearInterval(interval)
-                      self.fixDomainDns(domain, true)
-                      return
-                  }
-              }, 500)
+            if (response.data.error == 'auth') {
+              self.authRequired = true
             } else {
               self.error = response.data.error
-              self.loading = false
             }
           } else {
-            if (child) {
-              child.close()
-            }
             self.fetchData()
           }
         })
         .catch(function (error) {
           console.log(error)
         })
+      },
+      fixDkim() {
+        var self = this
+        this.error = ''
+        this.loading = true
+
+        api.post('domains/' + self.domainId + '/fixdkim', {})
+        .then(function (response) {
+          console.log(response)
+
+          self.loading = false
+          
+          if (!response.data.success) {
+            if (response.data.error == 'auth') {
+              self.authRequired = true
+            } else {
+              self.error = response.data.error
+            }
+          } else {
+            self.fetchData()
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
+      authPrompt() {      
+        this.authRequired = false  
+        window.open('https://serverwand.com/account/services/' + this.data.server.dns)
       }
     }
   }
