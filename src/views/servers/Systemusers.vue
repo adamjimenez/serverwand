@@ -9,7 +9,6 @@
       
         <Loading :value="loading" />
 
-<template>
   <v-card
     class="mx-auto"
     :loading="fetching"
@@ -23,10 +22,11 @@
             :value="item"
             @click="editItem(item)"
           >
-            <template v-slot:default="{ active, toggle }">
+            <template v-slot:default>
               <v-list-item-content>
                 <v-list-item-title>
                   {{item.name}}
+                  <v-icon x-small right v-if="item.sudo">fas fa-crown</v-icon>
                 </v-list-item-title>
               </v-list-item-content>
 
@@ -47,7 +47,6 @@
       </v-list-item-group>
     </v-list>
   </v-card>
-</template>
 
         <v-card>
             <div>
@@ -93,6 +92,11 @@
                   label="SSH key"
                   readonly
                 ></v-text-field>
+
+                <v-switch
+                    v-model="system_user.sudo"
+                    label="sudo"
+                ></v-switch>
                 
                 <v-btn
                   :disabled="fetching"
@@ -125,7 +129,8 @@
         system_user: {
           user: '',
           password: '',
-          key: ''
+          key: '',
+          sudo: false
         },
         details: '',
         loading: false,
@@ -169,6 +174,7 @@
         this.system_user.name = ''
         this.system_user.password = ''
         this.system_user.key = ''
+        this.system_user.sudo = false
         this.userDrawer = true
       },
       editItem(user) {
@@ -205,7 +211,7 @@
       saveUser () {
         var self = this
 
-        if (this.system_user.name && this.system_user.password) {
+        if (this.system_user.name) {
           this.details = ''
           this.fetching = true
           this.error = ''
