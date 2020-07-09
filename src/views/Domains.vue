@@ -128,7 +128,7 @@
         }
 
         var si
-        for(si = 0; size >= 1024; size /= 1024, si++) {}
+        for(si = 0; size >= 1024; size /= 1024, si++)
 
         return '' + Math.round(size) + 'KMGT'.substr(si, 1)
       },

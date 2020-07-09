@@ -34,7 +34,7 @@
             :key="`item-${i}`"
             :value="item"
           >
-            <template v-slot:default="{ active, toggle }">
+            <template v-slot:default>
               <v-list-item-content>
                 <v-list-item-title>
                   {{item.port}}/{{item.protocol}} {{item.action}} {{item.from}} {{item.v6 ? 'IPV6' : ''}}

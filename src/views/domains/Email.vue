@@ -103,7 +103,7 @@
 
       <v-navigation-drawer
         v-model="drawer"
-        absolute
+        fixed
         temporary
         right
       >
@@ -152,12 +152,10 @@
 <script>
   import api from '../../services/api'
   import Loading from '../../components/Loading'
-  import Copy from '../../components/Copy'
 
   export default {
     components: {
-      Loading,
-      Copy
+      Loading
     },
     data () {
       return {

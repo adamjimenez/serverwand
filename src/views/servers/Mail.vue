@@ -17,9 +17,8 @@
           two-line
           v-if="items.length"
         >
-            <template v-for="(item, index) in items">
+            <template v-for="(item) in items">
                 <v-list-tile
-                    @click=""
                     :key="item.id"                    
                 >
                     <v-list-tile-action>
@@ -135,7 +134,7 @@
         })
 
         api.post('servers/' + this.serverId + '/messages', {ids: ids})
-        .then(function (response) {
+        .then(function () {
             self.fetchData()
         })
         .catch(function (error) {

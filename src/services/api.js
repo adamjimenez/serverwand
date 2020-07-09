@@ -36,9 +36,6 @@ export default {
     deleteServer(serverId) {
         return axios.get('https://serverwand.com/api/servers/' + serverId + '/delete');
     },
-    deleteServer(serverId) {
-        return axios.get('https://serverwand.com/api/servers/' + serverId + '/delete');
-    },
     /*
     saveCronjob(serverId, payload) {
         return axios.post('https://serverwand.com/api/servers/' + serverId + '/savecronjob', payload);

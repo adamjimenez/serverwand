@@ -9,7 +9,7 @@
     
     <Loading :value="loading" />
 
-<template>
+
   <v-card
     class="mx-auto"
     :loading="fetching"
@@ -22,7 +22,7 @@
             :key="`item-${i}`"
             :value="item"
           >
-            <template v-slot:default="{ active, toggle }">
+            <template v-slot:default>
               <v-list-item-content>
                 <v-list-item-title>{{item.name}}</v-list-item-title>
                 <v-list-item-subtitle>{{format(item.size)}}</v-list-item-subtitle>
@@ -49,7 +49,6 @@
     </v-card-text>
 
   </v-card>
-</template>
 
   </div>
 </template>
@@ -100,7 +99,7 @@
         }
 
         var si
-        for(si = 0; size >= 1024; size /= 1024, si++) {}
+        for(si = 0; size >= 1024; size /= 1024, si++)
 
         return '' + Math.round(size) + 'KMGT'.substr(si, 1)
       },

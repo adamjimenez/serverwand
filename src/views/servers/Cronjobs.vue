@@ -9,7 +9,6 @@
         
         <Loading :value="loading" />
 
-<template>
   <v-card
     class="mx-auto"
     :loading="fetching"
@@ -23,7 +22,7 @@
             :value="item"
             @click="editItem(item)"
           >
-            <template v-slot:default="{ active, toggle }">
+            <template v-slot:default>
               <v-list-item-content>
                 <v-list-item-title>
                   <v-icon v-if="item.active===false">block</v-icon>
@@ -48,7 +47,6 @@
       </v-list-item-group>
     </v-list>
   </v-card>
-</template>
 
         <v-card>
             <div>

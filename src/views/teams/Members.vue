@@ -2,7 +2,6 @@
   <div>
     <Loading :value="loading" />
 
-<template>
   <v-card
     class="mx-auto"
     :loading="fetching"
@@ -15,7 +14,7 @@
             :key="`item-${i}`"
             :value="item"
           >
-            <template v-slot:default="{ active, toggle }">
+            <template v-slot:default>
               <v-list-item-content>
                 <v-list-item-title>
                   {{item.email}}
@@ -38,7 +37,6 @@
       </v-list-item-group>
     </v-list>
   </v-card>
-</template>
 
     <v-card>
       <div>
