@@ -255,9 +255,3 @@
     }
   }
 </script>
-
-<style>
-.v-expansion-panel__header {
-  padding: 10px 16px;
-}
-</style>

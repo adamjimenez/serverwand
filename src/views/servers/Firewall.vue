@@ -21,43 +21,41 @@
       </div>
     </v-card>
 
-<template>
-  <v-card
-    class="pa-3"
-    :loading="fetching"
-  >
-    <v-list>
-      <v-list-item-group>
-        <template v-for="(item, i) in items">
+    <v-card
+      class="pa-3"
+      :loading="fetching"
+    >
+      <v-list>
+        <v-list-item-group>
+          <template v-for="(item, i) in items">
 
-          <v-list-item
-            :key="`item-${i}`"
-            :value="item"
-          >
-            <template v-slot:default>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{item.port}}/{{item.protocol}} {{item.action}} {{item.from}} {{item.v6 ? 'IPV6' : ''}}
-                </v-list-item-title>
-              </v-list-item-content>
+            <v-list-item
+              :key="`item-${i}`"
+              :value="item"
+            >
+              <template v-slot:default>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{item.port}}/{{item.protocol}} {{item.action}} {{item.from}} {{item.v6 ? 'IPV6' : ''}}
+                  </v-list-item-title>
+                </v-list-item-content>
 
-              <v-list-item-action>
-                <v-btn
-                  icon
-                  :disabled="fetching"
-                  :loading="fetching"
-                  @click="deleteItem(item.id)"
-                >
-                  <v-icon small>delete</v-icon>
-                </v-btn>
-              </v-list-item-action>
-            </template>
-          </v-list-item>
-        </template>
-      </v-list-item-group>
-    </v-list>
-  </v-card>
-</template>
+                <v-list-item-action>
+                  <v-btn
+                    icon
+                    :disabled="fetching"
+                    :loading="fetching"
+                    @click="deleteItem(item.id)"
+                  >
+                    <v-icon small>delete</v-icon>
+                  </v-btn>
+                </v-list-item-action>
+              </template>
+            </v-list-item>
+          </template>
+        </v-list-item-group>
+      </v-list>
+    </v-card>
 
     <v-card>
       <div>

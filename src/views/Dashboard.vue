@@ -187,7 +187,7 @@
 </script>
 
 <style>
-.results a {
-  color: inherit;
-}
+  .results a {
+    color: inherit;
+  }
 </style>
