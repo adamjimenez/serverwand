@@ -12,26 +12,36 @@
     <v-card
       :loading="fetching"
     >
-        <v-list
-          subheader
-          two-line
-          v-if="items.length"
-        >
-            <template v-for="(item) in items">
-                <v-list-tile
-                    :key="item.id"                    
-                >
-                    <v-list-tile-action>
-                        <v-checkbox v-model="item.selected"></v-checkbox>
-                    </v-list-tile-action>
 
-                    <v-list-tile-content @click="item.selected = !item.selected">
-                        <v-list-tile-title>{{item.sender}} > {{item.recipient}}</v-list-tile-title>
-                        <v-list-tile-sub-title>{{item.date}}</v-list-tile-sub-title>
-                    </v-list-tile-content>
-                </v-list-tile>
-            </template>
-        </v-list>
+        <v-data-table
+          v-if="items.length"
+          :headers="headers"
+          :items="items"
+          class="results"
+        >
+          <template v-slot:body="prop">
+            <tr v-for="item in prop.items" :key="item.id">
+              <td class="text-start">
+                <v-list-item>
+                  <v-checkbox v-model="item.selected"></v-checkbox>
+                </v-list-item>
+              </td>
+              <td class="text-start" @click="view(item.id)">
+                {{item.id}}
+              </td>
+              <td class="text-start">
+                {{item.sender}}
+              </td>
+              <td class="text-start">
+                {{item.recipient}}
+              </td>
+              <td class="text-start">
+                {{item.date}}
+              </td>
+            </tr>
+          </template>
+        </v-data-table>
+
         <v-card-text v-else>
           Queue empty
         </v-card-text>
@@ -47,6 +57,24 @@
             </v-btn>
         </div>
     </v-card>
+
+        <v-dialog
+          app
+          v-model="emailDrawer"
+        >
+          <v-card>
+              <v-card-title>
+                Message
+              </v-card-title>
+
+              <v-textarea
+                auto-grow
+                v-model="message"
+                readonly
+              >
+              </v-textarea>
+          </v-card>
+        </v-dialog>
 
   </div>
 </template>
@@ -65,10 +93,28 @@
         items: [],
         data: {},
         details: '',
+        message: '',
         loading: false,
         fetching: false,
+        emailDrawer: false,
         serverId: 0,
-        selected: false
+        selected: false,
+        headers: [{
+          text: '',
+          value: ''
+        }, {
+          text: 'ID ',
+          value: 'id'
+        }, {
+          text: 'From ',
+          value: 'from'
+        }, {
+          text: 'To ',
+          value: 'to'
+        }, {
+          text: 'Date ',
+          value: 'date'
+        }]
       }
     },
     watch: {
@@ -142,6 +188,15 @@
           self.fetching = false
         })
         .finally(function() {
+        })
+      },
+      view(id) {
+        var self = this
+
+        api.get('servers/' + this.serverId + '/messages/' + id)
+        .then(function (response) {
+            self.message = response.data.message
+            self.emailDrawer = true
         })
       }
     }
