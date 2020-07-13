@@ -64,7 +64,6 @@
 
       <div v-else>
 
-<template>
   <v-card
     class="mx-auto"
   >
@@ -88,7 +87,6 @@
       </v-list-item-group>
     </v-list>
   </v-card>
-</template>
 
        </div>
     </v-card>

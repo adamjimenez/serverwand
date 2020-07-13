@@ -113,7 +113,7 @@
         if (this.$refs.form.validate()) {
           this.dialog = true
 
-          api.register({
+          api.post('auth/register', {
             email: this.email,
             password: this.password
           })

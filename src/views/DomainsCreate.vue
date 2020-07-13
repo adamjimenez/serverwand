@@ -156,7 +156,7 @@
         console.log(arguments);
 
         if (self.domainId) {
-          api.updateDomain(this.domainId, this.data)
+          api.post('domains/' + this.domainId + '/update', this.data)
           .then(function (response) {
             console.log(response)
             self.$router.push('/domains/' + self.domainId + '/summary')
@@ -165,7 +165,7 @@
             console.log(error)
           })
         } else {
-          api.createDomain(this.data)
+          api.post('domains/create', this.data)
           .then(function (response) {
             console.log(response)
             if (response.data.domain_id) {

@@ -92,7 +92,7 @@
         if (this.$refs.form.validate()) {
           this.loading = true
 
-          api.forgot(this.data)
+          api.post('auth/forgot', this.data)
           .then(function (response) {
             console.log(response)
             if (response.data.success) {

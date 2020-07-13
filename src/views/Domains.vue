@@ -90,16 +90,13 @@
           {
             text: 'Domain ',
             value: 'domain'
-          },
-          {
+          }, {
             text: 'IP ',
             value: 'ip'
-          },
-          {
+          }, {
             text: 'MX ',
             value: 'mx'
-          },
-          {
+          }, {
             text: 'Usage ',
             value: 'usage'
           }

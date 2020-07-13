@@ -8,8 +8,7 @@
     </v-alert>
     
     <v-card class="pa-3" :loading="fetching">
-      <v-container
-      >
+      <v-container class="ma-0">
          <v-layout row wrap>
           <v-flex xs12 sm6 md3>
             <v-card>
@@ -228,8 +227,7 @@
 
 
 
-      <v-container
-      >
+      <v-container class="ma-0">
          <v-layout row wrap>
           <svg width="100%" viewBox="0 0 1060 980" v-html="data.graph">
           </svg>

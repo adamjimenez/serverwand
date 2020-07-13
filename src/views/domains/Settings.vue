@@ -145,7 +145,7 @@
             this.fetching = true
             this.loading = true
 
-            api.deleteDomain(this.$route.params.id)
+            api.get('domains/' + this.$route.params.id + '/delete')
             .then(function (response) {
               console.log(response)
               

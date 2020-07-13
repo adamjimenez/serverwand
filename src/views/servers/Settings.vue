@@ -112,7 +112,7 @@
             var self = this
             this.fetching = true
 
-            api.deleteServer(this.$route.params.id)
+            api.get('servers/' + this.$route.params.id + '/delete')
             .then(function (response) {
               console.log(response)
 

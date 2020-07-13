@@ -128,7 +128,7 @@
           this.dialog = true
           this.error = ''
 
-          api.login({
+          api.post('auth/login', {
             email: this.email,
             password: this.password
           })

@@ -124,83 +124,6 @@
           self.fetching = false
         })
       },
-      editServer () { 
-        this.$router.push('/servers/' + this.$route.params.id + '/edit')
-      },
-      deleteServer () {
-        var self = this
-        this.fetching = true
-
-        api.deleteServer(this.$route.params.id)
-        .then(function (response) {
-          console.log(response)
-
-          if (response.data.success) {
-            // subscribe to status changes
-            self.$router.push('/servers/')
-          }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-      },
-      addUser() {
-        this.userDrawer = true
-      },
-      editUser(user) {
-        this.system_user.user = user
-        this.userDrawer = true
-      },
-      deleteUser(user) {
-        var self = this
-        this.fetching = true
-        this.error = ''
-
-        api.deleteSystemUser(this.serverId, {user: user})
-        .then(function (response) {
-          console.log(response)
-          
-          if (!response.data.success) {
-            self.error = response.data.error;
-          } else {
-            self.fetchData()
-          }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.dialfetchingog = false
-        })
-      },
-      saveUser () {
-        var self = this
-
-        if (this.system_user.user && this.system_user.password) {
-          this.details = ''
-          this.fetching = true
-          this.error = ''
-
-          api.saveSystemUser(this.serverId, this.system_user)
-          .then(function (response) {
-            console.log(response)
-            
-            if (!response.data.success) {
-              self.error = response.data.error;
-            } else {
-              self.userDrawer = false
-              self.fetchData()
-            }
-          })
-          .catch(function (error) {
-            console.log(error)              
-            self.fetching = false
-          })
-          .finally(function() {
-            self.fetching = false
-          })
-        }
-      },
       fetchLog (log) {
         var self = this
 
@@ -212,67 +135,12 @@
 
         this.logContent = 'loading..'
 
-        api.fetchLog(this.serverId, {log: self.log})
+        api.post('servers/' + this.serverId + '/fetchlog', {log: self.log})
         .then(function (response) {
           console.log(response)
           self.logContent = response.data.content
         })
-      },      
-      addCronjob() {
-        this.cronjob = {}
-        this.cronjobDrawer = true
       },
-      editCronjob(cronjob) {
-        this.cronjob = cronjob
-        this.cronjobDrawer = true
-      },
-      deleteCronjob(line) {
-        var self = this
-        this.fetching = true
-        this.error = ''
-
-        api.deleteCronjob(this.serverId, {line: line})
-        .then(function (response) {
-          console.log(response)
-          
-          if (!response.data.success) {
-            self.error = response.data.error;
-          } else {
-            self.fetchData()
-          }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.fetching = false
-        })
-      },
-      saveCronjob() {
-        var self = this
-        this.error = ''
-
-        if (this.$refs.cronjobForm.validate()) {
-          this.fetching = true
-          
-          api.saveCronjob(self.serverId, this.cronjob)
-          .then(function (response) {
-            console.log(response)
-            if (response.data.error) {
-              self.error = response.data.error
-            } else {
-              self.cronjobDrawer = false
-              self.fetchData()
-            }
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
-          .finally(function() {
-            self.fetching = false
-          })
-        }
-      }
     }
   }
 </script>

@@ -213,7 +213,7 @@
         if (this.$refs.form.validate()) {
           this.dialog = true
 
-          api.update(this.data)
+          api.post('settings/profile', this.data)
           .then(function (response) {
             console.log(response)
             if (response.data.success) {

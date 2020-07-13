@@ -143,7 +143,7 @@
           self.fetching = false
         })
 
-        api.profile()
+        api.get('settings/profile')
         .then(function (response) {
           self.useMasterPassword = response.data.profile.prefs.useMasterPassword
         })
