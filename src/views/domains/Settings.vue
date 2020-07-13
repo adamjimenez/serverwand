@@ -83,16 +83,6 @@
       '$route': 'fetchData'
     },
     methods: {
-      format: function(size) {
-        if (size === '' || size === -1) {
-          return ''
-        }
-
-        var si
-        for(si = 0; size >= 1024; size /= 1024, si++)
-
-        return '' + Math.round(size) + 'KMGT'.substr(si, 1)
-      },
       fetchData () {        
         var self = this
         this.error = ''
@@ -189,9 +179,3 @@
     }
   }
 </script>
-
-<style>
-.v-expansion-panel__header {
-  padding: 10px 16px;
-}
-</style>

@@ -54,7 +54,9 @@
                             height="20"
                           ></v-progress-linear>
                       </v-list-item-title>
-                      <v-list-item-subtitle v-html="format(data.mem_free)+'  free of '+format(data.mem_total)"></v-list-item-subtitle>
+                      <v-list-item-subtitle>
+                        {{data.mem_free | prettyBytes }} free of {{data.mem_total | prettyBytes }}
+                      </v-list-item-subtitle>
                   </div>
                 </v-card-text>
               </div>
@@ -82,7 +84,9 @@
                             height="20"
                           ></v-progress-linear>
                       </v-list-item-title>
-                      <v-list-item-subtitle v-html="format(data.disk_free)+'  free of '+format(data.disk_space)"></v-list-item-subtitle>
+                      <v-list-item-subtitle>
+                        {{data.disk_free | prettyBytes }} free of {{data.disk_space | prettyBytes }}
+                      </v-list-item-subtitle>
                   </div>
                 </v-card-text>
               </div>
@@ -225,8 +229,6 @@
 
       </v-layout>
 
-
-
       <v-container class="ma-0">
          <v-layout row wrap>
           <svg width="100%" viewBox="0 0 1060 980" v-html="data.graph">
@@ -304,16 +306,6 @@
       '$route': 'fetchData'
     },
     methods: {
-      format: function(size) {
-        if (size === '' || size === -1) {
-          return ''
-        }
-
-        var si
-        for(si = 0; size >= 1024; size /= 1024, si++)
-
-        return '' + Math.round(size) + 'KMGT'.substr(si, 1)
-      },
       fetchData () {
         var self = this
         this.error = ''
@@ -378,18 +370,20 @@
 </script>
 
 <style>
-.serverstatus {
-  all: initial;
-}
+  .serverstatus {
+    all: initial;
+  }
 
-.feature {
-  min-height: 140px;
-}
-.icon {
-  font-size: 30px; float: left;
-}
-.label {
-  float: right;
-  font-size: 12px;
-}
+  .feature {
+    min-height: 140px;
+  }
+
+  .icon {
+    font-size: 30px; float: left;
+  }
+  
+  .label {
+    float: right;
+    font-size: 12px;
+  }
 </style>

@@ -6,6 +6,7 @@ import Vuetify from 'vuetify'
 //import './registerServiceWorker'
 import VuetifyConfirm from 'vuetify-confirm'
 import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
+import vueFilterPrettyBytes from 'vue-filter-pretty-bytes'
 
 const vuetify = new Vuetify({
   theme: {
@@ -24,13 +25,15 @@ const vuetify = new Vuetify({
         error: '#b71c1c',
       },
     },
-  },
+  }
 })
 
 Vue.use(VuetifyConfirm, {
   vuetify,
   property: '$confirm'
 })
+
+Vue.use(vueFilterPrettyBytes)
 
 Vue.config.productionTip = false
 Vue.use(Vuetify)

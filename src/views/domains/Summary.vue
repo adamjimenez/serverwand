@@ -45,7 +45,7 @@
           <v-flex xs6>
           <v-card tile flat>
               <v-card-text>
-                {{ format(data.disk_usage) }}
+                {{ data.disk_usage | prettyBytes }}
               </v-card-text>
           </v-card>
         </v-flex>
@@ -178,16 +178,6 @@
       '$route': 'fetchData'
     },
     methods: {
-      format: function(size) {
-        if (size === '' || size === -1) {
-          return ''
-        }
-
-        var si
-        for(si = 0; size >= 1024; size /= 1024, si++)
-
-        return '' + Math.round(size) + 'KMGT'.substr(si, 1)
-      },
       fetchData () {        
         var self = this
         this.error = ''

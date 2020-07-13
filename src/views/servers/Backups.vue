@@ -25,7 +25,7 @@
             <template v-slot:default>
               <v-list-item-content>
                 <v-list-item-title>{{item.name}}</v-list-item-title>
-                <v-list-item-subtitle>{{format(item.size)}}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{item.size | prettyBytes }}</v-list-item-subtitle>
               </v-list-item-content>
 
               <v-list-item-action>
@@ -93,16 +93,6 @@
       this.fetchData()
     },
     methods: {
-      format: function(size) {
-        if (size === '' || size === -1) {
-          return ''
-        }
-
-        var si
-        for(si = 0; size >= 1024; size /= 1024, si++)
-
-        return '' + Math.round(size) + 'KMGT'.substr(si, 1)
-      },
       fetchData () {        
         var self = this
         this.error = ''
@@ -125,26 +115,28 @@
       },
       deleteBackup() {
         this.$confirm('Delete backup?').then(res => {
-          if (res) {
-            var self = this
-            self.fetching = true
-
-            var ids = []
-            this.items.forEach(element => {
-                if (element.selected) {
-                    ids.push(element.name)
-                }
-            })
-
-            api.post('servers/' + this.serverId + '/backups', {ids: ids})
-            .then(function () {
-                self.fetchData()
-            })
-            .catch(function (error) {
-              console.log(error)
-              self.fetching = false
-            })
+          if (!res) {
+            return
           }
+          
+          var self = this
+          self.fetching = true
+
+          var ids = []
+          this.items.forEach(element => {
+              if (element.selected) {
+                  ids.push(element.name)
+              }
+          })
+
+          api.post('servers/' + this.serverId + '/backups', {ids: ids})
+          .then(function () {
+              self.fetchData()
+          })
+          .catch(function (error) {
+            console.log(error)
+            self.fetching = false
+          })
         })
       }
     }

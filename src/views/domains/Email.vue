@@ -89,7 +89,7 @@
                     <v-icon>fas fa-long-arrow-alt-right</v-icon> {{item.destination}}
                   </span>
                 </v-list-item-title>
-                <v-list-item-subtitle>{{ format(item.disk_usage) }}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{ item.disk_usage | prettyBytes }}</v-list-item-subtitle>
               </v-list-item-content>
 
               <v-list-item-action>
@@ -214,16 +214,6 @@
       '$route': 'fetchData'
     },
     methods: {
-      format: function(size) {
-        if (size === '' || size === -1) {
-          return ''
-        }
-
-        var si
-        for(si = 0; size >= 1024; size /= 1024, si++)
-
-        return '' + Math.round(size) + 'KMGT'.substr(si, 1)
-      },
       fetchData () {
         var self = this
         this.error = ''
@@ -390,9 +380,3 @@
     }
   }
 </script>
-
-<style>
-.v-expansion-panel__header {
-  padding: 10px 16px;
-}
-</style>
