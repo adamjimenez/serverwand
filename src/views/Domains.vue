@@ -114,6 +114,7 @@
         this.items.forEach(element => {
             if (element.server == this.server) {
               this.filtered.push(element)
+              localStorage.server = element.server
             }
         })
       }
@@ -166,6 +167,7 @@
         })
         .finally(function() {
           self.fetching = false
+          self.server = localStorage.server
         })
       }
     }
