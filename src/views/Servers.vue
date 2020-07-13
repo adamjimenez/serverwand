@@ -14,26 +14,49 @@
         <v-card-title primary-title>
           <div class="headline">Servers</div>
         </v-card-title>
-        
-        <v-list two-line v-if="items.length" class="results">
-          <template v-for="(item, index) in items">
-            <v-list-item
-              v-if="index >= (page-1)*items_per_page && index < page*items_per_page"
-              :key="item.name"
-            >
-              <v-list-item-avatar>
-                <v-icon>fas fa-server</v-icon>
-              </v-list-item-avatar>
 
-              <v-list-item-content>
-                <router-link :to="'/servers/' + item.id + '/summary'"> 
-                  <v-list-item-title v-html="item.name"></v-list-item-title>
-                  <v-list-item-subtitle v-html="item.hostname"></v-list-item-subtitle>
-                </router-link>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-        </v-list>
+        <div        
+          v-if="items.length"
+        >
+
+          <v-card flat>
+            <v-card-text>
+              <v-select
+                v-model="provider"
+                :items="provider_opts"
+                label="Provider"
+              ></v-select>
+            </v-card-text>
+          </v-card>
+          
+          <v-data-table
+            :headers="headers"
+            :items="filtered"
+            class="results"
+          >
+            <template v-slot:body="prop">
+              <tr v-for="item in prop.items" :key="item.id">
+                <td class="text-start">
+                  <v-list-item>
+                      <v-icon class="mr-3">fas fa-globe</v-icon>
+
+                      <router-link :to="'/servers/' + item.id + '/summary'"> 
+                        <v-list-item-title v-html="item.name"></v-list-item-title>
+                        <v-list-item-subtitle v-html="item.hostname"></v-list-item-subtitle>
+                      </router-link>
+                  </v-list-item>
+                </td>
+                <td class="text-start">
+                  {{item.provider}}
+                </td>
+                <td class="text-start">
+                  {{item.region}}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+          
+        </div>
 
         <v-list v-else>
           <v-list-item>
@@ -76,10 +99,39 @@
         loading: false,
         fetching: false,
         error: null,
+        filtered: [],
         items: [],
         page: 1,
         pages: 1,
-        items_per_page: 10
+        provider: '*',
+        provider_opts: [{
+          text: 'All',
+          value: '*'
+        }, {
+          text: 'Linode',
+          value: 'linode'
+        }, {
+          text: 'Digital Ocean',
+          value: 'digitalocean'
+        }, {
+          text: 'Other',
+          value: ''
+        }],
+        items_per_page: 10,
+        headers: [
+          {
+            text: 'Server ',
+            value: 'server'
+          },
+          {
+            text: 'Provider ',
+            value: 'provider'
+          },
+          {
+            text: 'Region ',
+            value: 'region'
+          }
+        ]
       }
     },
     created () {
@@ -87,8 +139,16 @@
       this.fetchData()
     },
     watch: {
-      // call again the method if the route changes
-      '$route': 'fetchData'
+      'provider': function() {
+        this.filtered = []
+        
+        this.items.forEach(element => {
+            if (this.provider === '*' || element.provider == this.provider) {
+              this.filtered.push(element)
+              localStorage.provider = element.provider
+            }
+        })
+      }
     },
     methods: {
       fetchData () {        
@@ -100,7 +160,10 @@
         .then(function (response) {
           console.log(response)
           self.items = response.data.items
-          self.pages = self.items.length ? Math.ceil(self.items.length / self.items_per_page) : 1
+          
+          response.data.items.forEach(element => {
+              self.filtered.push(element)
+          })
         })
         .catch(function (error) {
           console.log(error)
