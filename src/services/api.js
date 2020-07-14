@@ -12,6 +12,19 @@ const api = axios.create({
     adapter: cache.adapter
 })
 
+api.interceptors.response.use(function (response) {
+    return response;
+}, function (error) {
+    const originalRequest = error.config;
+
+    if (!error.response || error.response.status === 401 && !originalRequest._retry) {
+        location.href = 'https://serverwand.com/login'
+        return false
+    }
+
+    return Promise.reject(error);
+})
+
 export default {
     get(path) {
         return api.get('https://serverwand.com/api/' + path);

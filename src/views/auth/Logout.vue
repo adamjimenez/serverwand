@@ -38,7 +38,7 @@
       logout () {
         var self = this
 
-        api.post('api/auth/logout')
+        api.post('auth/logout')
         .then(function (response) {
           console.log(response)
           if (response.data.success) {
