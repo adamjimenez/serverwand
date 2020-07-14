@@ -83,9 +83,11 @@
         items: [],
         servers: {},
         server: null,
-        server_opts: [],
+        server_opts: [{
+          text: 'All',
+          value: '*'
+        }],
         searchPanel: [false],
-
         search: '',
         selected: [],
         headers: [{
@@ -112,7 +114,7 @@
         this.filtered = []
         
         this.items.forEach(element => {
-            if (element.server == this.server) {
+            if (this.server === '*' || element.server == this.server) {
               this.filtered.push(element)
               localStorage.server = element.server
             }
