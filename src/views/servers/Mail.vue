@@ -30,6 +30,9 @@
                 {{item.id}}
               </td>
               <td class="text-start">
+                {{item.size | prettyBytes}}
+              </td>
+              <td class="text-start">
                 {{item.sender}}
               </td>
               <td class="text-start">
@@ -48,7 +51,7 @@
     </v-card>
 
     <v-card>
-        <div>
+        <div class="mx-3">
             <v-btn
                 @click="deleteMail()"
                 :disabled="!selected"
@@ -67,12 +70,9 @@
                 Message
               </v-card-title>
 
-              <v-textarea
-                auto-grow
-                v-model="message"
-                readonly
-              >
-              </v-textarea>
+              <v-card-text>
+                <iframe width="100%" height="315" :src="message_url" frameborder="0"></iframe>
+              </v-card-text>
           </v-card>
         </v-dialog>
 
@@ -94,6 +94,7 @@
         data: {},
         details: '',
         message: '',
+        message_url: '',
         loading: false,
         fetching: false,
         emailDrawer: false,
@@ -105,6 +106,9 @@
         }, {
           text: 'ID ',
           value: 'id'
+        }, {
+          text: 'Size ',
+          value: 'size'
         }, {
           text: 'From ',
           value: 'from'
@@ -150,13 +154,8 @@
 
           self.items = []
           response.data.messages.forEach(element => {
-              self.items.push({
-                  id: element.id,
-                  sender: element.sender,
-                  recipient: element.recipient,
-                  date: element.date,
-                  selected: false
-              })
+              element.selected = false
+              self.items.push(element)
           })
 
           document.title = 'Mail' + ' | ' + self.data.name
@@ -185,20 +184,38 @@
         })
         .catch(function (error) {
           console.log(error)
-          self.fetching = false
         })
         .finally(function() {
+          self.fetching = false
         })
       },
       view(id) {
-        var self = this
+        this.message_url = 'https://serverwand.com/api/servers/' + this.serverId + '/messages/' + id
+        this.emailDrawer = true
 
+        /*
+        var self = this
+        self.fetching = true
         api.get('servers/' + this.serverId + '/messages/' + id)
         .then(function (response) {
             self.message = response.data.message
             self.emailDrawer = true
         })
+        .catch(function (error) {
+          console.log(error)
+        })
+        .finally(function() {
+          self.fetching = false
+        })
+        */
       }
     }
   }
 </script>
+
+<style>
+  iframe {
+    background-color: #fff;
+    height: calc(100vh - 200px);
+  }
+</style>
