@@ -36,8 +36,11 @@
               <template v-slot:default>
                 <v-list-item-content>
                   <v-list-item-title>
-                    {{item.port}}/{{item.protocol}} {{item.action}} {{item.from}} {{item.v6 ? 'IPV6' : ''}}
+                    {{item.port}}/{{item.protocol}} {{item.action}}
                   </v-list-item-title>
+                  <v-list-item-subtitle>
+                    {{item.from}} {{item.v6 ? 'IPV6' : ''}}
+                  </v-list-item-subtitle>
                 </v-list-item-content>
 
                 <v-list-item-action>

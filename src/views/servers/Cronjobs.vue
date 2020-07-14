@@ -28,6 +28,14 @@
                   <v-icon v-if="item.active===false">block</v-icon>
                   {{item.command}}
                 </v-list-item-title>
+                <v-list-item-subtitle>
+                  {{item.user}}
+                  {{item.minute}}
+                  {{item.hour}}
+                  {{item.dom}}
+                  {{item.mon}}
+                  {{item.dow}}
+                </v-list-item-subtitle>
               </v-list-item-content>
 
               <v-list-item-action>
