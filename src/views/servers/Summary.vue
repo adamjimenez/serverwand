@@ -285,14 +285,15 @@
 
     <v-dialog
       app
+      scrollable
       v-model="showMessage"
     >
       <v-card>
           <v-card-title>
-            Message
+            Response
           </v-card-title>
 
-          <v-card-text>
+          <v-card-text id="messageBody">
             
             <v-textarea
               :value="message"
@@ -301,6 +302,19 @@
             ></v-textarea>
 
           </v-card-text>
+
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              @click="showMessage = false"
+              :disabled="disableClose"
+            >
+              Close
+            </v-btn>
+          </v-card-actions>
+
       </v-card>
     </v-dialog>
     
@@ -320,6 +334,7 @@
         error: '',
         message: '',
         showMessage: false,
+        disableClose: true,
         data: {
           disk_free: 0,
           disk_space: 0,
@@ -406,27 +421,40 @@
       upgrade() {
         var self = this
         this.error = ''
-        this.fetching = true
- 
-        api.get('servers/' + this.serverId + '/upgrade', {hostname: self.hostname})
-        .then(function (response) {
-          console.log(response)
+        this.showMessage = true
+        this.disableClose = true
+        this.message = ''        
 
-          self.message = response.data.result
-          self.showMessage = true
+        var source = api.event('servers/' + this.serverId + '/upgrade')
+        
+        source.addEventListener('message', function(event) {
+            var result = JSON.parse(event.data)
+            console.log(result)
 
-          if (response.data.error) {
-            self.error = response.data.error
-            self.fetching = false
-          } else if (response.data.success) {
-            self.drawer = false
-            self.fetchData();
-          }
-        })
-        .catch(function (error) {
-          self.fetching = false
-          console.log(error)
-        })
+            if (result.msg) {
+              self.message += result.msg + "\n"
+
+              // scroll to bottom
+              setTimeout(function() {
+                var el = document.getElementById('messageBody')
+                el.scrollTop = el.scrollHeight
+              }, 10)
+            }
+
+            if (result.error) {
+              self.error = result.error
+            }
+        }, false)
+    
+        source.addEventListener('error', function(event) {
+            if (event.eventPhase == 2) {
+              if (source) {
+                self.disableClose = false
+                source.close()
+              }
+            }
+        }, false)
+
       }
     }
   }
