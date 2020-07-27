@@ -1,10 +1,11 @@
 <template>
   <div>
+
     <v-alert
       :value="error.length>0"
       type="error"
     >
-    {{error}}
+      {{error}}
     </v-alert>
     
     <v-card class="pa-3" :loading="fetching">
@@ -55,7 +56,7 @@
                           ></v-progress-linear>
                       </v-list-item-title>
                       <v-list-item-subtitle>
-                        {{data.mem_free | prettyBytes }} free of {{data.mem_total | prettyBytes }}
+                        {{data.mem_free * 1024 | prettyBytes }} free of {{data.mem_total * 1024 | prettyBytes }}
                       </v-list-item-subtitle>
                   </div>
                 </v-card-text>
@@ -85,7 +86,7 @@
                           ></v-progress-linear>
                       </v-list-item-title>
                       <v-list-item-subtitle>
-                        {{data.disk_free | prettyBytes }} free of {{data.disk_space | prettyBytes }}
+                        {{data.disk_free * 1024 | prettyBytes }} free of {{data.disk_space * 1024 | prettyBytes }}
                       </v-list-item-subtitle>
                   </div>
                 </v-card-text>
@@ -128,6 +129,20 @@
                     <v-list-item-subtitle>
                       {{data.updates}} updates, {{data.security_updates}} security updates
                       <span v-if="data.reboot_required">(reboot required)</span>
+
+                      <v-tooltip top v-if="data.updates > 0 || data.security_updates > 0">
+                        <template v-slot:activator="{ on }">
+                          <v-btn                            
+                            v-on="on"
+                            icon
+                            @click="upgrade()"
+                          >
+                            <v-icon small>fas fa-download</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Upgrade</span>
+                      </v-tooltip>
+
                     </v-list-item-subtitle>
                   </v-list-item-content>
               </v-list-item>
@@ -150,7 +165,7 @@
                           >
                             <v-icon small>fas fa-edit</v-icon>
                           </v-btn>
-                        </template>                        
+                        </template>
                         <span>Edit</span>
                       </v-tooltip>
                     </v-list-item-subtitle>
@@ -231,7 +246,7 @@
 
       <v-container class="ma-0">
          <v-layout row wrap>
-          <svg width="100%" viewBox="0 0 1060 980" v-html="data.graph">
+          <svg width="100%" viewBox="0 0 1060 300" v-html="data.graph">
           </svg>
          </v-layout>
       </v-container>
@@ -267,6 +282,27 @@
           </v-card-text>
       </v-card>
     </v-navigation-drawer>
+
+    <v-dialog
+      app
+      v-model="showMessage"
+    >
+      <v-card>
+          <v-card-title>
+            Message
+          </v-card-title>
+
+          <v-card-text>
+            
+            <v-textarea
+              :value="message"
+              readonly
+              auto-grow
+            ></v-textarea>
+
+          </v-card-text>
+      </v-card>
+    </v-dialog>
     
   </div>
 </template>
@@ -282,6 +318,8 @@
     data () {
       return {
         error: '',
+        message: '',
+        showMessage: false,
         data: {
           disk_free: 0,
           disk_space: 0,
@@ -306,13 +344,13 @@
       '$route': 'fetchData'
     },
     methods: {
-      fetchData () {
+      fetchData (clearCacheEntry) {
         var self = this
         this.error = ''
         this.fetching = true
         this.serverId = this.$route.params.id
  
-        api.get('servers/' + this.serverId + '/summary')
+        api.get('servers/' + this.serverId + '/summary', { clearCacheEntry: clearCacheEntry })
         .then(function (response) {
           console.log(response)
 
@@ -348,9 +386,34 @@
         this.error = ''
         this.fetching = true
  
-        api.post('servers/' + this.serverId + '/hostname', {hostname: self.hostname})
+        api.post('servers/' + this.serverId + '/hostname', { clearCacheEntry: true })
         .then(function (response) {
           console.log(response)
+
+          if (response.data.error) {
+            self.error = response.data.error
+            self.fetching = false
+          } else if (response.data.success) {
+            self.drawer = false
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          self.fetching = false
+          console.log(error)
+        })
+      },
+      upgrade() {
+        var self = this
+        this.error = ''
+        this.fetching = true
+ 
+        api.get('servers/' + this.serverId + '/upgrade', {hostname: self.hostname})
+        .then(function (response) {
+          console.log(response)
+
+          self.message = response.data.result
+          self.showMessage = true
 
           if (response.data.error) {
             self.error = response.data.error
