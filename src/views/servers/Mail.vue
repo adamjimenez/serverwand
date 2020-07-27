@@ -51,30 +51,32 @@
     </v-card>
 
     <v-card>
-        <div class="mx-3">
+      <div>
+        <v-card-title primary-title>
             <v-btn
                 @click="deleteMail()"
                 :disabled="!selected"
             >
                 Delete
             </v-btn>
-        </div>
+        </v-card-title>
+      </div>
     </v-card>
 
-        <v-dialog
-          app
-          v-model="emailDrawer"
-        >
-          <v-card>
-              <v-card-title>
-                Message
-              </v-card-title>
+    <v-dialog
+      app
+      v-model="emailDrawer"
+    >
+      <v-card>
+          <v-card-title>
+            Message: {{message_id}}
+          </v-card-title>
 
-              <v-card-text>
-                <iframe width="100%" height="315" :src="message_url" frameborder="0"></iframe>
-              </v-card-text>
-          </v-card>
-        </v-dialog>
+          <v-card-text>
+            <iframe width="100%" height="315" :src="message_url" frameborder="0"></iframe>
+          </v-card-text>
+      </v-card>
+    </v-dialog>
 
   </div>
 </template>
@@ -95,6 +97,7 @@
         details: '',
         message: '',
         message_url: '',
+        message_id: '',
         loading: false,
         fetching: false,
         emailDrawer: false,
@@ -144,7 +147,7 @@
       fetchData () {        
         var self = this
         this.error = ''
-        // this.fetching = true
+        this.fetching = true
  
         api.get('servers/' + this.serverId + '/messages')
         .then(function (response) {
@@ -154,8 +157,14 @@
 
           self.items = []
           response.data.messages.forEach(element => {
-              element.selected = false
-              self.items.push(element)
+              self.items.push({
+                  id: element.id,
+                  size: element.size,
+                  sender: element.sender,
+                  recipient: element.recipient,
+                  date: element.date,
+                  selected: false
+              })
           })
 
           document.title = 'Mail' + ' | ' + self.data.name
@@ -190,7 +199,8 @@
         })
       },
       view(id) {
-        this.message_url = 'https://serverwand.com/api/servers/' + this.serverId + '/messages/' + id
+        this.message_id = id
+        this.message_url = 'https://serverwand.com/api/servers/' + this.serverId + '/messages/' + this.message_id
         this.emailDrawer = true
 
         /*
