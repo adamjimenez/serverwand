@@ -94,6 +94,9 @@ export default new Router({
             path: '/domains/:id/apps',
             component: () => import('./views/domains/Apps.vue')
           }, {
+            path: '/domains/:id/backups',
+            component: () => import('./views/domains/Backups.vue')
+          }, {
             path: '/domains/:id/settings',
             component: () => import('./views/domains/Settings.vue')
           }]

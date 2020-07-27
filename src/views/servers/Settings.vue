@@ -124,12 +124,16 @@
             .catch(function (error) {
               console.log(error)
             })
+            .finally(function() {
+              self.fetching = false
+            })
           }
         })
       },
       reboot () {
         this.$confirm('Reboot server?').then(res => {
           if (res) {
+            var self = this
             this.fetching = true
 
             api.get('servers/' + this.serverId + '/reboot')
@@ -142,6 +146,9 @@
             })
             .catch(function (error) {
               console.log(error)
+            })
+            .finally(function() {
+              self.fetching = false
             })
           }
         })

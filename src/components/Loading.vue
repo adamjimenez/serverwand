@@ -39,9 +39,9 @@ export default {
 </script>
 
 <style>
-.v-dialog.centered-dialog {
-  box-shadow: none;
-  border-radius: 0;
-  width: auto;
-}
+  .v-dialog.centered-dialog {
+    box-shadow: none;
+    border-radius: 0;
+    width: auto;
+  }
 </style>

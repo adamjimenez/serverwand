@@ -7,6 +7,7 @@ import Vuetify from 'vuetify'
 import VuetifyConfirm from 'vuetify-confirm'
 import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 import vueFilterPrettyBytes from 'vue-filter-pretty-bytes'
+import EventHub from 'vue-event-hub';
 
 const vuetify = new Vuetify({
   theme: {
@@ -38,7 +39,7 @@ Vue.use(vueFilterPrettyBytes)
 Vue.config.productionTip = false
 Vue.use(Vuetify)
 
-Vue.prototype.$eventHub = new Vue(); // Global event bus
+Vue.use(EventHub);
 
 new Vue({
   el: '#app',

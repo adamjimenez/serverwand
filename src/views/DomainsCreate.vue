@@ -49,7 +49,7 @@
           ></v-text-field>
           
           <v-checkbox
-            v-model="dns"
+            v-model="data.dns"
             label="Configure DNS"
             :disabled="!data.server || dnsProviders[data.server]==''"
           ></v-checkbox>
@@ -68,16 +68,20 @@
 
     </v-form>
 
+    <Domain ref="Domain" />
+
   </div>
 </template>
 
 <script>
   import api from '../services/api'
   import Loading from '../components/Loading'
+  import Domain from '../components/Domain'
 
   export default {
     components: {
-      Loading
+      Loading,
+      Domain
     },
     data: () => ({
       loading: false,
@@ -86,6 +90,7 @@
         domain: '',
         password: '',
         server: '',
+        dns: true,
       },
       domainRules: [
         v => !!v || 'Domain is required'
@@ -94,10 +99,10 @@
       ],
       servers: [],
       dnsProviders: {},
-      dns: true,
       details: "",
       serverId: 0,
-      error: ''
+      error: '',
+      authRequired: false
     }),
 
     created () {
@@ -147,7 +152,8 @@
           self.loading = false
         })
       },
-      save (noAuthPrompt) {
+      save () {
+
         var self = this
         this.error = ''
         this.details = ''
@@ -165,33 +171,12 @@
             console.log(error)
           })
         } else {
-          api.post('domains/create', this.data)
-          .then(function (response) {
-            console.log(response)
-            if (response.data.domain_id) {
-              self.$eventHub.$emit('itemsChanged')
-              self.$router.push('/domains/' + response.data.domain_id + '/summary')
-            } else if (response.data.error) {
-              if (response.data.error == 'auth' && !noAuthPrompt) {
-                var child = window.open('https://serverwand.com/account/services/' + self.dnsProviders[self.data.server])
-                var interval = setInterval(function() {
-                    if (child.closed) {
-                        clearInterval(interval)
-                        self.validate(true)
-                        return
-                    }
-                }, 500)
-              } else {
-                self.error = response.data.error
-              }
-            }
-          })
-          .catch(function (error) {
-            console.log(error)
-          }).finally(function () {
-            self.loading = false
-          })
+          
+          self.loading = false
+          this.$refs.Domain.create(this.data)
+
         }
+
       },
       validate () {
         if (this.$refs.form.validate()) {

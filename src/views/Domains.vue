@@ -54,7 +54,7 @@
               </td>
               <td class="text-start">
                 <div v-if="item.usage > 0">
-                  {{item.usage | prettyBytes }}
+                  {{item.usage * 1024 | prettyBytes }}
                 </div>
               </td>
             </tr>
@@ -82,7 +82,7 @@
         filtered: [],
         items: [],
         servers: {},
-        server: null,
+        server: '*',
         server_opts: [{
           text: 'All',
           value: '*'
@@ -116,9 +116,10 @@
         this.items.forEach(element => {
             if (this.server === '*' || element.server == this.server) {
               this.filtered.push(element)
-              localStorage.server = element.server
             }
         })
+        
+        localStorage.server = this.server
       }
     },
     methods: {
@@ -159,7 +160,9 @@
         })
         .finally(function() {
           self.fetching = false
-          self.server = localStorage.server
+
+          if (localStorage.server)
+            self.server = localStorage.server
         })
       }
     }

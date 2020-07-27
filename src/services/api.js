@@ -1,11 +1,19 @@
 import axios from 'axios'
 axios.defaults.withCredentials = true
 
-import { setupCache } from 'axios-cache-adapter'
+import { setup } from 'axios-cache-adapter'
 
 // Create `axios-cache-adapter` instance
-const cache = setupCache({
-    maxAge: 15 * 60 * 1000
+const cache = setup({
+    maxAge: 15 * 60 * 1000,
+    cache: {
+      // Invalidate only when a specific option is passed through config
+      invalidate: async (config, request) => {
+        if (request.clearCacheEntry) {
+          await config.store.removeItem(config.uuid)
+        }
+      }
+    }
 })
 
 const api = axios.create({

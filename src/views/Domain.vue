@@ -36,6 +36,7 @@
         <v-tab :to="'/domains/' + domainId + '/aliases'">Aliases</v-tab>
         <v-tab :to="'/domains/' + domainId + '/email'" v-if="data.server.mailserver">Email</v-tab>
         <v-tab :to="'/domains/' + domainId + '/apps'">Apps</v-tab>
+        <v-tab :to="'/domains/' + domainId + '/backups'">Backups</v-tab>
         <v-tab :to="'/domains/' + domainId + '/settings'">Settings</v-tab>
       </v-tabs>
       <router-view></router-view>

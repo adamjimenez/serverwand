@@ -46,7 +46,7 @@
       // already being observed
       this.fetchData()
 
-      this.$eventHub.$on('itemsChanged', this.fetchData);
+      this.$eventHub.on('itemsChanged', this.fetchData);
     },
 
     methods: {

@@ -64,9 +64,9 @@
       <div>
         <v-card-title primary-title>
           <v-btn
-          @click="addItem()"
-          >
-          Add rule
+            @click="addItem()"
+            >
+            Add rule
           </v-btn>
         </v-card-title>
       </div>

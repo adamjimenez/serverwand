@@ -21,6 +21,7 @@
           <v-list-item
             :key="`item-${i}`"
             :value="item"
+            @click="download(item)"
           >
             <template v-slot:default>
               <v-list-item-content>
@@ -31,8 +32,8 @@
               <v-list-item-action>
                 <v-btn
                   icon
-                  @click="deleteBackup()"
-                  :disabled="!selected"
+                  @click="deleteBackup(item.name)"
+                  @click.stop
                 >
                   <v-icon small>delete</v-icon>
                 </v-btn>
@@ -69,24 +70,8 @@
         details: '',
         loading: false,
         fetching: false,
-        serverId: 0,
-        selected: false
+        serverId: 0
       }
-    },
-    watch: {
-        items: {
-            handler: function(newItems) {
-                for(var i = 0; i < newItems.length; i++) {
-                    if(newItems[i].selected) {
-                        this.selected = true
-                        return
-                    }
-                }
-
-                this.selected = false
-            },
-            deep: true
-        }
     },
     created () {
       this.serverId = this.$route.params.id
@@ -113,8 +98,8 @@
           self.fetching = false
         })
       },
-      deleteBackup() {
-        this.$confirm('Delete backup?').then(res => {
+      deleteBackup(item) {
+        this.$confirm('Delete ' + item).then(res => {
           if (!res) {
             return
           }
@@ -122,14 +107,7 @@
           var self = this
           self.fetching = true
 
-          var ids = []
-          this.items.forEach(element => {
-              if (element.selected) {
-                  ids.push(element.name)
-              }
-          })
-
-          api.post('servers/' + this.serverId + '/backups', {ids: ids})
+          api.post('servers/' + this.serverId + '/backups', {ids: [item]})
           .then(function () {
               self.fetchData()
           })
@@ -138,6 +116,9 @@
             self.fetching = false
           })
         })
+      },
+      download(item) {
+        window.open('http://' + this.data.ip + '/backups/' + item.name)
       }
     }
   }
