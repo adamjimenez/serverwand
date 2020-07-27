@@ -47,6 +47,17 @@
             </v-flex>
           </v-layout>
 
+          <v-layout row v-if="!authRequired && data.server && data.spf && data.spf.not_set && !data.spf.SPF">
+            <v-flex xs12>
+              <v-card tile flat>
+                  <v-card-text>
+                    <strong>Missing SPF</strong>
+                    <v-btn v-if="data.spf.not_set" @click="fixSpf(data.domain)">Fix</v-btn>
+                  </v-card-text>
+              </v-card>
+            </v-flex>
+          </v-layout>
+
           <v-card-title primary-title>
             <v-switch
                 v-model="data.email"
@@ -354,6 +365,31 @@
         this.loading = true
 
         api.post('domains/' + self.domainId + '/fixdkim', {})
+        .then(function (response) {
+          console.log(response)
+
+          self.loading = false
+          
+          if (!response.data.success) {
+            if (response.data.error == 'auth') {
+              self.authRequired = true
+            } else {
+              self.error = response.data.error
+            }
+          } else {
+            self.fetchData()
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
+      fixSpf() {
+        var self = this
+        this.error = ''
+        this.loading = true
+
+        api.post('domains/' + self.domainId + '/fixspf', {})
         .then(function (response) {
           console.log(response)
 
