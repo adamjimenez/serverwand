@@ -72,39 +72,24 @@
             </v-flex>
           </v-layout>
 
-          <v-expansion-panels>
-            <v-expansion-panel
-                v-model="dbPasswordPanel"
-                expand
-            >
-              <v-expansion-panel-header class="pa-1">Reset db password</v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <v-form
-                  ref="dbPasswordForm"
-                  v-model="dbPasswordFormValid"
-                >
-                  <v-card flat>
-                    <v-card-text>
-                      <v-text-field
-                          v-model="dbPassword"
-                          :append-icon="showDbPassword ? 'visibility_off' : 'visibility'"
-                          :rules="[rules.required, rules.min]"
-                          :type="showDbPassword ? 'text' : 'password'"
-                          name="db_password"
-                          label="Password"
-                          hint="At least 8 characters"
-                          counter
-                          @click:append="showDbPassword = !showDbPassword"
-                      ></v-text-field>
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-btn color="primary" @click="submitDbPassword">Submit</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-form>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
+          <v-layout row>
+            <v-flex xs6>
+              <v-card tile flat>
+                  <v-card-text>DB Password:</v-card-text>
+              </v-card>
+            </v-flex>
+            <v-flex xs6>
+              <v-card tile flat>
+                  <v-card-text>
+                    {{data.db_password}}
+                  <Edit :val="data.db_password" label="DB Password" name="password" password  :path="'domains/' + this.domainId + '/database'" />
+                  <!--
+                  <Copy :val="data.auth.password" />
+                  -->
+                  </v-card-text>
+              </v-card>
+            </v-flex>
+          </v-layout>
 
         </div>            
 
@@ -117,11 +102,13 @@
   import api from '../../services/api'
   import Loading from '../../components/Loading'
   import Copy from '../../components/Copy'
+  import Edit from '../../components/Edit'
 
   export default {
     components: {
       Loading,
-      Copy
+      Copy,
+      Edit
     },
     data () {
       return {
@@ -197,31 +184,6 @@
           self.fetching = false
           self.loading = false
         })
-      },
-      submitDbPassword () { 
-        var self = this
-        this.error = ''
-
-        if (this.$refs.dbPasswordForm.validate()) {
-          this.details = ''
-          this.loading = true
-          
-          api.post('domains/' + this.domainId + '/database', {save: 1, password: self.dbPassword})
-          .then(function (response) {
-            console.log(response)
-            if (response.data.error) {
-              self.error = response.data.error
-            }
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
-          .finally(function() {
-            self.fetching = false
-            self.loading = false
-            self.dbPasswordPanel = [false]
-          })
-        }
       }
     }
   }
