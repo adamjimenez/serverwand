@@ -38,7 +38,7 @@
               <tr v-for="item in prop.items" :key="item.id">
                 <td class="text-start">
                   <v-list-item>
-                      <v-icon class="mr-3">fas fa-globe</v-icon>
+                      <v-icon class="mr-3">fas fa-server</v-icon>
 
                       <router-link :to="'/servers/' + item.id + '/summary'"> 
                         <v-list-item-title v-html="item.name"></v-list-item-title>
