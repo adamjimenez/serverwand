@@ -269,6 +269,19 @@
 <style>
   a {text-decoration: none;}
 
+  .v-navigation-drawer .themeSwitchContainer {
+    background-color: transparent;
+  }
+
+  .v-navigation-drawer .v-input--selection-controls .v-input__control {
+    margin-left: 3px;
+  }
+  
+  .v-navigation-drawer .v-input--switch {
+    margin: 0;
+    padding: 0;
+  }
+  
   .v-navigation-drawer .v-list__tile--link {
     border-left-width: 5px;
     border-left-style: solid;
@@ -279,18 +292,5 @@
     border-left-style: solid;
     border-left-width: 5px;
     border-left-color: inherit;
-  }
-
-  .v-navigation-drawer .v-input--switch {
-    margin: 0;
-    padding: 0;
-  }
-
-  .v-navigation-drawer .v-input--selection-controls .v-input__control {
-    margin-left: 3px;
-  }
-
-  .v-navigation-drawer .themeSwitchContainer {
-    background-color: transparent;
   }
 </style>

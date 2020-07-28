@@ -175,7 +175,8 @@
         dark
       >
         <v-card-text>
-          <v-layout row class="ma-1">
+
+          <v-layout class="pt-5">
               <i class="fas fa-magic fa-2x faa-horizontal animated"></i>
               <h2 style="margin-left: 10px;">Spellcasting...</h2>
           </v-layout>
