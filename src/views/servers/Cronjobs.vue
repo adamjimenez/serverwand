@@ -60,9 +60,9 @@
             <div>
               <v-card-title primary-title>
                 <v-btn
-                @click="addItem()"
+                  @click="addItem()"
                 >
-                Add cron job
+                  Add cron job
                 </v-btn>
               </v-card-title>
             </div>
@@ -265,6 +265,7 @@
       },     
       addItem() {
         this.cronjob = {}
+        this.$refs.cronjobForm.resetValidation()
         this.cronjobDrawer = true
       },
       editItem(cronjob) {
