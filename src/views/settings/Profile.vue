@@ -194,7 +194,7 @@
         this.error = ''
         this.loading = true
  
-        api.profile()
+        api.get('settings/profile')
         .then(function (response) {
           console.log(response)
           self.data = response.data.profile
