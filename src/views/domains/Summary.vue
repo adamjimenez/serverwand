@@ -18,7 +18,7 @@
       v-if="data.dns && data.dns.updating"
       class="ma-0"
     >
-      <strong>Updating DNS</strong>
+      <strong>Updating DNS..</strong>
     </v-alert>
 
     <Loading :value="loading" />    
@@ -134,28 +134,28 @@
         </v-layout>
 
         <v-layout row>
-          <v-flex xs3>
+          <v-flex xs6>
             <v-card tile flat>
                 <v-card-text>Username:</v-card-text>
             </v-card>
           </v-flex>
-          <v-flex xs3>
+          <v-flex xs6>
             <v-card tile flat>
                 <v-card-text>
                   {{data.auth.username}}
-                <Copy :val="data.auth.username" />
+                <Copy :val="data.auth.username" text />
                 </v-card-text>
             </v-card>
           </v-flex>
         </v-layout>
 
         <v-layout row>
-          <v-flex xs3>
+          <v-flex xs6>
             <v-card tile flat>
                 <v-card-text>Password:</v-card-text>
             </v-card>
           </v-flex>
-          <v-flex xs3>
+          <v-flex xs6>
             <v-card tile flat>
                 <v-card-text>
                   {{data.auth.password}}
