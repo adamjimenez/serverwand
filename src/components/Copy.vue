@@ -1,5 +1,19 @@
 <template>
-    <v-tooltip top>
+  <div>
+    <v-tooltip top v-if="text">
+      <template v-slot:activator="{ on }">
+        <span
+          v-on="on"
+          @click="copy(val)"
+          @mouseleave="resetCopyText()"
+        >
+          {{val}}
+        </span>
+      </template>
+      <span>{{ copyText }}</span>
+    </v-tooltip>
+
+    <v-tooltip top v-else>
       <template v-slot:activator="{ on }">
         <v-btn
           v-on="on"
@@ -12,12 +26,14 @@
       </template>
       <span>{{ copyText }}</span>
     </v-tooltip>
+  </div>
 </template>
 
 <script>
   export default {
     props: {
-      val: null
+      val: null,
+      text: Boolean
     },
     data () {
       return {

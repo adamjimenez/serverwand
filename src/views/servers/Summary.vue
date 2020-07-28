@@ -119,7 +119,7 @@
       </v-container>
 
       <v-layout row class="mx-1">
-        <v-flex xs6>
+        <v-flex md6 xs12>
           <v-card>
 
             <v-list two-line>
@@ -127,8 +127,11 @@
                   <v-list-item-content>
                     <v-list-item-title v-html="`Updates`"></v-list-item-title>
                     <v-list-item-subtitle>
-                      {{data.updates}} updates, {{data.security_updates}} security updates
-                      <span v-if="data.reboot_required">(reboot required)</span>
+
+                      <div>
+                        {{data.updates}} updates, {{data.security_updates}} security updates
+                        <span v-if="data.reboot_required">(reboot required)</span>
+                      </div>
 
                       <v-tooltip top v-if="data.updates > 0 || data.security_updates > 0">
                         <template v-slot:activator="{ on }">
@@ -136,6 +139,7 @@
                             v-on="on"
                             icon
                             @click="upgrade()"
+                            color="warning"
                           >
                             <v-icon small>fas fa-download</v-icon>
                           </v-btn>
@@ -153,8 +157,7 @@
                   <v-list-item-content>
                     <v-list-item-title v-html="`Hostname`"></v-list-item-title>
                     <v-list-item-subtitle>
-                      {{data.hostname}}
-                      <Copy :val="data.hostname" />
+                      <Copy :val="data.hostname" text />
 
                       <v-tooltip top>
                         <template v-slot:activator="{ on }">
@@ -177,8 +180,8 @@
               <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title v-html="`IP address`"></v-list-item-title>
-                    <v-list-item-subtitle>
-                      {{data.ip}} <Copy :val="data.ip" />
+                    <v-list-item-subtitle>                                            
+                      <Copy :val="data.ip" text />
                     </v-list-item-subtitle>
                   </v-list-item-content>
               </v-list-item>
@@ -188,8 +191,8 @@
               <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title v-html="`IPv6 address`"></v-list-item-title>
-                    <v-list-item-subtitle>
-                      {{data.ipv6}} <Copy :val="data.ipv6" />
+                    <v-list-item-subtitle>                      
+                      <Copy :val="data.ipv6" text />
                     </v-list-item-subtitle>
                   </v-list-item-content>
               </v-list-item>
@@ -286,6 +289,7 @@
     <v-dialog
       app
       scrollable
+      persistent
       v-model="showMessage"
     >
       <v-card>
@@ -299,6 +303,7 @@
               :value="message"
               readonly
               auto-grow
+              :loading="messageLoading"
             ></v-textarea>
 
           </v-card-text>
@@ -309,7 +314,7 @@
             <v-spacer></v-spacer>
             <v-btn
               @click="showMessage = false"
-              :disabled="disableClose"
+              :disabled="messageLoading"
             >
               Close
             </v-btn>
@@ -334,7 +339,7 @@
         error: '',
         message: '',
         showMessage: false,
-        disableClose: true,
+        messageLoading: true,
         data: {
           disk_free: 0,
           disk_space: 0,
@@ -422,7 +427,7 @@
         var self = this
         this.error = ''
         this.showMessage = true
-        this.disableClose = true
+        this.messageLoading = true
         this.message = ''        
 
         var source = api.event('servers/' + this.serverId + '/upgrade')
@@ -449,8 +454,9 @@
         source.addEventListener('error', function(event) {
             if (event.eventPhase == 2) {
               if (source) {
-                self.disableClose = false
+                self.messageLoading = false
                 source.close()
+                self.fetchData(true)
               }
             }
         }, false)
