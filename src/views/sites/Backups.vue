@@ -1,10 +1,10 @@
 <template>
   <div>
     <v-alert
-        :value="error.length>0"
-        type="error"
+      v-if="error"
+      type="error"
     >
-        {{error}}
+      {{error}}
     </v-alert>
 
     <Loading :value="loading" />
@@ -110,7 +110,7 @@
 
         this.fetching = true
  
-        api.get('domains/' + this.domainId + '/backups')
+        api.get('sites/' + this.domainId + '/backups')
         .then(function (response) {
           console.log(response)
             
@@ -128,7 +128,7 @@
         var self = this
         this.fetching = true
         
-        api.get('domains/' + this.domainId + '/backups/create')
+        api.get('sites/' + this.domainId + '/backups/create')
         .then(function (response) {
           console.log(response)
           
@@ -154,7 +154,7 @@
           var self = this
           self.fetching = true
 
-          api.post('domains/' + this.domainId + '/backups', {ids: [item]})
+          api.post('sites/' + this.domainId + '/backups', {ids: [item]})
           .then(function () {
               self.fetchData()
           })
@@ -173,7 +173,7 @@
           var self = this
           self.fetching = true
 
-          api.post('domains/' + this.domainId + '/backups', {restore: item})
+          api.post('sites/' + this.domainId + '/backups', {restore: item})
           .then(function () {
               self.fetchData()
           })

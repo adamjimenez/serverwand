@@ -1,80 +1,81 @@
 <template>
   <div>
     <v-alert
-      :value="error.length>0"
+      v-if="error"
       type="error"
     >
-    {{error}}
+      {{error}}
     </v-alert>
-
-    <v-subheader>
-      <h1>Server details</h1>
-    </v-subheader>
-
 
     <Loading :value="loading" />
 
-    <v-item-group v-if="!serverId">
-        <v-subheader>
-          Choose a VPS provider below or add a custom server
-        </v-subheader>
+    <v-card
+      :loading="fetching"
+    >
+      <v-card-title>Server details</v-card-title>
 
-        <v-menu 
-          offset-y
-          v-model="isOpen"
-        >
-          <template v-slot:activator="{ on }">
-            <v-btn
-              v-on="on"
-              value:="menu"
-              slot="activator"
-              color="primary"
-              class="mx-3"
-            >
-                {{provider}}
-                <v-icon dark>{{isOpen ? 'expand_less' : 'expand_more'}}</v-icon>
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item
-              v-for="(item, index) in items"
-              :key="index"
-              @click="getOptions(item.value)"
-            >          
-              <v-list-item-avatar>
-                <v-icon>{{item.avatar}}</v-icon>
-              </v-list-item-avatar>
 
-              <v-list-item-content>
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-    </v-item-group>
+      <v-card-text>
+
+        <div v-if="!serverId">
+
+          <v-card-subtitle>
+            Choose a VPS provider below or add a custom server
+          </v-card-subtitle>
+
+          <v-menu 
+            offset-y
+            v-model="isOpen"
+          >
+            <template v-slot:activator="{ on }">
+              <v-btn
+                v-on="on"
+                value:="menu"
+                slot="activator"
+                color="primary"
+                class="mx-3"
+              >
+                  {{provider}}
+                  <v-icon dark>{{isOpen ? 'expand_less' : 'expand_more'}}</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="(item, index) in items"
+                :key="index"
+                @click="getOptions(item.value)"
+              >          
+                <v-list-item-avatar>
+                  <v-icon>{{item.avatar}}</v-icon>
+                </v-list-item-avatar>
+
+                <v-list-item-content>
+                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+
+        </div>
 
     <v-form
       v-if="data.provider || serverId"
       ref="form"
       v-model="valid"
       lazy-validation
-      class="ma-3"
+      class="mx-3 my-5"
     >
 
-      <v-card>
-        <v-card-text>
           <p v-if="data.provider=='custom' && !serverId">
-            Configure a server which is freshly installed with Ubuntu 18.04 LTS<br>
-            Once configured, root login will be disabled for increased security
+            Connect a server which is freshly installed with Ubuntu 18.04 LTS. Once configured, root login will be disabled for increased security
           </p>
 
-          <p v-if="data.provider=='linode' && !serverId">
-            Create a new Linode
-          </p>
-
-          <p v-if="data.provider=='digitalocean' && !serverId">
-            Create a new Droplet
-          </p>
+          <v-select
+              v-if="unclaimed.length"
+              v-model="data.unclaimed"
+              :items="unclaimed"
+              label="Server"
+          ></v-select>
 
           <v-text-field
             v-model="data.name"
@@ -84,7 +85,7 @@
           ></v-text-field>
 
           <div
-            v-if="(data.provider!='custom')"
+            v-if="data.provider!=='custom' && !unclaimed.length"
           >
 
             <v-select
@@ -140,7 +141,14 @@
             v-model="data.dns"
             :items="dns"
             label="DNS provider"
-            v-if="(data.provider=='custom' || serverId>0)"
+            v-if="(data.provider === 'custom' || serverId>0)"
+          ></v-select>
+
+          <v-select
+            v-model="data.provider_token"
+            :items="provider_tokens"
+            label="API token"
+            v-if="data.dns"
           ></v-select>
 
           <v-checkbox
@@ -161,9 +169,9 @@
           >
             Save
           </v-btn>
-        </v-card-text>
-      </v-card>
-    </v-form>
+        </v-form>
+      </v-card-text>
+    </v-card>
 
     <v-dialog
       v-model="dialog"
@@ -192,6 +200,42 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <v-navigation-drawer
+      v-model="drawer"
+      temporary
+      right
+      app
+    >
+      <v-card>
+          <v-card-title>
+            API token
+          </v-card-title>
+
+          <v-card-text>
+            <v-text-field
+              v-model="provider_token.label"
+              label="Label"
+              required
+            ></v-text-field>
+
+            <v-text-field
+              v-model="provider_token.token"
+              label="Token"
+              required
+            ></v-text-field>
+            
+            <v-btn
+              :disabled="fetching"
+              :loading="fetching"
+              color="success"
+              @click="submitToken"
+            >
+              Save
+            </v-btn>
+          </v-card-text>
+      </v-card>
+    </v-navigation-drawer>
   </div>
 </template>
 
@@ -204,9 +248,11 @@
       Loading
     },
     data: () => ({
+      fetching: false,
       loading: false,
       valid: true,
       data: {
+        unclaimed: [],
         provider: '',
         name: '',
         host: '',
@@ -226,12 +272,18 @@
         text: 'Other',
         value: ''
       }],
+      provider_tokens: [{
+        text: 'Add new',
+        value: 'new'
+      }],
       nameRules: [
         v => !!v || 'Name is required'
       ],
       hostRules: [
         v => !!v || 'IP is required'
       ],
+      provider_token: {},
+      drawer: false,
       dialog: false,
       details: "",
       serverId: 0,
@@ -239,6 +291,7 @@
       progress: 0,
       regions: [],
       types: [],
+      unclaimed: [],
       items: [
         { title: 'Linode', value: 'linode', avatar: 'fab fa-linode' },
         { title: 'DigitalOcean', value: 'digitalocean', avatar: 'fab fa-digital-ocean' },
@@ -254,6 +307,17 @@
         this.serverId = this.$route.params.id
       }
       this.fetchData()
+    },
+    
+    watch: {
+      // call again the method if the route changes
+      'data.provider_token': function () {
+        if (this.data.provider_token === 'new') {
+          this.drawer = true
+          this.data.provider_token = ''
+          this.provider_token['provider'] = this.data.dns
+        }
+      }
     },
 
     methods: {
@@ -272,6 +336,28 @@
         })
         .catch(function (error) {
           console.log(error)
+        })
+        .finally(function() {
+          self.loading = false
+        })
+ 
+        api.get('providers/tokens')
+        .then(function (response) {
+          console.log(response)
+
+          self.provider_tokens.splice(1)
+
+          if (response.data.tokens) {
+            response.data.tokens.forEach(function(item) {
+              self.provider_tokens.push({
+                text: item.label,
+                value: item.id
+              })
+            })
+          }
+        })
+        .catch(function (error) {
+          self.error = error
         })
         .finally(function() {
           self.loading = false
@@ -337,6 +423,13 @@
           this.dialog = true
           this.error = '' 
 
+          if (self.data.unclaimed > 0) {
+            self.serverId = self.data.unclaimed
+          }
+
+          console.log('save server');
+          console.log(self.serverId);
+
           if (self.serverId) {
             api.post('servers/' + self.serverId + '/update', this.data)
             .then(function () {
@@ -384,8 +477,9 @@
         this.loading = true
         self.regions = []
         self.types = []
+        self.unclaimed = []
 
-        api.post('providers?cmd=options', {provider: provider})
+        api.post('providers/?cmd=options', {provider: provider})
         .then(function (response) {
           console.log(response)
 
@@ -405,6 +499,13 @@
             }
             self.regions = response.data.options.regions
             self.types = response.data.options.types
+
+            response.data.unclaimed.forEach(element => {
+                self.unclaimed.push({
+                    text: element.label,
+                    value: element.id
+                })
+            })
           }
         })
         .catch(function (error) {
@@ -415,6 +516,22 @@
         })
         .finally(function() {
           self.loading = false
+        })
+      },
+      submitToken() {
+        var self = this
+
+        api.post('providers/tokens', this.provider_token)
+        .then(function (response) {
+          if (response.data.error) {
+            self.error = response.data.error
+          } else {
+            self.drawer = false
+            self.fetchData()
+          }
+        })
+        .catch(function (error) {
+          self.error = error
         })
       }
     }

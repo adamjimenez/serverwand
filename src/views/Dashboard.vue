@@ -2,11 +2,11 @@
   <v-layout row>
     <v-flex>
       <v-alert
-        :value="error.length>0"
+        v-if="error"
         type="error"
       >
         {{error}}
-      </v-alert> 
+      </v-alert>
 
       <Loading :value="loading" />
 
@@ -20,7 +20,7 @@
         </v-card-title>
 
         <v-layout row class="mx-1">
-          <v-flex xs6>
+          <v-flex xs6 v-if="!restricted">
             <v-card>
 
               <v-card-subtitle class="pb-0">
@@ -65,11 +65,11 @@
             <v-card>
 
               <v-card-subtitle class="pb-0">
-                Domains
+                Sites
               </v-card-subtitle>
 
-              <v-list two-line v-if="domains.length" class="results">
-                <template v-for="(item, index) in domains">
+              <v-list two-line v-if="sites.length" class="results">
+                <template v-for="(item, index) in sites">
                   <v-divider
                     v-if="item.divider"
                     :inset="item.inset"
@@ -85,7 +85,7 @@
                     </v-list-item-avatar>
 
                     <v-list-item-content>
-                      <router-link :to="'/domains/' + item.id + '/summary'"> 
+                      <router-link :to="'/sites/' + item.id + '/summary'"> 
                         <v-list-item-title v-html="item.domain"></v-list-item-title>
                         <v-list-item-subtitle>{{serverOptions[item.server]}}</v-list-item-subtitle>
                       </router-link>
@@ -98,8 +98,8 @@
                 <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title>
-                      <router-link to="/domains/create">
-                          Add a domain
+                      <router-link to="/sites/create">
+                          Add a site
                       </router-link>
                     </v-list-item-title>
                   </v-list-item-content>
@@ -132,8 +132,14 @@
         post: null,
         error: '',
         servers: [],
-        domains: [],
+        sites: [],
         serverOptions: {}
+      }
+    },
+    props: {
+      restricted: {
+        type: Boolean,
+        default: false
       }
     },
     created () {
@@ -164,7 +170,7 @@
             return false
           }
 
-          self.domains = response.data.domains
+          self.sites = response.data.sites
 
           api.get('servers/')
           .then(function (response) {
@@ -177,6 +183,7 @@
         })
         .catch(function (error) {
           console.log(error)
+          self.error = error
         })
         .finally(function() {
           self.fetching = false

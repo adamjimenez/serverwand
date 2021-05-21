@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-alert
-      :value="error.length>0"
+      v-if="error"
       type="error"
-      >
+    >
       {{error}}
     </v-alert>
 
@@ -27,7 +27,7 @@
             </v-btn>
 
             <v-btn
-              @click="openSync(domainId)"
+              @click="openSync(siteId)"
             >
               Pull
             </v-btn>
@@ -45,7 +45,12 @@
             <v-list-item-content class="ma-3">
               <v-list-item-title>
                 <h2>{{ data.app.name }}</h2>
-                <p>{{ data.app.version }}</p>
+                <p>Version: {{ data.app.version }}</p>
+
+                <div v-if="data.app.latest && data.app.latest !== data.app.version">
+                  <p>Latest: {{ data.app.latest }}</p>
+                  <v-btn color="blue darken-1" @click="install(data.app.name)">Upgrade</v-btn>
+                </div>
               </v-list-item-title>
             </v-list-item-content>
 
@@ -159,11 +164,14 @@
                   :value="item"
                   @click="install(item.name)"
                 >
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        {{item.label}}
-                      </v-list-item-title>
-                    </v-list-item-content>
+                  <v-list-item-icon>
+                    <i :class="item.icon"></i>                    
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{item.label}}
+                    </v-list-item-title>
+                  </v-list-item-content>
                 </v-list-item>
               </template>
 
@@ -210,7 +218,7 @@
     >
 
       <v-card>
-        <v-card-title v-if="target === domainId">
+        <v-card-title v-if="target === siteId">
           Copy from live to staging
         </v-card-title>
         <v-card-title v-else>
@@ -274,7 +282,7 @@
       </v-card>
     </v-dialog>
 
-    <Domain ref="Domain" />
+    <Site ref="Site" />
 
   </div>
 </template>
@@ -283,16 +291,16 @@
   import api from '../../services/api'
   import Loading from '../../components/Loading'
   import Copy from '../../components/Copy'
-  import Domain from '../../components/Domain'
+  import Site from '../../components/Site'
 
   export default {
     components: {
       Loading,
       Copy,
-      Domain
+      Site
     },
     data: () => ({
-      domainId: null,
+      siteId: null,
       error: null,
       files: false,
       database: false,
@@ -315,22 +323,28 @@
       target: 0,
       apps: [{
         name: 'git',
-        label: 'Git repo'
+        label: 'Git repository',
+        icon: 'fab fa-git',
       }, {
         name: 'wordpress',
-        label: 'Wordpress'
+        label: 'Wordpress',
+        icon: 'fab fa-wordpress',
       }, {
         name: 'joomla',
-        label: 'Joomla'
+        label: 'Joomla',
+        icon: 'fab fa-joomla',
       }, {
         name: 'drupal',
-        label: 'Drupal'
+        label: 'Drupal',
+        icon: 'fab fa-drupal',
       }, {
         name: 'magento',
-        label: 'Magento'
+        label: 'Magento',
+        icon: 'fab fa-magento',
       }, {
-        name: 'Roundcubemail',
-        label: 'Roundcube mail'
+        name: 'Roundcube',
+        label: 'Roundcube webmail',
+        icon: 'fas fa-envelope',
       }],
       server_opts: [],
       selected: [],
@@ -352,9 +366,9 @@
         var self = this
         this.error = ''
         this.fetching = true
-        this.domainId = this.$route.params.id
+        this.siteId = this.$route.params.id
  
-        api.get('domains/' + this.domainId + '/apps')
+        api.get('sites/' + this.siteId + '/apps')
         .then(function (response) {
           console.log(response)
             
@@ -393,7 +407,7 @@
             this.fetching = true
             this.loading = true
 
-            api.post('domains/' + this.$route.params.id + '/apps', {app: app})
+            api.post('sites/' + this.$route.params.id + '/apps', {app: app})
             .then(function (response) {
               console.log(response)
               
@@ -420,7 +434,7 @@
           this.fetching = true
           this.error = ''
 
-          api.post('domains/' + this.domainId + '/apps', {git_url: this.data.git_url})
+          api.post('sites/' + this.siteId + '/apps', {git_url: this.data.git_url})
           .then(function (response) {
             console.log(response)
             
@@ -444,12 +458,12 @@
         var data = {
           server: this.data.server,
           domain: this.data.stagingDomain,
-          origin: this.domainId,
-          needle: this.data.domain,
+          origin: this.siteId,
+          //needle: this.data.domain,
           dns: this.dns
         }
 
-        this.$refs.Domain.create(data)
+        this.$refs.Site.create(data)
 
       },
       openSync (target) {
@@ -457,7 +471,7 @@
         this.target = target
         this.syncDialog = true
 
-        api.get('domains/' + target + '/database/tables')
+        api.get('sites/' + target + '/database/tables')
         .then(function (response) {
           console.log(response)
           self.tables = response.data.tables
@@ -481,9 +495,9 @@
 
         //console.log(params); 
 
-        var cmd = (this.target === this.domainId) ? 'pull' : 'push'
+        var cmd = (this.target === this.siteId) ? 'pull' : 'push'
 
-        api.post('domains/' + this.domainId + '/apps/' + cmd, params)
+        api.post('sites/' + this.siteId + '/apps/' + cmd, params)
         .then(function (response) {
           console.log(response)
         })
@@ -499,7 +513,7 @@
         var self = this
         this.fetching = true
 
-        api.get('domains/' + this.domainId + '/apps/pull')
+        api.get('sites/' + this.siteId + '/apps/pull')
         .then(function (response) {
           console.log(response)
         })

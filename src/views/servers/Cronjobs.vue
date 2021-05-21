@@ -1,13 +1,13 @@
 <template>
-    <div>
-        <v-alert
-          :value="error.length>0"
-          type="error"
-        >
-        {{error}}
-        </v-alert>
-        
-        <Loading :value="loading" />
+  <div>
+    <v-alert
+      v-if="error"
+      type="error"
+    >
+      {{error}}
+    </v-alert>
+      
+    <Loading :value="loading" />
 
   <v-card
     class="pa-3"

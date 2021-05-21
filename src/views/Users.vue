@@ -16,7 +16,7 @@
         :loading="fetching"
       >
         <v-card-title primary-title>
-          <div class="headline">Domains</div>
+          <div class="headline">Users</div>
         </v-card-title>
 
         <v-data-table
@@ -25,23 +25,17 @@
           class="results"
         >
           <template v-slot:body="prop">
-            <tbody>
-              <tr v-for="item in prop.items" :key="item.id">
-                <td class="text-start">
-                  <v-list-item>
-                      <v-icon class="mr-3">fas fa-globe</v-icon>
+            <tr v-for="item in prop.items" :key="item.id">
+              <td class="text-start">
+                <v-list-item>
+                    <v-icon class="mr-3">fas fa-user</v-icon>
 
-                      <router-link :to="'/domains/' + item.id + '/summary'"> 
-                        <v-list-item-title v-html="item.domain"></v-list-item-title>
-                        <v-list-item-subtitle></v-list-item-subtitle>
-                      </router-link>
-                  </v-list-item>
-                </td>
-                <td class="text-start">
-                  {{item.registrar ? 'Yes' : ''}}
-                </td> 
-              </tr>
-            </tbody>
+                    <router-link :to="'/users/' + item.id + '/summary'"> 
+                      <v-list-item-title v-html="item.name"></v-list-item-title>
+                    </router-link>
+                </v-list-item>
+              </td>
+            </tr>
           </template>
         </v-data-table>
         
@@ -65,23 +59,19 @@
         error: '',
         filtered: [],
         items: [],
+        servers: {},
+        server: '*',
         searchPanel: [false],
         search: '',
         selected: [],
         headers: [{
-          text: 'Domain ',
-          value: 'domain'
-        }, {
-          text: 'Registrar ',
-          value: 'registrar'
-        }/*, {
-          text: 'Expiration ',
-          value: 'expiration'
-        }*/]
+          text: 'Name ',
+          value: 'name'
+        }]
       }
     },
     created () {
-      document.title = 'Domains'
+      document.title = 'Users'
       this.fetchData()
     },
     methods: {
@@ -90,7 +80,7 @@
         this.error = ''
         this.fetching = true
  
-        api.get('domains/')
+        api.get('users/')
         .then(function (response) {
           console.log(response)
 
@@ -104,13 +94,15 @@
           response.data.items.forEach(element => {
               self.filtered.push(element)
           })
-
         })
         .catch(function (error) {
           console.log(error)
         })
         .finally(function() {
           self.fetching = false
+
+          if (localStorage.server)
+            self.server = localStorage.server
         })
       }
     }

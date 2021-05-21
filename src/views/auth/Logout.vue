@@ -5,16 +5,17 @@
     lazy-validation
   >
     <v-alert
-      :value="error.length>0"
+      v-if="error"
       type="error"
     >
-    {{error}}
+      {{error}}
     </v-alert>
   </v-form>
 </template>
 
 <script>
   import api from '../../services/api';
+  import router from '../../router'
 
   export default {
     data: () => ({
@@ -42,7 +43,7 @@
         .then(function (response) {
           console.log(response)
           if (response.data.success) {
-            location.href = 'https://serverwand.com/login'
+            router.push('/auth/login')
             return false
           } else {
             self.error = response.data.error

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-alert
-      :value="error.length>0"
+      v-if="error"
       type="error"
     >
       {{error}}
@@ -20,28 +20,30 @@
           class="results"
         >
           <template v-slot:body="prop">
-            <tr v-for="item in prop.items" :key="item.id">
-              <td class="text-start">
-                <v-list-item>
-                  <v-checkbox v-model="item.selected"></v-checkbox>
-                </v-list-item>
-              </td>
-              <td class="text-start" @click="view(item.id)">
-                {{item.id}}
-              </td>
-              <td class="text-start">
-                {{item.size | prettyBytes}}
-              </td>
-              <td class="text-start">
-                {{item.sender}}
-              </td>
-              <td class="text-start">
-                {{item.recipient}}
-              </td>
-              <td class="text-start">
-                {{item.date}}
-              </td>
-            </tr>
+            <tbody>
+              <tr v-for="item in prop.items" :key="item.id">
+                <td class="text-start">
+                  <v-list-item>
+                    <v-checkbox v-model="item.selected"></v-checkbox>
+                  </v-list-item>
+                </td>
+                <td class="text-start" @click="view(item.id)">
+                  {{item.id}}
+                </td>
+                <td class="text-start">
+                  {{item.size | prettyBytes}}
+                </td>
+                <td class="text-start">
+                  {{item.sender}}
+                </td>
+                <td class="text-start">
+                  {{item.recipient}}
+                </td>
+                <td class="text-start">
+                  {{item.date}}
+                </td>
+              </tr>
+            </tbody>
           </template>
         </v-data-table>
 

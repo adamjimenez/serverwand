@@ -1,5 +1,4 @@
 <template>
-<v-layout row justify-center>
   <v-dialog v-model="value" persistent content content-class="centered-dialog">
     <v-container fill-height
     >
@@ -16,7 +15,6 @@
       </v-card>
     </v-container>
   </v-dialog>
-</v-layout>
 </template>
 
 <script>

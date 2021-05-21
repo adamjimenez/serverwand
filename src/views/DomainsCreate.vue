@@ -1,72 +1,49 @@
 <template>
   <div>
     <v-alert
-      :value="error.length>0"
+      v-if="error"
       type="error"
     >
-    {{error}}
-    </v-alert> 
+      {{error}}
+    </v-alert>
 
     <Loading :value="loading" />
 
-    <v-subheader>
-      <h1>Domain details</h1>
-    </v-subheader>
+    <v-card v-if="!serverId">
+      <v-card-title>Domain details</v-card-title>
 
-    <v-form
-      v-if="!loading"
-      ref="form"
-      v-model="valid"
-      lazy-validation
-    >
+      <v-card-text>
 
-      <v-card>
-        <v-card-text>
+        <v-form
+        v-if="!loading"
+        ref="form"
+        v-model="valid"
+        lazy-validation
+        >
 
-          <v-text-field
-            :disabled="domainId>0"
-            v-model="data.domain"
-            :rules="domainRules"
-            label="Domain"
-            required
-          ></v-text-field>
+            <v-text-field
+                :disabled="domainId>0"
+                v-model="data.domain"
+                :rules="domainRules"
+                label="Domain"
+                required
+            ></v-text-field>
 
-          <v-select
-            :disabled="domainId>0"
-            v-model="data.server"
-            :items="servers"
-            label="Server"
-            :rules="[(v) => !!v || 'Server is required']"
-            required
-          ></v-select>
+            <v-btn
+                :disabled="loading"
+                :loading="loading"
+                color="success"
+                @click="validate"
+            >
+                Save
+            </v-btn>
 
-          <v-text-field
-            type="password"
-            v-model="data.password"
-            :rules="passwordRules"
-            label="Password"
-            required
-          ></v-text-field>
-          
-          <v-checkbox
-            v-model="data.dns"
-            label="Configure DNS"
-            :disabled="!data.server || dnsProviders[data.server]==''"
-          ></v-checkbox>
 
-          <v-btn
-            :disabled="loading"
-            :loading="loading"
-            color="success"
-            @click="validate"
-          >
-            Save
-          </v-btn>
+        </v-form>
 
-        </v-card-text>
-      </v-card>
+      </v-card-text>
 
-    </v-form>
+    </v-card>
 
     <Domain ref="Domain" />
 
@@ -88,8 +65,6 @@
       valid: true,
       data: {
         domain: '',
-        password: '',
-        server: '',
         dns: true,
       },
       domainRules: [
@@ -100,7 +75,6 @@
       servers: [],
       dnsProviders: {},
       details: "",
-      serverId: 0,
       error: '',
       authRequired: false
     }),
@@ -122,28 +96,8 @@
           console.log(response)
 
           if (self.domainId) {
-            self.data = response.data.items[0]
+            self.data = response.data.item
           }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.loading = false
-        })
- 
-        api.get('servers/')
-        .then(function (response) {
-          console.log(response)
-            
-          response.data.items.forEach(element => {
-              self.servers.push({
-                  text: element.name,
-                  value: element.id
-              });
-
-              self.dnsProviders[element.id] = element.dns
-          })
         })
         .catch(function (error) {
           console.log(error)
@@ -170,11 +124,9 @@
           .catch(function (error) {
             console.log(error)
           })
-        } else {
-          
+        } else {          
           self.loading = false
           this.$refs.Domain.create(this.data)
-
         }
 
       },

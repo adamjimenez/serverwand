@@ -2,7 +2,7 @@
   <div>
 
     <v-alert
-      :value="error.length>0"
+      v-if="error"
       type="error"
     >
       {{error}}
@@ -406,7 +406,7 @@
         this.error = ''
         this.fetching = true
  
-        api.post('servers/' + this.serverId + '/hostname', { clearCacheEntry: true })
+        api.post('servers/' + this.serverId + '/hostname', { hostname: self.hostname })
         .then(function (response) {
           console.log(response)
 

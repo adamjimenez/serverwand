@@ -15,10 +15,10 @@
     </v-subheader>
 
     <v-alert
-      :value="error.length>0"
+      v-if="error"
       type="error"
     >
-    {{error}}
+      {{error}}
     </v-alert>
 
     <v-card-text>
@@ -128,7 +128,7 @@
           .catch(function (error) {
             console.log(error)
           })
-          .finally(function (error) {
+          .finally(function () {
             self.dialog = false
             self.loading = false
           })

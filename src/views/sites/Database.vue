@@ -1,10 +1,10 @@
 <template>
   <div>
     <v-alert
-    :value="error.length>0"
-    type="error"
+      v-if="error"
+      type="error"
     >
-    {{error}}
+      {{error}}
     </v-alert>
 
     <Loading :value="loading" />
@@ -82,7 +82,7 @@
               <v-card tile flat>
                   <v-card-text>
                     {{data.db_password}}
-                  <Edit :val="data.db_password" label="DB Password" name="password" password  :path="'domains/' + this.domainId + '/database'" />
+                  <Edit :val="data.db_password" label="DB Password" name="password" password  :path="'sites/' + this.domainId + '/database'" />
                   <!--
                   <Copy :val="data.auth.password" />
                   -->
@@ -148,7 +148,7 @@
         this.fetching = true
         this.domainId = this.$route.params.id
  
-        api.get('domains/' + this.domainId + '/database')
+        api.get('sites/' + this.domainId + '/database')
         .then(function (response) {
           console.log(response)
             
@@ -167,7 +167,7 @@
         this.error = ''
         this.loading = true
 
-        api.post('domains/' + this.domainId + '/database', {save: 1})
+        api.post('sites/' + this.domainId + '/database', {save: 1})
         .then(function (response) {
           console.log(response)
           

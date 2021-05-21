@@ -10,26 +10,27 @@ export default new Router({
     {
       path: '/',
       redirect: 'dashboard',
-      component: () => import(/* webpackChunkName: "main" */ './Main.vue'),
+      component: () => import('./Main.vue'),
       children: [
         {
           path: '/dashboard',
-          component: () => import(/* webpackChunkName: "servers" */ './views/Dashboard.vue')
-        },
-        {
+          component: () => import('./views/Dashboard.vue')
+        }, {
           path: '/servers',
           name: 'servers',
-          component: () => import(/* webpackChunkName: "servers" */ './views/Servers.vue')
-        },
-        {
+          component: () => import('./views/Servers.vue')
+        }, {
           path: '/servers/create',
           name: 'servers-create',
-          component: () => import(/* webpackChunkName: "servers-create" */ './views/ServersCreate.vue')
-        },
-        {
+          component: () => import('./views/ServersCreate.vue')
+        }, {
+          path: '/servers/:id/edit',
+          name: 'server-edit',
+          component: () => import('./views/ServersCreate.vue')
+        }, {
           path: '/servers/:id',
           name: 'server',
-          component: () => import(/* webpackChunkName: "server" */ './views/Server.vue'),
+          component: () => import('./views/Server.vue'),
           children: [{
             path: '/servers/:id/summary',
             component: () => import('./views/servers/Summary.vue')
@@ -58,65 +59,83 @@ export default new Router({
             path: '/servers/:id/logs',
             component: () => import('./views/servers/Logs.vue')
           }]
-        },
-        {
-          path: '/servers/:id/edit',
-          name: 'server-edit',
-          component: () => import(/* webpackChunkName: "server-edit" */ './views/ServersCreate.vue')
-        },
-        {
+        }, {
+          path: '/sites',
+          name: 'sites',
+          component: () => import('./views/Sites.vue')
+        }, {
+          path: '/sites/create',
+          name: 'sites-create',
+          component: () => import('./views/SitesCreate.vue')
+        }, {
+          path: '/sites/:id/edit',
+          name: 'Site-edit',
+          component: () => import('./views/SitesCreate.vue')
+        }, {
+          path: '/sites/:id',
+          name: 'site',
+          component: () => import('./views/Site.vue'),
+          children: [{
+            path: '/sites/:id/summary',
+            component: () => import('./views/sites/Summary.vue')
+          }, {
+            path: '/sites/:id/database',
+            component: () => import('./views/sites/Database.vue')
+          }, {
+            path: '/sites/:id/aliases',
+            component: () => import('./views/sites/Aliases.vue')
+          }, {
+            path: '/sites/:id/email',
+            component: () => import('./views/sites/Email.vue')
+          }, {
+            path: '/sites/:id/apps',
+            component: () => import('./views/sites/Apps.vue')
+          }, {
+            path: '/sites/:id/dns',
+            component: () => import('./views/sites/Dns.vue')
+          }, {
+            path: '/sites/:id/backups',
+            component: () => import('./views/sites/Backups.vue')
+          }, {
+            path: '/sites/:id/settings',
+            component: () => import('./views/sites/Settings.vue')
+          }]
+        }, {
           path: '/domains',
           name: 'domains',
-          component: () => import(/* webpackChunkName: "domains" */ './views/Domains.vue')
-        },
-        {
+          component: () => import('./views/Domains.vue')
+        }, {
           path: '/domains/create',
           name: 'domains-create',
-          component: () => import(/* webpackChunkName: "domains-create" */ './views/DomainsCreate.vue')
-        },
-        {
+          component: () => import('./views/DomainsCreate.vue')
+        }, {
+          path: '/domains/:id/edit',
+          name: 'Site-edit',
+          component: () => import('./views/DomainsCreate.vue')
+        }, {
           path: '/domains/:id',
           name: 'domain',
-          component: () => import(/* webpackChunkName: "server" */ './views/Domain.vue'),
+          component: () => import('./views/Domain.vue'),
           children: [{
             path: '/domains/:id/summary',
             component: () => import('./views/domains/Summary.vue')
           }, {
-            path: '/domains/:id/database',
-            component: () => import('./views/domains/Database.vue')
-          }, {
-            path: '/domains/:id/aliases',
-            component: () => import('./views/domains/Aliases.vue')
-          }, {
-            path: '/domains/:id/email',
-            component: () => import('./views/domains/Email.vue')
-          }, {
-            path: '/domains/:id/apps',
-            component: () => import('./views/domains/Apps.vue')
-          }, {
-            path: '/domains/:id/backups',
-            component: () => import('./views/domains/Backups.vue')
+            path: '/domains/:id/dns',
+            component: () => import('./views/domains/Dns.vue')
           }, {
             path: '/domains/:id/settings',
             component: () => import('./views/domains/Settings.vue')
           }]
-        },
-        {
-          path: '/domains/:id/edit',
-          name: 'domain-edit',
-          component: () => import(/* webpackChunkName: "domain-edit" */ './views/DomainsCreate.vue')
         }, {
           path: '/teams',
           component: () => import('./views/Teams.vue')
         }, {
           path: '/teams/create',
           component: () => import('./views/TeamsCreate.vue')
-        },
-        {
+        }, {
           path: '/teams/:id/edit',
           component: () => import('./views/TeamsCreate.vue')
-        },
-        {
+        }, {
           path: '/teams/:id',
           component: () => import('./views/Team.vue'),
           children: [{
@@ -129,47 +148,82 @@ export default new Router({
             path: '/teams/:id/settings',
             component: () => import('./views/teams/Settings.vue')
           }]
-        },
-        {
+        }, {
+          path: '/users',
+          name: 'users',
+          component: () => import('./views/Users.vue')
+        }, {
+          path: '/users/create',
+          name: 'users-create',
+          component: () => import('./views/UsersCreate.vue')
+        }, {
+          path: '/users/:id/edit',
+          component: () => import('./views/UsersCreate.vue')
+        }, {
+          path: '/users/:id',
+          component: () => import('./views/User.vue'),
+          children: [{
+            path: '/users/:id/summary',
+            component: () => import('./views/users/Summary.vue')
+          }, {
+            path: '/users/:id/sites',
+            component: () => import('./views/users/Sites.vue')
+          }, {
+            path: '/users/:id/domains',
+            component: () => import('./views/users/Domains.vue')
+          }, {
+            path: '/users/:id/invoices',
+            component: () => import('./views/users/Invoices.vue')
+          }, {
+            path: '/users/:id/subscriptions',
+            component: () => import('./views/users/Subscriptions.vue')
+          }, {
+            path: '/users/:id/notes',
+            component: () => import('./views/users/Notes.vue')
+          }, {
+            path: '/users/:id/settings',
+            component: () => import('./views/users/Settings.vue')
+          }]
+        }, {
           path: '/settings',
-          component: () => import(/* webpackChunkName: "profile" */ './views/Settings.vue'),
+          component: () => import('./views/Settings.vue'),
           children: [{
             path: '/settings/profile',
             component: () => import('./views/settings/Profile.vue')
           }, {
             path: '/settings/api',
             component: () => import('./views/settings/Api.vue')
+          }, {
+            path: '/settings/tokens',
+            component: () => import('./views/settings/Tokens.vue')
+          }, {
+            path: '/settings/products',
+            component: () => import('./views/settings/Products.vue')
           }]
         }
       ]
     },
     {
-      path: '/auth/',
-      component: () => import(/* webpackChunkName: "main" */ './views/auth/Template.vue'),
-      children: [/*
-        {
+      path: '/auth',
+      component: () => import('./views/auth/Template.vue'),
+      children: [{
           path: '/auth/login',
           name: 'login',
           component: () => import('./views/auth/Login.vue')
-        },
-        {
+        }, {
           path: '/auth/forgot',
           name: 'forgot',
           component: () => import('./views/auth/Forgot.vue')
-        },
-        {
+        }, {
           path: '/auth/register',
           name: 'register',
           component: () => import('./views/auth/Register.vue')
-        },*/
-        {
+        }, {
           path: '/auth/logout',
           name: 'logout',
           component: () => import('./views/auth/Logout.vue')
-        },
-      ]
-    },
-    {
+      }]
+    }, {
       path: '/loading',
       component: () => import('./views/Loading.vue')
     },

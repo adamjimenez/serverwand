@@ -1,17 +1,18 @@
 <template>
   <div>
     <v-alert
-      :value="error.length>0"
+      v-if="error"
       type="error"
     >
-    {{error}}
-    </v-alert> 
+      {{error}}
+    </v-alert>
 
     <Loading :value="loading" />
 
-    <v-subheader>
-      <h1>Team details</h1>
-    </v-subheader>
+    <v-card v-if="!serverId">
+      <v-card-title>Team details</v-card-title>
+
+      <v-card-text>
 
     <v-form
       v-if="!loading"
@@ -19,10 +20,6 @@
       v-model="valid"
       lazy-validation
     >
-
-      <v-card>
-        <v-card-text>
-
           <v-text-field
             v-model="data.name"
             :rules="nameRules"
@@ -38,10 +35,10 @@
           >
             Save
           </v-btn>
+    </v-form>
 
         </v-card-text>
       </v-card>
-    </v-form>
   </div>
 </template>
 

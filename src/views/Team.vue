@@ -2,10 +2,10 @@
   <v-layout row>
     <v-flex>
       <v-alert
-      :value="error.length>0"
-      type="error"
+        v-if="error"
+        type="error"
       >
-       {{error}}
+        {{error}}
       </v-alert>
 
       <Loading :value="fetching" />

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-alert
-      :value="error.length>0"
+      v-if="error"
       type="error"
     >
       {{error}}
@@ -257,15 +257,13 @@
               self.error = response.data.error
             } else {
               self.drawer = false
-              self.fetchData()
             }
           })
           .catch(function (error) {
             console.log(error)
           })
           .finally(function() {
-            self.fetching = false
-            self.loading = ''
+            self.fetchData()
           })
         }
       }

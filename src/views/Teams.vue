@@ -2,9 +2,12 @@
   <v-layout row>
     <v-flex>
       
-      <div v-if="error" class="error">
-        {{ error }}
-      </div>
+      <v-alert
+        v-if="error"
+        type="error"
+      >
+        {{error}}
+      </v-alert>
 
       <Loading :value="loading" />
     

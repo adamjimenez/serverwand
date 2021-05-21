@@ -1,11 +1,11 @@
 <template>
   <div>
     <v-alert
-        :value="error.length>0"
-        type="error"
+      v-if="error"
+      type="error"
     >
-    {{error}}
-    </v-alert> 
+      {{error}}
+    </v-alert>
 
     <Loading :value="fetching" />
 
@@ -35,7 +35,7 @@
                   :loading="dialog"
                   @click="deleteItem(item.id)"
                 >
-                  Delete
+                  <v-icon small>delete</v-icon>
                 </v-btn>
               </v-list-item-action>
             </template>

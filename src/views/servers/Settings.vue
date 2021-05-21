@@ -1,52 +1,51 @@
 <template>
-    <div>
-        <v-alert
-          :value="error.length>0"
-          type="error"
-        >
-        {{error}}
-        </v-alert>
+  <div>
+
+    <v-alert
+      v-if="error"
+      type="error"
+    >
+      {{error}}
+    </v-alert>
         
-        <Loading :value="fetching" />
+    <Loading :value="fetching" />
 
-<template>
-  <v-card
-    class="pa-3"
-  >
-    <v-row>
-      <v-col>
-        <div class="ma-3">
-            <v-btn
-              @click="editServer"
-            >
-              Edit
-            </v-btn>
-        </div>
+    <v-card
+      class="pa-3"
+    >
+      <v-row>
+        <v-col>
+          <div class="ma-3">
+              <v-btn
+                @click="editServer"
+              >
+                Edit
+              </v-btn>
+          </div>
 
-        <div class="ma-3">
-            <v-btn
-              :disabled="fetching"
-              :loading="fetching"
-              @click="reboot"
-            >
-              Reboot
-            </v-btn>
-        </div>
+          <div class="ma-3">
+              <v-btn
+                :disabled="fetching"
+                :loading="fetching"
+                @click="reboot"
+              >
+                Reboot
+              </v-btn>
+          </div>
 
-        <div class="ma-3">
-            <v-btn
-              :disabled="fetching"
-              :loading="fetching"
-              @click="deleteServer"
-              color="error"
-            >
-              Disconnect
-            </v-btn>
-        </div>
-      </v-col>
-    </v-row>
-  </v-card>
-</template>
+          <div class="ma-3">
+              <v-btn
+                :disabled="fetching"
+                :loading="fetching"
+                @click="deleteServer"
+                color="error"
+              >
+                Disconnect
+              </v-btn>
+          </div>
+        </v-col>
+      </v-row>
+    </v-card>
 
     </div>
 </template>

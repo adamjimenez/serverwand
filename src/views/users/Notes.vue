@@ -8,7 +8,7 @@
   >
     <v-list>
       <v-list-item-group>
-        <template v-for="(item, i) in data.servers">
+        <template v-for="(item, i) in notes">
 
           <v-list-item
             :key="`item-${i}`"
@@ -17,8 +17,11 @@
             <template v-slot:default>
               <v-list-item-content>
                 <v-list-item-title>
-                  {{item.name}}
+                    <span style="white-space: pre;">{{item.note}}</span>
                 </v-list-item-title>
+                <v-list-item-subtitle>
+                  {{item.created}}
+                </v-list-item-subtitle>
               </v-list-item-content>
 
               <v-list-item-action>
@@ -44,7 +47,7 @@
           <v-btn
           @click="addItem()"
           >
-            Add server
+            Add note
           </v-btn>
         </v-card-title>
       </div>
@@ -58,28 +61,24 @@
     >
       <v-card>
         <v-card-title>
-          Server
+          Note
         </v-card-title>
 
         <v-card-text>
-          <v-select
-            v-model="data.server"
-            :items="servers"
-            label="Server"
-          ></v-select>   
+
+            <v-textarea
+                v-model="data.note"
+                label="Note"
+            ></v-textarea>
           
           <v-btn
             :disabled="dialog"
-            :loading="dialog"
+            :loading="loading"
             color="success"
             @click="saveItem"
           >
             Save
-          </v-btn>          
-          
-          <p v-if="useMasterPassword" style="font-size: 12px; margin-top: 20px;">
-            Note: Server keys shared with other users will not be encrypted with your master password  
-          </p>
+          </v-btn>
         </v-card-text>
       </v-card>
     </v-navigation-drawer>
@@ -102,18 +101,17 @@
         error: null,
         data: {
         },
-        servers: [],
+        notes: [],
         dialog: false,
         details: '',
         rules: {
           required: value => !!value || 'Required.',
           min: v => v.length >= 8 || 'Min 8 characters',
         },
-        server: {
+        domain: {
           name: ''
         },
-        drawer: false,
-        useMasterPassword: false
+        drawer: false
       }
     },
     created () {
@@ -127,16 +125,16 @@
       '$route': 'fetchData'
     },
     methods: {
-      fetchData () {        
+      fetchData () {
         var self = this
         this.error = ''
         this.fetching = true
  
-        api.get('teams/' + this.id)
+        api.get('users/' + this.id + '/notes')
         .then(function (response) {
-          console.log(response)            
-          self.data = response.data.item
-          document.title = 'Servers' + ' | ' + self.data.name
+            console.log(response)
+            self.notes = response.data.notes
+            //document.title = 'Notes' + ' | ' + self.data.domain
         })
         .catch(function (error) {
           console.log(error)
@@ -144,51 +142,29 @@
         .finally(function() {
           self.fetching = false
         })
- 
-        api.get('servers/')
-        .then(function (response) {
-          console.log(response)
-            
-          response.data.items.forEach(element => {
-              self.servers.push({
-                  text: element.name,
-                  value: element.id
-              });
-          })
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.loading = false
-        })
-
-        api.get('settings/profile')
-        .then(function (response) {
-          self.useMasterPassword = response.data.profile.prefs.useMasterPassword
-        })
       },
       addItem () {
-        this.server.name = ''
+        this.domain.name = ''
         this.drawer = true
       },
       saveItem () {
         var self = this
 
-        if (this.data.server) {
+        if (this.data.note) {
           this.details = ''
           this.dialog = true
           this.error = ''
 
-          api.post('teams/' + this.id, this.data)
+          api.post('users/' + this.id + '/notes', this.data)
           .then(function (response) {
             console.log(response)
             
             if (!response.data.success) {
-              self.error = response.data.error;
+                self.error = response.data.error;
             } else {
-              self.drawer = false
-              self.fetchData()
+                self.data.note = ''
+                self.drawer = false
+                self.fetchData()
             }
           })
           .catch(function (error) {
@@ -201,31 +177,34 @@
         }
       },
       deleteItem (id) { 
-        this.$confirm('Delete server?').then(res => {
-          if (res) {
+        this.$confirm('Delete note?').then(res => {
+            if (!res) {
+               return
+            }
+          
             var self = this
             this.error = ''
             this.dialog = true
             this.loading = true
 
-            api.post('teams/' + this.id, {delete: 1, server: id})
+            api.post('users/' + this.id + '/notes', {delete: 1, domain: id})
             .then(function (response) {
-              console.log(response)
-              
-              if (response.data.error) {
+                console.log(response)
+                
+                if (response.data.error) {
                 self.error = response.data.error
-              } else {
+                } else {
                 self.fetchData()
-              }
+                }
             })
             .catch(function (error) {
-              console.log(error)
+                console.log(error)
             })
             .finally(function() {
-              self.dialog = false
-              self.loading = false
+                self.dialog = false
+                self.loading = false
             })
-          }
+          
         })
       }
     }

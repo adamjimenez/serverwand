@@ -8,7 +8,7 @@
   >
     <v-list>
       <v-list-item-group>
-        <template v-for="(item, i) in data.servers">
+        <template v-for="(item, i) in user_domains">
 
           <v-list-item
             :key="`item-${i}`"
@@ -17,7 +17,7 @@
             <template v-slot:default>
               <v-list-item-content>
                 <v-list-item-title>
-                  {{item.name}}
+                  {{item.domain}}
                 </v-list-item-title>
               </v-list-item-content>
 
@@ -44,7 +44,7 @@
           <v-btn
           @click="addItem()"
           >
-            Add server
+            Add domain
           </v-btn>
         </v-card-title>
       </div>
@@ -58,15 +58,28 @@
     >
       <v-card>
         <v-card-title>
-          Server
+          Domain
         </v-card-title>
 
         <v-card-text>
           <v-select
-            v-model="data.server"
-            :items="servers"
-            label="Server"
-          ></v-select>   
+            v-model="data.domain"
+            :items="domains"
+            label="Domain"
+          >
+            <template
+                slot="item"
+                slot-scope="data"
+            >
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{data.item.text}}
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </template>>
+          </v-select>   
           
           <v-btn
             :disabled="dialog"
@@ -75,11 +88,7 @@
             @click="saveItem"
           >
             Save
-          </v-btn>          
-          
-          <p v-if="useMasterPassword" style="font-size: 12px; margin-top: 20px;">
-            Note: Server keys shared with other users will not be encrypted with your master password  
-          </p>
+          </v-btn>
         </v-card-text>
       </v-card>
     </v-navigation-drawer>
@@ -102,18 +111,19 @@
         error: null,
         data: {
         },
-        servers: [],
+        user_domains: [],
+        domains: [],
+        servers: {},
         dialog: false,
         details: '',
         rules: {
           required: value => !!value || 'Required.',
           min: v => v.length >= 8 || 'Min 8 characters',
         },
-        server: {
+        domain: {
           name: ''
         },
-        drawer: false,
-        useMasterPassword: false
+        drawer: false
       }
     },
     created () {
@@ -132,11 +142,11 @@
         this.error = ''
         this.fetching = true
  
-        api.get('teams/' + this.id)
+        api.get('users/' + this.id + '/domains')
         .then(function (response) {
-          console.log(response)            
-          self.data = response.data.item
-          document.title = 'Servers' + ' | ' + self.data.name
+            console.log(response)
+            self.user_domains = response.data.domains
+            //document.title = 'Domains' + ' | ' + self.data.domain
         })
         .catch(function (error) {
           console.log(error)
@@ -145,15 +155,23 @@
           self.fetching = false
         })
  
-        api.get('servers/')
+        api.get('domains/')
         .then(function (response) {
           console.log(response)
             
           response.data.items.forEach(element => {
-              self.servers.push({
-                  text: element.name,
-                  value: element.id
+              self.domains.push({
+                  text: element.domain,
+                  value: element.id,
+                  server: element.server
               });
+          })
+ 
+          api.get('servers/')
+          .then(function (response) {
+            response.data.items.forEach(element => {
+                self.$set(self.servers, element.id, element.name)
+            })
           })
         })
         .catch(function (error) {
@@ -162,25 +180,20 @@
         .finally(function() {
           self.loading = false
         })
-
-        api.get('settings/profile')
-        .then(function (response) {
-          self.useMasterPassword = response.data.profile.prefs.useMasterPassword
-        })
       },
       addItem () {
-        this.server.name = ''
+        this.domain.name = ''
         this.drawer = true
       },
       saveItem () {
         var self = this
 
-        if (this.data.server) {
+        if (this.data.domain) {
           this.details = ''
           this.dialog = true
           this.error = ''
 
-          api.post('teams/' + this.id, this.data)
+          api.post('users/' + this.id + '/domains', this.data)
           .then(function (response) {
             console.log(response)
             
@@ -201,31 +214,34 @@
         }
       },
       deleteItem (id) { 
-        this.$confirm('Delete server?').then(res => {
-          if (res) {
+        this.$confirm('Delete domain?').then(res => {
+            if (!res) {
+               return
+            }
+          
             var self = this
             this.error = ''
             this.dialog = true
             this.loading = true
 
-            api.post('teams/' + this.id, {delete: 1, server: id})
+            api.post('users/' + this.id + '/domains', {delete: 1, domain: id})
             .then(function (response) {
-              console.log(response)
-              
-              if (response.data.error) {
+                console.log(response)
+                
+                if (response.data.error) {
                 self.error = response.data.error
-              } else {
+                } else {
                 self.fetchData()
-              }
+                }
             })
             .catch(function (error) {
-              console.log(error)
+                console.log(error)
             })
             .finally(function() {
-              self.dialog = false
-              self.loading = false
+                self.dialog = false
+                self.loading = false
             })
-          }
+          
         })
       }
     }

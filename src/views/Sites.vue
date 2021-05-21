@@ -16,8 +16,18 @@
         :loading="fetching"
       >
         <v-card-title primary-title>
-          <div class="headline">Domains</div>
+          <div class="headline">Sites</div>
         </v-card-title>
+
+        <v-card flat>
+          <v-card-text>
+            <v-select
+              v-model="server"
+              :items="server_opts"
+              label="Server"
+            ></v-select>
+          </v-card-text>
+        </v-card>
 
         <v-data-table
           :headers="headers"
@@ -29,17 +39,25 @@
               <tr v-for="item in prop.items" :key="item.id">
                 <td class="text-start">
                   <v-list-item>
-                      <v-icon class="mr-3">fas fa-globe</v-icon>
+                      <v-icon class="mr-3">fas fa-sitemap</v-icon>
 
-                      <router-link :to="'/domains/' + item.id + '/summary'"> 
+                      <router-link :to="'/sites/' + item.id + '/summary'"> 
                         <v-list-item-title v-html="item.domain"></v-list-item-title>
-                        <v-list-item-subtitle></v-list-item-subtitle>
+                        <v-list-item-subtitle>{{servers[item.server]}}</v-list-item-subtitle>
                       </router-link>
                   </v-list-item>
                 </td>
                 <td class="text-start">
-                  {{item.registrar ? 'Yes' : ''}}
-                </td> 
+                  {{item.ip}}
+                </td>
+                <td class="text-start">
+                  {{item.mx}}
+                </td>
+                <td class="text-start">
+                  <div v-if="item.usage > 0">
+                    {{item.usage * 1024 | prettyBytes }}
+                  </div>
+                </td>
               </tr>
             </tbody>
           </template>
@@ -65,6 +83,12 @@
         error: '',
         filtered: [],
         items: [],
+        servers: {},
+        server: '*',
+        server_opts: [{
+          text: 'All',
+          value: '*'
+        }],
         searchPanel: [false],
         search: '',
         selected: [],
@@ -72,17 +96,33 @@
           text: 'Domain ',
           value: 'domain'
         }, {
-          text: 'Registrar ',
-          value: 'registrar'
-        }/*, {
-          text: 'Expiration ',
-          value: 'expiration'
-        }*/]
+          text: 'IP ',
+          value: 'ip'
+        }, {
+          text: 'MX ',
+          value: 'mx'
+        }, {
+          text: 'Usage ',
+          value: 'usage'
+        }]
       }
     },
     created () {
-      document.title = 'Domains'
+      document.title = 'Sites'
       this.fetchData()
+    },
+    watch: {
+      'server': function() {
+        this.filtered = []
+        
+        this.items.forEach(element => {
+            if (this.server === '*' || element.server == this.server) {
+              this.filtered.push(element)
+            }
+        })
+        
+        localStorage.server = this.server
+      }
     },
     methods: {
       fetchData () {        
@@ -90,7 +130,7 @@
         this.error = ''
         this.fetching = true
  
-        api.get('domains/')
+        api.get('sites/')
         .then(function (response) {
           console.log(response)
 
@@ -104,13 +144,27 @@
           response.data.items.forEach(element => {
               self.filtered.push(element)
           })
+ 
+          api.get('servers/')
+          .then(function (response) {
+            response.data.items.forEach(element => {
+                self.$set(self.servers, element.id, element.name)
 
+                self.server_opts.push({
+                    text: element.name,
+                    value: element.id
+                })
+            })
+          })
         })
         .catch(function (error) {
           console.log(error)
         })
         .finally(function() {
           self.fetching = false
+
+          if (localStorage.server)
+            self.server = localStorage.server
         })
       }
     }

@@ -20,10 +20,8 @@
             <v-icon>{{data.item.avatar}}</v-icon>
           </v-list-item-avatar>
           <v-list-item-content class="results">
-            <router-link :to="data.item.value"> 
-              <v-list-item-title>{{data.item.text}}</v-list-item-title>
-              <v-list-item-subtitle v-html="data.item.subtitle"></v-list-item-subtitle>
-            </router-link>
+            <v-list-item-title>{{data.item.text}}</v-list-item-title>
+            <v-list-item-subtitle v-html="data.item.subtitle"></v-list-item-subtitle>
           </v-list-item-content>
         </template>
       </template>
@@ -55,15 +53,15 @@
         this.error = this.post = null
         this.loading = true
  
-        api.get('domains/')
+        api.get('sites/')
         .then(function (response) {
           console.log(response)
           response.data.items.forEach(element => {
               self.items.push({
                   text: element.domain,
                   subtitle: self.servers[element.server],
-                  value: '/domains/' + element.id + '/summary',
-                  avatar: 'fas fa-globe'
+                  value: '/sites/' + element.id + '/summary',
+                  avatar: 'fas fa-sitemap'
               });
           })
         })
@@ -95,9 +93,9 @@
           self.loading = false
         })
       },
-      afterselection(){
+      afterselection() {
         this.$nextTick(() => {
-          console.log(this)
+          this.$router.push(this.model)
           this.model = null           
           this.$refs.autocomplete.blur()
         })

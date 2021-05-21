@@ -1,15 +1,19 @@
 <template>
+
+  <div>
+
   <v-form
     ref="form"
     v-model="valid"
     lazy-validation
   >
 
-
     <v-card-title primary-title>
-      <h1 style="text-align: center; width: 100%;">
-        ServerWand
-      </h1>
+        <v-icon 
+          left
+          color="primary"
+        >fas fa-magic</v-icon>
+        <strong>SERVERWAND</strong>
     </v-card-title>
 
     <v-subheader>
@@ -17,10 +21,10 @@
     </v-subheader>
 
     <v-alert
-      :value="error.length>0"
+      v-if="error"
       type="error"
     >
-    {{error}}
+      {{error}}
     </v-alert>
   
     <div style="margin: 0 8px;">
@@ -96,6 +100,8 @@
     </v-dialog>
   </v-form>
 
+  </div>
+
 </template>
 
 <script>
@@ -143,7 +149,7 @@
           .catch(function (error) {
             console.log(error)
           })
-          .finally(function (error) {
+          .finally(function () {
             self.dialog = false
             self.loading = false
           })

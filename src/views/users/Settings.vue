@@ -69,7 +69,7 @@
         this.error = ''
         this.fetching = true
  
-        api.get('domains/' + this.id)
+        api.get('users/' + this.id)
         .then(function (response) {
           console.log(response)            
           self.data = response.data.item
@@ -83,7 +83,7 @@
         })
       },
       editItem () {           
-        this.$router.push('/domains/' + this.$route.params.id + '/edit')
+        this.$router.push('/users/' + this.$route.params.id + '/edit')
       },
       deleteItem () {
         this.$confirm('Delete ' + this.data.name + '?').then(res => {
@@ -92,14 +92,14 @@
             this.dialog = true
             this.loading = true
 
-            api.post('domains/' + this.id, {delete: 1})
+            api.post('users/' + this.id, {delete: 1})
             .then(function (response) {
                 console.log(response)
               
                 if (response.data.error) {
                   self.error = response.data.error
                 } else {
-                  self.$router.push('/domains/')
+                  self.$router.push('/users/')
                 }
             })
             .catch(function (error) {

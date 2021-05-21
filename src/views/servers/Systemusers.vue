@@ -1,12 +1,12 @@
 <template>
     <div>
         <v-alert
-          :value="error.length>0"
+          v-if="error"
           type="error"
         >
-        {{error}}
+          {{error}}
         </v-alert>
-      
+        
         <Loading :value="loading" />
 
   <v-card

@@ -1,10 +1,10 @@
 <template>
   <div>
     <v-alert
-    :value="error.length>0"
-    type="error"
+      v-if="error"
+      type="error"
     >
-    {{error}}
+      {{error}}
     </v-alert>
 
     <Loading :value="loading" />
@@ -166,7 +166,7 @@
 
         this.fetching = true
  
-        api.get('domains/' + this.domainId + '/aliases')
+        api.get('sites/' + this.domainId + '/aliases')
         .then(function (response) {
           console.log(response)
             
@@ -208,7 +208,7 @@
             child = window.open('/loading')
           }
 
-          api.post('domains/' + this.domainId + '/aliases', {alias: this.alias.domain, dns: this.alias.dns})
+          api.post('sites/' + this.domainId + '/aliases', {alias: this.alias.domain, dns: this.alias.dns})
           .then(function (response) {
             console.log(response)
             
@@ -250,7 +250,7 @@
             this.fetching = true
             this.error = ''
 
-            api.post('domains/' + this.domainId + '/aliases', {delete: 1, alias: alias})
+            api.post('sites/' + this.domainId + '/aliases', {delete: 1, alias: alias})
             .then(function (response) {
               console.log(response)
               
@@ -275,7 +275,7 @@
         this.fetching = true
         this.error = ''
 
-        api.post('domains/' + self.domainId + '/fixaliasdns', {alias: alias})
+        api.post('sites/' + self.domainId + '/fixaliasdns', {alias: alias})
         .then(function (response) {
           console.log(response)
           

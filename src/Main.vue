@@ -25,7 +25,7 @@
 
           <v-list dense class="pt-0">
             <v-list-item
-              v-for="item in items"
+              v-for="item in filtered"
               :key="item.title"
               :to="item.to"
             >
@@ -35,6 +35,8 @@
             </v-list-item>
           </v-list>
           <v-spacer></v-spacer>
+
+          <!--
           <v-list>
             <v-layout row justify-center>
               <v-flex xs2>
@@ -60,20 +62,22 @@
               </v-flex>
             </v-layout>
           </v-list>
+          -->
+
         </v-layout>
         
       </v-navigation-drawer>
 
       <v-app-bar app flat>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-        <CreateMenu />
+        <CreateMenu v-if="!restricted" />
         <Search />
         <UserMenu />
       </v-app-bar>
 
       <v-main>
-        <v-container fluid class="py-0">
-          <router-view></router-view>
+        <v-container fluid>
+          <router-view :restricted="restricted"></router-view>
         </v-container>
       </v-main>
       
@@ -158,14 +162,18 @@
         dark: false,
         drawer: null,
         items: [
-          { title: 'Dashboard', to: '/dashboard' },
-          { title: 'Servers', to: '/servers' },
-          { title: 'Domains', to: '/domains' },
-          { title: 'Teams', to: '/teams' },
+          { title: 'Dashboard', to: '/dashboard', restricted: true },
+          { title: 'Servers', to: '/servers', restricted: true },
+          { title: 'Sites', to: '/sites', restricted: false },
+          { title: 'Domains', to: '/Domains', restricted: false },
+          { title: 'Teams', to: '/teams', restricted: true },
+          { title: 'Users', to: '/users', restricted: true },
         ],
+        filtered: [],
         resetKeyDialog: false,
         masterPasswordDialog: false,
         masterPassword: '',
+        restricted: false
       }
     },
     created () {      
@@ -198,9 +206,11 @@
       
         return Promise.reject(error);
       })
+      
+      this.fetchData()
     },
     mounted() {
-      if (localStorage.dark) {
+      if (parseInt(localStorage.dark) !== 0) {
         this.dark = true
         this.$vuetify.theme.dark = true
       }
@@ -211,12 +221,37 @@
           localStorage.dark = 1
           this.$vuetify.theme.dark = true
         } else {
-          delete localStorage.dark
+          localStorage.dark = 0
           this.$vuetify.theme.dark = false
         }
+      },
+      data() {
+        var self = this
+        this.restricted = (self.data.user !== "0")
+          
+        this.filtered = this.items.filter(function (item) {
+          return self.restricted ? !item.restricted : true
+        })
       }
     },
     methods: {
+      fetchData () {        
+        var self = this
+        this.error = ''
+        this.loading = true
+ 
+        api.get('settings/profile')
+        .then(function (response) {
+          console.log(response)
+          self.data = response.data.profile
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+        .finally(function() {
+          self.loading = false
+        })
+      },
       submitMasterPassword() {
         var self = this
 
@@ -269,6 +304,7 @@
 <style>
   a {text-decoration: none;}
 
+  /*
   .v-navigation-drawer .themeSwitchContainer {
     background-color: transparent;
   }
@@ -281,6 +317,7 @@
     margin: 0;
     padding: 0;
   }
+  */
   
   .v-navigation-drawer .v-list__tile--link {
     border-left-width: 5px;

@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-alert
-          :value="error.length>0"
+          v-if="error"
           type="error"
         >
           {{error}}
@@ -232,7 +232,7 @@
         clearTimeout(self.timer)
         this.fetching = true
 
-        api.get('domains/' + this.domainId + '/email?v=' + Date.now())
+        api.get('sites/' + this.domainId + '/email?v=' + Date.now())
         .then(function (response) {
           console.log(response)
             
@@ -256,7 +256,7 @@
         this.error = ''
         this.loading = true
 
-        api.post('domains/' + this.domainId  + '/email', {update: 1, status: this.data.email})
+        api.post('sites/' + this.domainId  + '/email', {update: 1, status: this.data.email})
         .then(function (response) {
           console.log(response)
 
@@ -291,7 +291,7 @@
           this.loading = true
           this.error = ''
 
-          api.post('domains/' + this.domainId + '/email', this.email)
+          api.post('sites/' + this.domainId + '/email', this.email)
           .then(function (response) {
             console.log(response)
             
@@ -316,7 +316,7 @@
             this.loading = true
             this.error = ''
 
-            api.post('domains/' + this.domainId + '/email', {delete: 1, user: user})
+            api.post('sites/' + this.domainId + '/email', {delete: 1, user: user})
             .then(function (response) {
               console.log(response)
               
@@ -339,7 +339,7 @@
         this.error = ''
         this.loading = true
 
-        api.post('domains/' + self.domainId + '/fixmx', {})
+        api.post('sites/' + self.domainId + '/fixmx', {})
         .then(function (response) {
           console.log(response)
 
@@ -364,7 +364,7 @@
         this.error = ''
         this.loading = true
 
-        api.post('domains/' + self.domainId + '/fixdkim', {})
+        api.post('sites/' + self.domainId + '/fixdkim', {})
         .then(function (response) {
           console.log(response)
 
@@ -389,7 +389,7 @@
         this.error = ''
         this.loading = true
 
-        api.post('domains/' + self.domainId + '/fixspf', {})
+        api.post('sites/' + self.domainId + '/fixspf', {})
         .then(function (response) {
           console.log(response)
 

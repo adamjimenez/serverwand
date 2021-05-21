@@ -1,9 +1,9 @@
 <template>
-  <v-layout>
-    <v-flex xs12 sm6 offset-sm3>
-      <v-card>
-        <router-view></router-view>
-      </v-card>
-    </v-flex>
-  </v-layout>
+    <v-app>
+      <v-main>
+        <v-container>
+          <router-view></router-view>
+        </v-container>
+      </v-main>
+    </v-app>
 </template>

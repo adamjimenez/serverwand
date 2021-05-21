@@ -13,26 +13,24 @@
       <v-list two-line v-if="!fetching">
         <v-list-item>
           <v-list-item-avatar>
-            <v-icon left>fas fa-globe</v-icon>
+            <v-icon left>fas fa-user</v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>
-              {{ data.domain }}
-              
-              <a v-bind:href="'http://' + data.domain" target="_blank">
-                <v-icon right>open_in_new</v-icon>
-              </a> 
+              {{ data.name }}
             </v-list-item-title>
-            <v-list-item-subtitle>
-            </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>      
 
       <v-tabs>
-        <v-tab :to="'/domains/' + domainId + '/summary'">Summary</v-tab>
-        <v-tab :to="'/domains/' + domainId + '/dns'">DNS</v-tab>
-        <v-tab :to="'/domains/' + domainId + '/settings'">Settings</v-tab>
+        <v-tab :to="'/users/' + userId + '/summary'">Summary</v-tab>
+        <v-tab :to="'/users/' + userId + '/sites'">Sites</v-tab>
+        <v-tab :to="'/users/' + userId + '/domains'">Domains</v-tab>
+        <v-tab :to="'/users/' + userId + '/invoices'">Invoices</v-tab>
+        <v-tab :to="'/users/' + userId + '/subscriptions'">Subscriptions</v-tab>
+        <v-tab :to="'/users/' + userId + '/notes'">Notes</v-tab>
+        <v-tab :to="'/users/' + userId + '/settings'">Settings</v-tab>
       </v-tabs>
       <router-view></router-view>
     </v-flex>
@@ -50,7 +48,7 @@
     },
     data () {
       return {
-        domainId: null,
+        userId: null,
         post: null,
         error: null,
         data: {
@@ -62,7 +60,7 @@
       }
     },
     created () {
-      document.title = 'Domain'
+      document.title = 'User'
       this.fetchData()
     },
     watch: {
@@ -74,19 +72,14 @@
         var self = this
         this.error = ''
         // this.fetching = true
-        this.domainId = this.$route.params.id
+        this.userId = this.$route.params.id
  
-        api.get('domains/' + this.domainId)
+        api.get('users/' + this.userId)
         .then(function (response) {
           console.log(response)
 
-          if (response.data.item) {
-            self.data = response.data.item
-          }
-
-          if (response.data.domain) {
-            document.title = self.data.domain
-          }
+          self.data = response.data.item
+          document.title = self.data.domain
         })
         .catch(function (error) {
           console.log(error)
@@ -98,9 +91,3 @@
     }
   }
 </script>
-
-<style>
-  .v-list-item__subtitle a {
-    color: inherit !important;
-  }
-</style>

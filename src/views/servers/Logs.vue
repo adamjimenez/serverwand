@@ -1,28 +1,28 @@
 <template>
-    <div>
+  <div>
 
-        <v-card>
-            <v-card-title primary-title>
-            <v-select
-                :items="logs"
-                label="Log"
-                @change="fetchLog"
-            ></v-select>
-            
-            <v-btn
-                @click="fetchLog()"                  
-                :disabled="!log"
-                >
-                <i class="fas fa-redo-alt"></i>
-            </v-btn>
-            </v-card-title>
-            <v-card-text>
-            <div v-if="log=='serverstatus'" v-html="logContent" class="serverstatus"></div>
-            <pre v-else>{{ logContent }}</pre>
-            </v-card-text>
-        </v-card>
+    <v-card>
+        <v-card-title primary-title>
+          <v-select
+              :items="logs"
+              label="Log"
+              @change="fetchLog"
+          ></v-select>
+          
+          <v-btn
+              @click="fetchLog()"                  
+              :disabled="!log"
+              >
+              <i class="fas fa-redo-alt"></i>
+          </v-btn>
+        </v-card-title>
+        <v-card-text>
+          <div v-if="log=='serverstatus'" v-html="logContent" class="serverstatus"></div>
+          <pre v-else>{{ logContent }}</pre>
+        </v-card-text>
+    </v-card>
 
-    </div>
+  </div>
 </template>
 
 <script>
@@ -76,6 +76,9 @@
         }, {
           value: 'apache_error',
           text: 'Apache Error',
+        }, {
+          value: 'mail',
+          text: 'Mail',
         }, {
           value: 'mysql',
           text: 'MySQL',

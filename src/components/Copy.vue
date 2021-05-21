@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <span>
     <v-tooltip top v-if="text">
       <template v-slot:activator="{ on }">
         <span
@@ -26,7 +26,7 @@
       </template>
       <span>{{ copyText }}</span>
     </v-tooltip>
-  </div>
+  </span>
 </template>
 
 <script>

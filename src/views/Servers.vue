@@ -2,9 +2,12 @@
   <v-layout row>
     <v-flex>
       
-      <div v-if="error" class="error">
-        {{ error }}
-      </div>
+      <v-alert
+        v-if="error"
+        type="error"
+      >
+        {{error}}
+      </v-alert>
 
       <Loading :value="loading" />
     
@@ -35,24 +38,26 @@
             class="results"
           >
             <template v-slot:body="prop">
-              <tr v-for="item in prop.items" :key="item.id">
-                <td class="text-start">
-                  <v-list-item>
-                      <v-icon class="mr-3">fas fa-server</v-icon>
+              <tbody>
+                <tr v-for="item in prop.items" :key="item.id">
+                  <td class="text-start">
+                    <v-list-item>
+                        <v-icon class="mr-3">fas fa-server</v-icon>
 
-                      <router-link :to="'/servers/' + item.id + '/summary'"> 
-                        <v-list-item-title v-html="item.name"></v-list-item-title>
-                        <v-list-item-subtitle v-html="item.hostname"></v-list-item-subtitle>
-                      </router-link>
-                  </v-list-item>
-                </td>
-                <td class="text-start">
-                  {{item.provider}}
-                </td>
-                <td class="text-start">
-                  {{item.region}}
-                </td>
-              </tr>
+                        <router-link :to="'/servers/' + item.id + '/summary'"> 
+                          <v-list-item-title v-html="item.name"></v-list-item-title>
+                          <v-list-item-subtitle v-html="item.hostname"></v-list-item-subtitle>
+                        </router-link>
+                    </v-list-item>
+                  </td>
+                  <td class="text-start">
+                    {{item.provider}}
+                  </td>
+                  <td class="text-start">
+                    {{item.region}}
+                  </td>
+                </tr>
+              </tbody>
             </template>
           </v-data-table>
           
@@ -69,16 +74,6 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
-
-        <div 
-          v-if="items.length > items_per_page"
-          class="text-xs-center"
-        >
-          <v-pagination
-            v-model="page"
-            :length="pages"
-          ></v-pagination>
-        </div>
 
       </v-card>
 
@@ -117,7 +112,6 @@
           text: 'Other',
           value: ''
         }],
-        items_per_page: 10,
         headers: [
           {
             text: 'Server ',

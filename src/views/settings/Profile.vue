@@ -3,10 +3,10 @@
     <v-card>
       <v-card-text>
         <v-alert
-          :value="error.length>0"
+          v-if="error"
           type="error"
         >
-        {{error}}
+          {{error}}
         </v-alert>
 
         <v-text-field

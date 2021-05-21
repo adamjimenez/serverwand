@@ -3,6 +3,8 @@ axios.defaults.withCredentials = true
 
 import { setup } from 'axios-cache-adapter'
 
+//import router from '../router'
+
 // Create `axios-cache-adapter` instance
 const cache = setup({
     maxAge: 15 * 60 * 1000,
@@ -25,8 +27,9 @@ api.interceptors.response.use(function (response) {
 }, function (error) {
     const originalRequest = error.config;
 
-    if (!error.response || error.response.status === 401 && !originalRequest._retry) {
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
         location.href = 'https://serverwand.com/login'
+        //router.push('/auth/login')
         return false
     }
 
