@@ -330,4 +330,9 @@
     border-left-width: 5px;
     border-left-color: inherit;
   }
+
+  .v-alert__content a {
+    color: #fff;
+    text-decoration: underline;
+  }
 </style>

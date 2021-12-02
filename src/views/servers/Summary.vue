@@ -51,7 +51,7 @@
                   <div class="pt-3" style="clear: both;">
                       <v-list-item-title>
                           <v-progress-linear 
-                            v-model="data.mem_perc"
+                            :value="data.mem_perc"
                             height="20"
                           ></v-progress-linear>
                       </v-list-item-title>
@@ -81,13 +81,20 @@
                   <div class="pt-3" style="clear: both;">
                       <v-list-item-title>
                           <v-progress-linear 
-                            v-model="data.disk_perc"
+                            :value="data.disk_perc"
                             height="20"
                           ></v-progress-linear>
                       </v-list-item-title>
                       <v-list-item-subtitle>
-                        {{data.disk_free * 1024 | prettyBytes }} free of {{data.disk_space * 1024 | prettyBytes }}
+                        {{data.disk_free * 1024 | prettyBytes }} free of {{data.disk_space * 1024 | prettyBytes }}                        
                       </v-list-item-subtitle>
+                      
+                      <v-btn
+                        icon
+                        @click="clean()"
+                      >
+                        <i class="fas fa-broom"></i>
+                      </v-btn>
                   </div>
                 </v-card-text>
               </div>
@@ -109,7 +116,7 @@
                   </div>
                   
                   <div class="pt-3" style="clear: both; font-size: 14px;">
-                  {{data.uptime}}
+                    {{data.uptime}}
                   </div>
                 </v-card-text>
               </div>
@@ -126,11 +133,11 @@
               <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title v-html="`Updates`"></v-list-item-title>
-                    <v-list-item-subtitle>
+                    <v-list-item-subtitle v-if="data.updates >= 0">
 
                       <div>
-                        {{data.updates}} updates, {{data.security_updates}} security updates
-                        <span v-if="data.reboot_required">(reboot required)</span>
+                        {{data.updates}} updates, {{data.security_updates}} security updates.
+                        <span v-if="data.reboot_required">Reboot required.</span>
                       </div>
 
                       <v-tooltip top v-if="data.updates > 0 || data.security_updates > 0">
@@ -139,7 +146,6 @@
                             v-on="on"
                             icon
                             @click="upgrade()"
-                            color="warning"
                           >
                             <v-icon small>fas fa-download</v-icon>
                           </v-btn>
@@ -156,21 +162,10 @@
               <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title v-html="`Hostname`"></v-list-item-title>
-                    <v-list-item-subtitle>
+                    <v-list-item-subtitle v-if="data.hostname">
                       <Copy :val="data.hostname" text />
-
-                      <v-tooltip top>
-                        <template v-slot:activator="{ on }">
-                          <v-btn
-                            v-on="on"
-                            icon
-                            @click="drawer=true"
-                          >
-                            <v-icon small>fas fa-edit</v-icon>
-                          </v-btn>
-                        </template>
-                        <span>Edit</span>
-                      </v-tooltip>
+                      
+                      <Edit :val="data.hostname" hideText label="Hostname" name="hostname" :path="'servers/' + this.serverId + '/hostname'"  @save="fetchData(true)" />               
                     </v-list-item-subtitle>
                   </v-list-item-content>
               </v-list-item>
@@ -203,6 +198,17 @@
 
         <v-flex xs6>
           <v-card>
+
+            <v-list two-line>
+              <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title v-html="`Operating system`"></v-list-item-title>
+                    <v-list-item-subtitle>
+                      {{ data.os }}
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+              </v-list-item>
+            </v-list>
 
             <v-list two-line>
               <v-list-item>
@@ -256,43 +262,13 @@
 
     </v-card>
 
-    <v-navigation-drawer
-        app
-        v-model="drawer"
-        temporary
-        right
-    >
-      <v-card>
-          <v-card-title>
-            Set Hostname
-          </v-card-title>
-
-          <v-card-text>
-            <v-text-field
-                v-model="hostname"
-                label="Hostname"
-                required
-            ></v-text-field>
-            
-            <v-btn
-                :disabled="fetching"
-                :loading="fetching"
-                color="success"
-                @click="save"
-            >
-                Save
-            </v-btn>
-          </v-card-text>
-      </v-card>
-    </v-navigation-drawer>
-
     <v-dialog
       app
       scrollable
       persistent
       v-model="showMessage"
     >
-      <v-card>
+      <v-card :loading="fetching">
           <v-card-title>
             Response
           </v-card-title>
@@ -322,6 +298,58 @@
 
       </v-card>
     </v-dialog>
+
+    <v-dialog
+      app
+      scrollable
+      v-model="showClean"
+    >
+      <v-card :loading="fetching">
+          <v-card-title>
+            Clean files
+          </v-card-title>
+          <v-card-subtitle>
+            {{sumSize(selectedFiles) | prettyBytes }} to be removed
+          </v-card-subtitle>
+
+          <v-card-text>
+            <v-data-table
+              v-model="selectedFiles"
+              :headers="cleanHeaders"
+              :items="files"
+              item-key="file"
+              show-select
+              class="elevation-1"
+              disable-pagination
+              :hide-default-footer="true"
+            >
+              <template v-slot:item.size="{ item }">
+                <div v-if="item.size > 0">
+                  {{item.size | prettyBytes }}
+                </div>
+              </template>
+            </v-data-table>
+          </v-card-text>
+
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-btn
+              @click="doClean()"
+              :disabled="selectedFiles.length === 0"
+            >
+              Remove
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
+              @click="fetchData(true); showClean = false"
+            >
+              Close
+            </v-btn>
+          </v-card-actions>
+
+      </v-card>
+    </v-dialog>
     
   </div>
 </template>
@@ -329,10 +357,12 @@
 <script>
   import api from '../../services/api'
   import Copy from '../../components/Copy'
+  import Edit from '../../components/Edit'
 
   export default {
     components: {
-      Copy
+      Copy,
+      Edit
     },
     data () {
       return {
@@ -349,11 +379,18 @@
           mem_perc: 0,
           graph: ''
         },
-        hostname: '',
         details: '',
         fetching: false,
         serverId: 0,
-        drawer: false
+
+        cleanSize: 0,
+        showClean: false,
+        selectedFiles: [],
+        cleanHeaders: [
+          { text: 'File', value: 'file' },
+          { text: 'Size', value: 'size' }
+        ],
+        files: [],
       }
     },
     created () {
@@ -364,6 +401,16 @@
       '$route': 'fetchData'
     },
     methods: {
+      sumSize(files) {
+        var total = 0;
+        files.forEach(element => {
+          total += parseInt(element.size)
+          //console.log(element.size)
+        })
+        
+        return total
+      },
+
       fetchData (clearCacheEntry) {
         var self = this
         this.error = ''
@@ -399,28 +446,6 @@
         })
         .finally(function() {
           self.fetching = false
-        })
-      },
-      save () {
-        var self = this
-        this.error = ''
-        this.fetching = true
- 
-        api.post('servers/' + this.serverId + '/hostname', { hostname: self.hostname })
-        .then(function (response) {
-          console.log(response)
-
-          if (response.data.error) {
-            self.error = response.data.error
-            self.fetching = false
-          } else if (response.data.success) {
-            self.drawer = false
-            self.fetchData();
-          }
-        })
-        .catch(function (error) {
-          self.fetching = false
-          console.log(error)
         })
       },
       upgrade() {
@@ -461,6 +486,34 @@
             }
         }, false)
 
+      },
+      clean() {
+        var self = this        
+        this.showClean = true
+        this.fetching = true
+
+        api.get('servers/' + this.serverId + '/clean', { clearCacheEntry: true })
+        .then(function (response) {
+          self.files = response.data.files
+          self.cleanSize = response.data.size
+          self.fetching = false
+        })
+
+      },
+
+      doClean() {
+        var self = this
+        this.fetching = true
+
+        var files = [];
+        this.selectedFiles.forEach(function(item) {
+          files.push(item.file)
+        })
+
+        api.post('servers/' + this.serverId + '/clean', { files: files })
+        .then(function () {
+          self.clean()
+        })
       }
     }
   }

@@ -27,6 +27,16 @@
               <v-btn
                 :disabled="fetching"
                 :loading="fetching"
+                @click="clearSSHUser"
+              >
+                Clear SSH user
+              </v-btn>
+          </div>
+
+          <div class="ma-3">
+              <v-btn
+                :disabled="fetching"
+                :loading="fetching"
                 @click="reboot"
               >
                 Reboot
@@ -43,6 +53,18 @@
                 Disconnect
               </v-btn>
           </div>
+
+
+          <div>
+            <v-card-title primary-title>
+              <v-switch
+                v-model="data.password_authentication"
+                label="SSH Password Authentication"
+                @change="togglePasswordAuthentication()"
+              ></v-switch>
+            </v-card-title>
+          </div>
+
         </v-col>
       </v-row>
     </v-card>
@@ -61,9 +83,7 @@
     data () {
       return {
         error: '',
-        data: {
-          users: {}
-        },
+        data: {},
         details: '',
         fetching: false,
         serverId: 0
@@ -76,13 +96,13 @@
       this.fetchData()
     },
     methods: {
-      fetchData () {        
+      fetchData (clearCacheEntry) {        
         var self = this
         this.error = ''
 
         //this.fetching = true
  
-        api.get('servers/' + this.serverId)
+        api.get('servers/' + this.serverId + '?detailed=1', { clearCacheEntry: clearCacheEntry })
         .then(function (response) {
           console.log(response)
 
@@ -127,6 +147,55 @@
               self.fetching = false
             })
           }
+        })
+      },
+      clearSSHUser () {
+        this.$confirm('Clear SSH user?').then(res => {
+          if (res) {
+            var self = this
+            self.fetching = true
+            api.post('servers/' + this.serverId + '/savesshuser', {ssh_username: ''})
+            .then(function (response) {
+              console.log(response)
+              
+              if (!response.data.success) {
+                self.error = response.data.error;
+              } else {
+                self.fetchData()
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+            .finally(function() {
+              self.fetching = false
+              self.chooseUser = false
+            })
+          }
+        })
+      },
+      togglePasswordAuthentication () { 
+        var self = this
+        this.error = ''
+        this.fetching = true
+        this.loading = true
+
+        api.post('servers/' + this.serverId  + '/password_authentication', {save: 1, enable: this.data.password_authentication})
+        .then(function (response) {
+          console.log(response)
+
+          if (response.data.error) {
+            self.error = response.data.error
+          } else if (response.data.success) {
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+        .finally(function() {
+          self.fetching = false
+          self.loading = false
         })
       },
       reboot () {

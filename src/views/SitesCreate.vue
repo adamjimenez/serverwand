@@ -12,10 +12,6 @@
     <v-card v-if="!serverId">
       <v-card-title>Site details</v-card-title>
 
-      <v-card-subtitle>
-        Choose a VPS provider below or add a custom server
-      </v-card-subtitle>
-
       <v-card-text>
 
         <v-form
@@ -24,7 +20,6 @@
           v-model="valid"
           lazy-validation
         >
-
 
           <v-text-field
             :disabled="domainId>0"
@@ -42,14 +37,6 @@
             :rules="[(v) => !!v || 'Server is required']"
             required
           ></v-select>
-
-          <v-text-field
-            type="password"
-            v-model="data.password"
-            :rules="passwordRules"
-            label="Password"
-            required
-          ></v-text-field>
           
           <v-checkbox
             v-model="data.dns"
@@ -111,7 +98,7 @@
     }),
 
     created () {
-      document.title = 'Domain details'
+      document.title = 'Site details'
       this.domainId = this.$route.params.id
       this.fetchData()
 

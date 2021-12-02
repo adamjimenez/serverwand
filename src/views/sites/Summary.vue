@@ -92,8 +92,7 @@
               Password
             </v-list-item-title>
             <v-list-item-subtitle>
-                {{data.auth.password}}
-                <Edit :val="data.ftp_password" label="FTP Password" name="password" password  :path="'sites/' + this.siteId + '/update'" />
+                <Edit :val="data.ftp_password" label="FTP Password" name="password" password  :path="'sites/' + this.siteId + '/update'"  @save="fetchData(true)" />
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -137,7 +136,7 @@
               </v-list-item-title>
               <v-list-item-subtitle>
                   {{data.auth.password}}
-                  <Edit :val="data.auth.password" label="Auth Password" name="password" password  :path="'sites/' + this.siteId + '/auth'" />
+                  <Edit :val="data.auth.password" label="Auth Password" name="password" password  :path="'sites/' + this.siteId + '/auth'"  @save="fetchData(true)" />
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -207,7 +206,7 @@
       '$route': 'fetchData'
     },
     methods: {
-      fetchData (clearCacheEntry) {        
+      fetchData (clearCacheEntry) {
         var self = this
         this.error = ''
         this.siteId = this.$route.params.id
@@ -265,31 +264,6 @@
           self.enablingSSL = false
           self.loading = false
         })
-      },
-      submitPassword () {
-        var self = this
-        this.error = ''
-
-        if (this.$refs.passwordForm.validate()) {
-          this.details = ''
-          this.fetching = true
-          
-          api.post('sites/' + self.siteId + '/update', {password: self.password})
-          .then(function (response) {
-            console.log(response)
-            if (response.data.error) {
-              self.error = response.data.error
-            }
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
-          .finally(function() {
-            self.fetching = false
-            self.loading = false
-            self.passwordPanel = [false]
-          })
-        }
       },
       fixDomainDns() {
         var self = this

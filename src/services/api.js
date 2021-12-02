@@ -28,7 +28,7 @@ api.interceptors.response.use(function (response) {
     const originalRequest = error.config;
 
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
-        location.href = 'https://serverwand.com/login'
+        location.href = 'https://serverwand.com/login?u=' + encodeURIComponent(location.href)
         //router.push('/auth/login')
         return false
     }
@@ -38,12 +38,14 @@ api.interceptors.response.use(function (response) {
 
 export default {
     get(path) {
-        return api.get('https://serverwand.com/api/' + path);
+        var url = (path.substr(0, 4) === 'http') ? path : 'https://serverwand.com/api/' + path
+        return api.get(url);
     },
     post(path, payload) {
-        return api.post('https://serverwand.com/api/' + path, payload);
+        var url = (path.substr(0, 4) === 'http') ? path : 'https://serverwand.com/api/' + path
+        return api.post(url, payload)
     },
     event(path) {
-        return new EventSource('https://serverwand.com/api/' + path, {withCredentials: true});
+        return new EventSource('https://serverwand.com/api/' + path, {withCredentials: true})
     }
 }

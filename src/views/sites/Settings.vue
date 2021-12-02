@@ -25,11 +25,41 @@
     </v-card>
 
     <v-card>
+
+      <v-list>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>
+              OpenBasedir
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              <Edit :val="data.openbasedir" label="OpenBasedir" name="openbasedir" :path="'sites/' + this.siteId + '/openbasedir'" />
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+
+    </v-card>
+
+    <v-card>
       <v-card-title primary-title>
         <v-btn
           @click="download()"
         >
           Download site
+        </v-btn>
+      </v-card-title>
+    </v-card>
+
+    <v-card>
+      <v-card-title primary-title>
+        <v-btn
+          :disabled="fetching"
+          :loading="loading=='empty'"
+          @click="empty"
+          color="error"
+        >
+          Empty Site
         </v-btn>
       </v-card-title>
     </v-card>
@@ -52,15 +82,17 @@
 <script>
   import api from '../../services/api'
   import Loading from '../../components/Loading'
+  import Edit from '../../components/Edit'
 
   export default {
     components: {
-      Loading
+      Loading,
+      Edit
     },
     data () {
       return {
         loading: false,
-        domainId: null,
+        siteId: null,
         post: null,
         error: null,
         data: {
@@ -87,9 +119,9 @@
         var self = this
         this.error = ''
         this.fetching = true
-        this.domainId = this.$route.params.id
+        this.siteId = this.$route.params.id
  
-        api.get('sites/' + this.domainId + '/settings')
+        api.get('sites/' + this.siteId + '/settings')
         .then(function (response) {
           console.log(response)
             
@@ -127,6 +159,32 @@
           self.loading = false
         })
       },
+      empty () { 
+        this.$confirm('Empty ' + this.data.domain + '?').then(res => {
+          if (res) {
+            var self = this
+            this.error = ''
+            this.fetching = true
+            this.loading = true
+
+            api.get('sites/' + this.$route.params.id + '/empty')
+            .then(function (response) {
+              console.log(response)
+              
+              if (response.data.error) {
+                self.error = response.data.error
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+            .finally(function() {
+              self.fetching = false
+              self.loading = false
+            })
+          }
+        })
+      },
       deleteDomain () { 
         this.$confirm('Delete ' + this.data.domain + '?').then(res => {
           if (res) {
@@ -159,7 +217,7 @@
         var self = this
         this.fetching = true
         
-        api.get('sites/' + this.domainId + '/download')
+        api.get('sites/' + this.siteId + '/download')
         .then(function (response) {
           console.log(response)
           

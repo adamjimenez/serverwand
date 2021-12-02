@@ -202,15 +202,15 @@
         api.get('domains/' + this.domainId + '/records')
         .then(function (response) {
             console.log(response)
-            
-            //self.data = response.data.item
-            document.title = 'DNS' + ' | ' + self.data.domain
 
             self.data = response.data
+            
+            //self.data = response.data.item
+            document.title = 'DNS' + ' | ' + self.data.item.domain
 
             if (response.data.error == 'auth') {
               self.authRequired = true
-              setTimeout(this.fetchData, 5000)
+              setTimeout(self.fetchData, 5000)
             } else {
               self.error = response.data.error
             }
@@ -250,7 +250,7 @@
             if (!response.data.success) {
               if (response.data.error == 'auth' && !noAuthPrompt) {                  
                 self.authRequired = true
-                setTimeout(this.fetchData, 5000)
+                setTimeout(self.fetchData, 5000)
               } else {
                 self.error = response.data.error
               }

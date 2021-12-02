@@ -53,7 +53,7 @@
           </v-list-item>
           <v-divider></v-divider>
 
-          <v-list-item v-if="typeof data.info.locked !== 'undefined'">
+          <v-list-item v-if="(typeof data.info.locked !== 'undefined')">
             <v-list-item-content>
               <v-list-item-title>
                 Locked

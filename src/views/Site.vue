@@ -10,28 +10,52 @@
 
       <Loading :value="fetching" />      
       
-      <v-list two-line v-if="!fetching">
+      <v-list v-if="!fetching">
         <v-list-item>
-          <v-list-item-avatar>
-            <v-icon left>fas fa-globe</v-icon>
-          </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title>
-              {{ data.domain }}
-              
-              <a v-bind:href="'https://' + data.domain" target="_blank" title="Open site in new window">
-                <v-icon right>open_in_new</v-icon>
-              </a>
-              
-              <a v-bind:href="data.shiftedit_url" target="_blank" title="Open in ShiftEdit IDE">
-                <v-icon right>code</v-icon>
-              </a>
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              <router-link :to="'/servers/' + data.server.id + '/summary'">
-                {{data.server.name}}
-              </router-link>
-            </v-list-item-subtitle>
+
+            <v-container class="mx-0" style="max-width: 100%;">
+              <v-row>
+                <v-col>
+                  <v-list-item class="px-0">
+                    <v-list-item-icon>
+                      <v-icon>fas fa-globe</v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content class="py-0">
+                      <v-list-item-title>
+                        {{ data.domain }}
+                      </v-list-item-title>
+                      <v-list-item-subtitle>
+                        <router-link :to="'/servers/' + data.server.id + '/summary'">
+                          {{data.server.name}}
+                        </router-link>
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-col>
+                <v-col align="right">
+                  <v-btn
+                    v-bind:href="'http://' + data.domain" 
+                    target="_blank" 
+                    title="Open site in new window"
+                    class="mr-3"
+                  >
+                    <v-icon>open_in_new</v-icon>
+                  </v-btn>
+                  
+                  <v-btn
+                    color="success"
+                    v-bind:href="data.shiftedit_url"
+                    target="_blank"
+                    title="Open in ShiftEdit IDE"
+                  >
+                    <v-icon>code</v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-container>
+
           </v-list-item-content>
         </v-list-item>
       </v-list>      
@@ -39,6 +63,7 @@
       <v-tabs>
         <v-tab :to="'/sites/' + domainId + '/summary'">Summary</v-tab>
         <v-tab :to="'/sites/' + domainId + '/database'">Database</v-tab>
+        <v-tab :to="'/sites/' + domainId + '/variables'">Variables</v-tab>
         <v-tab :to="'/sites/' + domainId + '/aliases'">Aliases</v-tab>
         <v-tab :to="'/sites/' + domainId + '/email'" v-if="data.server.mailserver">Email</v-tab>
         <v-tab :to="'/sites/' + domainId + '/apps'">Apps</v-tab>
@@ -75,7 +100,6 @@
       }
     },
     created () {
-      document.title = 'Domain'
       this.fetchData()
     },
     watch: {
@@ -95,10 +119,6 @@
 
           if (response.data.item) {
             self.data = response.data.item
-          }
-
-          if (response.data.domain) {
-            document.title = self.data.domain
           }
         })
         .catch(function (error) {

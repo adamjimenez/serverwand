@@ -122,7 +122,7 @@
     },
     data () {
       return {
-        domainId: null,
+        siteId: null,
         post: null,
         error: null,
         data: {
@@ -161,12 +161,12 @@
       fetchData () {        
         var self = this
         this.error = ''
-        this.domainId = this.$route.params.id
+        this.siteId = this.$route.params.id
         clearTimeout(self.timer)
 
         this.fetching = true
  
-        api.get('sites/' + this.domainId + '/aliases')
+        api.get('sites/' + this.siteId + '/aliases')
         .then(function (response) {
           console.log(response)
             
@@ -208,7 +208,7 @@
             child = window.open('/loading')
           }
 
-          api.post('sites/' + this.domainId + '/aliases', {alias: this.alias.domain, dns: this.alias.dns})
+          api.post('sites/' + this.siteId + '/aliases', {alias: this.alias.domain, dns: this.alias.dns})
           .then(function (response) {
             console.log(response)
             
@@ -250,7 +250,7 @@
             this.fetching = true
             this.error = ''
 
-            api.post('sites/' + this.domainId + '/aliases', {delete: 1, alias: alias})
+            api.post('sites/' + this.siteId + '/aliases', {delete: 1, alias: alias})
             .then(function (response) {
               console.log(response)
               
@@ -275,7 +275,7 @@
         this.fetching = true
         this.error = ''
 
-        api.post('sites/' + self.domainId + '/fixaliasdns', {alias: alias})
+        api.post('sites/' + self.siteId + '/fixaliasdns', {alias: alias})
         .then(function (response) {
           console.log(response)
           

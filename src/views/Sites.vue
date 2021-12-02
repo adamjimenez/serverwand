@@ -34,32 +34,20 @@
           :items="filtered"
           class="results"
         >
-          <template v-slot:body="prop">
-            <tbody>
-              <tr v-for="item in prop.items" :key="item.id">
-                <td class="text-start">
-                  <v-list-item>
-                      <v-icon class="mr-3">fas fa-sitemap</v-icon>
+          <template v-slot:item.domain="{ item }">
+            <v-list-item>
+                <v-icon class="mr-3">fas fa-sitemap</v-icon>
 
-                      <router-link :to="'/sites/' + item.id + '/summary'"> 
-                        <v-list-item-title v-html="item.domain"></v-list-item-title>
-                        <v-list-item-subtitle>{{servers[item.server]}}</v-list-item-subtitle>
-                      </router-link>
-                  </v-list-item>
-                </td>
-                <td class="text-start">
-                  {{item.ip}}
-                </td>
-                <td class="text-start">
-                  {{item.mx}}
-                </td>
-                <td class="text-start">
-                  <div v-if="item.usage > 0">
-                    {{item.usage * 1024 | prettyBytes }}
-                  </div>
-                </td>
-              </tr>
-            </tbody>
+                <router-link :to="'/sites/' + item.id + '/summary'"> 
+                  <v-list-item-title v-html="item.domain"></v-list-item-title>
+                  <v-list-item-subtitle>{{servers[item.server]}}</v-list-item-subtitle>
+                </router-link>
+            </v-list-item>
+          </template>
+          <template v-slot:item.usage="{ item }">
+            <div v-if="item.usage > 0">
+              {{item.usage * 1024 | prettyBytes }}
+            </div>
           </template>
         </v-data-table>
         

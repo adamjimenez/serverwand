@@ -305,6 +305,8 @@
           })
           .catch(function (error) {
             console.log(error)
+          })
+          .finally(function() {
             self.loading = false
           })
         }
@@ -329,6 +331,8 @@
             })
             .catch(function (error) {
               console.log(error)
+            })
+            .finally(function() {
               self.loading = false
             })
           }

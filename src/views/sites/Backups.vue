@@ -21,12 +21,23 @@
                 :key="`item-${i}`"
                 :value="item"
                 @click="restore(item.name)"
+                @click.stop
             >
                 <template v-slot:default>
                 <v-list-item-content>
                     <v-list-item-title>{{item.name}}</v-list-item-title>
                     <v-list-item-subtitle>{{item.date}} - {{item.size | prettyBytes }}</v-list-item-subtitle>
                 </v-list-item-content>
+
+                <v-list-item-action>
+                  <v-btn
+                        icon
+                        @click="download(item)"
+                        @click.stop
+                  >
+                    <v-icon small>download</v-icon>
+                  </v-btn>
+                </v-list-item-action>
 
                 <v-list-item-action>
                     <v-btn
@@ -144,6 +155,10 @@
         .finally(function() {
           self.fetching = false
         })
+      },
+      download(item) {
+        console.log('http://' + this.data.ip + '/backups/' + item.name)
+        window.open('http://' + this.data.ip + '/backups/' + item.name)
       },
       deleteBackup(item) {
         this.$confirm('Delete ' + item + '?').then(res => {

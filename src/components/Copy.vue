@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span ref="container">
     <v-tooltip top v-if="text">
       <template v-slot:activator="{ on }">
         <span
@@ -42,16 +42,14 @@
     },
     methods: {
       copy(text) {
-        var self = this
         var el = document.createElement("textarea")
-        document.body.appendChild(el)
+        this.$refs['container'].appendChild(el)
         el.setAttribute('id', 'clipboard')
         el.value = text
         el.select()
         document.execCommand("Copy")
-        el.parentNode.removeChild(el)
-        
-        self.copyText = 'Copied'
+        el.parentNode.removeChild(el)        
+        this.copyText = 'Copied'
       },
       resetCopyText() {
         var self = this

@@ -11,17 +11,15 @@
 
     <v-card
       :loading="fetching"
+      class="pb-5"
     >
       <v-card-title>Server details</v-card-title>
 
-
-      <v-card-text>
+      <v-card-subtitle v-if="!serverId">
+        Choose a VPS provider below or add a custom server
+      </v-card-subtitle>
 
         <div v-if="!serverId">
-
-          <v-card-subtitle>
-            Choose a VPS provider below or add a custom server
-          </v-card-subtitle>
 
           <v-menu 
             offset-y
@@ -58,13 +56,13 @@
 
         </div>
 
-    <v-form
-      v-if="data.provider || serverId"
-      ref="form"
-      v-model="valid"
-      lazy-validation
-      class="mx-3 my-5"
-    >
+        <v-form
+          v-if="data.provider || serverId"
+          ref="form"
+          v-model="valid"
+          lazy-validation
+          class="mx-3 my-5"
+        >
 
           <p v-if="data.provider=='custom' && !serverId">
             Connect a server which is freshly installed with Ubuntu 18.04 LTS. Once configured, root login will be disabled for increased security
@@ -85,9 +83,8 @@
           ></v-text-field>
 
           <div
-            v-if="data.provider!=='custom' && !unclaimed.length"
+            v-if="data.provider!=='custom' && data.provider!=='vultr' && !unclaimed.length"
           >
-
             <v-select
                 v-if="!serverId"
                 v-model="data.region"
@@ -104,7 +101,7 @@
           </div>
 
           <div
-            v-if="(data.provider=='custom')"
+            v-if="data.provider == 'custom' || data.provider == 'vultr'"
           >
             <v-text-field
               :disabled="serverId>0"
@@ -114,27 +111,31 @@
               required
             ></v-text-field>
 
-            <v-text-field
-              :disabled="serverId>0"
-              v-model="data.user"
-              label="Username"
-              required
-            ></v-text-field>
+            <div
+              v-if="data.provider == 'custom'"
+            >
+                <v-text-field
+                  :disabled="serverId>0"
+                  v-model="data.user"
+                  label="Username"
+                  required
+                ></v-text-field>
 
-            <v-text-field
-              type="password"
-              :disabled="serverId>0"
-              v-model="data.pass"
-              label="Password"
-              required
-            ></v-text-field>
+                <v-text-field
+                  type="password"
+                  :disabled="serverId>0"
+                  v-model="data.pass"
+                  label="Password"
+                  required
+                ></v-text-field>
 
-            <v-text-field
-              :disabled="serverId>0"
-              v-model="data.port"
-              label="Port"
-              required
-            ></v-text-field>
+                <v-text-field
+                  :disabled="serverId>0"
+                  v-model="data.port"
+                  label="Port"
+                  required
+                ></v-text-field>
+              </div>
           </div>
 
           <v-select
@@ -147,14 +148,9 @@
           <v-select
             v-model="data.provider_token"
             :items="provider_tokens"
-            label="API token"
+            label="DNS provider API token (optional)"
             v-if="data.dns"
           ></v-select>
-
-          <v-checkbox
-            v-model="data.webserver"
-            label="Webserver"
-          ></v-checkbox>
           
           <v-checkbox
             v-model="data.mailserver"
@@ -170,7 +166,7 @@
             Save
           </v-btn>
         </v-form>
-      </v-card-text>
+        
     </v-card>
 
     <v-dialog
@@ -254,7 +250,7 @@
       data: {
         unclaimed: [],
         provider: '',
-        name: '',
+        name: 'New-server',
         host: '',
         user: 'root',
         pass: '',
@@ -277,7 +273,8 @@
         value: 'new'
       }],
       nameRules: [
-        v => !!v || 'Name is required'
+        v => !!v || 'Name is required',
+        v => /^[a-zA-Z0-9_-]+$/g.test(v) || 'Must contain alphanumeric characters only',
       ],
       hostRules: [
         v => !!v || 'IP is required'
@@ -295,6 +292,7 @@
       items: [
         { title: 'Linode', value: 'linode', avatar: 'fab fa-linode' },
         { title: 'DigitalOcean', value: 'digitalocean', avatar: 'fab fa-digital-ocean' },
+        { title: 'Vultr', value: 'vultr', avatar: 'fas fa-server' },
         { title: 'Custom server', value: 'custom', avatar: 'fas fa-server' }
       ],
       isOpen: false,
@@ -307,6 +305,12 @@
         this.serverId = this.$route.params.id
       }
       this.fetchData()
+
+      if (this.$route.query.ip) {
+        this.data.host = this.$route.query.ip
+        this.data.provider = 'vultr'
+        this.provider = 'vultr'
+      }
     },
     
     watch: {
@@ -465,7 +469,7 @@
         this.data.provider = provider
         this.provider = provider
 
-        if (provider=='custom') {
+        if (provider === 'custom' || provider === 'vultr') {
           return
         }
 

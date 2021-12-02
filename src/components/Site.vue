@@ -65,8 +65,9 @@
                             self.provider = response.data.provider
                             self.authRequired = true
 
-                            var interval = setInterval(function() {
+                            var interval = setInterval(function() {                                
                                 if (self.newWindow && self.newWindow.closed) {
+                                    self.newWindow = null
                                     clearInterval(interval)
                                     self.create(data)
                                     return

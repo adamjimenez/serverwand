@@ -5,7 +5,11 @@
       {{ val ? 'Yes' : 'No' }}
     </span>
 
-    <span v-else>
+    <span v-else-if="password">
+      {{ '******'}}
+    </span>
+
+    <span v-else-if="!hideText">
       {{ val }}
     </span>    
 
@@ -41,6 +45,8 @@
             :items="yesnoItems"
             :label="label"
             autofocus
+            :error="errors.length > 0"
+            :error-messages="errors"
           ></v-select>
 
           <v-text-field
@@ -51,6 +57,7 @@
             :type = "!password || showPassword ? 'text' : 'password'"
             :append-icon="!password ? '' : (showPassword ? 'visibility_off' : 'visibility')"
             @click:append="showPassword = !showPassword"
+            :error-messages="errors"
           ></v-text-field>
 
           <v-btn
@@ -76,6 +83,7 @@
       val: null,
       label: null,
       password: Boolean,
+      hideText: Boolean,
       path: null,
       yesno: Boolean,
     },
@@ -94,6 +102,7 @@
           text: 'No',
           value: 0
         }],
+        errors: []
       }
     },
     created () {
@@ -106,7 +115,7 @@
       },
       save() {
         this.fetching = true
-        this.error = ''
+        this.errors = []
 
         var data = {}
         data[this.name] = this.data.val
@@ -115,8 +124,13 @@
         api.post(this.path, data)
         .then(function (response) {
           console.log(response)
-          if (!self.password) {
+
+          if (response.data.success) {
             self.val = self.data.val
+            self.dialog = false
+            self.$emit('save')
+          } else {
+            self.errors.push(response.data.error)
           }
         })
         .catch(function (error) {
@@ -124,7 +138,6 @@
         })
         .finally(function() {
           self.fetching = false
-          self.dialog = false
         })
       }
     }

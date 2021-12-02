@@ -20,15 +20,11 @@
         <v-card>
           <v-card-text>
             
-            <v-btn
-              @click="openSync(data.origin)"
-            >
+            <v-btn @click="openSync(data.origin)">
               Push
             </v-btn>
 
-            <v-btn
-              @click="openSync(siteId)"
-            >
+            <v-btn @click="openSync(siteId)">
               Pull
             </v-btn>
 
@@ -41,113 +37,68 @@
         row
       >
 
-          <div v-if="data.app.name" style="flex: 1">
-            <v-list-item-content class="ma-3">
-              <v-list-item-title>
-                <h2>{{ data.app.name }}</h2>
-                <p>Version: {{ data.app.version }}</p>
+        <div v-if="data.app.name" style="flex: 1">
 
-                <div v-if="data.app.latest && data.app.latest !== data.app.version">
-                  <p>Latest: {{ data.app.latest }}</p>
-                  <v-btn color="blue darken-1" @click="install(data.app.name)">Upgrade</v-btn>
-                </div>
-              </v-list-item-title>
-            </v-list-item-content>
+          <v-card>
+            <v-card-title>
+              {{ data.app.name }}
+            </v-card-title>
+            <v-card-subtitle>
+              {{ data.app.version }}
+            </v-card-subtitle>
 
-            <div v-if="data.app.name=='git'">
-              <v-container class="ma-0">
-                <v-row>
-                  <v-col>
-                    <v-text-field
-                      v-model="data.app.ssh_key"
-                      label="SSH key"
-                      readonly
-                    ></v-text-field>
-                  </v-col>
+            <v-card-text v-if="data.app.isNode">              
+              <v-switch
+                v-model="data.app.online"
+                :label="data.app.status"
+                @change="toggleStatus()"
+              ></v-switch>
 
-                  <v-col>
-                    <Copy :val="data.app.ssh_key" />
-                  </v-col>
-                </v-row>
+              <v-textarea
+                label="Ouput log"
+                readonly
+                :value="data.app.output_log"
+              ></v-textarea>
 
-                <v-row>
-                  <v-col>                      
-                    <v-text-field
-                      v-model="data.app.webhook_url"
-                      label="web hook url"
-                      readonly
-                    ></v-text-field>
-                  </v-col>
+              <v-textarea
+                label="Error log"
+                readonly
+                :value="data.app.error_log"
+              ></v-textarea>
+            </v-card-text>
+          </v-card>
 
-                  <v-col>
-                    <Copy :val="data.app.webhook_url" />
-                  </v-col>
-                </v-row>
-                
-              </v-container>
-            </div>
-          </div>
-
-          <div v-else>
-              <v-flex>
-                  <v-card tile flat>
-                      <v-card-text>
-                        Unrecognised application
-                      </v-card-text>
-                  </v-card>
-              </v-flex>
-          </div>
-
-          <v-flex xs12>
-
-            <v-dialog>
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  v-on="on"
-                >
-                  Clone App
+          <v-container class="ma-0">
+            <v-row>
+              <v-col>
+                <v-btn @click="clearLogs" title="Clear logs" v-if="data.app.isNode">
+                  <v-icon>block</v-icon>
                 </v-btn>
-              </template>
 
-              <v-card>
-                <v-card-title>
-                  Clone App
-                </v-card-title>
+                <v-btn @click="gitInfo = true" title="Git info" v-if="data.app.git_url">
+                  <v-icon>fab fa-git</v-icon>
+                </v-btn>
 
-                <v-card-text>
+                <v-btn @click="showCloneApp = true" title="Clone app">
+                  <v-icon>mdi-content-copy</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+            
+          </v-container>
 
-                  <v-text-field
-                    v-model="data.stagingDomain"
-                    :rules="domainRules"
-                    label="Staging Domain"
-                    required
-                  ></v-text-field>
+        </div>
 
-                  <v-select
-                    v-model="data.server"
-                    :items="server_opts"
-                    label="Server"
-                    required
-                  ></v-select>
-       
-                  <v-checkbox
-                    v-model="dns"
-                    label="Configure DNS"
-                    :disabled="dnsProviders[data.server]==''"
-                  ></v-checkbox>
+        <div v-else>
+            <v-flex>
+                <v-card tile flat>
+                    <v-card-text>
+                      Unrecognised application
+                    </v-card-text>
+                </v-card>
+            </v-flex>
+        </div>
 
-                  <v-btn
-                    color="primary"
-                    @click="cloneApp"
-                  >
-                    Save
-                  </v-btn>
-
-                </v-card-text>
-              </v-card>
-            </v-dialog>
-
-          </v-flex>
       </v-layout>
 
       <div v-else>
@@ -212,6 +163,47 @@
         </v-card-text>
       </v-card>
     </v-navigation-drawer>
+
+    <v-dialog
+      v-model="showCloneApp"
+    >
+      <v-card>
+        <v-card-title>
+          Clone App
+        </v-card-title>
+
+        <v-card-text>
+
+          <v-text-field
+            v-model="data.stagingDomain"
+            :rules="domainRules"
+            label="Staging Domain"
+            required
+          ></v-text-field>
+
+          <v-select
+            v-model="data.server"
+            :items="server_opts"
+            label="Server"
+            required
+          ></v-select>
+
+          <v-checkbox
+            v-model="dns"
+            label="Configure DNS"
+            :disabled="dnsProviders[data.server]==''"
+          ></v-checkbox>
+
+          <v-btn
+            color="primary"
+            @click="cloneApp"
+          >
+            Save
+          </v-btn>
+
+        </v-card-text>
+      </v-card>
+    </v-dialog>
 
     <v-dialog
       v-model="syncDialog"
@@ -282,6 +274,73 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog
+      app
+      v-model="gitInfo"
+    >
+      <v-card
+        :loading="fetching"
+      >
+          <v-card-title>
+            Git info
+          </v-card-title>
+
+          <v-card-text>
+            <v-row>
+              <v-col>
+                <v-btn
+                  @click="gitPull"
+                >
+                  Pull
+                </v-btn>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <v-text-field
+                  v-model="data.app.git_url"
+                  label="Git URL"
+                  readonly
+                ></v-text-field>
+              </v-col>
+
+              <v-col>
+                <Copy :val="data.app.git_url" />
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <v-text-field
+                  v-model="data.app.ssh_key"
+                  label="SSH key: save to your git host in order to push to this repository"
+                  readonly
+                ></v-text-field>
+              </v-col>
+
+              <v-col>
+                <Copy :val="data.app.ssh_key" />
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>                      
+                <v-text-field
+                  v-model="data.app.webhook_url"
+                  label="Git Pull Webhook: use this webhook to initiiate a Git Pull"
+                  readonly
+                ></v-text-field>
+              </v-col>
+
+              <v-col>
+                <Copy :val="data.app.webhook_url" />
+              </v-col>
+            </v-row>
+          </v-card-text>
+      </v-card>
+    </v-dialog>
+
     <Site ref="Site" />
 
   </div>
@@ -308,7 +367,9 @@
       tableNames: [],
       tables: [],
       data: {
-        server: ''
+        server: '',
+        origin: '',
+        app: {}
       },
       dns: true,
       dnsProviders: {},
@@ -350,7 +411,9 @@
       selected: [],
       allSelected: false,
       authRequired: false,
-      newWindow: false
+      newWindow: false,
+      gitInfo: false,
+      showCloneApp: false
     }),
     created () {
       // fetch the data when the view is created and the data is
@@ -427,6 +490,31 @@
           }
         })
       },
+      clearLogs () {
+        var self = this
+
+        this.fetching = true
+        this.error = ''
+
+        api.post('sites/' + this.siteId + '/apps', {flush: true})
+        .then(function (response) {
+          console.log(response)
+          
+          if (!response.data.success) {
+            self.error = response.data.error
+            self.fetching = false
+          } else {
+            self.drawer = false
+            self.fetchData()
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+          self.fetching = false
+        })
+        .finally(function() {
+        })
+      },
       submitGit () {
         var self = this
 
@@ -440,6 +528,7 @@
             
             if (!response.data.success) {
               self.error = response.data.error
+              self.fetching = false
             } else {
               self.drawer = false
               self.fetchData()
@@ -447,14 +536,13 @@
           })
           .catch(function (error) {
             console.log(error)
+            self.fetching = false
           })
           .finally(function() {
-            self.fetching = false
           })
         }
       },
       cloneApp () {
-
         var data = {
           server: this.data.server,
           domain: this.data.stagingDomain,
@@ -464,7 +552,6 @@
         }
 
         this.$refs.Site.create(data)
-
       },
       openSync (target) {
         var self = this
@@ -534,7 +621,45 @@
       },
       select: function() {
           this.allSelected = false;
-      }
+      },
+      toggleStatus () {
+        var self = this
+        this.error = ''
+        this.loading = true
+
+        api.post('sites/' + this.siteId  + '/apps/', {status: this.data.app.online})
+        .then(function (response) {
+          console.log(response)
+
+          if (response.data.error) {
+            self.error = response.data.error
+            self.fetching = false
+          } else if (response.data.success) {
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+          self.fetching = false
+        })
+        .finally(function() {
+          self.loading = false
+        })
+      },
+      gitPull () {
+        var self = this
+        this.fetching = true
+
+        api.get('sites/' + this.siteId + '/git/pull')
+        .then(function (response) {
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        }).finally(function () {
+          self.fetching = false
+        })
+      },
     }
   }
 </script>

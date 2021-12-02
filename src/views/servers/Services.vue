@@ -84,7 +84,7 @@
           
           self.items = response.data.services
           self.data = response.data.item
-          document.title = 'Services' + ' | ' + self.data.name
+          document.title = 'Services | ' + self.data.name
         })
         .catch(function (error) {
           console.log(error)

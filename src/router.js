@@ -41,6 +41,9 @@ export default new Router({
             path: '/servers/:id/cronjobs',
             component: () => import('./views/servers/Cronjobs.vue')
           }, {
+            path: '/servers/:id/database',
+            component: () => import('./views/servers/Database.vue')
+          }, {
             path: '/servers/:id/systemusers',
             component: () => import('./views/servers/Systemusers.vue')
           }, {
@@ -55,6 +58,9 @@ export default new Router({
           }, {
             path: '/servers/:id/settings',
             component: () => import('./views/servers/Settings.vue')
+          }, {
+            path: '/servers/:id/apps',
+            component: () => import('./views/servers/Apps.vue')
           }, {
             path: '/servers/:id/logs',
             component: () => import('./views/servers/Logs.vue')
@@ -81,6 +87,9 @@ export default new Router({
           }, {
             path: '/sites/:id/database',
             component: () => import('./views/sites/Database.vue')
+          }, {
+            path: '/sites/:id/variables',
+            component: () => import('./views/sites/Variables.vue')
           }, {
             path: '/sites/:id/aliases',
             component: () => import('./views/sites/Aliases.vue')
@@ -110,7 +119,7 @@ export default new Router({
           component: () => import('./views/DomainsCreate.vue')
         }, {
           path: '/domains/:id/edit',
-          name: 'Site-edit',
+          name: 'Domain-edit',
           component: () => import('./views/DomainsCreate.vue')
         }, {
           path: '/domains/:id',

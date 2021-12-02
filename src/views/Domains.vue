@@ -38,8 +38,11 @@
                   </v-list-item>
                 </td>
                 <td class="text-start">
-                  {{item.registrar ? 'Yes' : ''}}
+                  {{item.registrar ? registrars[item.registrar].label : ''}}
                 </td> 
+                <td class="text-start">
+                  {{item.auto_renew ? 'Yes' : ''}}
+                </td>
               </tr>
             </tbody>
           </template>
@@ -64,6 +67,7 @@
         loading: false,
         error: '',
         filtered: [],
+        registrars: [],
         items: [],
         searchPanel: [false],
         search: '',
@@ -74,6 +78,9 @@
         }, {
           text: 'Registrar ',
           value: 'registrar'
+        }, {
+          text: 'Auto renew ',
+          value: 'auto_renew'
         }/*, {
           text: 'Expiration ',
           value: 'expiration'
@@ -100,6 +107,10 @@
           }
             
           self.items = response.data.items
+
+          response.data.provider_tokens.forEach(element => {
+              self.registrars[element.id] = element
+          })
           
           response.data.items.forEach(element => {
               self.filtered.push(element)
