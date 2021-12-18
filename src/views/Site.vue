@@ -60,7 +60,9 @@
         </v-list-item>
       </v-list>      
 
-      <v-tabs>
+      <v-tabs
+        show-arrows
+      >
         <v-tab :to="'/sites/' + domainId + '/summary'">Summary</v-tab>
         <v-tab :to="'/sites/' + domainId + '/database'">Database</v-tab>
         <v-tab :to="'/sites/' + domainId + '/variables'">Variables</v-tab>

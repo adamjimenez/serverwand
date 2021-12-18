@@ -1,16 +1,12 @@
 <template>
   <v-dialog v-model="value" persistent content content-class="centered-dialog">
-    <v-container fill-height
-    >
-      <v-card
-        color="primary"
-        dark
-      >
+    <v-container fill-height>
+      <v-card color="primary" dark>
         <v-card-text>
           <v-layout row>
-              <i class="fas fa-magic fa-2x faa-horizontal animated"></i>
-              <h2 style="margin-left: 10px;">{{message}}</h2>
-          </v-layout>              
+            <i class="fas fa-magic fa-2x faa-horizontal animated"></i>
+            <h2 style="margin-left: 10px">{{ message }}</h2>
+          </v-layout>
         </v-card-text>
       </v-card>
     </v-container>
@@ -20,26 +16,26 @@
 <script>
 export default {
   name: "Loading",
-  data: function() {
-    return {}
+  data: function () {
+    return {};
   },
   props: {
     value: {
       type: Boolean,
-      default: false
+      default: false,
     },
     message: {
       type: String,
-      default: "Summoning..."
+      default: "Summoning...",
     },
   },
-}
+};
 </script>
 
 <style>
-  .v-dialog.centered-dialog {
-    box-shadow: none;
-    border-radius: 0;
-    width: auto;
-  }
+.v-dialog.centered-dialog {
+  box-shadow: none;
+  border-radius: 0;
+  width: auto;
+}
 </style>

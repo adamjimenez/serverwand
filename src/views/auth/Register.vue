@@ -1,24 +1,13 @@
 <template>
-  <v-form
-    ref="form"
-    v-model="valid"
-    lazy-validation
-  >
+  <v-form ref="form" v-model="valid" lazy-validation>
     <v-card-title primary-title>
-      <h1 style="text-align: center; width: 100%;">
-        ServerWand
-      </h1>
+      <h1 style="text-align: center; width: 100%">ServerWand</h1>
     </v-card-title>
 
-    <v-subheader>
-      Register
-    </v-subheader>
+    <v-subheader> Register </v-subheader>
 
-    <v-alert
-      v-if="error"
-      type="error"
-    >
-      {{error}}
+    <v-alert v-if="error" type="error">
+      {{ error }}
     </v-alert>
 
     <v-card-text>
@@ -38,7 +27,7 @@
       ></v-text-field>
     </v-card-text>
 
-    <div style="margin: 0 8px;">
+    <div style="margin: 0 8px">
       <v-btn
         :disabled="dialog"
         :loading="dialog"
@@ -53,16 +42,8 @@
       <router-link to="/auth/login">Go back to login</router-link>
     </v-subheader>
 
-    <v-dialog
-      v-model="dialog"
-      hide-overlay
-      persistent
-      width="300"
-    >
-      <v-card
-        color="primary"
-        dark
-      >
+    <v-dialog v-model="dialog" hide-overlay persistent width="300">
+      <v-card color="primary" dark>
         <v-card-text>
           Please stand by
           <v-progress-linear
@@ -70,7 +51,6 @@
             color="white"
             class="mb-0"
           ></v-progress-linear>
-              
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -78,62 +58,59 @@
 </template>
 
 <script>
-  import api from '../../services/api';
+import api from "../../services/api";
 
-  export default {
-    data: () => ({
-      valid: true,
-      email: '',
-      password: '',
-      usernameRules: [
-        v => !!v || 'Email is required'
-      ],
-      passwordRules: [
-        v => !!v || 'Password is required'
-      ],
-      dialog: false,
-      loading: false,
-      error: ''
-    }),
+export default {
+  data: () => ({
+    valid: true,
+    email: "",
+    password: "",
+    usernameRules: [(v) => !!v || "Email is required"],
+    passwordRules: [(v) => !!v || "Password is required"],
+    dialog: false,
+    loading: false,
+    error: "",
+  }),
 
-    created () {
-      // fetch the data when the view is created and the data is
-      // already being observed
-      this.serverId = this.$route.params.id
+  created() {
+    // fetch the data when the view is created and the data is
+    // already being observed
+    this.serverId = this.$route.params.id;
 
-      if (this.serverId) {
-        this.fetchData()
-      }
-    },
+    if (this.serverId) {
+      this.fetchData();
+    }
+  },
 
-    methods: {
-      validate () {
-        var self = this
+  methods: {
+    validate() {
+      var self = this;
 
-        if (this.$refs.form.validate()) {
-          this.dialog = true
+      if (this.$refs.form.validate()) {
+        this.dialog = true;
 
-          api.post('auth/register', {
+        api
+          .post("auth/register", {
             email: this.email,
-            password: this.password
+            password: this.password,
           })
           .then(function (response) {
-            console.log(response)
+            console.log(response);
             if (response.data.success) {
-                self.$router.push('/auth/login')
+              self.$router.push("/auth/login");
             } else {
-                self.error = response.data.error;
+              self.error = response.data.error;
             }
           })
           .catch(function (error) {
-            console.log(error)
+            console.log(error);
           })
           .finally(function () {
-            self.dialog = false
-            self.loading = false
-          })
-        }
+            self.dialog = false;
+            self.loading = false;
+          });
       }
-    }
-  }
+    },
+  },
+};
 </script>

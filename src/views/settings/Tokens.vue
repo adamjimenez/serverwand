@@ -1,31 +1,21 @@
 <template>
   <div>
-    <v-alert
-        v-if="error"
-        type="error"
-    >
-        {{error}}
-    </v-alert> 
+    <v-alert v-if="error" type="error">
+      {{ error }}
+    </v-alert>
 
     <Loading :value="fetching" />
 
-    <v-card
-        class="mx-auto"
-    >
-        <v-list>
+    <v-card class="mx-auto">
+      <v-list>
         <v-list-item-group>
-            <template v-for="(item, i) in items">
-
-            <v-list-item
-                :key="`item-${i}`"
-                :value="item"
-            >
-                <template v-slot:default>
-
+          <template v-for="(item, i) in items">
+            <v-list-item :key="`item-${i}`" :value="item">
+              <template v-slot:default>
                 <v-list-item-content>
-                    <v-list-item-title>
-                    {{item.label}}
-                    </v-list-item-title>
+                  <v-list-item-title>
+                    {{ item.label }}
+                  </v-list-item-title>
                 </v-list-item-content>
 
                 <v-list-item-action>
@@ -37,80 +27,68 @@
                     <v-icon small>delete</v-icon>
                   </v-btn>
                 </v-list-item-action>
-                </template>
+              </template>
             </v-list-item>
-            </template>
+          </template>
         </v-list-item-group>
-        </v-list>
+      </v-list>
     </v-card>
 
     <v-card>
       <div>
         <v-card-title primary-title>
-          <v-btn
-          @click="addItem()"
-          >
-            Add Integration
-          </v-btn>
+          <v-btn @click="addItem()"> Add Integration </v-btn>
         </v-card-title>
       </div>
     </v-card>
 
-    <v-navigation-drawer
-      v-model="drawer"
-      temporary
-      right
-      app
-    >
+    <v-navigation-drawer v-model="drawer" temporary right app>
       <v-card>
-          <v-card-title>
-            API token
-          </v-card-title>
+        <v-card-title> API token </v-card-title>
 
-          <v-card-text>
+        <v-card-text>
+          <v-select
+            v-model="provider_token.provider"
+            :items="providers"
+            label="Provider"
+          ></v-select>
 
-            <v-select
-                v-model="provider_token.provider"
-                :items="providers"
-                label="Provider"
-            ></v-select>
+          <v-text-field
+            v-model="provider_token.label"
+            label="Label"
+            required
+          ></v-text-field>
 
-            <v-text-field
-              v-model="provider_token.label"
-              label="Label"
-              required
-            ></v-text-field>
+          <v-text-field
+            v-if="provider_token.provider === 'nominet'"
+            v-model="provider_token.username"
+            label="Username"
+            required
+          ></v-text-field>
 
-            <v-text-field
-              v-if="provider_token.provider === 'nominet'"
-              v-model="provider_token.username"
-              label="Username"
-              required
-            ></v-text-field>
+          <v-text-field
+            v-if="provider_token.provider === 'nominet'"
+            v-model="provider_token.password"
+            label="Password"
+            type="password"
+            required
+          ></v-text-field>
 
-            <v-text-field
-              v-if="provider_token.provider === 'nominet'"
-              v-model="provider_token.password"
-              label="Password"
-              type="password"
-              required
-            ></v-text-field>
+          <v-text-field
+            v-model="provider_token.token"
+            label="Token"
+            required
+          ></v-text-field>
 
-            <v-text-field
-              v-model="provider_token.token"
-              label="Token"
-              required
-            ></v-text-field>
-            
-            <v-btn
-              :disabled="fetching"
-              :loading="fetching"
-              color="success"
-              @click="submitToken"
-            >
-              Save
-            </v-btn>
-          </v-card-text>
+          <v-btn
+            :disabled="fetching"
+            :loading="fetching"
+            color="success"
+            @click="submitToken"
+          >
+            Save
+          </v-btn>
+        </v-card-text>
       </v-card>
     </v-navigation-drawer>
 
@@ -136,120 +114,127 @@
 </template>
 
 <script>
-  import api from '../../services/api'
-  import Loading from '../../components/Loading'
+import api from "../../services/api";
+import Loading from "../../components/Loading";
 
-  export default {
-    components: {
-      Loading
-    },
-    data () {
-      return {
-        error: '',
-        data: {
-            label: '',
+export default {
+  components: {
+    Loading,
+  },
+  data() {
+    return {
+      error: "",
+      data: {
+        label: "",
+      },
+      providers: [
+        {
+          text: "Linode",
+          value: "linode",
         },
-        providers: [{
-          text: 'Linode',
-          value: 'linode'
-        }, {
-          text: 'Digital Ocean',
-          value: 'digitalocean'
-        }, {
-          text: 'NameSilo',
-          value: 'namesilo'
-        }, {
-          text: 'Nominet',
-          value: 'nominet'
-        }],
-        items: [],
-        dialog: false,
-        details: '',
-        fetching: true,
-        /*
+        {
+          text: "Digital Ocean",
+          value: "digitalocean",
+        },
+        {
+          text: "NameSilo",
+          value: "namesilo",
+        },
+        {
+          text: "Nominet",
+          value: "nominet",
+        },
+      ],
+      items: [],
+      dialog: false,
+      details: "",
+      fetching: true,
+      /*
         rules: {
           required: value => !!value || 'Required.',
           min: v => v.length >= 8 || 'Min 8 characters',
         },
         */
-        server: {
-          name: ''
-        },
-        provider_token: {},
-        drawer: false
-      }
-    },
-    created () {
-        this.fetchData()
-    },
-    watch: {
-      // call again the method if the route changes
-      '$route': 'fetchData'
-    },
-    methods: {
-      fetchData () {        
-        var self = this
-        this.error = ''
-        this.fetching = true
- 
-        api.get('providers/tokens')
+      server: {
+        name: "",
+      },
+      provider_token: {},
+      drawer: false,
+    };
+  },
+  created() {
+    this.fetchData();
+  },
+  watch: {
+    // call again the method if the route changes
+    $route: "fetchData",
+  },
+  methods: {
+    fetchData() {
+      var self = this;
+      this.error = "";
+      this.fetching = true;
+
+      api
+        .get("providers/tokens")
         .then(function (response) {
-          console.log(response)            
-          self.items = response.data.tokens
-          document.title = 'Tokens'
+          console.log(response);
+          self.items = response.data.tokens;
+          document.title = "Tokens";
         })
         .catch(function (error) {
-          self.error = error
+          self.error = error;
         })
-        .finally(function() {
-          self.fetching = false
-        })
-      },
-      addItem () {
-        this.data.label = ''
-        this.drawer = true
-      },
-      deleteItem (id) { 
-        this.$confirm('Delete subscription?').then(res => {
-          if (!res) {
-              return
-          }
-          
-          var self = this
-          this.error = ''
+        .finally(function () {
+          self.fetching = false;
+        });
+    },
+    addItem() {
+      this.data.label = "";
+      this.drawer = true;
+    },
+    deleteItem(id) {
+      this.$confirm("Delete subscription?").then((res) => {
+        if (!res) {
+          return;
+        }
 
-          api.post('providers/tokens/' + id, {delete: 1})
+        var self = this;
+        this.error = "";
+
+        api
+          .post("providers/tokens/" + id, { delete: 1 })
           .then(function (response) {
-            console.log(response)
-            
+            console.log(response);
+
             if (response.data.error) {
-              self.error = response.data.error
+              self.error = response.data.error;
             } else {
-              self.fetchData()
+              self.fetchData();
             }
           })
           .catch(function (error) {
-            console.log(error)
-          })
-            
-        })
-      },
-      submitToken() {
-        var self = this
+            console.log(error);
+          });
+      });
+    },
+    submitToken() {
+      var self = this;
 
-        api.post('providers/tokens', this.provider_token)
+      api
+        .post("providers/tokens", this.provider_token)
         .then(function (response) {
           if (response.data.error) {
-            self.error = response.data.error
+            self.error = response.data.error;
           } else {
-            self.drawer = false
-            self.fetchData()
+            self.drawer = false;
+            self.fetchData();
           }
         })
         .catch(function (error) {
-          self.error = error
-        })
-      }
-    }
-  }
+          self.error = error;
+        });
+    },
+  },
+};
 </script>

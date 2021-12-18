@@ -9,12 +9,12 @@ import { setup } from 'axios-cache-adapter'
 const cache = setup({
     maxAge: 15 * 60 * 1000,
     cache: {
-      // Invalidate only when a specific option is passed through config
-      invalidate: async (config, request) => {
-        if (request.clearCacheEntry) {
-          await config.store.removeItem(config.uuid)
+        // Invalidate only when a specific option is passed through config
+        invalidate: async (config, request) => {
+            if (request.clearCacheEntry) {
+                await config.store.removeItem(config.uuid)
+            }
         }
-      }
     }
 })
 
@@ -46,6 +46,6 @@ export default {
         return api.post(url, payload)
     },
     event(path) {
-        return new EventSource('https://serverwand.com/api/' + path, {withCredentials: true})
+        return new EventSource('https://serverwand.com/api/' + path, { withCredentials: true })
     }
 }

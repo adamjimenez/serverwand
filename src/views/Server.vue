@@ -49,7 +49,9 @@
           </v-list-item>
         </v-list>
 
-        <v-tabs>
+        <v-tabs
+          show-arrows
+        >
           <v-tab :to="'/servers/' + serverId + '/summary'">Summary</v-tab>
           <v-tab :to="'/servers/' + serverId + '/services'">Services</v-tab>
           <v-tab :to="'/servers/' + serverId + '/cronjobs'">Cronjobs</v-tab>

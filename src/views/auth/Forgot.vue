@@ -1,24 +1,13 @@
 <template>
-  <v-form
-    ref="form"
-    v-model="valid"
-    lazy-validation
-  >
+  <v-form ref="form" v-model="valid" lazy-validation>
     <v-card-title primary-title>
-      <h1 style="text-align: center; width: 100%;">
-        ServerWand
-      </h1>
+      <h1 style="text-align: center; width: 100%">ServerWand</h1>
     </v-card-title>
 
-    <v-subheader>
-      Password reminder
-    </v-subheader>
+    <v-subheader> Password reminder </v-subheader>
 
-    <v-alert
-      v-if="error"
-      type="error"
-    >
-      {{error}}
+    <v-alert v-if="error" type="error">
+      {{ error }}
     </v-alert>
 
     <v-card-text>
@@ -40,7 +29,7 @@
       ></v-text-field>
     </v-card-text>
 
-    <div style="margin: 0 8px;">
+    <div style="margin: 0 8px">
       <v-btn
         :disabled="loading"
         :loading="loading"
@@ -54,61 +43,57 @@
     <v-subheader>
       <router-link to="/auth/login">Go back to login</router-link>
     </v-subheader>
-
   </v-form>
 </template>
 
 <script>
-  import api from '../../services/api';
+import api from "../../services/api";
 
-  export default {
-    data: () => ({
-      valid: true,
-      data: {
-        email: '',
-        password: '',
-        code: '',
-      },
-      usernameRules: [
-        v => !!v || 'Username is required'
-      ],
-      passwordRules: [
-        v => !!v || 'Password is required'
-      ],
-      loading: false,
-      error: ''
-    }),
-
-    created () {
-      if(this.$route.query.c) {
-        this.data.code = this.$route.query.c
-      }
+export default {
+  data: () => ({
+    valid: true,
+    data: {
+      email: "",
+      password: "",
+      code: "",
     },
+    usernameRules: [(v) => !!v || "Username is required"],
+    passwordRules: [(v) => !!v || "Password is required"],
+    loading: false,
+    error: "",
+  }),
 
-    methods: {
-      validate () {
-        var self = this
+  created() {
+    if (this.$route.query.c) {
+      this.data.code = this.$route.query.c;
+    }
+  },
 
-        if (this.$refs.form.validate()) {
-          this.loading = true
+  methods: {
+    validate() {
+      var self = this;
 
-          api.post('auth/forgot', this.data)
+      if (this.$refs.form.validate()) {
+        this.loading = true;
+
+        api
+          .post("auth/forgot", this.data)
           .then(function (response) {
-            console.log(response)
+            console.log(response);
             if (response.data.success) {
-                self.$router.push('/auth/login')
+              self.$router.push("/auth/login");
             } else {
-                self.error = response.data.error;
+              self.error = response.data.error;
             }
           })
           .catch(function (error) {
-            console.log(error)
+            console.log(error);
           })
           .finally(function () {
-            self.loading = false
-          })
-        }
+            self.loading = false;
+          });
       }
-    }
-  }
+    },
+  },
+};
 </script>

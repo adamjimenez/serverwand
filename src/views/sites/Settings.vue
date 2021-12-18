@@ -9,20 +9,7 @@
 
     <Loading :value="loading" />
 
-    <v-card
-      class="pa-3"
-      :loading="fetching"
-    >
-      <div>
-        <v-card-title primary-title>
-          <v-switch
-            v-model="data.ssl"
-            label="SSL"
-            @change="toggleSSL()"
-          ></v-switch>
-        </v-card-title>
-      </div>
-    </v-card>
+    <SSL :siteId="this.siteId" :provider="data.ssl_provider.provider" :fullchain="data.ssl_provider.fullchain"  @closed="fetchData(true)" />
 
     <v-card>
 
@@ -83,11 +70,13 @@
   import api from '../../services/api'
   import Loading from '../../components/Loading'
   import Edit from '../../components/Edit'
+  import SSL from '../../components/SSL'
 
   export default {
     components: {
       Loading,
-      Edit
+      Edit,
+      SSL
     },
     data () {
       return {
@@ -98,7 +87,10 @@
         data: {
           disk_usage: 0,
           server: {},
-          app: {}
+          app: {},
+          ssl_provider: {
+            provider: 'none'
+          }
         },
         details: '',
         fetching: false,
@@ -133,30 +125,6 @@
         })
         .finally(function() {
           self.fetching = false
-        })
-      },
-      toggleSSL () { 
-        var self = this
-        this.error = ''
-        this.fetching = true
-        this.loading = true
-
-        api.post('sites/' + this.$route.params.id  + '/settings', {save: 1, ssl: this.data.ssl})
-        .then(function (response) {
-          console.log(response)
-
-          if (response.data.error) {
-            self.error = response.data.error
-          } else if (response.data.success) {
-            self.fetchData();
-          }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.fetching = false
-          self.loading = false
         })
       },
       empty () { 

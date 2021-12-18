@@ -123,26 +123,26 @@
 
                 <v-text-field
                   type="password"
-                  :disabled="serverId>0"
+                  :disabled="serverId > 0"
                   v-model="data.pass"
                   label="Password"
-                  required
-                ></v-text-field>
-
-                <v-text-field
-                  :disabled="serverId>0"
-                  v-model="data.port"
-                  label="Port"
                   required
                 ></v-text-field>
               </div>
           </div>
 
+          <v-text-field
+            v-if="serverId>0 || data.provider == 'custom'"
+            v-model="data.port"
+            label="Port"
+            required
+          ></v-text-field>
+
           <v-select
             v-model="data.dns"
             :items="dns"
             label="DNS provider"
-            v-if="(data.provider === 'custom' || serverId>0)"
+            v-if="(data.provider === 'custom' || serverId > 0)"
           ></v-select>
 
           <v-select

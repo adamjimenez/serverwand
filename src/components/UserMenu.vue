@@ -22,18 +22,18 @@
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      items: [
-        { title: 'Settings', to: '/settings/profile' },
-        { title: 'Log out', to: '/auth/logout' }
-      ]
-    }),
+export default {
+  data: () => ({
+    items: [
+      { title: "Settings", to: "/settings/profile" },
+      { title: "Log out", to: "/auth/logout" },
+    ],
+  }),
 
-    methods: {
-      goto(to) {
-        this.$router.push(to)
-      }
-    }
-  }
+  methods: {
+    goto(to) {
+      this.$router.push(to);
+    },
+  },
+};
 </script>

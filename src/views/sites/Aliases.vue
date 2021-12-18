@@ -27,6 +27,14 @@
                 <v-list-item-title>
                   {{item.domain}}
                 </v-list-item-title>
+                <v-list-item-subtitle>
+                  <span v-if="item.redirect">
+                    Redirect
+                  </span>
+                  <span v-else>
+                    Alias
+                  </span>
+                </v-list-item-subtitle>
               </v-list-item-content>
 
               <v-list-item-action v-if="item.dns.A != data.server.ip">
@@ -87,7 +95,7 @@
 
           <v-card-text>
             <v-text-field
-              v-model="alias.domain"
+              v-model="alias.alias"
               label="Alias"
               required
             ></v-text-field>
@@ -96,6 +104,11 @@
               v-model="alias.dns"
               label="Configure DNS"
               :disabled="data.server.dns==''"
+            ></v-checkbox>
+            
+            <v-checkbox
+              v-model="alias.redirect"
+              label="Redirect"
             ></v-checkbox>
             
             <v-btn
@@ -141,7 +154,8 @@
           emailMatch: () => ('The email and password you entered don\'t match')
         },
         alias: {
-          domain: '',
+          alias: '',
+          redirect: false,
           dns: false
         },
         drawer: false,
@@ -189,7 +203,7 @@
         })
       },
       addAlias () {
-        this.alias.domain = ''
+        this.alias = {}
         this.drawer = true
       },
       submitAlias() {
@@ -198,7 +212,7 @@
       saveAlias (noAuthPrompt) {
         var self = this
 
-        if (this.alias.domain) {
+        if (this.alias.alias) {
           this.details = ''
           this.fetching = true
           this.error = ''
@@ -208,7 +222,9 @@
             child = window.open('/loading')
           }
 
-          api.post('sites/' + this.siteId + '/aliases', {alias: this.alias.domain, dns: this.alias.dns})
+          console.log(this.alias)
+
+          api.post('sites/' + this.siteId + '/aliases', this.alias)
           .then(function (response) {
             console.log(response)
             

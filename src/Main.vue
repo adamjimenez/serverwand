@@ -1,21 +1,14 @@
 <template>
   <div class="page-container">
     <v-app>
-      <v-navigation-drawer 
-        app
-        v-model="drawer"
-      >
-
+      <v-navigation-drawer app v-model="drawer">
         <v-layout column fill-height>
           <v-toolbar flat max-height="64">
             <v-list>
               <v-list-item>
                 <v-list-item-title class="title">
-                  <router-link to="/dashboard"> 
-                    <v-icon 
-                      left
-                      color="primary"
-                    >fas fa-magic</v-icon>
+                  <router-link to="/dashboard">
+                    <v-icon left color="primary">fas fa-magic</v-icon>
                     <strong>SERVERWAND</strong>
                   </router-link>
                 </v-list-item-title>
@@ -63,9 +56,7 @@
             </v-layout>
           </v-list>
           -->
-
         </v-layout>
-        
       </v-navigation-drawer>
 
       <v-app-bar app flat>
@@ -80,9 +71,8 @@
           <router-view :restricted="restricted"></router-view>
         </v-container>
       </v-main>
-      
-      <v-footer app></v-footer>
 
+      <v-footer app></v-footer>
     </v-app>
 
     <v-dialog v-model="masterPasswordDialog" persistent max-width="600px">
@@ -91,20 +81,25 @@
           <span class="headline">Master password required</span>
         </v-card-title>
         <v-card-text>
-          
           <v-text-field
-              v-model="masterPassword"
-              type="password"
-              label="Master password"
-              required
-              browser-autocomplete="new-password"
+            v-model="masterPassword"
+            type="password"
+            label="Master password"
+            required
+            browser-autocomplete="new-password"
           ></v-text-field>
-        
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="masterPasswordDialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" flat @click="submitMasterPassword()">OK</v-btn>
+          <v-btn
+            color="blue darken-1"
+            flat
+            @click="masterPasswordDialog = false"
+            >Close</v-btn
+          >
+          <v-btn color="blue darken-1" flat @click="submitMasterPassword()"
+            >OK</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -115,7 +110,6 @@
           <span class="headline">Reset key</span>
         </v-card-title>
         <v-card-text>
-          
           <v-text-field
             v-model="data.user"
             label="Username"
@@ -128,12 +122,13 @@
             label="Password"
             required
           ></v-text-field>
-        
         </v-card-text>
-        
+
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="resetKeyDialog = false">Close</v-btn>
+          <v-btn color="blue darken-1" flat @click="resetKeyDialog = false"
+            >Close</v-btn
+          >
           <v-btn color="blue darken-1" flat @click="submitResetKey()">OK</v-btn>
         </v-card-actions>
       </v-card>
@@ -142,169 +137,179 @@
 </template>
 
 <script>
-  import Search from './components/Search'
-  import CreateMenu from './components/CreateMenu'
-  import UserMenu from './components/UserMenu'
-  import api from './services/api'
-  import axios from 'axios'
-  import { sha256 } from 'js-sha256'
+import Search from "./components/Search";
+import CreateMenu from "./components/CreateMenu";
+import UserMenu from "./components/UserMenu";
+import api from "./services/api";
+import axios from "axios";
+import { sha256 } from "js-sha256";
 
-  export default {
-    components: {
-      Search,
-      CreateMenu,
-      UserMenu
-    },
-    data () {
-      return {
-        serverId: 0,
-        data: {},
-        dark: false,
-        drawer: null,
-        items: [
-          { title: 'Dashboard', to: '/dashboard', restricted: true },
-          { title: 'Servers', to: '/servers', restricted: true },
-          { title: 'Sites', to: '/sites', restricted: false },
-          { title: 'Domains', to: '/Domains', restricted: false },
-          { title: 'Teams', to: '/teams', restricted: true },
-          { title: 'Users', to: '/users', restricted: true },
-        ],
-        filtered: [],
-        resetKeyDialog: false,
-        masterPasswordDialog: false,
-        masterPassword: '',
-        restricted: false
-      }
-    },
-    created () {      
-      var self = this
+export default {
+  components: {
+    Search,
+    CreateMenu,
+    UserMenu,
+  },
+  data() {
+    return {
+      serverId: 0,
+      data: {},
+      dark: false,
+      drawer: null,
+      items: [
+        { title: "Dashboard", to: "/dashboard", restricted: true },
+        { title: "Servers", to: "/servers", restricted: true },
+        { title: "Sites", to: "/sites", restricted: false },
+        { title: "Domains", to: "/Domains", restricted: false },
+        { title: "Teams", to: "/teams", restricted: true },
+        { title: "Users", to: "/users", restricted: true },
+      ],
+      filtered: [],
+      resetKeyDialog: false,
+      masterPasswordDialog: false,
+      masterPassword: "",
+      restricted: false,
+    };
+  },
+  created() {
+    var self = this;
 
-      axios.interceptors.response.use(function (response) {
+    axios.interceptors.response.use(
+      function (response) {
         if (!response) {
-          return false
+          return false;
         }
 
-        if (response.data.error == 'master password') {
+        if (response.data.error == "master password") {
           // show password prompt
-          self.masterPasswordDialog = true
-        } else if (response.data.error == 'missing key') {
+          self.masterPasswordDialog = true;
+        } else if (response.data.error == "missing key") {
           // show password prompt
-          self.resetKeyDialog = true
-          self.serverId = response.data.server
+          self.resetKeyDialog = true;
+          self.serverId = response.data.server;
           return response;
         } else {
           return response;
         }
-
-      }, function (error) {
+      },
+      function (error) {
         const originalRequest = error.config;
 
-        if (!error.response || error.response.status === 401 && !originalRequest._retry) {
+        if (
+          !error.response ||
+          (error.response.status === 401 && !originalRequest._retry)
+        ) {
           //location.href = 'https://serverwand.com/login'
-          return false
+          return false;
         }
-      
+
         return Promise.reject(error);
-      })
-      
-      this.fetchData()
-    },
-    mounted() {
-      if (parseInt(localStorage.dark) !== 0) {
-        this.dark = true
-        this.$vuetify.theme.dark = true
       }
-    },
-    watch: {
-      dark(newDark) {
-        if (newDark) {
-          localStorage.dark = 1
-          this.$vuetify.theme.dark = true
-        } else {
-          localStorage.dark = 0
-          this.$vuetify.theme.dark = false
-        }
-      },
-      data() {
-        var self = this
-        this.restricted = (self.data.user !== "0")
-          
-        this.filtered = this.items.filter(function (item) {
-          return self.restricted ? !item.restricted : true
-        })
-      }
-    },
-    methods: {
-      fetchData () {        
-        var self = this
-        this.error = ''
-        this.loading = true
- 
-        api.get('settings/profile')
-        .then(function (response) {
-          console.log(response)
-          self.data = response.data.profile
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.loading = false
-        })
-      },
-      submitMasterPassword() {
-        var self = this
+    );
 
-        api.post('auth/masterpassword', {
-          masterPassword: sha256(self.masterPassword)
-        })
-        .then(function (response) {
-          console.log(response)
-          if (response.data.success) {
-              self.$router.go()
-          } else {
-              self.error = response.data.error;
-          }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function () {
-          self.dialog = false
-          self.loading = false
-        })
-      },
-      resetKey() {
-        var self = this
-
-        api.post('servers/' + self.serverId + '/resetkey', {
-          username: self.data.user,
-          password: self.data.pass
-        })
-        .then(function (response) {
-          console.log(response)
-          if (response.data.success) {
-              self.$router.go()
-          } else {
-              self.error = response.data.error;
-          }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function () {
-          self.resetKeyDialog = false
-          self.loading = false
-        })
-      }
+    this.fetchData();
+  },
+  mounted() {
+    if (parseInt(localStorage.dark) !== 0) {
+      this.dark = true;
+      this.$vuetify.theme.dark = true;
     }
-  }
+  },
+  watch: {
+    dark(newDark) {
+      if (newDark) {
+        localStorage.dark = 1;
+        this.$vuetify.theme.dark = true;
+      } else {
+        localStorage.dark = 0;
+        this.$vuetify.theme.dark = false;
+      }
+    },
+    data() {
+      var self = this;
+      this.restricted = self.data.user !== "0";
+
+      this.filtered = this.items.filter(function (item) {
+        return self.restricted ? !item.restricted : true;
+      });
+    },
+  },
+  methods: {
+    fetchData() {
+      var self = this;
+      this.error = "";
+      this.loading = true;
+
+      api
+        .get("settings/profile")
+        .then(function (response) {
+          console.log(response);
+          self.data = response.data.profile;
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .finally(function () {
+          self.loading = false;
+        });
+    },
+    submitMasterPassword() {
+      var self = this;
+
+      api
+        .post("auth/masterpassword", {
+          masterPassword: sha256(self.masterPassword),
+        })
+        .then(function (response) {
+          console.log(response);
+          if (response.data.success) {
+            self.$router.go();
+          } else {
+            self.error = response.data.error;
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .finally(function () {
+          self.dialog = false;
+          self.loading = false;
+        });
+    },
+    resetKey() {
+      var self = this;
+
+      api
+        .post("servers/" + self.serverId + "/resetkey", {
+          username: self.data.user,
+          password: self.data.pass,
+        })
+        .then(function (response) {
+          console.log(response);
+          if (response.data.success) {
+            self.$router.go();
+          } else {
+            self.error = response.data.error;
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .finally(function () {
+          self.resetKeyDialog = false;
+          self.loading = false;
+        });
+    },
+  },
+};
 </script>
 
 <style>
-  a {text-decoration: none;}
+a {
+  text-decoration: none;
+}
 
-  /*
+/*
   .v-navigation-drawer .themeSwitchContainer {
     background-color: transparent;
   }
@@ -318,21 +323,21 @@
     padding: 0;
   }
   */
-  
-  .v-navigation-drawer .v-list__tile--link {
-    border-left-width: 5px;
-    border-left-style: solid;
-    border-left-color: transparent;
-  }
 
-  .v-navigation-drawer .v-list__tile--active {
-    border-left-style: solid;
-    border-left-width: 5px;
-    border-left-color: inherit;
-  }
+.v-navigation-drawer .v-list__tile--link {
+  border-left-width: 5px;
+  border-left-style: solid;
+  border-left-color: transparent;
+}
 
-  .v-alert__content a {
-    color: #fff;
-    text-decoration: underline;
-  }
+.v-navigation-drawer .v-list__tile--active {
+  border-left-style: solid;
+  border-left-width: 5px;
+  border-left-color: inherit;
+}
+
+.v-alert__content a {
+  color: #fff;
+  text-decoration: underline;
+}
 </style>

@@ -33,21 +33,21 @@
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      isOpen: false,
-      items: [
-        { title: 'Server', to: '/servers/create', avatar: 'fas fa-server' },
-        { title: 'Site', to: '/sites/create', avatar: 'fas fa-sitemap' },
-        /*{ title: 'Domain', to: '/domains/create', avatar: 'fas fa-globe' },*/
-        { title: 'Team', to: '/teams/create', avatar: 'fas fa-users' },
-        { title: 'User', to: '/users/create', avatar: 'fas fa-user' }
-      ]
-    }),
-    methods:{
-      goto(to) {
-        this.$router.push(to)
-      }
-    }
-  }
+export default {
+  data: () => ({
+    isOpen: false,
+    items: [
+      { title: "Server", to: "/servers/create", avatar: "fas fa-server" },
+      { title: "Site", to: "/sites/create", avatar: "fas fa-sitemap" },
+      /*{ title: 'Domain', to: '/domains/create', avatar: 'fas fa-globe' },*/
+      { title: "Team", to: "/teams/create", avatar: "fas fa-users" },
+      { title: "User", to: "/users/create", avatar: "fas fa-user" },
+    ],
+  }),
+  methods: {
+    goto(to) {
+      this.$router.push(to);
+    },
+  },
+};
 </script>

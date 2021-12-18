@@ -175,7 +175,6 @@
 
           if (response.data.error) {
             self.error = response.data.error
-
             return false
           }
           
