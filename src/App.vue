@@ -8,6 +8,10 @@
 body {
   overflow: hidden;
 }
+
+.editor {
+    height: 75vh;
+}
 </style>
 
 <style>

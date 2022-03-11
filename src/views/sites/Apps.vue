@@ -17,23 +17,53 @@
         </v-card>
       </v-layout>
 
-      <v-layout v-else-if="data.app" row>
-        <div v-if="data.app.name" style="flex: 1">
+      <v-container v-if="data.app">
+        <v-row>
+            <v-btn
+              @click="gitInfo = true"
+              title="Git info"
+              v-if="data.app.git_url"
+              class="mt-3"
+            >
+              <v-icon>fab fa-git</v-icon>
+            </v-btn>
+            <v-btn @click="clearLogs" title="Clear logs" v-if="data.app.isNode"
+              class="mt-3">
+              <v-icon>block</v-icon>
+            </v-btn>
+            <v-btn @click="showCloneApp = true" title="Copy app"
+              class="mt-3">
+              <v-icon>mdi-content-copy</v-icon>
+            </v-btn>
+            <v-switch
+              v-if="data.app.isNode"
+              v-model="data.app.online"
+              :label="data.app.status"
+              @change="toggleStatus()"
+            ></v-switch>
+        </v-row>
+      </v-container>
+
+      <div v-if="data.app">
+        <div v-if="data.app.name">
           <v-card>
             <v-card-title>
               {{ data.app.name }}
             </v-card-title>
             <v-card-subtitle>
               {{ data.app.version }}
+
+              <div
+                v-if="data.app.latest && data.app.latest !== data.app.version"
+              >
+                <p>Latest: {{ data.app.latest }}</p>
+                <v-btn color="blue darken-1" @click="install(data.app.name)"
+                  >Upgrade</v-btn
+                >
+              </div>
             </v-card-subtitle>
 
             <v-card-text v-if="data.app.isNode">
-              <v-switch
-                v-model="data.app.online"
-                :label="data.app.status"
-                @change="toggleStatus()"
-              ></v-switch>
-
               <v-textarea
                 label="Ouput log"
                 readonly
@@ -47,42 +77,14 @@
               ></v-textarea>
             </v-card-text>
           </v-card>
-
-          <v-container class="ma-0">
-            <v-row>
-              <v-col>
-                <v-btn
-                  @click="clearLogs"
-                  title="Clear logs"
-                  v-if="data.app.isNode"
-                >
-                  <v-icon>block</v-icon>
-                </v-btn>
-
-                <v-btn
-                  @click="gitInfo = true"
-                  title="Git info"
-                  v-if="data.app.git_url"
-                >
-                  <v-icon>fab fa-git</v-icon>
-                </v-btn>
-
-                <v-btn @click="showCloneApp = true" title="Clone app">
-                  <v-icon>mdi-content-copy</v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-container>
         </div>
 
         <div v-else>
-          <v-flex>
-            <v-card tile flat>
-              <v-card-text> Unrecognised application </v-card-text>
-            </v-card>
-          </v-flex>
+          <v-card class="pa-3">
+            <v-card-text> Unrecognised application</v-card-text>
+          </v-card>
         </div>
-      </v-layout>
+      </div>
 
       <div v-else>
         <v-card class="mx-auto">
@@ -135,6 +137,10 @@
 
     <v-dialog v-model="showCloneApp">
       <v-card>
+        <v-alert v-if="error" type="error">
+          {{ error }}
+        </v-alert>
+
         <v-card-title> Clone App </v-card-title>
 
         <v-card-text>
@@ -155,6 +161,18 @@
           <v-checkbox
             v-model="dns"
             label="Configure DNS"
+            :disabled="dnsProviders[data.server] == ''"
+          ></v-checkbox>
+
+          <v-checkbox
+            v-model="basic_auth"
+            label="Enable basic auth"
+            :disabled="dnsProviders[data.server] == ''"
+          ></v-checkbox>
+
+          <v-checkbox
+            v-model="substitutions"
+            label="Realtime domain substitution in HTML"
             :disabled="dnsProviders[data.server] == ''"
           ></v-checkbox>
 
@@ -278,7 +296,7 @@
       </v-card>
     </v-dialog>
 
-    <Site ref="Site" />
+    <Site ref="Site" @error="handleError" />
   </div>
 </template>
 
@@ -308,6 +326,8 @@ export default {
       app: {},
     },
     dns: true,
+    basic_auth: false,
+    substitutions: false,
     dnsProviders: {},
     domainRules: [(v) => !!v || "Domain is required"],
     loading: false,
@@ -346,6 +366,11 @@ export default {
         name: "Roundcube",
         label: "Roundcube webmail",
         icon: "fas fa-envelope",
+      },
+      {
+        name: "shiftlib",
+        label: "ShiftLib CMS",
+        icon: "fas fa-user-edit",
       },
     ],
     server_opts: [],
@@ -487,6 +512,8 @@ export default {
       }
     },
     cloneApp() {
+      this.error = "";
+
       var data = {
         server: this.data.server,
         domain: this.data.stagingDomain,
@@ -515,6 +542,7 @@ export default {
     },
     sync() {
       var self = this;
+      this.error = "";
       this.fetching = true;
 
       var params = {
@@ -531,6 +559,10 @@ export default {
         .post("sites/" + this.siteId + "/apps/" + cmd, params)
         .then(function (response) {
           console.log(response);
+
+          if (response.data.error) {
+            self.error = response.data.error;
+          }
         })
         .catch(function (error) {
           console.log(error);
@@ -610,6 +642,9 @@ export default {
         .finally(function () {
           self.fetching = false;
         });
+    },
+    handleError(error) {
+      this.error = error;
     },
   },
 };

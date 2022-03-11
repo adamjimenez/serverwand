@@ -45,7 +45,7 @@ export default {
       fetching: false,
       loading: false,
       serverId: 0,
-    };
+    }
   },
   created() {
     // fetch the data when the view is created and the data is
@@ -79,7 +79,7 @@ export default {
         })
         .finally(function () {
           self.fetching = false;
-        });
+        })
     },
     toggle(item) {
       var self = this;
@@ -106,7 +106,7 @@ export default {
         })
         .finally(function () {
           self.loading = false;
-        });
+        })
     },
   },
 };

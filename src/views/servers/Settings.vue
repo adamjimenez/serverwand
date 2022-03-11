@@ -14,41 +14,13 @@
           </div>
 
           <div class="ma-3">
-            <v-btn
-              :disabled="fetching"
-              :loading="fetching"
-              @click="clearSSHUser"
-            >
-              Clear SSH user
-            </v-btn>
+            <Reboot :serverId="serverId" />
           </div>
 
           <div class="ma-3">
-            <v-btn :disabled="fetching" :loading="fetching" @click="reboot">
-              Reboot
-            </v-btn>
+            <Disconnect :serverId="serverId" :server="data" />
           </div>
 
-          <div class="ma-3">
-            <v-btn
-              :disabled="fetching"
-              :loading="fetching"
-              @click="deleteServer"
-              color="error"
-            >
-              Disconnect
-            </v-btn>
-          </div>
-
-          <div>
-            <v-card-title primary-title>
-              <v-switch
-                v-model="data.password_authentication"
-                label="SSH Password Authentication"
-                @change="togglePasswordAuthentication()"
-              ></v-switch>
-            </v-card-title>
-          </div>
         </v-col>
       </v-row>
     </v-card>
@@ -58,18 +30,21 @@
 <script>
 import api from "../../services/api";
 import Loading from "../../components/Loading";
+import Reboot from "../../components/Reboot";
+import Disconnect from "../../components/Disconnect";
 
 export default {
   components: {
     Loading,
+    Reboot,
+    Disconnect,
   },
   data() {
     return {
       error: "",
-      data: {},
-      details: "",
       fetching: false,
       serverId: 0,
+      data: {},
     };
   },
   created() {
@@ -110,113 +85,6 @@ export default {
     },
     editServer() {
       this.$router.push("/servers/" + this.$route.params.id + "/edit");
-    },
-    deleteServer() {
-      this.$confirm("Disconnect from server " + this.data.name + "?").then(
-        (res) => {
-          if (res) {
-            var self = this;
-            this.fetching = true;
-
-            api
-              .get("servers/" + this.$route.params.id + "/delete")
-              .then(function (response) {
-                console.log(response);
-
-                if (response.data.success) {
-                  // subscribe to status changes
-                  self.$router.push("/servers/");
-                }
-              })
-              .catch(function (error) {
-                console.log(error);
-              })
-              .finally(function () {
-                self.fetching = false;
-              });
-          }
-        }
-      );
-    },
-    clearSSHUser() {
-      this.$confirm("Clear SSH user?").then((res) => {
-        if (res) {
-          var self = this;
-          self.fetching = true;
-          api
-            .post("servers/" + this.serverId + "/savesshuser", {
-              ssh_username: "",
-            })
-            .then(function (response) {
-              console.log(response);
-
-              if (!response.data.success) {
-                self.error = response.data.error;
-              } else {
-                self.fetchData();
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-            })
-            .finally(function () {
-              self.fetching = false;
-              self.chooseUser = false;
-            });
-        }
-      });
-    },
-    togglePasswordAuthentication() {
-      var self = this;
-      this.error = "";
-      this.fetching = true;
-      this.loading = true;
-
-      api
-        .post("servers/" + this.serverId + "/password_authentication", {
-          save: 1,
-          enable: this.data.password_authentication,
-        })
-        .then(function (response) {
-          console.log(response);
-
-          if (response.data.error) {
-            self.error = response.data.error;
-          } else if (response.data.success) {
-            self.fetchData();
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-          self.loading = false;
-        });
-    },
-    reboot() {
-      this.$confirm("Reboot server?").then((res) => {
-        if (res) {
-          var self = this;
-          this.fetching = true;
-
-          api
-            .get("servers/" + this.serverId + "/reboot")
-            .then(function (response) {
-              console.log(response);
-
-              if (response.data.success) {
-                this.$router.push("/servers");
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-            })
-            .finally(function () {
-              self.fetching = false;
-            });
-        }
-      });
     },
   },
 };

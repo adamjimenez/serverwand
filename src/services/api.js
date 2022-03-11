@@ -30,7 +30,8 @@ api.interceptors.response.use(function (response) {
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
         location.href = 'https://serverwand.com/login?u=' + encodeURIComponent(location.href)
         //router.push('/auth/login')
-        return false
+
+        return Promise.reject('Forbidden');
     }
 
     return Promise.reject(error);

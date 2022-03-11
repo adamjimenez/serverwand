@@ -164,7 +164,7 @@ export default {
         this.error = "";
 
         api
-          .post("teams/" + this.id, this.data)
+          .post("teams/" + this.id + '/servers', { server: this.data.server })
           .then(function (response) {
             console.log(response);
 
@@ -193,7 +193,7 @@ export default {
           this.loading = true;
 
           api
-            .post("teams/" + this.id, { delete: 1, server: id })
+            .post("teams/" + this.id + '/servers', { delete: 1, server: id })
             .then(function (response) {
               console.log(response);
 

@@ -7,6 +7,11 @@
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
+      <TogglePasswordAuthentication
+        :serverId="serverId"
+        :passwordAuthentication="data.password_authentication"
+      />
+
       <v-list>
         <v-list-item-group>
           <template v-for="(item, i) in data.users">
@@ -52,14 +57,12 @@
           </template>
         </v-list-item-group>
       </v-list>
-    </v-card>
-
-    <v-card>
-      <div>
-        <v-card-title primary-title>
-          <v-btn @click="addItem()"> Add system user </v-btn>
-        </v-card-title>
-      </div>
+      <v-container class="mt-5">
+        <v-row>
+          <v-btn @click="addItem()" class="mr-3"> Add system user </v-btn>
+          <ClearSSHUser :serverId="serverId" :server="data" />
+        </v-row>
+      </v-container>
     </v-card>
 
     <v-navigation-drawer app v-model="userDrawer" temporary right>
@@ -197,11 +200,15 @@
 import api from "../../services/api";
 import Loading from "../../components/Loading";
 import Copy from "../../components/Copy";
+import TogglePasswordAuthentication from "../../components/TogglePasswordAuthentication";
+import ClearSSHUser from "../../components/ClearSSHUser";
 
 export default {
   components: {
     Loading,
     Copy,
+    TogglePasswordAuthentication,
+    ClearSSHUser,
   },
   data() {
     return {
@@ -241,7 +248,7 @@ export default {
       this.fetching = true;
 
       api
-        .get("servers/" + this.serverId + "/systemusers")
+        .get("servers/" + this.serverId + "/systemusers?detailed=1")
         .then(function (response) {
           console.log(response);
 

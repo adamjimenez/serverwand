@@ -6,19 +6,29 @@
 
     <Loading :value="loading" />
 
-    <v-card>
-      <div>
-        <v-card-title primary-title>
+    <v-card class="pa-3" :loading="fetching">
+      <v-container>
+        <v-row>
           <v-switch
             v-model="pma_restrictions"
             label="PHPMyAdmin restrictions"
             @change="toggle()"
+            class="mx-3"
           ></v-switch>
-        </v-card-title>
-      </div>
-    </v-card>
 
-    <v-card class="pa-3" :loading="fetching">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon color="primary" v-bind="attrs" v-on="on">
+                mdi-information
+              </v-icon>
+            </template>
+            <span>
+              Enforce access restrictions for PHPMYAdmin. We recommend this is
+              enabled.</span
+            >
+          </v-tooltip>
+        </v-row>
+      </v-container>
       <v-list>
         <v-list-item-group>
           <template v-for="(item, i) in items">

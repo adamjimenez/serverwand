@@ -7,7 +7,14 @@ import Vuetify from 'vuetify'
 import VuetifyConfirm from 'vuetify-confirm'
 import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 import vueFilterPrettyBytes from 'vue-filter-pretty-bytes'
-import EventHub from 'vue-event-hub';
+import EventHub from 'vue-event-hub'
+import moment from 'moment'
+
+Vue.filter('formatDate', function(value) {
+  if (value) {
+    return moment.unix(parseInt(value)).format('MM/DD/YYYY hh:mm')
+  }
+})
 
 const vuetify = new Vuetify({
   theme: {

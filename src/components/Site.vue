@@ -1,9 +1,5 @@
 <template>
   <div>
-    <v-alert :value="error.length > 0" type="error">
-      {{ error }}
-    </v-alert>
-
     <Loading :value="loading" />
 
     <v-dialog v-model="authRequired">
@@ -29,7 +25,6 @@ export default {
   name: "Site",
   data: () => ({
     loading: false,
-    error: "",
     newWindow: false,
     provider: "linode",
     authRequired: false,
@@ -37,7 +32,7 @@ export default {
   methods: {
     create(data) {
       var self = this;
-      self.loading = true;
+      this.loading = true;
 
       api
         .post("sites/create", data)
@@ -59,7 +54,7 @@ export default {
                 }
               }, 500);
             } else {
-              self.error = response.data.error;
+              self.$emit("error", response.data.error);
             }
           }
         })

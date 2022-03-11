@@ -142,6 +142,11 @@ export default {
         .then(function (response) {
           console.log(response);
 
+          if (!response.data) {            
+            self.error = 'No data';
+            return false;
+          }
+
           if (response.data.error) {
             self.error = response.data.error;
 

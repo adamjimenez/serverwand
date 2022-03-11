@@ -35,6 +35,9 @@ export default new Router({
             path: '/servers/:id/summary',
             component: () => import('./views/servers/Summary.vue')
           }, {
+            path: '/servers/:id/files',
+            component: () => import('./views/servers/Files.vue')
+          }, {
             path: '/servers/:id/services',
             component: () => import('./views/servers/Services.vue')
           }, {
