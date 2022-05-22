@@ -7,7 +7,7 @@
             <v-list>
               <v-list-item>
                 <v-list-item-title class="title">
-                  <router-link to="/dashboard">
+                  <router-link to="/servers">
                     <v-icon left color="primary">fas fa-magic</v-icon>
                     <strong>SERVERWAND</strong>
                   </router-link>
@@ -157,7 +157,6 @@ export default {
       dark: false,
       drawer: null,
       items: [
-        { title: "Dashboard", to: "/dashboard", restricted: true },
         { title: "Servers", to: "/servers", restricted: true },
         { title: "Sites", to: "/sites", restricted: false },
         { title: "Domains", to: "/Domains", restricted: false },

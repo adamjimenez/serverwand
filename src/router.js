@@ -9,13 +9,10 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: 'dashboard',
+      redirect: 'Servers',
       component: () => import('./Main.vue'),
       children: [
         {
-          path: '/dashboard',
-          component: () => import('./views/Dashboard.vue')
-        }, {
           path: '/servers',
           name: 'servers',
           component: () => import('./views/Servers.vue')
