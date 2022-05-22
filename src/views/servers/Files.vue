@@ -26,6 +26,7 @@ extract zip
       :serverId="serverId"
       :path="path"
       :selected="selected"
+      action="files"
       @complete="fetchData()"
       @error="handleError"
     />

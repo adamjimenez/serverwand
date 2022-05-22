@@ -18,7 +18,7 @@
             @editorDidMount="setLanguage"
           />
 
-          <v-btn color="primary" @click="saveFile"> Save </v-btn>
+          <v-btn color="primary" @click="saveFile" v-if="save !== 'false'"> Save </v-btn>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -38,6 +38,8 @@ export default {
     serverId: null,
     path: null,
     selected: null,
+    action: null,
+    save: null
   },
 
   watch: {
@@ -87,7 +89,7 @@ export default {
       var self = this;
 
       api
-        .post("servers/" + this.serverId + "/files", {
+        .post("servers/" + this.serverId + "/" + this.action, {
           cmd: 'get',
           path: this.path,
           file: item.name,
