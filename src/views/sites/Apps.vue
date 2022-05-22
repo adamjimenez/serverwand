@@ -17,7 +17,7 @@
         </v-card>
       </v-layout>
 
-      <v-container v-if="data.app">
+      <v-container v-if="data.app" class="ma-0">
         <v-row>
             <v-btn
               @click="gitInfo = true"
