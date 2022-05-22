@@ -65,7 +65,7 @@
         >
 
           <p v-if="data.provider=='custom' && !serverId">
-            Connect a server which is freshly installed with Ubuntu 18.04 LTS. Once configured, root login will be disabled for increased security
+            Connect a server which is freshly installed with Ubuntu. Once configured, root login will be disabled for increased security
           </p>
 
           <v-select
@@ -97,6 +97,13 @@
                 v-model="data.type"
                 :items="types"
                 label="Type"
+            ></v-select>
+
+            <v-select
+                v-if="!serverId && images.length"
+                v-model="data.image"
+                :items="images"
+                label="Image"
             ></v-select>
           </div>
 
@@ -288,6 +295,7 @@
       progress: 0,
       regions: [],
       types: [],
+      images: [],
       unclaimed: [],
       items: [
         { title: 'Linode', value: 'linode', avatar: 'fab fa-linode' },
@@ -480,6 +488,7 @@
         var self = this
         this.loading = true
         self.regions = []
+        self.images = []
         self.types = []
         self.unclaimed = []
 
@@ -501,7 +510,9 @@
             if (child) {
               child.close()
             }
+            
             self.regions = response.data.options.regions
+            self.images = response.data.options.images
             self.types = response.data.options.types
 
             response.data.unclaimed.forEach(element => {
