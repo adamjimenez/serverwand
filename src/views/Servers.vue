@@ -29,9 +29,11 @@
                 <tr v-for="item in prop.items" :key="item.id">
                   <td class="text-start">
                     <v-list-item>
-                      <v-icon class="mr-3">fas fa-server</v-icon>
+                      <v-icon v-if="item.provider === 'linode'">fab fa-linode</v-icon>
+                      <v-icon v-else-if="item.provider === 'digitalocean'">fab fa-digital-ocean</v-icon>
+                      <v-icon v-else>fas fa-server</v-icon>
 
-                      <router-link :to="'/servers/' + item.id + '/summary'">
+                      <router-link :to="'/servers/' + item.id + '/summary'" class="ml-3">
                         <v-list-item-title
                           v-html="item.name"
                         ></v-list-item-title>
@@ -42,10 +44,13 @@
                     </v-list-item>
                   </td>
                   <td class="text-start">
-                    {{ item.provider }}
+                    {{ item.region }}
                   </td>
                   <td class="text-start">
-                    {{ item.region }}
+                    {{ item.image }}
+                  </td>
+                  <td class="text-start">
+                    {{ item.type }}
                   </td>
                 </tr>
               </tbody>
@@ -109,12 +114,16 @@ export default {
           value: "server",
         },
         {
-          text: "Provider ",
-          value: "provider",
-        },
-        {
           text: "Region ",
           value: "region",
+        },
+        {
+          text: "Image ",
+          value: "image",
+        },
+        {
+          text: "Type ",
+          value: "type",
         },
       ],
     };

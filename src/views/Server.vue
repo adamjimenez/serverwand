@@ -14,7 +14,9 @@
                   <v-col>
                     <v-list-item class="px-0">
                       <v-list-item-icon>
-                        <v-icon>fas fa-server</v-icon>
+                        <v-icon v-if="data.provider === 'linode'">fab fa-linode</v-icon>
+                        <v-icon v-else-if="data.provider === 'digitalocean'">fab fa-digital-ocean</v-icon>
+                        <v-icon v-else>fas fa-server</v-icon>
                       </v-list-item-icon>
 
                       <v-list-item-content class="py-0">
@@ -52,7 +54,7 @@
           <v-tab :to="'/servers/' + serverId + '/mail'">Mail</v-tab>
           <v-tab :to="'/servers/' + serverId + '/apps'">Apps</v-tab>
           <v-tab :to="'/servers/' + serverId + '/logs'">Logs</v-tab>
-          <v-tab :to="'/servers/' + serverId + '/backups'">Backups</v-tab>
+          <v-tab :to="'/servers/' + serverId + '/backups'">Cloud backups</v-tab>
           <v-tab :to="'/servers/' + serverId + '/settings'">Settings</v-tab>
         </v-tabs>
         <router-view></router-view>
