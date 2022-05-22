@@ -7,6 +7,30 @@
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
+      <v-layout row>
+        <v-flex xs12>
+          <v-card tile flat>
+            <v-card-text>
+              <form
+                :action="'http://' + data.ip + '/phpmyadmin/'"
+                method="post"
+                target="_blank"
+              >
+                <input
+                  type="hidden"
+                  name="pma_username"
+                  :value="data.db_name"
+                />
+                <button type="submit">
+                  PhpMyAdmin
+                  <v-icon right>open_in_new</v-icon>
+                </button>
+              </form>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+
       <v-container>
         <v-row>
           <v-switch
@@ -117,6 +141,7 @@ export default {
       loading: false,
       error: "",
       pma_restrictions: false,
+      data: {},
       items: {},
       item: {},
       details: "",
