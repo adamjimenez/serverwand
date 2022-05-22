@@ -19,7 +19,15 @@
                 <v-col>
                   <v-list-item class="px-0">
                     <v-list-item-icon>
-                      <v-icon>fas fa-globe</v-icon>
+                      <v-icon v-if="data.app === 'wordpress'">fab fa-wordpress</v-icon>
+                      <v-icon v-else-if="data.app === 'git'">fab fa-git</v-icon>
+                      <v-icon v-else-if="data.app === 'node'">fab fa-node-js</v-icon>
+                      <v-icon v-else-if="data.app === 'joomla'">fab fa-joomla</v-icon>
+                      <v-icon v-else-if="data.app === 'drupal'">fab fa-drupal</v-icon>
+                      <v-icon v-else-if="data.app === 'magento'">fab fa-magento</v-icon>
+                      <v-icon v-else-if="data.app === 'roundcube'">fas fa-envelope</v-icon>
+                      <v-icon v-else-if="data.app === 'shiftlib'">fas fa-user-edit</v-icon>
+                      <v-icon v-else>fas fa-sitemap</v-icon>
                     </v-list-item-icon>
 
                     <v-list-item-content class="py-0">

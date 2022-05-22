@@ -25,9 +25,18 @@
         <v-data-table :headers="headers" :items="filtered" class="results">
           <template v-slot:item.domain="{ item }">
             <v-list-item>
-              <v-icon class="mr-3">fas fa-sitemap</v-icon>
 
-              <router-link :to="'/sites/' + item.id + '/summary'">
+              <v-icon v-if="item.app === 'wordpress'">fab fa-wordpress</v-icon>
+              <v-icon v-else-if="item.app === 'git'">fab fa-git</v-icon>
+              <v-icon v-else-if="item.app === 'node'">fab fa-node-js</v-icon>
+              <v-icon v-else-if="item.app === 'joomla'">fab fa-joomla</v-icon>
+              <v-icon v-else-if="item.app === 'drupal'">fab fa-drupal</v-icon>
+              <v-icon v-else-if="item.app === 'magento'">fab fa-magento</v-icon>
+              <v-icon v-else-if="item.app === 'roundcube'">fas fa-envelope</v-icon>
+              <v-icon v-else-if="item.app === 'shiftlib'">fas fa-user-edit</v-icon>
+              <v-icon v-else>fas fa-sitemap</v-icon>
+
+              <router-link :to="'/sites/' + item.id + '/summary'" class="ml-3">
                 <v-list-item-title v-html="item.domain"></v-list-item-title>
                 <v-list-item-subtitle>{{
                   servers[item.server]
