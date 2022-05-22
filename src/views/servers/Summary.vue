@@ -59,36 +59,36 @@
             </v-card>
           </v-flex>
 
-          <v-flex xs12 sm6 md3>
-            <v-card>
-              <div class="feature">
-                <v-card-text>
-                  <div>
-                    <div class="icon">
-                      <i class="fas fa-hdd"></i>
+          <template v-for="(disk, i) in data.disks">
+            <v-flex xs12 sm6 md3 :key="`item-${i}`" :value="disk">
+              <v-card>
+                <div class="feature">
+                  <v-card-text>
+                    <div>
+                      <div class="icon">
+                        <i class="fas fa-hdd"></i>
+                      </div>
+
+                      <div class="label">{{ disk.name }}</div>
                     </div>
 
-                    <div class="label">Disk Usage</div>
-                  </div>
-
-                  <div class="pt-3" style="clear: both">
-                    <v-list-item-title>
-                      <v-progress-linear
-                        :value="data.disk_perc"
-                        height="20"
-                      ></v-progress-linear>
-                    </v-list-item-title>
-                    <v-list-item-subtitle>
-                      {{ (data.disk_free * 1024) | prettyBytes }} free of
-                      {{ (data.disk_space * 1024) | prettyBytes }}
-                    </v-list-item-subtitle>
-
-                    <CleanUp :serverId="serverId" @closed="fetchData(true)" />
-                  </div>
-                </v-card-text>
-              </div>
-            </v-card>
-          </v-flex>
+                    <div class="pt-3" style="clear: both">
+                      <v-list-item-title>
+                        <v-progress-linear
+                          :value="(1 - disk.free / disk.space) * 100"
+                          height="20"
+                        ></v-progress-linear>
+                      </v-list-item-title>
+                      <v-list-item-subtitle>
+                        {{ (disk.free * 1024) | prettyBytes }} free of
+                        {{ (disk.space * 1024) | prettyBytes }}
+                      </v-list-item-subtitle>
+                    </div>
+                  </v-card-text>
+                </div>
+              </v-card>
+            </v-flex>
+          </template>
 
           <v-flex xs12 sm6 md3>
             <v-card>
@@ -127,6 +127,8 @@
                     </div>
 
                     <Upgrade :serverId="serverId" @closed="fetchData(true)" />
+
+                    <UpdatesConfig :serverId="serverId" />
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -245,7 +247,7 @@
 
       <v-container class="ma-0">
         <v-layout row wrap>
-          <svg width="100%" viewBox="0 0 1060 300" v-html="data.graph"></svg>
+          <svg width="100%" viewBox="0 0 1060 400" v-html="data.graph"></svg>
         </v-layout>
       </v-container>
     </v-card>
@@ -260,6 +262,7 @@ import PhpConfig from "../../components/PhpConfig";
 import MysqlConfig from "../../components/MysqlConfig";
 import CleanUp from "../../components/CleanUp";
 import Upgrade from "../../components/Upgrade";
+import UpdatesConfig from "../../components/UpdatesConfig";
 
 export default {
   components: {
@@ -269,6 +272,7 @@ export default {
     MysqlConfig,
     CleanUp,
     Upgrade,
+    UpdatesConfig,
   },
   data() {
     return {
@@ -276,7 +280,6 @@ export default {
       data: {
         disk_free: 0,
         disk_space: 0,
-        disk_perc: 0,
         mem_free: 0,
         mem_total: 0,
         mem_perc: 0,
@@ -314,12 +317,6 @@ export default {
 
           if (response.data.item) {
             self.data = response.data.item;
-          }
-
-          if (self.data.disk_space) {
-            self.data.disk_perc = Math.round(
-              (1 - self.data.disk_free / self.data.disk_space) * 100
-            );
           }
 
           if (self.data.mem_total) {
