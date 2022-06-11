@@ -22,25 +22,16 @@
           </v-card-text>
         </v-card>
 
-        <v-data-table :headers="headers" :items="filtered" class="results">
+        <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
           <template v-slot:item.domain="{ item }">
             <v-list-item>
-
-              <v-icon v-if="item.app === 'wordpress'">fab fa-wordpress</v-icon>
-              <v-icon v-else-if="item.app === 'git'">fab fa-git</v-icon>
-              <v-icon v-else-if="item.app === 'node'">fab fa-node-js</v-icon>
-              <v-icon v-else-if="item.app === 'joomla'">fab fa-joomla</v-icon>
-              <v-icon v-else-if="item.app === 'drupal'">fab fa-drupal</v-icon>
-              <v-icon v-else-if="item.app === 'magento'">fab fa-magento</v-icon>
-              <v-icon v-else-if="item.app === 'roundcube'">fas fa-envelope</v-icon>
-              <v-icon v-else-if="item.app === 'shiftlib'">fas fa-user-edit</v-icon>
-              <v-icon v-else>fas fa-sitemap</v-icon>
+              <SiteIcon :app="item.app"></SiteIcon>
 
               <router-link :to="'/sites/' + item.id + '/summary'" class="ml-3">
                 <v-list-item-title v-html="item.domain"></v-list-item-title>
-                <v-list-item-subtitle>{{
-                  servers[item.server]
-                }}</v-list-item-subtitle>
+                <v-list-item-subtitle>
+                  {{ servers[item.server] }}
+                </v-list-item-subtitle>
               </router-link>
             </v-list-item>
           </template>
@@ -58,10 +49,12 @@
 <script>
 import api from "../services/api";
 import Loading from "../components/Loading";
+import SiteIcon from "../components/SiteIcon";
 
 export default {
   components: {
     Loading,
+    SiteIcon,
   },
   data() {
     return {
@@ -89,14 +82,20 @@ export default {
         {
           text: "IP ",
           value: "ip",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
         {
           text: "MX ",
           value: "mx",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
         {
           text: "Usage ",
           value: "usage",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
       ],
     };

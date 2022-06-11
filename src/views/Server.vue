@@ -14,9 +14,7 @@
                   <v-col>
                     <v-list-item class="px-0">
                       <v-list-item-icon>
-                        <v-icon v-if="data.provider === 'linode'">fab fa-linode</v-icon>
-                        <v-icon v-else-if="data.provider === 'digitalocean'">fab fa-digital-ocean</v-icon>
-                        <v-icon v-else>fas fa-server</v-icon>
+                        <ServerIcon :provider="data.provider"></ServerIcon>
                       </v-list-item-icon>
 
                       <v-list-item-content class="py-0">
@@ -95,8 +93,12 @@
 
 <script>
 import api from "../services/api";
+import ServerIcon from "../components/ServerIcon";
 
 export default {
+  components: {
+    ServerIcon
+  },
   data() {
     return {
       error: "",

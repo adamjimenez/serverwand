@@ -23,38 +23,23 @@
             </v-card-text>
           </v-card>
 
-          <v-data-table :headers="headers" :items="filtered" class="results">
-            <template v-slot:body="prop">
-              <tbody>
-                <tr v-for="item in prop.items" :key="item.id">
-                  <td class="text-start">
-                    <v-list-item>
-                      <v-icon v-if="item.provider === 'linode'">fab fa-linode</v-icon>
-                      <v-icon v-else-if="item.provider === 'digitalocean'">fab fa-digital-ocean</v-icon>
-                      <v-icon v-else>fas fa-server</v-icon>
+          <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
 
-                      <router-link :to="'/servers/' + item.id + '/summary'" class="ml-3">
-                        <v-list-item-title
-                          v-html="item.name"
-                        ></v-list-item-title>
-                        <v-list-item-subtitle
-                          v-html="item.hostname"
-                        ></v-list-item-subtitle>
-                      </router-link>
-                    </v-list-item>
-                  </td>
-                  <td class="text-start">
-                    {{ item.region }}
-                  </td>
-                  <td class="text-start">
-                    {{ item.image }}
-                  </td>
-                  <td class="text-start">
-                    {{ item.type }}
-                  </td>
-                </tr>
-              </tbody>
+            <template v-slot:item.server="{ item }">
+              <v-list-item>
+                <ServerIcon :provider="item.provider"></ServerIcon>
+
+                <router-link :to="'/servers/' + item.id + '/summary'" class="ml-3">
+                  <v-list-item-title
+                    v-html="item.name"
+                  ></v-list-item-title>
+                  <v-list-item-subtitle
+                    v-html="item.hostname"
+                  ></v-list-item-subtitle>
+                </router-link>
+              </v-list-item>
             </template>
+
           </v-data-table>
         </div>
 
@@ -75,10 +60,12 @@
 <script>
 import api from "../services/api";
 import Loading from "../components/Loading";
+import ServerIcon from "../components/ServerIcon";
 
 export default {
   components: {
     Loading,
+    ServerIcon
   },
   data() {
     return {
@@ -116,14 +103,20 @@ export default {
         {
           text: "Region ",
           value: "region",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
         {
           text: "Image ",
           value: "image",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
         {
           text: "Type ",
           value: "type",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
       ],
     };
