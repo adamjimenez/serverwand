@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container>
+    <v-container fluid>
       <v-row>
         <v-switch
           v-model="data.passwordAuthentication"
