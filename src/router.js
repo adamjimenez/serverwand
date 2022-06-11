@@ -19,11 +19,11 @@ export default new Router({
         }, {
           path: '/servers/create',
           name: 'servers-create',
-          component: () => import('./views/ServersCreate.vue')
+          component: () => import('./views/servers/Create.vue')
         }, {
           path: '/servers/:id/edit',
           name: 'server-edit',
-          component: () => import('./views/ServersCreate.vue')
+          component: () => import('./views/servers/Create.vue')
         }, {
           path: '/servers/:id',
           name: 'server',
@@ -72,11 +72,11 @@ export default new Router({
         }, {
           path: '/sites/create',
           name: 'sites-create',
-          component: () => import('./views/SitesCreate.vue')
+          component: () => import('./views/sites/Create.vue')
         }, {
           path: '/sites/:id/edit',
           name: 'Site-edit',
-          component: () => import('./views/SitesCreate.vue')
+          component: () => import('./views/sites/Create.vue')
         }, {
           path: '/sites/:id',
           name: 'site',
@@ -116,11 +116,11 @@ export default new Router({
         }, {
           path: '/domains/create',
           name: 'domains-create',
-          component: () => import('./views/DomainsCreate.vue')
+          component: () => import('./views/domains/Create.vue')
         }, {
           path: '/domains/:id/edit',
           name: 'Domain-edit',
-          component: () => import('./views/DomainsCreate.vue')
+          component: () => import('./views/domains/Create.vue')
         }, {
           path: '/domains/:id',
           name: 'domain',
@@ -140,10 +140,10 @@ export default new Router({
           component: () => import('./views/Teams.vue')
         }, {
           path: '/teams/create',
-          component: () => import('./views/TeamsCreate.vue')
+          component: () => import('./views/teams/Create.vue')
         }, {
           path: '/teams/:id/edit',
-          component: () => import('./views/TeamsCreate.vue')
+          component: () => import('./views/teams/Create.vue')
         }, {
           path: '/teams/:id',
           component: () => import('./views/Team.vue'),
@@ -164,10 +164,10 @@ export default new Router({
         }, {
           path: '/users/create',
           name: 'users-create',
-          component: () => import('./views/UsersCreate.vue')
+          component: () => import('./views/users/Create.vue')
         }, {
           path: '/users/:id/edit',
-          component: () => import('./views/UsersCreate.vue')
+          component: () => import('./views/users/Create.vue')
         }, {
           path: '/users/:id',
           component: () => import('./views/User.vue'),
@@ -236,5 +236,9 @@ export default new Router({
       path: '/loading',
       component: () => import('./views/Loading.vue')
     },
+    {
+      path: '*',
+      component: () => import('./views/404.vue')
+    }
   ]
 })

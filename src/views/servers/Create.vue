@@ -82,6 +82,13 @@
             required
           ></v-text-field>
 
+          <v-text-field
+            v-model="data.ip"
+            :rules="hostRules"
+            label="IP"
+            required
+          ></v-text-field>
+
           <div
             v-if="data.provider!=='custom' && data.provider!=='vultr' && !unclaimed.length"
           >
@@ -112,7 +119,7 @@
           >
             <v-text-field
               :disabled="serverId>0"
-              v-model="data.host"
+              v-model="data.hostname"
               :rules="hostRules"
               label="Host name/ IP Address"
               required
@@ -243,8 +250,8 @@
 </template>
 
 <script>
-  import api from '../services/api'
-  import Loading from '../components/Loading'
+  import api from '../../services/api'
+  import Loading from '../../components/Loading'
 
   export default {
     components: {
@@ -255,10 +262,11 @@
       loading: false,
       valid: true,
       data: {
+        images: [],
         unclaimed: [],
         provider: '',
         name: 'New-server',
-        host: '',
+        hostname: '',
         user: 'root',
         pass: '',
         port: '22',
@@ -315,7 +323,7 @@
       this.fetchData()
 
       if (this.$route.query.ip) {
-        this.data.host = this.$route.query.ip
+        this.data.hostname = this.$route.query.ip
         this.data.provider = 'vultr'
         this.provider = 'vultr'
       }
@@ -382,50 +390,33 @@
         self.details = ''
 
         // subscribe to status changes
-        var url = 'servers/' + self.serverId + '/install?';
-        if (self.data.webserver) {
-          url += 'webserver=1&'
-        }
-
+        var url = 'servers/' + self.serverId + '/install?webserver=1';
         if (self.data.mailserver) {
-          url += 'mailserver=1&'
+          url += '&mailserver=1'
         }
 
-        var source = api.event(url)
-        
-        var abortFunction = function() {
-            if (source)
-                source.close()
-
+        api.event(
+          url,
+          result => {
+            self.details = result.msg + '...';
+            
+            if (result.progress) {
+              self.progress = result.progress;
+            }
+          },
+          error => {
+            self.error = error;
+          },
+          () => {
             self.dialog = false;
 
             if (!self.error) { 
               self.$eventHub.$emit('itemsChanged')
               self.$router.push('/servers/' + self.serverId + '/summary')
             }
-        }
+          }
+        );
     
-        source.addEventListener('message', function(event) {
-            var result = JSON.parse(event.data)
-            console.log(result)
-
-            if (result.msg) {
-              self.details = result.msg + '...'
-            }
-
-            if (result.error) {
-              self.error = result.error
-            }
-
-            if (result.progress) {
-              self.progress = result.progress
-            }
-        }, false)
-    
-        source.addEventListener('error', function(event) {
-            if (event.eventPhase == 2)
-                abortFunction()
-        }, false)
       },
       validate () {
         var self = this

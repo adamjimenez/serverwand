@@ -89,8 +89,8 @@
 </template>
 
 <script>
-import api from "../services/api";
-import Loading from "../components/Loading";
+import api from "../../services/api";
+import Loading from "../../components/Loading";
 
 export default {
   components: {
