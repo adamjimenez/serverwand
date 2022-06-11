@@ -145,7 +145,7 @@ export default {
           }
 
           if (self.data.domain) {
-            document.title = "Summary" + " | " + self.data.domain;
+            document.title = "Summary | " + self.data.domain;
           }
         })
         .catch(function (error) {
