@@ -78,37 +78,23 @@
         this.error = ''
         this.showMessage = true
         this.loading = true
-        this.message = ''        
+        this.message = ''
 
-        var source = api.event('servers/' + this.serverId + '/upgrade')
-        
-        source.addEventListener('message', function(event) {
-            var result = JSON.parse(event.data)
-            console.log(result)
+        api.event(
+          'servers/' + this.serverId + '/upgrade',
+          result => {
+            self.message += result.msg + "\n"
 
-            if (result.msg) {
-              self.message += result.msg + "\n"
+            // scroll to bottom
+            setTimeout(function() {
+              var el = document.getElementById('messageBody')
+              el.scrollTop = el.scrollHeight
+            }, 10)
+          },
+          error => self.error = error,
+          () => self.loading = false
+        );
 
-              // scroll to bottom
-              setTimeout(function() {
-                var el = document.getElementById('messageBody')
-                el.scrollTop = el.scrollHeight
-              }, 10)
-            }
-
-            if (result.error) {
-              self.error = result.error
-            }
-        }, false)
-    
-        source.addEventListener('error', function(event) {
-            if (event.eventPhase == 2) {
-              if (source) {
-                self.loading = false
-                source.close()
-              }
-            }
-        }, false)
       },
 
     }

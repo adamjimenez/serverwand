@@ -46,7 +46,27 @@ export default {
         var url = (path.substr(0, 4) === 'http') ? path : 'https://serverwand.com/api/' + path
         return api.post(url, payload)
     },
-    event(path) {
-        return new EventSource('https://serverwand.com/api/' + path, { withCredentials: true })
+    event(path, callback, errorCallback, completeCallback) {
+        var source = new EventSource('https://serverwand.com/api/' + path, { withCredentials: true })
+
+        source.addEventListener('message', function(event) {
+            var result = JSON.parse(event.data)
+            console.log(result);
+            
+            if (result.error) {
+                errorCallback(result.error);
+            } else if (result.msg) {
+                callback(result);
+            }
+        }, false)
+    
+        source.addEventListener('error', function(event) {
+            if (event.eventPhase == 2) {
+              if (source) {
+                source.close();
+                completeCallback();
+              }
+            }
+        }, false);
     }
 }
