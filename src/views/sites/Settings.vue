@@ -31,16 +31,6 @@
     <v-card>
       <v-card-title primary-title>
         <v-btn
-          @click="download()"
-        >
-          Download site
-        </v-btn>
-      </v-card-title>
-    </v-card>
-
-    <v-card>
-      <v-card-title primary-title>
-        <v-btn
           :disabled="fetching"
           :loading="loading=='empty'"
           @click="empty"
@@ -179,27 +169,6 @@
               self.loading = false
             })
           }
-        })
-      },
-      download() {
-        var self = this
-        this.fetching = true
-        
-        api.get('sites/' + this.siteId + '/download')
-        .then(function (response) {
-          console.log(response)
-          
-          if (!response.data.success) {
-            self.error = response.data.error
-          } else {
-            window.open(response.data.download_url)
-          }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.fetching = false
         })
       }
     }
