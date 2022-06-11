@@ -10,16 +10,8 @@
 
     <Loading :value="loading" />
 
-    <EditFile
-      ref="editFile"
-      :serverId="serverId"
-      :path="path"
-      :selected="selected"
-      action="backups"
-      save="false"
-      @complete="list()"
-      @error="handleError"
-    />
+    <EditFile ref="editFile" :serverId="serverId" :path="path" :selected="selected" action="backups" save="false"
+      @complete="list()" @error="handleError" />
 
     <v-card class="pa-3">
       <v-row>
@@ -29,46 +21,32 @@
           </v-btn>
         </v-col>
         <v-col class="flex-grow-0" v-if="s3.access_key">
-          <Snapshot
-            :serverId="serverId"
-            @complete="handleComplete"
-            @error="handleError"
-          />
+          <Snapshot :serverId="serverId" @complete="handleComplete" @error="handleError" />
         </v-col>
+        <!--
         <v-col class="flex-grow-0" v-if="s3.access_key">
           <v-btn @click="fetchData()">
             <v-icon>refresh</v-icon>
           </v-btn>
         </v-col>
+        -->
         <v-col>
-          <v-switch
-            v-model="s3.active"
-            label="Nightly backups"
-            class="my-0"
-            @change="toggleBackups()"
-          ></v-switch>
+          <v-switch v-model="s3.active" label="Nightly backups" class="my-0" @change="toggleBackups()"></v-switch>
         </v-col>
       </v-row>
     </v-card>
 
     <v-card :loading="fetching">
-      <v-container>
+      <v-container fluid>
         <v-row>
           <v-col class="flex-grow-0">
-            <Restore
-              :serverId="serverId"
-              :path="path"
-              :selected="selected"
-              @complete="handleComplete"
-              @error="handleError"
-            />
+            <Restore :serverId="serverId" :path="path" :selected="selected" @complete="handleComplete"
+              @error="handleError" />
           </v-col>
         </v-row>
-      </v-container>
 
-      <div v-if="s3.access_key">
-        <div v-if="path !== '/'">
-          <v-container>
+        <div v-if="s3.access_key">
+          <div v-if="path !== '/'">
             <v-row>
               <v-col class="flex-grow-0">
                 <v-btn icon @click="upLevel()" :disabled="path === '/'">
@@ -77,101 +55,81 @@
               </v-col>
 
               <v-col>
-                <v-text-field
-                  v-model="path"
-                  class="ma-0 pa-0"
-                  @change="list"
-                  @keydown.enter="list"
-                ></v-text-field>
+                <v-text-field v-model="path" class="ma-0 pa-0" @change="list" @keydown.enter="list"></v-text-field>
               </v-col>
             </v-row>
-          </v-container>
 
-          <v-data-table
-            :headers="headers"
-            :items="items"
-            class="results"
-            ref="results"
-          >
-            <template v-slot:body="prop">
-              <tbody>
-                <tr v-for="item in prop.items" :key="item.name">
-                  <td class="text-start">
-                    <v-list-item>
-                      <v-checkbox v-model="item.selected"></v-checkbox>
-                    </v-list-item>
-                  </td>
-                  <td
-                    class="text-start"
-                    @click="open(item)"
-                    style="cursor: pointer"
-                  >
-                    {{ item.name }}
-                  </td>
-                  <td class="text-start">
-                    {{ item.size | prettyBytes }}
-                  </td>
-                  <td class="text-start">
+            <v-row>
+              <v-col cols="12">
+                <v-data-table 
+                  :headers="headers" 
+                  :items="items" 
+                  class="results" 
+                  ref="results"
+                  mobile-breakpoint="0"                  
+                  @click:row="open"
+                >
+
+                  <template v-slot:item.modified="{ item }">
                     {{ item.modified | formatDate }}
-                  </td>
-                  <td class="text-start">
-                    {{ item.perms }}
-                  </td>
-                  <td class="text-start">
-                    {{ item.owner }}
-                    {{ item.group }}
-                  </td>
-                </tr>
-              </tbody>
-            </template>
-          </v-data-table>
-        </div>
+                  </template>
 
-        <div v-else>
-          <v-data-table :headers="backupHeaders" :items="backups">
-            <template v-slot:body="prop">
-              <tbody>
-                <tr v-for="item in prop.items" :key="item.name">
-                  <td
-                    class="text-start"
-                    @click="browse(item)"
-                    style="cursor: pointer"
-                  >
-                    {{ item.name }}
-                  </td>
-                  <td class="text-start">
+                </v-data-table>
+              </v-col>
+            </v-row>
+          </div>
+
+          <div v-else>
+            <v-row>
+              <v-col cols="12">
+                <v-data-table 
+                  :headers="backupHeaders"
+                  :items="backups"
+                  mobile-breakpoint="0"                  
+                  @click:row="browse"
+                >
+
+                  <template v-slot:item.name="{ item }">
+                    <span @click="browse(item)">{{ item.name }}</span>
+                  </template>
+
+                  <template v-slot:item.timestamp="{ item }">
                     {{ item.timestamp | formatDate }}
-                  </td>
-                  <td class="text-start">
+                  </template>
+
+                  <template v-slot:item.complete="{ item }">
                     {{ item.complete ? 'Complete' : 'Incomplete' }}
-                  </td>
-                  <td class="text-start">
+                  </template>
+
+                  <template v-slot:item.automatic="{ item }">
                     {{ item.automatic ? 'Automatic' : 'Manual' }}
-                  </td>
-                  <td class="text-start">
+                  </template>
+
+                  <template v-slot:item.duration="{ item }">
                     {{ Math.round(item.duration / 60) }}m
-                  </td>
-                  <td class="text-start">
+                  </template>
+
+                  <template v-slot:item.size="{ item }">
                     {{ item.size | prettyBytes }}
-                  </td>
-                  <td class="text-start">
-                    <v-btn
-                      v-if="item.automatic !== true"
-                      icon
-                      :disabled="loading"
-                      :loading="loading"
-                      @click="deleteSnapshot(item.name)"
-                      @click.stop
-                    >
+                  </template>
+
+                  <template v-slot:item.size="{ item }">
+                    {{ item.size | prettyBytes }}
+                  </template>
+
+                  <template v-slot:item.actions="{ item }">
+                    <v-btn icon :disabled="loading" :loading="loading" @click="deleteSnapshot(item.name)" @click.stop>
                       <v-icon small>delete</v-icon>
                     </v-btn>
-                  </td>
-                </tr>
-              </tbody>
-            </template>
-          </v-data-table>
+                  </template>
+
+                </v-data-table>
+              </v-col>
+            </v-row>
+          </div>
         </div>
-      </div>
+      </v-container>
+
     </v-card>
 
     <v-navigation-drawer app v-model="s3Drawer" temporary right>
@@ -181,30 +139,20 @@
         <v-card-text>
           <v-select v-model="s3.host" :items="hosts" label="Host"></v-select>
 
-          <v-text-field
-            v-model="s3.access_key"
-            label="Access Key"
-            required
-          ></v-text-field>
+          <v-text-field v-model="s3.access_key" label="Access Key" required></v-text-field>
 
-          <v-text-field
-            v-model="s3.secret_key"
-            label="Secret Key"
-            required
-          ></v-text-field>
+          <v-text-field v-model="s3.secret_key" label="Secret Key" required></v-text-field>
 
-          <v-text-field
-            v-model="s3.bucket"
-            label="Bucket"
-            required
-          ></v-text-field>
+          <v-text-field v-model="s3.bucket" label="Bucket" required></v-text-field>
 
-          <v-btn
-            :disabled="fetching"
-            :loading="loading"
-            color="success"
-            @click="save"
-          >
+          <!--
+          <v-checkbox
+            v-model="data.weekly_backups"
+            :label="`Weekly backups`"
+          ></v-checkbox>
+          -->
+
+          <v-btn :disabled="fetching" :loading="loading" color="success" @click="save">
             Save
           </v-btn>
         </v-card-text>
@@ -294,10 +242,6 @@ export default {
 
       headers: [
         {
-          text: "",
-          value: "",
-        },
-        {
           text: "Name ",
           value: "name",
         },
@@ -323,22 +267,30 @@ export default {
         {
           text: "Status",
           value: "complete",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
         {
           text: "Type",
           value: "automatic",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
         {
           text: "Duration",
           value: "duration",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
         {
           text: "Size",
           value: "size",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: "",
-          value: "",
+          text: " ",
+          value: "action",
         },
       ],
     };
