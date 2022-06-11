@@ -233,10 +233,21 @@
             <v-list two-line>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title v-html="`MariadDb`"></v-list-item-title>
+                  <v-list-item-title v-html="`MariaDb`"></v-list-item-title>
                   <v-list-item-subtitle>
                     {{ data.mariadb }}
                     <MysqlConfig :serverId="serverId" />
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+
+            <v-list two-line>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title v-html="`Postfix`"></v-list-item-title>
+                  <v-list-item-subtitle>
+                    {{ data.postfix }}
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -327,7 +338,7 @@ export default {
 
           self.hostname = self.data.hostname;
 
-          document.title = "Summary" + " | " + self.data.name;
+          document.title = "Summary | " + self.data.name;
         })
         .catch(function (error) {
           console.log(error);
