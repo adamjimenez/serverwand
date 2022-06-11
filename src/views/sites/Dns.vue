@@ -16,36 +16,28 @@
         </v-card>
       </v-dialog>
 
-      <v-data-table :headers="headers" :items="data.records" class="results">
-        <template v-slot:body="prop">
-          <tbody>
-            <tr
-              v-for="item in prop.items"
-              :key="item.id"
-              @click="editItem(item)"
-            >
-              <td class="text-start">
-                {{ item.type }}
-              </td>
-              <td class="text-start">
-                {{ item.name }}
-              </td>
-              <td class="text-start">
-                {{ item.target }}
-              </td>
-              <td class="text-start">
-                <div v-if="item.type === 'MX'">
-                  {{ item.priority }}
-                </div>
-              </td>
-              <td class="text-start">
-                <v-icon small @click="deleteItem(item)" @click.stop>
-                  delete
-                </v-icon>
-              </td>
-            </tr>
-          </tbody>
+      <v-data-table 
+        :headers="headers" 
+        :items="data.records" 
+        class="results" 
+        mobile-breakpoint="0"
+        @click:row="editItem"
+      >
+
+        <template v-slot:item.type="{ item }">
+          <span>{{ item.type }}</span>
         </template>
+
+        <template v-slot:item.priority="{ item }">
+          <span v-if="item.type === 'MX'">{{ item.priority }}</span>
+        </template>
+
+        <template v-slot:item.actions="{ item }">
+          <v-icon small @click="deleteItem(item)" @click.stop>
+            delete
+          </v-icon>
+        </template>
+
       </v-data-table>
     </v-card>
 
@@ -146,6 +138,8 @@ export default {
         {
           text: "Priority ",
           value: "priority",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
         {
           text: "",
