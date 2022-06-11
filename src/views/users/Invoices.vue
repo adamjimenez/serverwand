@@ -3,33 +3,29 @@
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
-      <v-data-table :headers="headers" :items="invoices" class="results">
-        <template v-slot:body="prop">
-          <tbody>
-            <tr v-for="item in prop.items" :key="item.id">
-              <td class="text-start" @click="view(item.id)">
-                {{ item.id }}
-              </td>
-              <td class="text-start">
-                {{ item.created }}
-              </td>
-              <td class="text-start">£{{ item.total }}</td>
-              <td class="text-start">
-                {{ item.status }}
-              </td>
-              <td class="text-start">
-                <v-btn
-                  icon
-                  :disabled="fetching"
-                  :loading="fetching"
-                  @click="deleteItem(item.id)"
-                >
-                  <v-icon small>delete</v-icon>
-                </v-btn>
-              </td>
-            </tr>
-          </tbody>
+      <v-data-table 
+        :headers="headers" 
+        :items="invoices" 
+        class="results"     
+        mobile-breakpoint="0"   
+        @click:row="view"
+      >
+
+        <template v-slot:item.created="{ item }">
+          {{ item.created | formatDate }}
         </template>
+
+        <template v-slot:item.actions="{ item }">
+          <v-btn
+            icon
+            :disabled="fetching"
+            :loading="fetching"
+            @click="deleteItem(item.id)"
+          >
+            <v-icon small>delete</v-icon>
+          </v-btn>
+        </template>
+
       </v-data-table>
     </v-card>
 
@@ -185,7 +181,13 @@ export default {
         },
         {
           text: "Status ",
-          value: "status",
+          value: "payment_status",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
+        },
+        {
+          text: " ",
+          value: "actions",
         },
       ],
     };
@@ -287,8 +289,8 @@ export default {
     removeRow(index) {
       this.data.items.splice(index, 1);
     },
-    view(id) {
-      this.invoice_id = id;
+    view(item) {
+      this.invoice_id = item.id;
 
       var self = this;
       self.fetching = true;

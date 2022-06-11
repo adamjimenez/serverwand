@@ -7,38 +7,32 @@
     <Loading :value="loading" />
 
     <v-card :loading="fetching">
+
+      <v-container fluid>
+        <v-row>
+          <v-card>
+            <v-card-text>
+              Mail queue: {{ data.queue }}
+            </v-card-text>
+          </v-card>
+        </v-row>
+      </v-container>
+
       <v-data-table
         v-if="items.length"
+        v-model="selected"
         :headers="headers"
         :items="items"
+        show-select
         class="results"
+        mobile-breakpoint="0"
+        @click:row="view"
       >
-        <template v-slot:body="prop">
-          <tbody>
-            <tr v-for="item in prop.items" :key="item.id">
-              <td class="text-start">
-                <v-list-item>
-                  <v-checkbox v-model="item.selected"></v-checkbox>
-                </v-list-item>
-              </td>
-              <td class="text-start" @click="view(item.id)">
-                {{ item.id }}
-              </td>
-              <td class="text-start">
-                {{ item.size | prettyBytes }}
-              </td>
-              <td class="text-start">
-                {{ item.sender }}
-              </td>
-              <td class="text-start">
-                {{ item.recipient }}
-              </td>
-              <td class="text-start">
-                {{ item.date }}
-              </td>
-            </tr>
-          </tbody>
+
+        <template v-slot:item.size="{ item }">
+          <span>{{ item.size | prettyBytes }}</span>
         </template>
+
       </v-data-table>
 
       <v-card-text v-else> Queue empty </v-card-text>
@@ -47,7 +41,7 @@
     <v-card>
       <div>
         <v-card-title primary-title>
-          <v-btn @click="deleteMail()" :disabled="!selected"> Delete </v-btn>
+          <v-btn @click="deleteMail()" :disabled="selected.length === 0" :loading="fetching"> Delete </v-btn>
         </v-card-title>
       </div>
     </v-card>
@@ -90,7 +84,7 @@ export default {
       fetching: false,
       emailDrawer: false,
       serverId: 0,
-      selected: false,
+      selected: [],
       headers: [
         {
           text: "",
@@ -103,36 +97,29 @@ export default {
         {
           text: "Size ",
           value: "size",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
         {
           text: "From ",
           value: "from",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
         {
           text: "To ",
           value: "to",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
         {
           text: "Date ",
           value: "date",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
       ],
     };
-  },
-  watch: {
-    items: {
-      handler: function (newItems) {
-        for (var i = 0; i < newItems.length; i++) {
-          if (newItems[i].selected) {
-            this.selected = true;
-            return;
-          }
-        }
-
-        this.selected = false;
-      },
-      deep: true,
-    },
   },
   created() {
     this.serverId = this.$route.params.id;
@@ -159,7 +146,7 @@ export default {
               sender: element.sender,
               recipient: element.recipient,
               date: element.date,
-              selected: false,
+              //selected: false,
             });
           });
 
@@ -173,15 +160,17 @@ export default {
         });
     },
     deleteMail() {
-      var self = this;
-      self.fetching = true;
 
+      var self = this;
+
+      // get selected ids
       var ids = [];
-      this.items.forEach((element) => {
-        if (element.selected) {
-          ids.push(element.id);
-        }
+      this.selected.forEach((element) => {
+        ids.push(element.id);
       });
+      
+      // process deletions
+      self.fetching = true;
 
       api
         .post("servers/" + this.serverId + "/messages", { ids: ids })
@@ -195,30 +184,14 @@ export default {
           self.fetching = false;
         });
     },
-    view(id) {
-      this.message_id = id;
+    view(item) {
+      this.message_id = item.id;
       this.message_url =
         "https://serverwand.com/api/servers/" +
         this.serverId +
         "/messages/" +
         this.message_id;
       this.emailDrawer = true;
-
-      /*
-        var self = this
-        self.fetching = true
-        api.get('servers/' + this.serverId + '/messages/' + id)
-        .then(function (response) {
-            self.message = response.data.message
-            self.emailDrawer = true
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.fetching = false
-        })
-        */
     },
   },
 };

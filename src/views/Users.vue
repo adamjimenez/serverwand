@@ -12,19 +12,15 @@
           <div class="headline">Users</div>
         </v-card-title>
 
-        <v-data-table :headers="headers" :items="filtered" class="results">
-          <template v-slot:body="prop">
-            <tr v-for="item in prop.items" :key="item.id">
-              <td class="text-start">
-                <v-list-item>
-                  <v-icon class="mr-3">fas fa-user</v-icon>
+        <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
+          <template v-slot:item.name="{ item }">
+            <v-list-item>
+              <v-icon class="mr-3">fas fa-user</v-icon>
 
-                  <router-link :to="'/users/' + item.id + '/summary'">
-                    <v-list-item-title v-html="item.name"></v-list-item-title>
-                  </router-link>
-                </v-list-item>
-              </td>
-            </tr>
+              <router-link :to="'/users/' + item.id + '/summary'">
+                <v-list-item-title v-html="item.name"></v-list-item-title>
+              </router-link>
+            </v-list-item>
           </template>
         </v-data-table>
       </v-card>

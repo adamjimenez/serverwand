@@ -12,31 +12,26 @@
           <div class="headline">Domains</div>
         </v-card-title>
 
-        <v-data-table :headers="headers" :items="filtered" class="results">
-          <template v-slot:body="prop">
-            <tbody>
-              <tr v-for="item in prop.items" :key="item.id">
-                <td class="text-start">
-                  <v-list-item>
-                    <v-icon class="mr-3">fas fa-globe</v-icon>
+        <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
+          <template v-slot:item.domain="{ item }">
+            <v-list-item>
+              <v-icon class="mr-3">fas fa-globe</v-icon>
 
-                    <router-link :to="'/domains/' + item.id + '/summary'">
-                      <v-list-item-title
-                        v-html="item.domain"
-                      ></v-list-item-title>
-                      <v-list-item-subtitle></v-list-item-subtitle>
-                    </router-link>
-                  </v-list-item>
-                </td>
-                <td class="text-start">
-                  {{ item.registrar ? registrars[item.registrar].label : "" }}
-                </td>
-                <td class="text-start">
-                  {{ item.auto_renew ? "Yes" : "" }}
-                </td>
-              </tr>
-            </tbody>
+              <router-link :to="'/domains/' + item.id + '/summary'">
+                <v-list-item-title
+                  v-html="item.domain"
+                ></v-list-item-title>
+                <v-list-item-subtitle></v-list-item-subtitle>
+              </router-link>
+            </v-list-item>
           </template>
+          <template v-slot:item.registrar="{ item }">
+            {{ item.registrar ? registrars[item.registrar].label : "" }}
+          </template>
+          <template v-slot:item.auto_renew="{ item }">
+            {{ item.auto_renew ? "Yes" : "" }}
+          </template>
+
         </v-data-table>
       </v-card>
     </v-flex>
@@ -70,10 +65,14 @@ export default {
         {
           text: "Registrar ",
           value: "registrar",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
         {
           text: "Auto renew ",
           value: "auto_renew",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         } /*, {
           text: 'Expiration ',
           value: 'expiration'
