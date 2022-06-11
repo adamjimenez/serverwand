@@ -112,7 +112,7 @@ export default {
         .then(function (response) {
           console.log(response);
           self.notes = response.data.notes;
-          //document.title = 'Notes' + ' | ' + self.data.domain
+          document.title = 'Notes';
         })
         .catch(function (error) {
           console.log(error);

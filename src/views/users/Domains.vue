@@ -120,7 +120,7 @@ export default {
         .then(function (response) {
           console.log(response);
           self.user_domains = response.data.domains;
-          //document.title = 'Domains' + ' | ' + self.data.domain
+          document.title = 'Domains';
         })
         .catch(function (error) {
           console.log(error);

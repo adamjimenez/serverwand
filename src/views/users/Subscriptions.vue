@@ -135,7 +135,7 @@ export default {
         .then(function (response) {
           console.log(response);
           self.subscriptions = response.data.subscriptions;
-          //document.title = 'Subscriptions' + ' | ' + self.data.domain
+          document.title = 'Subscriptions'
         })
         .catch(function (error) {
           console.log(error);

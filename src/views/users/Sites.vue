@@ -122,7 +122,7 @@ export default {
         .then(function (response) {
           console.log(response);
           self.user_sites = response.data.sites;
-          //document.title = 'Sites' + ' | ' + self.data.domain
+          document.title = 'Sites'
         })
         .catch(function (error) {
           console.log(error);

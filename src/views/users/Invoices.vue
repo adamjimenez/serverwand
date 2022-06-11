@@ -211,7 +211,7 @@ export default {
         .then(function (response) {
           console.log(response);
           self.invoices = response.data.invoices;
-          //document.title = 'Invoices' + ' | ' + self.data.domain
+          document.title = 'Invoices'
         })
         .catch(function (error) {
           console.log(error);
