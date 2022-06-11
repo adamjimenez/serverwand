@@ -195,13 +195,12 @@ export default {
 
       var files = [];
       this.selected.forEach((element) => {
-        files.push(element.name);
+        files.push(element.id);
       });
 
       api
         .post("servers/" + this.serverId + "/files", {
           cmd: 'chmod',
-          path: this.path,
           mode: this.data.mode,
           recursive: this.data.recursive,
           files: files,

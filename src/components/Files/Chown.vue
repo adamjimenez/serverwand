@@ -77,13 +77,12 @@ export default {
 
       var files = [];
       this.selected.forEach((element) => {
-        files.push(element.name);
+        files.push(element.id);
       });
 
       api
         .post("servers/" + this.serverId + "/files", {
           cmd: 'chown',
-          path: this.path,
           owner: this.data.owner,
           group: this.data.group,
           recursive: this.data.recursive,

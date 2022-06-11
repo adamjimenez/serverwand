@@ -36,19 +36,19 @@ export default {
   methods: {
     deleteItem() {
       this.$confirm("Delete selected files?").then((res) => {
+
         if (res) {
           var self = this;
           this.fetching = true;
 
           var files = [];
           this.selected.forEach((element) => {
-            files.push(element.name);
+            files.push(element.id);
           });
 
           api
             .post("servers/" + this.serverId + "/files", {
               cmd: 'delete',
-              path: this.path,
               files: files,
             })
             .then(function (response) {

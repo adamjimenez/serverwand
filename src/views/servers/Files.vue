@@ -1,22 +1,7 @@
-<!--
-extract zip
--->
-
 <template>
   <div>
     <v-alert v-if="error" type="error">
       {{ error }}
-    </v-alert>
-
-    <v-alert
-      v-if="dragover"
-      type="info"
-      style="position: fixed; height: 80px; z-index: 10; bottom: 0; left: 50%"
-    >
-      Drop files to upload them to:
-      <p>
-        <strong>{{ path }}</strong>
-      </p>
     </v-alert>
 
     <Loading :value="loading" />
@@ -29,10 +14,11 @@ extract zip
       action="files"
       @complete="fetchData()"
       @error="handleError"
+      @loading="handleLoading"
     />
 
     <v-card :loading="fetching">
-      <v-container>
+      <v-container fluid>
         <v-row>
           <v-col class="flex-grow-0">
             <NewFile
@@ -53,10 +39,10 @@ extract zip
           <Upload
             :serverId="serverId"
             :path="path"
-            :results="$refs.results"
+            :dropZone="$refs.results"
             @complete="fetchData()"
             @error="handleError"
-            @progress="handleProgress"
+            folder="folder"
           />
           <v-col class="flex-grow-0" v-if="selected.length === 1">
             <Rename
@@ -121,17 +107,11 @@ extract zip
         </v-row>
       </v-container>
 
-      <v-container>
+      <v-container fluid>
         <v-row>
           <v-col class="flex-grow-0">
-            <v-btn icon @click="upLevel()" :disabled="path === '/'">
+            <v-btn icon @click="upLevel()" :disabled="path === '/'" title="Up one level">
               <v-icon small>arrow_upward</v-icon>
-            </v-btn>
-          </v-col>
-
-          <v-col class="flex-grow-0">
-            <v-btn icon @click="fetchData()">
-              <v-icon small>refresh</v-icon>
             </v-btn>
           </v-col>
 
@@ -143,46 +123,44 @@ extract zip
               @keydown.enter="fetchData"
             ></v-text-field>
           </v-col>
+
+          <v-col cols="2">
+            <v-text-field
+              placeholder="Search"
+              prepend-inner-icon="search"
+              v-model="search"
+              class="ma-0 pa-0"
+              @change="fetchData"
+              @keydown.enter="fetchData"
+            ></v-text-field>
+          </v-col>
         </v-row>
       </v-container>
 
       <v-data-table
+        v-model="selected"
         :headers="headers"
         :items="items"
         class="results"
         ref="results"
+        show-select
+        mobile-breakpoint="0"
+        @click:row="open"
       >
-        <template v-slot:body="prop">
-          <tbody>
-            <tr v-for="item in prop.items" :key="item.name">
-              <td class="text-start">
-                <v-list-item>
-                  <v-checkbox v-model="item.selected"></v-checkbox>
-                </v-list-item>
-              </td>
-              <td
-                class="text-start"
-                @click="open(item)"
-                style="cursor: pointer"
-              >
-                {{ item.name }}
-              </td>
-              <td class="text-start">
-                {{ item.size | prettyBytes }}
-              </td>
-              <td class="text-start">
-                {{ item.modified | formatDate }}
-              </td>
-              <td class="text-start">
-                {{ item.perms }}
-              </td>
-              <td class="text-start">
-                {{ item.owner }}
-                {{ item.group }}
-              </td>
-            </tr>
-          </tbody>
+
+        <template v-slot:item.size="{ item }">
+          {{ item.size | prettyBytes }}
         </template>
+
+        <template v-slot:item.modified="{ item }">
+          {{ item.modified | formatDate }}
+        </template>
+
+        <template v-slot:item.owner="{ item }">
+          {{ item.owner }}
+          {{ item.group }}
+        </template>
+
       </v-data-table>
     </v-card>
   </div>
@@ -221,13 +199,14 @@ export default {
   data() {
     return {
       path: "/",
+      search: "",
       error: "",
       items: [],
       server: {},
       data: {},
       loading: false,
       fetching: false,
-      dragover: false,
+      userHashChange: true,
       serverId: 0,
       selected: [],
 
@@ -243,103 +222,145 @@ export default {
         {
           text: "Size ",
           value: "size",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
         {
           text: "Last modified ",
           value: "modified",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
         {
           text: "Permissions ",
           value: "perms",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
         {
           text: "Owner ",
           value: "owner",
+          class: 'd-none d-sm-table-cell',
+          cellClass: 'd-none d-sm-table-cell',
         },
       ],
     };
   },
   watch: {
-    items: {
-      handler: function (newItems) {
-        this.selected = [];
-
-        for (var i = 0; i < newItems.length; i++) {
-          if (newItems[i].selected) {
-            this.selected.push(newItems[i]);
-          }
-        }
-      },
-      deep: true,
-    },
     path: {
       handler: function (newValue) {
         window.ssh_path = newValue;
+
+        // change location hash without triggering a reload
+        this.userHashChange = false;
+        location.hash = newValue;
       },
     },
   },
   created() {
     this.serverId = this.$route.params.id;
-    this.fetchData();
-  },
-  mounted() {
+
     var self = this;
 
-    var counter = 0;
-    this.$refs.results.$el.addEventListener("dragenter", (e) => {
-      [2];
-      e.preventDefault();
-      counter++;
-      self.dragover = true;
-    });
-    this.$refs.results.$el.addEventListener("dragleave", (e) => {
-      [2];
-      e.preventDefault();
-      counter--;
-      if (counter === 0) {
-        self.dragover = false;
+    // change folder when url hash is manually edited
+    function locationHashChanged () {
+      if (self.userHashChange) {
+        self.path = location.hash.substr(1);
+        self.fetchData();
+      } else {
+        self.userHashChange = true
       }
-    });
+    };
+
+    window.onhashchange = locationHashChanged;
+
+    // load initial location hash
+    if(location.hash) {
+      this.path = location.hash.substr(1);
+    }
+    
+    this.fetchData();
   },
   methods: {
+    basename(path) {
+      return path.split(/[\\/]/).pop();
+    },
     fetchData() {
       var self = this;
       this.error = "";
       this.fetching = true;
 
-      api
-        .post("servers/" + this.serverId + "/files", { path: this.path })
-        .then(function (response) {
-          console.log(response);
+      if (this.search) {
+        this.items = [];
 
-          self.server = response.data.item;
+        api.event(
+          'servers/' + this.serverId + '/files?path=' + encodeURIComponent(this.path) + '&search=' + encodeURIComponent(this.search),
+          result => {
+            let files = result.msg.split("\n");
 
-          self.items = [];
-          response.data.files.forEach((element) => {
-            self.items.push({
-              id: element.id,
-              name: element.name,
-              size: element.size,
-              type: element.type,
-              modified: element.modified,
-              perms: element.perms,
-              permsn: element.permsn,
-              owner: element.owner,
-              group: element.group,
-              selected: false,
+            files.forEach(function (file) {
+              // check if item already exists
+              let found = false;
+              self.items.forEach(function (item) {
+                if (item.id === file) {
+                  found = true;
+                }
+              });
+
+              if (!found) {
+                self.items.push({
+                  id: file,
+                  name: self.basename(file),
+                  type: 'file',
+                });
+              }
             });
+          },
+          error => self.error = error,
+          () => self.fetching = false
+        );
+
+      } else {
+
+        api
+          .post("servers/" + this.serverId + "/files", { 
+            path: this.path
+          })
+          .then(function (response) {
+            console.log(response);
+
+            self.server = response.data.item;
+
+            self.items = [];
+            response.data.files.forEach((element) => {
+              self.items.push({
+                id: element.id,
+                name: element.name,
+                size: element.size,
+                type: element.type,
+                modified: element.modified,
+                perms: element.perms,
+                permsn: element.permsn,
+                owner: element.owner,
+                group: element.group,
+                selected: false,
+              });
+            });
+
+            document.title = "Files | " + self.server.name;
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .finally(function () {
+            self.fetching = false;
+            self.selected = [];
           });
 
-          document.title = "Files | " + self.server.name;
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-        });
+      }
     },
     open(item) {
+      this.error = '';
       if (item.type === "folder" || item.type === "link") {
         this.path = item.id;
         this.fetchData();
@@ -350,6 +371,7 @@ export default {
     },
     upLevel() {
       console.log(this.path);
+      this.search = '';
       var index = this.path.lastIndexOf("/");
       if (index !== -1) {
         this.path = this.path.substr(0, index);
@@ -366,11 +388,6 @@ export default {
     },
     handleLoading(loading) {
       this.fetching = loading;
-    },
-    handleProgress(progress) {
-      console.log(progress);
-      this.dragover = false;
-      this.fetching = true;
     },
   },
 };

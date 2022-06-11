@@ -88,16 +88,17 @@ export default {
     open(item) {
       var self = this;
 
+      this.$emit("loading", true);
       api
         .post("servers/" + this.serverId + "/" + this.action, {
           cmd: 'get',
-          path: this.path,
-          file: item.name,
+          id: item.id,
         })
         .then(function (response) {
           console.log(response);
 
-          if (response.data.content !== false) {
+          if (response.data.success !== false) {
+            self.data.id = item.id;
             self.data.file = item.name;
             self.data.content = response.data.content;
             self.dialog = true;
@@ -113,17 +114,18 @@ export default {
         })
         .finally(function () {
           self.fetching = false;
+          self.$emit("loading", false);
         });
     },
     saveFile() {
       var self = this;
       this.fetching = true;
 
+      this.$emit("loading", true);
       api
         .post("servers/" + this.serverId + "/files", {
           cmd: 'put',
-          path: this.path,
-          file: this.data.file,
+          id: this.data.id,
           content: this.data.content,
         })
         .then(function (response) {
@@ -132,13 +134,16 @@ export default {
           if (response.data.success) {
             self.dialog = false;
             self.$emit("complete");
+          } else {
+            self.$emit("error", response.data.error);
           }
         })
         .catch(function (error) {
           console.log(error);
         })
         .finally(function () {
-          self.fetching = false;
+          self.fetching = false;          
+          self.$emit("loading", false);
         });
     },
   },
