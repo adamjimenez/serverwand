@@ -6,10 +6,44 @@
 
     <Loading :value="loading" />
 
-    <v-card class="pa-3" :loading="fetching">
-      <v-layout row>
-        <v-flex xs12>
-          <v-card tile flat>
+    <v-card :loading="fetching">
+
+      <v-container class="ma-0">
+        <v-layout row wrap>
+          <v-flex xs12 sm6 md3>
+            <v-card>
+              <div class="feature">
+                <v-card-text>
+                  <div>
+                    <div class="icon">
+                      <i class="fas fa-network-wired"></i>
+                    </div>
+
+                    <div class="label">Max Connection Usage</div>
+                  </div>
+
+                  <div class="pt-3" style="clear: both">
+                    <v-list-item-title>
+                      <v-progress-linear
+                        :value="(data.max_used_connections/data.max_connections) * 100"
+                        height="20"
+                      ></v-progress-linear>
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      {{ (data.max_used_connections)}} used of
+                      {{ (data.max_connections)}}
+                    </v-list-item-subtitle>
+                  </div>
+                </v-card-text>
+              </div>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+
+      <v-container fluid>
+        <v-row>
+          <v-card>
             <v-card-text>
               <form
                 :action="'http://' + data.ip + '/phpmyadmin/'"
@@ -28,14 +62,12 @@
               </form>
             </v-card-text>
           </v-card>
-        </v-flex>
-      </v-layout>
+        </v-row>
 
-      <v-container>
         <v-row>
           <v-switch
             v-model="pma_restrictions"
-            label="PHPMyAdmin restrictions"
+            label="IP restrictions"
             @change="toggle()"
             class="mx-3"
           ></v-switch>
@@ -53,6 +85,7 @@
           </v-tooltip>
         </v-row>
       </v-container>
+
       <v-list>
         <v-list-item-group>
           <template v-for="(item, i) in items">
