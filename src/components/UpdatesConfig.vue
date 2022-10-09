@@ -50,11 +50,11 @@ export default {
         .get("servers/" + this.serverId + "/updates", {
           clearCacheEntry: true,
         })
-        .then(function (response) {
-          self.automatic_updates = response.data.automatic_updates;
-          self.fetching = false;
-          self.drawer = true;
-        });
+        .then(response => {
+            self.automatic_updates=response.data.automatic_updates;
+            self.fetching=false;
+            self.drawer=true;
+          });
     },
 
     toggle() {
@@ -65,10 +65,10 @@ export default {
         .post("servers/" + this.serverId + "/updates", {
           automatic_updates: self.automatic_updates,
         })
-        .then(function () {
-          self.fetching = false;
-          self.drawer = false;
-        });
+        .then(() => {
+            self.fetching=false;
+            self.drawer=false;
+          });
     },
   },
 };

@@ -61,25 +61,21 @@ export default {
 
       api
         .get("servers/" + this.serverId + "/services")
-        .then(function (response) {
-          console.log(response);
+        .then(response => {
+            console.log(response);
 
-          if (response.data.error) {
-            self.error = response.data.error;
+            if(response.data.error) {
+              self.error=response.data.error;
 
-            return false;
-          }
+              return false;
+            }
 
-          self.items = response.data.services;
-          self.data = response.data.item;
-          document.title = "Services | " + self.data.name;
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-        })
+            self.items=response.data.services;
+            self.data=response.data.item;
+            document.title="Services | "+self.data.name;
+          })
+        .catch(error => console.log(error))
+        .finally(() => self.fetching = false)
     },
     toggle(item) {
       var self = this;
@@ -92,21 +88,16 @@ export default {
           name: item.name,
           action: action,
         })
-        .then(function (response) {
-          console.log(response);
+        .then(response => {
+            console.log(response);
 
-          if (!response.data.success) {
-            self.error = response.data.error;
-          } else {
-            self.fetchData();
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.loading = false;
-        })
+            if(!response.data.success)
+              self.error=response.data.error;
+            else
+              self.fetchData();
+          })
+        .catch(error => console.log(error))
+        .finally(() => self.loading = false)
     },
   },
 };

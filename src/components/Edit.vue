@@ -90,9 +90,13 @@ export default {
       errors: [],
     };
   },
-  created() {
-    this.data.val = this.val;
+  
+  watch: {
+      val: function (newVal) {
+          this.data.val = newVal;
+      },
   },
+
   methods: {
     edit() {
       this.data.val = this.val;
@@ -108,23 +112,19 @@ export default {
       var self = this;
       api
         .post(this.path, data)
-        .then(function (response) {
-          console.log(response);
+        .then(response => {
+            console.log(response);
 
-          if (response.data.success) {
-            self.val = self.data.val;
-            self.dialog = false;
-            self.$emit("save");
-          } else {
-            self.errors.push(response.data.error);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-        });
+            if(response.data.success) {
+              self.val=self.data.val;
+              self.dialog=false;
+              self.$emit("save");
+            } else {
+              self.errors.push(response.data.error);
+            }
+          })
+        .catch(error => console.log(error))
+        .finally(() => self.fetching = false);
     },
   },
 };

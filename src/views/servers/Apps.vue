@@ -152,6 +152,12 @@ export default {
         .get("servers/" + this.serverId + "/apps")
         .then(function (response) {
           console.log(response);
+
+          if (response.data.error) {
+            self.error = response.data.error;
+            return false;
+          }
+          
           self.data = response.data.item;
           self.items = response.data.apps;
 

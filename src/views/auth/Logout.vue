@@ -32,22 +32,22 @@ export default {
 
       api
         .post("auth/logout")
-        .then(function (response) {
-          console.log(response);
-          if (response.data.success) {
-            router.push("/auth/login");
-            return false;
-          } else {
-            self.error = response.data.error;
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.dialog = false;
-          self.loading = false;
-        });
+        .then(response => {
+            console.log(response);
+            if(response.data.success) {
+              router.push("/auth/login");
+              return false;
+            } else {
+              self.error=response.data.error;
+            }
+          })
+        .catch(error => {
+            console.log(error);
+          })
+        .finally(() => {
+            self.dialog=false;
+            self.loading=false;
+          });
     },
   },
 };

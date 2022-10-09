@@ -28,7 +28,8 @@ export default {
 
   watch: {
     path: function (newVal) {
-      this.data.path = newVal
+      if (this)
+        this.data.path = newVal
     },
   },
 
@@ -63,7 +64,7 @@ export default {
           new_folder: this.data.value,
           path: this.data.path
         })
-        .then(function (response) {
+        .then(response => {
           console.log(response)
 
           if (response.data.success) {
@@ -77,10 +78,8 @@ export default {
             self.$emit("error", error);
           }
         })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
+        .catch(error => console.log(error))
+        .finally(() => {
           self.fetching = false
           self.loading = false
         })

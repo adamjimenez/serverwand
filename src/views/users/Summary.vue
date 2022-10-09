@@ -130,18 +130,14 @@ export default {
         .get("users/" + this.userId + "/summary", {
           clearCacheEntry: clearCacheEntry,
         })
-        .then(function (response) {
-          console.log(response);
+        .then(response => {
+            console.log(response);
 
-          self.data = response.data.item;
-          document.title = "Summary" + " | " + self.data.name;
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-        });
+            self.data=response.data.item;
+            document.title="Summary"+" | "+self.data.name;
+          })
+        .catch(error => console.log(error))
+        .finally(() => self.fetching=false);
     },
   },
 };

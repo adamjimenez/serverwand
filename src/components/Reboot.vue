@@ -27,19 +27,15 @@ export default {
 
           api
             .get("servers/" + this.serverId + "/reboot")
-            .then(function (response) {
+            .then(response => {
               console.log(response);
 
               if (response.data.success) {
                 this.$router.push("/servers");
               }
             })
-            .catch(function (error) {
-              console.log(error);
-            })
-            .finally(function () {
-              self.fetching = false;
-            });
+            .catch(error => console.log(error))
+            .finally(() => self.fetching = false);
         }
       });
     },

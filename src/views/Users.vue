@@ -68,7 +68,7 @@ export default {
 
       api
         .get("users/")
-        .then(function (response) {
+        .then(response => {
           console.log(response);
 
           if (response.data.error) {
@@ -82,10 +82,8 @@ export default {
             self.filtered.push(element);
           });
         })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
+        .catch(error => console.log(error))
+        .finally(() => {
           self.fetching = false;
 
           if (localStorage.server) self.server = localStorage.server;

@@ -72,16 +72,16 @@ export default {
 
       api
         .get("users/" + this.userId)
-        .then(function (response) {
+        .then(response => {
           console.log(response);
 
           self.data = response.data.item;
           document.title = self.data.domain;
         })
-        .catch(function (error) {
+        .catch(error => {
           console.log(error);
         })
-        .finally(function () {
+        .finally(() => {
           self.fetching = false;
         });
     },

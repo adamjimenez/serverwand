@@ -11,29 +11,13 @@
     </v-alert>
 
     <v-card-text>
-      <v-text-field
-        v-model="email"
-        :rules="usernameRules"
-        label="Email"
-        required
-      ></v-text-field>
+      <v-text-field v-model="email" :rules="usernameRules" label="Email" required></v-text-field>
 
-      <v-text-field
-        type="password"
-        v-model="password"
-        :rules="passwordRules"
-        label="Password"
-        required
-      ></v-text-field>
+      <v-text-field type="password" v-model="password" :rules="passwordRules" label="Password" required></v-text-field>
     </v-card-text>
 
     <div style="margin: 0 8px">
-      <v-btn
-        :disabled="dialog"
-        :loading="dialog"
-        color="success"
-        @click="validate"
-      >
+      <v-btn :disabled="dialog" :loading="dialog" color="success" @click="validate">
         Register
       </v-btn>
     </div>
@@ -46,11 +30,7 @@
       <v-card color="primary" dark>
         <v-card-text>
           Please stand by
-          <v-progress-linear
-            indeterminate
-            color="white"
-            class="mb-0"
-          ></v-progress-linear>
+          <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -94,7 +74,7 @@ export default {
             email: this.email,
             password: this.password,
           })
-          .then(function (response) {
+          .then(response => {
             console.log(response);
             if (response.data.success) {
               self.$router.push("/auth/login");
@@ -102,10 +82,10 @@ export default {
               self.error = response.data.error;
             }
           })
-          .catch(function (error) {
+          .catch(error => {
             console.log(error);
           })
-          .finally(function () {
+          .finally(() => {
             self.dialog = false;
             self.loading = false;
           });

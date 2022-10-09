@@ -88,27 +88,23 @@ export default {
               cmd: 'snapshot',
               name: this.name
             })
-            .then(function (response) {
-              console.log(response);
+            .then(response => {
+                console.log(response);
 
-              self.dialog = false
+                self.dialog=false;
 
-              if (response.data.success) {
-                self.$emit("complete", response.data.result);
-              } else {
-                var error = response.data.error
-                  ? response.data.error
-                  : response.data;
+                if(response.data.success) {
+                  self.$emit("complete", response.data.result);
+                } else {
+                  var error=response.data.error
+                    ? response.data.error
+                    :response.data;
 
-                self.$emit("error", error);
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-            })
-            .finally(function () {
-              self.fetching = false;
-            });
+                  self.$emit("error", error);
+                }
+              })
+            .catch((error) => console.log(error))
+            .finally(() => self.fetching = false);
 
         }
       });

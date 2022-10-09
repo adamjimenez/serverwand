@@ -128,7 +128,7 @@ export default {
 
       api
         .get("servers/" + this.serverId)
-        .then(function (response) {
+        .then(response => {
           console.log(response);
 
           if (response.data.error) {
@@ -139,12 +139,8 @@ export default {
             self.data = response.data.item;
           }
         })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-        });
+        .catch(error => console.log(error))
+        .finally(() => self.fetching = false);
     },
     fetchUsers() {
       var self = this;
@@ -154,27 +150,23 @@ export default {
 
       api
         .get("servers/" + this.serverId + "/systemusers")
-        .then(function (response) {
-          console.log(response);
+        .then(response => {
+            console.log(response);
 
-          if (response.data.error) {
-            self.error = response.data.error;
-            return false;
-          }
+            if(response.data.error) {
+              self.error=response.data.error;
+              return false;
+            }
 
-          response.data.item.users.forEach((element) => {
-            self.users.push({
-              text: element.name,
-              value: element.name,
+            response.data.item.users.forEach((element) => {
+              self.users.push({
+                text: element.name,
+                value: element.name,
+              });
             });
-          });
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-        });
+          })
+        .catch(error => console.log(error))
+        .finally(() => self.fetching=false);
     },
     saveKey(key) {
       var self = this;
@@ -185,18 +177,18 @@ export default {
           "servers/" + self.serverId + "/systemusers/" + self.ssh_username,
           { key: key }
         )
-        .then(function (response) {
-          console.log(response);
+        .then(response => {
+            console.log(response);
 
-          if (!response.data.success) {
-            self.fetching = false;
-            self.error = response.data.error;
-          } else {
-            self.saveSSHUser();
-          }
-        })
-        .catch(function (error) {
-          self.fetching = false;
+            if(!response.data.success) {
+              self.fetching=false;
+              self.error=response.data.error;
+            } else {
+              self.saveSSHUser();
+            }
+          })
+        .catch(error => {
+          self.fetching=false;
           console.log(error);
         });
     },
@@ -207,22 +199,20 @@ export default {
         .post("servers/" + this.serverId + "/savesshuser", {
           ssh_username: self.ssh_username,
         })
-        .then(function (response) {
-          console.log(response);
+        .then(response => {
+            console.log(response);
 
-          if (!response.data.success) {
-            self.error = response.data.error;
-          } else {
-            self.data.ssh_username = self.ssh_username;
-            self.terminal();
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-          self.chooseUser = false;
+            if(!response.data.success) {
+              self.error=response.data.error;
+            } else {
+              self.data.ssh_username=self.ssh_username;
+              self.terminal();
+            }
+          })
+        .catch(error => console.log(error))
+        .finally(() => {
+          self.fetching=false;
+          self.chooseUser=false;
         });
     },
     saveKeyAndContinue() {
@@ -232,20 +222,18 @@ export default {
       // get ssh key
       api
         .post("https://shiftedit.net/api/prefs")
-        .then(function (response) {
-          console.log(response);
+        .then(response => {
+            console.log(response);
 
-          if (response.data.error) {
-            self.error = response.data.error;
-            self.chooseUser = false;
-          } else {
-            console.log(response.data.public_key);
-            self.saveKey(response.data.public_key);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+            if(response.data.error) {
+              self.error=response.data.error;
+              self.chooseUser=false;
+            } else {
+              console.log(response.data.public_key);
+              self.saveKey(response.data.public_key);
+            }
+          })
+        .catch(error => console.log(error));
     },
     terminal() {
       if (this.data.ssh_username) {

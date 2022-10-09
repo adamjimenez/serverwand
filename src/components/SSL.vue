@@ -96,19 +96,17 @@ export default {
 
       api
         .post("sites/" + this.siteId + "/ssl", this.data)
-        .catch(function (error) {
-          console.log(error);
-        })
-        .then(function (response) {
-          self.fetching = false;
+        .catch(error => console.log(error))
+        .then(response => {
+          self.fetching=false;
 
-          if (typeof response === "undefined") {
-            self.error = "An error occurred";
-          } else if (!response.data.success) {
-            self.error = response.data.error;
+          if(typeof response==="undefined") {
+            self.error="An error occurred";
+          } else if(!response.data.success) {
+            self.error=response.data.error;
           } else {
             self.$emit("closed");
-            self.showDialog = false;
+            self.showDialog=false;
           }
         });
     },

@@ -33,12 +33,12 @@ export default {
   },
 
   watch: {
-    path: function (newVal) {
+    path: function(newVal) {
       this.data.path = newVal;
     },
-    selected: function (newVal) {
+    selected: function(newVal) {
       this.data.selected = newVal;
-    },
+    } 
   },
 
   data() {

@@ -74,17 +74,15 @@ export default {
 
       api
         .get("teams/" + this.id)
-        .then(function (response) {
+        .then(response => {
           console.log(response);
           self.data = response.data.item;
           document.title = self.data.name;
         })
-        .catch(function (error) {
+        .catch(error => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
-        });
+        .finally(() => self.fetching = false);
     },
   },
 };

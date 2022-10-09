@@ -62,20 +62,22 @@
               @error="handleError"
             />
           </v-col>
-          <v-col class="flex-grow-0" v-if="selected.length">
+          <v-col class="flex-grow-0">
             <Chmod
               :serverId="serverId"
               :path="path"
               :selected="selected"
+              :folderSelected="folderSelected"
               @complete="fetchData()"
               @error="handleError"
             />
           </v-col>
-          <v-col class="flex-grow-0" v-if="selected.length">
+          <v-col class="flex-grow-0">
             <Chown
               :serverId="serverId"
               :path="path"
               :selected="selected"
+              :folderSelected="folderSelected"
               @complete="fetchData()"
               @error="handleError"
             />
@@ -209,6 +211,7 @@ export default {
       userHashChange: true,
       serverId: 0,
       selected: [],
+      folderSelected: false,
 
       headers: [
         {
@@ -256,6 +259,15 @@ export default {
         location.hash = newValue;
       },
     },
+    selected: function (newVal) {
+      let folderSelected = false;
+      newVal.forEach(element => {
+        if (element.type === 'folder') {
+          folderSelected = true;
+        }
+      });
+      this.folderSelected = folderSelected;
+    },
   },
   created() {
     this.serverId = this.$route.params.id;
@@ -298,13 +310,12 @@ export default {
           result => {
             let files = result.msg.split("\n");
 
-            files.forEach(function (file) {
+            files.forEach(file => {
               // check if item already exists
               let found = false;
-              self.items.forEach(function (item) {
-                if (item.id === file) {
+              self.items.forEach(item => {
+                if (item.id === file)
                   found = true;
-                }
               });
 
               if (!found) {
@@ -326,13 +337,13 @@ export default {
           .post("servers/" + this.serverId + "/files", { 
             path: this.path
           })
-          .then(function (response) {
+          .then(response => {
             console.log(response);
 
             self.server = response.data.item;
 
             self.items = [];
-            response.data.files.forEach((element) => {
+            response.data.files.forEach(element => {
               self.items.push({
                 id: element.id,
                 name: element.name,
@@ -349,10 +360,10 @@ export default {
 
             document.title = "Files | " + self.server.name;
           })
-          .catch(function (error) {
+          .catch(error => {
             console.log(error);
           })
-          .finally(function () {
+          .finally(() => {
             self.fetching = false;
             self.selected = [];
           });

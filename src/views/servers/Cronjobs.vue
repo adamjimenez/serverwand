@@ -57,7 +57,7 @@
       </div>
     </v-card>
 
-    <v-navigation-drawer app v-model="cronjobDrawer" temporary right>
+    <v-navigation-drawer app v-model="drawer" temporary right>
       <v-card>
         <v-form ref="cronjobForm">
           <v-card-title> Cronjob </v-card-title>
@@ -178,7 +178,7 @@ export default {
       details: "",
       fetching: false,
       loading: false,
-      cronjobDrawer: false,
+      drawer: false,
       serverId: 0,
       logs: [
         {
@@ -253,11 +253,11 @@ export default {
     addItem() {
       this.cronjob = {};
       this.$refs.cronjobForm.resetValidation();
-      this.cronjobDrawer = true;
+      this.drawer = true;
     },
     editItem(cronjob) {
       this.cronjob = JSON.parse(JSON.stringify(cronjob));
-      this.cronjobDrawer = true;
+      this.drawer = true;
     },
     deleteItem(line) {
       this.$confirm("Delete cron job?").then((res) => {
@@ -300,7 +300,7 @@ export default {
               self.fetching = false;
               self.error = response.data.error;
             } else {
-              self.cronjobDrawer = false;
+              self.drawer = false;
               self.fetchData();
             }
           })

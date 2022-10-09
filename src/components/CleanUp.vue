@@ -95,27 +95,23 @@ export default {
 
       api
         .get("servers/" + this.serverId + "/clean", { clearCacheEntry: true })
-        .then(function (response) {
-          self.files = response.data.files;
-          self.cleanSize = response.data.size;
-          self.fetching = false;
+        .then(response => {
+          self.files=response.data.files;
+          self.cleanSize=response.data.size;
+          self.fetching=false;
         });
-    },
+  },
 
     doClean() {
       var self = this;
       this.fetching = true;
 
       var files = [];
-      this.selectedFiles.forEach(function (item) {
-        files.push(item.file);
-      });
+      this.selectedFiles.forEach(item => files.push(item.file));
 
       api
         .post("servers/" + this.serverId + "/clean", { files: files })
-        .then(function () {
-          self.clean();
-        });
+        .then(() => self.clean());
     },
   },
 };

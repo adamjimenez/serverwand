@@ -80,7 +80,7 @@
         </v-flex>
       </v-layout>
 
-      <v-card-title primary-title>
+      <v-card-title primary-title v-if="data.server.mailserver">
         <v-switch
           v-model="data.email"
           label="Email"
@@ -100,85 +100,90 @@
       </v-card>
 -->
 
-    <v-card class="mx-auto">
-      <v-list>
-        <v-list-item-group>
-          <template v-for="(item, i) in data.emails">
-            <v-list-item :key="`item-${i}`" :value="item" @click="editEmail(i)">
-              <template v-slot:default>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ item.user }}
-                    <span v-if="item.destination">
-                      <v-icon>fas fa-long-arrow-alt-right</v-icon>
-                      {{ item.destination }}
-                    </span>
-                  </v-list-item-title>
-                  <v-list-item-subtitle>{{
-                    item.disk_usage | prettyBytes
-                  }}</v-list-item-subtitle>
-                </v-list-item-content>
+    <div v-if="data.server.mailserver">
+      <v-card class="mx-auto">
+        <v-list>
+          <v-list-item-group>
+            <template v-for="(item, i) in data.emails">
+              <v-list-item :key="`item-${i}`" :value="item" @click="editEmail(i)">
+                <template v-slot:default>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{ item.user }}
+                      <span v-if="item.destination">
+                        <v-icon>fas fa-long-arrow-alt-right</v-icon>
+                        {{ item.destination }}
+                      </span>
+                    </v-list-item-title>
+                    <v-list-item-subtitle>{{
+                      item.disk_usage | prettyBytes
+                    }}</v-list-item-subtitle>
+                  </v-list-item-content>
 
-                <v-list-item-action>
-                  <v-btn
-                    icon
-                    :disabled="fetching"
-                    :loading="fetching"
-                    @click="deleteEmail(item.user)"
-                    @click.stop
-                  >
-                    <v-icon small>delete</v-icon>
-                  </v-btn>
-                </v-list-item-action>
-              </template>
-            </v-list-item>
-          </template>
-        </v-list-item-group>
-      </v-list>
-    </v-card>
+                  <v-list-item-action>
+                    <v-btn
+                      icon
+                      :disabled="fetching"
+                      :loading="fetching"
+                      @click="deleteEmail(item.user)"
+                      @click.stop
+                    >
+                      <v-icon small>delete</v-icon>
+                    </v-btn>
+                  </v-list-item-action>
+                </template>
+              </v-list-item>
+            </template>
+          </v-list-item-group>
+        </v-list>
+      </v-card>
 
-    <v-card>
-      <v-card-text>
-        <v-btn @click="addEmail()"> Add email </v-btn>
-      </v-card-text>
-    </v-card>
-
-    <v-navigation-drawer v-model="drawer" fixed temporary right>
       <v-card>
-        <v-card-title> Email account </v-card-title>
-
         <v-card-text>
-          <v-text-field
-            v-model="email.user"
-            label="Name"
-            required
-            :readonly="userReadonly"
-          ></v-text-field>
-
-          <v-text-field
-            type="password"
-            v-model="email.password"
-            label="Password"
-            required
-          ></v-text-field>
-
-          <v-text-field
-            v-model="email.destination"
-            label="Forwarding"
-            required
-          ></v-text-field>
-
-          <v-btn
-            :disabled="fetching"
-            :loading="fetching"
-            color="success"
-            @click="saveEmail()"
-          >
-            Save
-          </v-btn>
+          <v-btn @click="addEmail()"> Add email </v-btn>
         </v-card-text>
       </v-card>
-    </v-navigation-drawer>
+
+      <v-navigation-drawer v-model="drawer" fixed temporary right>
+        <v-card>
+          <v-card-title> Email account </v-card-title>
+
+          <v-card-text>
+            <v-text-field
+              v-model="email.user"
+              label="Name"
+              required
+              :readonly="userReadonly"
+            ></v-text-field>
+
+            <v-text-field
+              type="password"
+              v-model="email.password"
+              label="Password"
+              required
+            ></v-text-field>
+
+            <v-text-field
+              v-model="email.destination"
+              label="Forwarding"
+              required
+            ></v-text-field>
+
+            <v-btn
+              :disabled="fetching"
+              :loading="fetching"
+              color="success"
+              @click="saveEmail()"
+            >
+              Save
+            </v-btn>
+          </v-card-text>
+        </v-card>
+      </v-navigation-drawer>
+
+    </div>
+
+    
   </div>
 </template>
 

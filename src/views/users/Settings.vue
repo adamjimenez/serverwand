@@ -60,17 +60,13 @@ export default {
 
       api
         .get("users/" + this.id)
-        .then(function (response) {
-          console.log(response);
-          self.data = response.data.item;
-          document.title = "Settings" + " | " + self.data.name;
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-        });
+        .then(response => {
+            console.log(response);
+            self.data=response.data.item;
+            document.title="Settings"+" | "+self.data.name;
+          })
+        .catch(error => console.log(error))
+        .finally(() => self.fetching = false);
     },
     editItem() {
       this.$router.push("/users/" + this.$route.params.id + "/edit");
@@ -84,22 +80,20 @@ export default {
 
           api
             .post("users/" + this.id, { delete: 1 })
-            .then(function (response) {
-              console.log(response);
+            .then(response => {
+                console.log(response);
 
-              if (response.data.error) {
-                self.error = response.data.error;
-              } else {
-                self.$router.push("/users/");
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-            })
-            .finally(function () {
-              self.dialog = false;
-              self.loading = false;
-            });
+                if(response.data.error) {
+                  self.error=response.data.error;
+                } else {
+                  self.$router.push("/users/");
+                }
+              })
+            .catch(error => console.log(error))
+            .finally(() => {
+                self.dialog = false;
+                self.loading = false;
+              });
         }
       });
     },

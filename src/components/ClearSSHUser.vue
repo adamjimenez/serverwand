@@ -32,21 +32,17 @@ export default {
             .post("servers/" + this.serverId + "/savesshuser", {
               ssh_username: "",
             })
-            .then(function (response) {
-              console.log(response);
+            .then(response => {
+                console.log(response);
 
-              if (!response.data.success) {
-                self.error = response.data.error;
-              } else {
-                self.$emit('complete')
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-            })
-            .finally(function () {
-              self.fetching = false;
-            });
+                if(!response.data.success) {
+                  self.error=response.data.error;
+                } else {
+                  self.$emit('complete');
+                }
+              })
+            .catch(error => console.log(error))
+            .finally(() => self.fetching = false);
         }
       });
     },

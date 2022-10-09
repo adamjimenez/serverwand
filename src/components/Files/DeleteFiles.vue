@@ -42,16 +42,14 @@ export default {
           this.fetching = true;
 
           var files = [];
-          this.selected.forEach((element) => {
-            files.push(element.id);
-          });
+          this.selected.forEach(element => files.push(element.id));
 
           api
             .post("servers/" + this.serverId + "/files", {
               cmd: 'delete',
               files: files,
             })
-            .then(function (response) {
+            .then(response => {
               console.log(response);
 
               if (response.data.success) {
@@ -64,12 +62,10 @@ export default {
                 self.$emit("error", error);
               }
             })
-            .catch(function (error) {
+            .catch(error => {
               console.log(error);
             })
-            .finally(function () {
-              self.fetching = false;
-            });
+            .finally(() => self.fetching = false);
         }
       });
     },

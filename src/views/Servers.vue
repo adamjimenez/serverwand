@@ -145,20 +145,16 @@ export default {
 
       api
         .get("servers/")
-        .then(function (response) {
-          console.log(response);
-          self.items = response.data.items;
+        .then(response => {
+            console.log(response);
+            self.items=response.data.items;
 
-          response.data.items.forEach((element) => {
-            self.filtered.push(element);
-          });
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-        });
+            response.data.items.forEach((element) => {
+              self.filtered.push(element);
+            });
+          })
+        .catch(error => console.log(error))
+        .finally(() => self.fetching = false);
     },
   },
 };

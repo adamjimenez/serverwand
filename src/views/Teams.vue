@@ -91,19 +91,15 @@ export default {
 
       api
         .get("teams/")
-        .then(function (response) {
+        .then(response => {
           console.log(response);
           self.items = response.data.items;
           self.pages = self.items.length
             ? Math.ceil(self.items.length / self.items_per_page)
             : 1;
         })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-        });
+        .catch(error => console.log(error))
+        .finally(() => self.fetching = false);
     },
   },
 };

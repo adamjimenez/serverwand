@@ -50,11 +50,9 @@ export default {
       this.data.selected = newVal;
     },
     dialog: function (value) {
-      if (value === false) {
-        // clear models
-        window.monaco.editor.getModels().forEach((model) => model.dispose());
-        // this.$refs.editor.getEditor().dispose()
-      }
+      // clear models
+      if (value === false) 
+        window.monaco.editor.getModels().forEach(model => model.dispose());
     },
   },
 
@@ -94,7 +92,7 @@ export default {
           cmd: 'get',
           id: item.id,
         })
-        .then(function (response) {
+        .then(response => {
           console.log(response);
 
           if (response.data.success !== false) {
@@ -109,10 +107,8 @@ export default {
             self.$emit("error", response.data.error);
           }
         })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
+        .catch(error => console.log(error))
+        .finally(() => {
           self.fetching = false;
           self.$emit("loading", false);
         });
@@ -128,7 +124,7 @@ export default {
           id: this.data.id,
           content: this.data.content,
         })
-        .then(function (response) {
+        .then(response => {
           console.log(response);
 
           if (response.data.success) {
@@ -138,10 +134,10 @@ export default {
             self.$emit("error", response.data.error);
           }
         })
-        .catch(function (error) {
+        .catch(error => {
           console.log(error);
         })
-        .finally(function () {
+        .finally(() => {
           self.fetching = false;          
           self.$emit("loading", false);
         });

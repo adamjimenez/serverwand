@@ -46,7 +46,9 @@
       </v-card-text>
     </v-card>
 
-    <Site ref="Site" />
+    <Site ref="Site" 
+      @error="err => error = err"
+    />
   </div>
 </template>
 
@@ -151,10 +153,17 @@ export default {
           .post("sites/" + this.domainId + "/update", this.data)
           .then(function (response) {
             console.log(response);
+
+            if (response.data.error) {
+              self.error = response.data.error
+              return false
+            }
+
             self.$router.push("/sites/" + self.domainId + "/summary");
           })
           .catch(function (error) {
             console.log(error);
+            self.error = error;
           });
       } else {
         self.loading = false;

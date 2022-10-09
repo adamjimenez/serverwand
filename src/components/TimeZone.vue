@@ -6,15 +6,20 @@
           <v-icon small>fas fa-wrench</v-icon>
         </v-btn>
       </template>
-      <span>Configure MariaDB</span>
+      <span>Configure Time Zone</span>
     </v-tooltip>
 
     <v-navigation-drawer app v-model="drawer" temporary right>
       <v-card>
-        <v-card-title> Edit MariaDB config </v-card-title>
+        <v-card-title> Edit Time Zone </v-card-title>
 
         <v-card-text>
-          <v-textarea v-model="config" label="Config" auto-grow></v-textarea>
+
+          <v-select
+              v-model="timeZone"
+              :items="timeZones"
+              label="Time Zone"
+          ></v-select>
 
           <v-btn
             :disabled="fetching"
@@ -40,7 +45,8 @@ export default {
   data() {
     return {
       fetching: false,
-      config: "",
+      timeZone: "",
+      timeZones: [],
       drawer: false,
     };
   },
@@ -51,13 +57,16 @@ export default {
       this.fetching = true;
 
       api
-        .get("servers/" + this.serverId + "/mariadb_config", {
-          clearCacheEntry: true,
+        .get("servers/" + this.serverId + "/time_zone", {
+            clearCacheEntry: true,
         })
         .then(response => {
-          self.config = response.data.config;
-          self.fetching = false;
-          self.drawer = true;
+            self.timeZones = response.data.time_zones;
+            console.log(self.timeZones)
+            console.log(response.data)
+            self.timeZone = response.data.time_zone;
+            self.fetching = false;
+            self.drawer = true;
         });
     },
 
@@ -66,13 +75,14 @@ export default {
       this.fetching = true;
 
       api
-        .post("servers/" + this.serverId + "/mariadb_config", {
-          config: self.config,
+        .post("servers/" + this.serverId + "/time_zone", {
+            time_zone: self.timeZone,
         })
         .then(() => {
             self.fetching=false;
             self.drawer=false;
-          });
+            self.$emit("save");
+        });
     },
   },
 };

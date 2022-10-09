@@ -116,40 +116,30 @@ export default {
 
       api
         .get("teams/" + this.id)
-        .then(function (response) {
-          console.log(response);
-          self.data = response.data.item;
-          document.title = "Servers" + " | " + self.data.name;
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-        });
+        .then(response => {
+            console.log(response);
+            self.data=response.data.item;
+            document.title="Servers"+" | "+self.data.name;
+          })
+        .catch(error => console.log(error))
+        .finally(() => self.fetching=false);
 
       api
         .get("servers/")
-        .then(function (response) {
-          console.log(response);
+        .then(response => {
+            console.log(response);
 
-          response.data.items.forEach((element) => {
-            self.servers.push({
-              text: element.name,
-              value: element.id,
+            response.data.items.forEach((element) => {
+              self.servers.push({
+                text: element.name,
+                value: element.id,
+              });
             });
-          });
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.loading = false;
-        });
+          })
+        .catch(error => console.log(error))
+        .finally(() => self.loading=false);
 
-      api.get("settings/profile").then(function (response) {
-        self.useMasterPassword = response.data.profile.prefs.useMasterPassword;
-      });
+      api.get("settings/profile").then(response => self.useMasterPassword=response.data.profile.prefs.useMasterPassword);
     },
     addItem() {
       this.server.name = "";
@@ -165,23 +155,21 @@ export default {
 
         api
           .post("teams/" + this.id + '/servers', { server: this.data.server })
-          .then(function (response) {
-            console.log(response);
+          .then(response => {
+              console.log(response);
 
-            if (!response.data.success) {
-              self.error = response.data.error;
-            } else {
-              self.drawer = false;
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-            self.dialog = false;
-          })
-          .finally(function () {
-            self.dialog = false;
-          });
+              if(!response.data.success) {
+                self.error=response.data.error;
+              } else {
+                self.drawer=false;
+                self.fetchData();
+              }
+            })
+          .catch(error => {
+              console.log(error);
+              self.dialog=false;
+            })
+          .finally(() => self.dialog=false);
       }
     },
     deleteItem(id) {
@@ -194,21 +182,19 @@ export default {
 
           api
             .post("teams/" + this.id + '/servers', { delete: 1, server: id })
-            .then(function (response) {
+            .then(response => {
               console.log(response);
 
-              if (response.data.error) {
-                self.error = response.data.error;
+              if(response.data.error) {
+                self.error=response.data.error;
               } else {
                 self.fetchData();
               }
             })
-            .catch(function (error) {
-              console.log(error);
-            })
-            .finally(function () {
-              self.dialog = false;
-              self.loading = false;
+            .catch(error => console.log(error))
+            .finally(() => {
+              self.dialog=false;
+              self.loading=false;
             });
         }
       });

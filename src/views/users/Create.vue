@@ -126,19 +126,19 @@ export default {
 
       api
         .get("users/" + this.id)
-        .then(function (response) {
-          console.log(response);
+        .then(response => {
+            console.log(response);
 
-          if (self.id) {
-            self.data = response.data.item;
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.loading = false;
-        });
+            if(self.id) {
+              self.data=response.data.item;
+            }
+          })
+        .catch(error => {
+            console.log(error);
+          })
+        .finally(() => {
+            self.loading=false;
+          });
     },
     validate() {
       var self = this;
@@ -149,20 +149,20 @@ export default {
 
         api
           .post("users/" + self.id, this.data)
-          .then(function (response) {
-            console.log(response);
-            if (response.data.id) {
-              self.$router.push("/users/" + response.data.id + "/summary");
-            } else if (response.data.error) {
-              self.error = response.data.error;
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          .finally(function () {
-            self.loading = false;
-          });
+          .then(response => {
+              console.log(response);
+              if(response.data.id) {
+                self.$router.push("/users/"+response.data.id+"/summary");
+              } else if(response.data.error) {
+                self.error=response.data.error;
+              }
+            })
+          .catch(error => {
+              console.log(error);
+            })
+          .finally(() => {
+              self.loading=false;
+            });
       }
     },
   },

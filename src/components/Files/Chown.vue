@@ -18,6 +18,7 @@
           <v-text-field v-model="data.group" label="Group"></v-text-field>
 
           <v-checkbox
+            v-if="folderSelected"
             v-model="data.recursive"
             label="Replace child permissions"
           ></v-checkbox>
@@ -37,15 +38,16 @@ export default {
     serverId: null,
     path: null,
     selected: null,
+    folderSelected: null,
   },
 
   watch: {
     path: function (newVal) {
-      this.data.path = newVal;
+        this.data.path = newVal;
     },
     selected: function (newVal) {
       this.data.selected = newVal;
-    },
+    }
   },
 
   data() {
@@ -76,9 +78,7 @@ export default {
       this.fetching = true;
 
       var files = [];
-      this.selected.forEach((element) => {
-        files.push(element.id);
-      });
+      this.selected.forEach(element => files.push(element.id));
 
       api
         .post("servers/" + this.serverId + "/files", {
@@ -88,7 +88,7 @@ export default {
           recursive: this.data.recursive,
           files: files,
         })
-        .then(function (response) {
+        .then(response => {
           console.log(response);
 
           if (response.data.success) {
@@ -102,10 +102,10 @@ export default {
             self.$emit("error", error);
           }
         })
-        .catch(function (error) {
+        .catch(error => {
           console.log(error);
         })
-        .finally(function () {
+        .finally(() => {
           self.fetching = false;
         });
     },

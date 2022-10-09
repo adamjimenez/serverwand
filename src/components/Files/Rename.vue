@@ -33,12 +33,8 @@ export default {
   },
 
   watch: {
-    path: function (newVal) {
-      this.data.path = newVal;
-    },
-    selected: function (newVal) {
-      this.data.selected = newVal;
-    },
+    path: newVal => this.data.path = newVal,
+    selected: newVal => this.data.selected = newVal,
   },
 
   data() {
@@ -67,7 +63,7 @@ export default {
           old_name: this.data.oldName,
           new_name: this.data.newName,
         })
-        .then(function (response) {
+        .then(response => {
           console.log(response);
 
           if (response.data.success) {
@@ -81,12 +77,8 @@ export default {
             self.$emit("error", error);
           }
         })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-        });
+        .catch(error => console.log(error))
+        .finally(() => self.fetching = false);
     },
   },
 };

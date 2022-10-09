@@ -34,20 +34,16 @@ export default {
 
             api
               .get("servers/" + this.$route.params.id + "/delete")
-              .then(function (response) {
-                console.log(response);
+              .then(response => {
+                  console.log(response);
 
-                if (response.data.success) {
-                  // subscribe to status changes
-                  self.$router.push("/servers/");
-                }
-              })
-              .catch(function (error) {
-                console.log(error);
-              })
-              .finally(function () {
-                self.fetching = false;
-              });
+                  if(response.data.success) {
+                    // subscribe to status changes
+                    self.$router.push("/servers/");
+                  }
+                })
+              .catch((error) => console.log(error))
+              .finally(() => self.fetching = false);
           }
         }
       );

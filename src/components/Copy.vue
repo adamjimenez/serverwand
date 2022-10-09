@@ -44,9 +44,7 @@ export default {
     },
     resetCopyText() {
       var self = this;
-      setTimeout(function () {
-        self.copyText = "Copy";
-      }, 500);
+      setTimeout(() => self.copyText = "Copy", 500);
     },
   },
 };

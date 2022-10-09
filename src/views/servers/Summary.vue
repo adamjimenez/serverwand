@@ -176,6 +176,22 @@
                 </v-list-item-content>
               </v-list-item>
             </v-list>
+
+            <v-list two-line>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title
+                    v-html="`Time Zone`"
+                  ></v-list-item-title>
+                  <v-list-item-subtitle>
+                    {{ data.timeZone }}
+                    
+                    <TimeZone :serverId="serverId" @save="fetchData(true)" />
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+
           </v-card>
         </v-flex>
 
@@ -274,6 +290,7 @@ import MysqlConfig from "../../components/MysqlConfig";
 import CleanUp from "../../components/CleanUp";
 import Upgrade from "../../components/Upgrade";
 import UpdatesConfig from "../../components/UpdatesConfig";
+import TimeZone from "../../components/TimeZone";
 
 export default {
   components: {
@@ -284,6 +301,7 @@ export default {
     CleanUp,
     Upgrade,
     UpdatesConfig,
+    TimeZone,
   },
   data() {
     return {
@@ -319,33 +337,29 @@ export default {
         .get("servers/" + this.serverId + "/summary", {
           clearCacheEntry: clearCacheEntry,
         })
-        .then(function (response) {
-          console.log(response);
+        .then(response => {
+            console.log(response);
 
-          if (response.data.error) {
-            self.error = response.data.error;
-          }
+            if(response.data.error) {
+              self.error=response.data.error;
+            }
 
-          if (response.data.item) {
-            self.data = response.data.item;
-          }
+            if(response.data.item) {
+              self.data=response.data.item;
+            }
 
-          if (self.data.mem_total) {
-            self.data.mem_perc = Math.round(
-              (1 - self.data.mem_free / self.data.mem_total) * 100
-            );
-          }
+            if(self.data.mem_total) {
+              self.data.mem_perc=Math.round(
+                (1-self.data.mem_free/self.data.mem_total)*100
+              );
+            }
 
-          self.hostname = self.data.hostname;
+            self.hostname=self.data.hostname;
 
-          document.title = "Summary | " + self.data.name;
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-        });
+            document.title="Summary | "+self.data.name;
+          })
+        .catch(error => console.log(error))
+        .finally(() => self.fetching = false);
     },
   },
 };

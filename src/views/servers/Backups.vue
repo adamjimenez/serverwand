@@ -66,8 +66,10 @@
                   :items="items" 
                   class="results" 
                   ref="results"
-                  mobile-breakpoint="0"                  
-                  @click:row="open"
+                  mobile-breakpoint="0"    
+                  @click:row="open"                  
+                  v-model="selected"
+                  show-select
                 >
 
                   <template v-slot:item.modified="{ item }">

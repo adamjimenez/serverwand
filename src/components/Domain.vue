@@ -35,44 +35,44 @@ export default {
     authRequired: false,
   }),
   methods: {
-    create(data) {
+    create (data) {
       var self = this;
       self.loading = true;
 
       api
         .post("domains/create", data)
-        .then(function (response) {
-          if (response.data.domain_id) {
-            self.$eventHub.emit("itemsChanged");
-            self.$router.push(
-              "/domains/" + response.data.domain_id + "/summary"
-            );
-          } else if (response.data.error) {
-            if (response.data.error === "auth") {
-              self.provider = response.data.provider;
-              self.authRequired = true;
+        .then(response => {
+            if(response.data.domain_id) {
+              self.$eventHub.emit("itemsChanged");
+              self.$router.push(
+                "/domains/"+response.data.domain_id+"/summary"
+              );
+            } else if(response.data.error) {
+              if(response.data.error==="auth") {
+                self.provider=response.data.provider;
+                self.authRequired=true;
 
-              var interval = setInterval(function () {
-                if (self.newWindow && self.newWindow.closed) {
-                  clearInterval(interval);
-                  self.create(data);
-                  return;
-                }
-              }, 500);
-            } else {
-              self.error = response.data.error;
+                var interval=setInterval(() => {
+                    if(self.newWindow&&self.newWindow.closed) {
+                      clearInterval(interval);
+                      self.create(data);
+                      return;
+                    }
+                  }, 500);
+              } else {
+                self.error=response.data.error;
+              }
             }
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.loading = false;
-        });
+          })
+        .catch(error => {
+            console.log(error);
+          })
+        .finally(() => {
+            self.loading=false;
+          });
     },
 
-    authPrompt() {
+    authPrompt () {
       this.authRequired = false;
       this.newWindow = window.open(
         "https://serverwand.com/account/services/" + this.provider

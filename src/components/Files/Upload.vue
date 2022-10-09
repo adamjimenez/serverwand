@@ -112,13 +112,13 @@ export default {
         this.r.assignBrowse(this.$refs.uploadFolderButton.$el, true);
       }
 
-      this.r.on("fileAdded", function () {
+      this.r.on("fileAdded", () => {
         self.error = "";
         this.opts.query.path = self.path;
         this.upload();
       });
 
-      this.r.on("fileProgress", function (file) {
+      this.r.on("fileProgress", file => {
         //console.log(file);
 
         var perc = parseInt(self.r.progress() * 100);
@@ -128,14 +128,14 @@ export default {
         self.dragover = false;
       });
 
-      this.r.on("fileSuccess", function (file, message) {
+      this.r.on("fileSuccess", (file, message) => {
         var data = JSON.parse(message);
         if (data.error) {
           self.error = data.error;
         }
       });
 
-      this.r.on("complete", function () {
+      this.r.on("complete", () => {
         //clear upload queue so you can upload the same file
         this.cancel();
 
@@ -146,10 +146,7 @@ export default {
         }
       });
 
-      this.r.on("error", function (message) {
-        self.$emit("error", message);
-      });
-
+      this.r.on("error", message => self.$emit("error", message));
       this.r.assignDrop(this.dropZone.$el);
 
       // handle dragover

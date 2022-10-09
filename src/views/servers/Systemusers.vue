@@ -57,7 +57,7 @@
           </template>
         </v-list-item-group>
       </v-list>
-      <v-container class="mt-5">
+      <v-container class="mt-5" fluid>
         <v-row>
           <v-btn @click="addItem()" class="mr-3"> Add system user </v-btn>
           <ClearSSHUser :serverId="serverId" :server="data" />
@@ -165,6 +165,9 @@
                     </v-list-item-content>
 
                     <v-list-item-action>
+                      <v-btn icon :disabled="fetching" :loading="fetching">
+                        <Copy :val="item.key" />
+                      </v-btn>
                       <v-btn
                         icon
                         :disabled="fetching"

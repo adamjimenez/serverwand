@@ -37,7 +37,7 @@ export default {
   watch: {
     passwordAuthentication: function (newVal) {
       this.data.passwordAuthentication = newVal;
-    },
+    }
   },
 
   data() {
@@ -65,22 +65,22 @@ export default {
           save: 1,
           enable: this.data.passwordAuthentication,
         })
-        .then(function (response) {
-          console.log(response);
+        .then(response => {
+            console.log(response);
 
-          if (response.data.error) {
-            self.error = response.data.error;
-          } else if (response.data.success) {
-            self.$emit("complete");
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-          self.loading = false;
-        });
+            if(response.data.error) {
+              self.error=response.data.error;
+            } else if(response.data.success) {
+              self.$emit("complete");
+            }
+          })
+        .catch(error => {
+            console.log(error);
+          })
+        .finally(() => {
+            self.fetching=false;
+            self.loading=false;
+          });
     },
   },
 };

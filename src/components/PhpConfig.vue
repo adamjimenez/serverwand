@@ -54,10 +54,10 @@ export default {
         .get("servers/" + this.serverId + "/php_config", {
           clearCacheEntry: true,
         })
-        .then(function (response) {
-          self.config = response.data.config;
-          self.fetching = false;
-          self.drawer = true;
+        .then(response => {
+          self.config=response.data.config;
+          self.fetching=false;
+          self.drawer=true;
         });
     },
 
@@ -69,9 +69,9 @@ export default {
         .post("servers/" + this.serverId + "/php_config", {
           config: self.config,
         })
-        .then(function () {
-          self.fetching = false;
-          self.drawer = false;
+        .then(() => {
+          self.fetching=false;
+          self.drawer=false;
         });
     },
   },

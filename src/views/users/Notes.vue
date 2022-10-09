@@ -109,17 +109,13 @@ export default {
 
       api
         .get("users/" + this.id + "/notes")
-        .then(function (response) {
-          console.log(response);
-          self.notes = response.data.notes;
-          document.title = 'Notes';
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-        });
+        .then(response => {
+            console.log(response);
+            self.notes=response.data.notes;
+            document.title = 'Notes';
+          })
+        .catch(error => console.log(error))
+        .finally(() => self.fetching = false);
     },
     addItem() {
       this.domain.name = "";
@@ -135,28 +131,26 @@ export default {
 
         api
           .post("users/" + this.id + "/notes", this.data)
-          .then(function (response) {
-            console.log(response);
+          .then(response => {
+              console.log(response);
 
-            if (!response.data.success) {
-              self.error = response.data.error;
-            } else {
-              self.data.note = "";
-              self.drawer = false;
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-            self.dialog = false;
-          })
-          .finally(function () {
-            self.dialog = false;
-          });
+              if(!response.data.success) {
+                self.error=response.data.error;
+              } else {
+                self.data.note="";
+                self.drawer=false;
+                self.fetchData();
+              }
+            })
+          .catch(error => {
+              console.log(error);
+              self.dialog=false;
+            })
+          .finally(() => self.dialog = false);
       }
     },
     deleteItem(id) {
-      this.$confirm("Delete note?").then((res) => {
+      this.$confirm("Delete note?").then(res => {
         if (!res) {
           return;
         }
@@ -168,22 +162,19 @@ export default {
 
         api
           .post("users/" + this.id + "/notes", { delete: 1, domain: id })
-          .then(function (response) {
-            console.log(response);
+          .then(response => {
+              console.log(response);
 
-            if (response.data.error) {
-              self.error = response.data.error;
-            } else {
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          .finally(function () {
-            self.dialog = false;
-            self.loading = false;
-          });
+              if(response.data.error)
+                self.error=response.data.error;
+              else
+                self.fetchData();
+            })
+          .catch(error => console.log(error))
+          .finally(() => {
+              self.dialog=false;
+              self.loading=false;
+            });
       });
     },
   },

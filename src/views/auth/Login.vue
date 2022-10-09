@@ -109,21 +109,18 @@ export default {
             email: this.email,
             password: this.password,
           })
-          .then(function (response) {
-            console.log(response);
-            if (response.data.success) {
-              self.$router.push("/");
-            } else {
-              self.error = response.data.error;
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          .finally(function () {
-            self.dialog = false;
-            self.loading = false;
-          });
+          .then(response => {
+              console.log(response);
+              if(response.data.success)
+                self.$router.push("/");
+              else
+                self.error=response.data.error;
+            })
+          .catch(error => console.log(error))
+          .finally(() => {
+              self.dialog=false;
+              self.loading=false;
+            });
       }
     },
   },

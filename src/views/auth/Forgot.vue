@@ -78,20 +78,16 @@ export default {
 
         api
           .post("auth/forgot", this.data)
-          .then(function (response) {
-            console.log(response);
-            if (response.data.success) {
-              self.$router.push("/auth/login");
-            } else {
-              self.error = response.data.error;
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          .finally(function () {
-            self.loading = false;
-          });
+          .then(response => {
+              console.log(response);
+              if(response.data.success)
+                self.$router.push("/auth/login");
+
+              else
+                self.error=response.data.error;
+            })
+          .catch((error) => console.log(error))
+          .finally(() => self.loading = false);
       }
     },
   },

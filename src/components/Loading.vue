@@ -16,8 +16,8 @@
 <script>
 export default {
   name: "Loading",
-  data: function () {
-    return {};
+  data: () => {
+    return {} 
   },
   props: {
     value: {

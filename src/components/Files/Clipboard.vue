@@ -36,7 +36,7 @@ export default {
     },
     selected: function (newVal) {
       this.data.selected = newVal;
-    },
+    }
   },
 
   data() {
@@ -61,9 +61,7 @@ export default {
       this.data.cut = cut ? true : false;
       this.data.src = this.path;
       this.data.items = [];
-      this.selected.forEach((element) => {
-        this.data.items.push(element.name);
-      });
+      this.selected.forEach(element => this.data.items.push(element.name));
     },
 
     paste() {
@@ -84,7 +82,7 @@ export default {
                 src: this.data.src,
                 files: this.data.items,
               })
-              .then(function (response) {
+              .then(response => {
                 console.log(response);
 
                 if (cmd.toLowerCase() === "move") {
@@ -101,12 +99,8 @@ export default {
                   self.$emit('error', error);
                 }
               })
-              .catch(function (error) {
-                console.log(error);
-              })
-              .finally(function () {
-                self.fetching = false;
-              });
+              .catch(error => console.log(error))
+              .finally(() => self.fetching = false);
           }
         }
       );

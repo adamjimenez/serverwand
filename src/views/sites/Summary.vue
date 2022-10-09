@@ -104,35 +104,44 @@
           </v-list-item>
           <v-divider></v-divider>
 
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title> Username </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ data.auth.username }}
-                <Copy :val="data.auth.username" text />
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-divider></v-divider>
+          <div v-if="data.auth.active">
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title> Username </v-list-item-title>
+                <v-list-item-subtitle>
+                  {{ data.auth.username }}
+                  <Copy :val="data.auth.username" text />
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider></v-divider>
 
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title> Password </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ data.auth.password }}
-                <Edit
-                  :val="data.auth.password"
-                  label="Auth Password"
-                  name="password"
-                  password
-                  :path="'sites/' + this.siteId + '/auth'"
-                  @save="fetchData(true)"
-                />
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title> Password </v-list-item-title>
+                <v-list-item-subtitle>
+                  {{ data.auth.password }}
+                  <Edit
+                    :val="data.auth.password"
+                    label="Auth Password"
+                    name="password"
+                    password
+                    :path="'sites/' + this.siteId + '/auth'"
+                    @save="fetchData(true)"
+                  />
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </div>
           <v-divider></v-divider>
         </div>
+
+        <IPRestrictions
+          :active="data.ip_restrictions.active"
+          :items="data.ip_restrictions.ips"
+          :path="'sites/' + this.siteId + '/iprestrictions'"
+          @save="fetchData(true)"
+        />
       </v-list>
     </v-card>
   </div>
@@ -143,12 +152,14 @@ import api from "../../services/api";
 import Loading from "../../components/Loading";
 import Copy from "../../components/Copy";
 import Edit from "../../components/Edit";
+import IPRestrictions from "../../components/IPRestrictions";
 
 export default {
   components: {
     Loading,
     Copy,
     Edit,
+    IPRestrictions,
   },
   data() {
     return {
@@ -161,6 +172,7 @@ export default {
         app: {},
         dns: {},
         auth: {},
+        ip_restrictions: {},
       },
       details: "",
       loading: false,

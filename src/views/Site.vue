@@ -75,7 +75,7 @@
         <v-tab :to="'/sites/' + domainId + '/database'">Database</v-tab>
         <v-tab :to="'/sites/' + domainId + '/variables'">Variables</v-tab>
         <v-tab :to="'/sites/' + domainId + '/aliases'">Aliases</v-tab>
-        <v-tab :to="'/sites/' + domainId + '/email'" v-if="data.server.mailserver">Email</v-tab>
+        <v-tab :to="'/sites/' + domainId + '/email'">Email</v-tab>
         <v-tab :to="'/sites/' + domainId + '/apps'">Apps</v-tab>
         <v-tab :to="'/sites/' + domainId + '/dns'">DNS</v-tab>
         <v-tab :to="'/sites/' + domainId + '/backups'">Backups</v-tab>
@@ -124,19 +124,15 @@
         this.domainId = this.$route.params.id
  
         api.get('sites/' + this.domainId)
-        .then(function (response) {
+        .then(response => {
           console.log(response)
 
           if (response.data.item) {
             self.data = response.data.item
           }
         })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.fetching = false
-        })
+        .catch(error => console.log(error))
+        .finally(() => self.fetching = false)
       }
     }
   }

@@ -20,19 +20,19 @@
         <v-list-item-group>
           <template v-for="(item, i) in items">
 
-            <v-list-item :key="`item-${i}`" :value="item">
+            <v-list-item :key="`item-${i}`" :value="item" @click="editItem(item)">
               <template v-slot:default>
                 <v-list-item-content>
                   <v-list-item-title>
-                    {{ item.port }}/{{ item.protocol }} {{ item.action }}
+                    {{ item.port }}/{{ item.protocol }} {{ item.action }} from {{ item.from }}
                   </v-list-item-title>
                   <v-list-item-subtitle>
-                    {{ item.from }} {{ item.v6 ? 'IPV6' : '' }}
+                    {{ item.comment }}
                   </v-list-item-subtitle>
                 </v-list-item-content>
 
                 <v-list-item-action>
-                  <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item.id)">
+                  <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
                     <v-icon small>delete</v-icon>
                   </v-btn>
                 </v-list-item-action>
@@ -61,14 +61,21 @@
           </v-card-title>
 
           <v-card-text>
-            <v-text-field v-model="item.port" label="Port range" required :rules="[rules.required, rules.port]">
+            <v-text-field v-model="item.port" label="Port range" placeholder="80, 443, 5000:5010" required
+              :rules="[rules.required, rules.port]">
             </v-text-field>
 
-            <v-select v-model="item.protocol" :items="protocol" label="Protocol" required></v-select>
+            <v-select v-model="item.protocol" :items="protocol" label="Protocol"></v-select>
 
             <v-select v-model="item.action" :items="action" label="Action" required></v-select>
 
-            <v-text-field v-model="item.from" label="From" :rules="[rules.ip]"></v-text-field>
+            <!--
+            <v-select v-model="item.direction" :items="direction" label="Direction"></v-select>
+            -->
+
+            <v-text-field v-model="item.from" label="From" :rules="[rules.ip]" placeholder="192.168.0.1"></v-text-field>
+
+            <v-text-field v-model="item.comment" label="Comment"></v-text-field>
 
             <v-btn :disabled="fetching" :loading="fetching" color="success" @click="saveItem">
               Save
@@ -99,11 +106,24 @@ export default {
       fetching: false,
       drawer: false,
       serverId: 0,
-      protocol: ['tcp', 'udp'],
-      action: ['allow', 'deny'],
+      protocol: [{
+        text: 'TCP',
+        value: 'tcp'
+      }, {
+        text: 'UDP',
+        value: 'udp'
+      }],
+      action: [{
+        text: 'Allow',
+        value: 'ALLOW'
+      }, {
+        text: 'Deny',
+        value: 'DENY'
+      }],
+      direction: ['IN', 'OUT'],
       rules: {
         required: value => !!value || 'Required.',
-        port: v => (!v || /^\d+(-\d+)?$/.test(v)) || '1-65535',
+        port: v => (!v || /^\d+(:\d+)?$/.test(v)) || '1-65535',
         ip: v => (!v || /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(v)) || 'Invalid IP address',
       },
     }
@@ -167,56 +187,73 @@ export default {
       this.item = {}
       this.drawer = true
     },
-    deleteItem(id) {
-      this.$confirm('Delete rule?').then(res => {
+    editItem(item) {
+      this.item = JSON.parse(JSON.stringify(item));
+
+      if (this.item.from.substr(0, 8) === 'Anywhere') {
+        this.item.from = '';
+      }
+
+      this.drawer = true;
+    },
+    deleteItem(item) {
+      var self = this
+      var label = item.port + '/' + item.protocol + ' ' + item.action + ' from ' + item.from;
+
+      this.$confirm('Delete ' + label).then(async function (res) {
         if (res) {
-          var self = this
-          this.fetching = true
-          this.error = ''
+          await self.doDelete(item.id);
 
-          api.post('servers/' + this.serverId + '/firewall', { id: id })
-            .then(function (response) {
-              console.log(response)
-
-              if (!response.data.success) {
-                self.error = response.data.error;
-              } else {
-                self.fetchData()
-              }
-            })
-            .catch(function (error) {
-              console.log(error)
-            })
-            .finally(function () {
-              self.fetching = false
-            })
+          if (!self.error) {
+            self.fetchData();
+          }
         }
       })
     },
-    saveItem() {
+    doDelete(id) {
       var self = this
+      this.fetching = true
       this.error = ''
+      return api.post('servers/' + this.serverId + '/firewall', { id: id })
+        .then(function (response) {
+          console.log(response)
 
+          if (!response.data.success) {
+            self.error = response.data.error;
+          }
+        })
+        .catch(function (error) {
+          self.error = error
+        })
+        .finally(function () {
+          self.fetching = false
+        })
+    },
+    saveItem: async function () {
       if (this.$refs.form.validate()) {
+        var self = this
+        this.error = ''
         this.fetching = true
-
         api.post('servers/' + this.serverId + '/firewall', this.item)
           .then(function (response) {
             console.log(response)
-            if (response.data.error) {
-              self.error = response.data.error
-            } else {
+            if (response.data.success) {
               self.drawer = false
+              self.fetchData()
+            } else {
+              self.error = response.data.error
+                ? response.data.error
+                : response.data;
             }
           })
           .catch(function (error) {
-            console.log(error)
+            self.error = error
           })
           .finally(function () {
-            self.fetchData()
+            self.fetching = false
           })
       }
-    }
-  }
+    },
+  },
 }
 </script>

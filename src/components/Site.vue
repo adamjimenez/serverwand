@@ -36,34 +36,30 @@ export default {
 
       api
         .post("sites/create", data)
-        .then(function (response) {
-          if (response.data.site_id) {
-            self.$eventHub.emit("itemsChanged");
-            self.$router.push("/sites/" + response.data.site_id + "/summary");
-          } else if (response.data.error) {
-            if (response.data.error === "auth") {
-              self.provider = response.data.provider;
-              self.authRequired = true;
+        .then(response => {
+            if(response.data.site_id) {
+              self.$eventHub.emit("itemsChanged");
+              self.$router.push("/sites/"+response.data.site_id+"/summary");
+            } else if(response.data.error) {
+              if(response.data.error === "auth") {
+                self.provider=response.data.provider;
+                self.authRequired=true;
 
-              var interval = setInterval(function () {
-                if (self.newWindow && self.newWindow.closed) {
-                  self.newWindow = null;
-                  clearInterval(interval);
-                  self.create(data);
-                  return;
-                }
-              }, 500);
-            } else {
-              self.$emit("error", response.data.error);
+                var interval=setInterval(() => {
+                    if(self.newWindow&&self.newWindow.closed) {
+                      self.newWindow=null;
+                      clearInterval(interval);
+                      self.create(data);
+                      return;
+                    }
+                  }, 500);
+              } else {
+                self.$emit("error", response.data.error);
+              }
             }
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.loading = false;
-        });
+          })
+        .catch(error => console.log(error))
+        .finally(() => self.loading=false);
     },
 
     authPrompt() {

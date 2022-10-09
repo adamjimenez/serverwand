@@ -125,6 +125,11 @@ export default {
         .then(function (response) {
           console.log(response);
 
+          if (response.data.error) {
+            self.error = response.data.error;
+            return false;
+          }
+
           self.data = response.data;
           document.title = "Backups" + " | " + self.data.domain;
 
@@ -141,6 +146,7 @@ export default {
     createBackup() {
       var self = this;
       this.fetching = true;
+      this.error = '';
 
       api
         .get("sites/" + this.domainId + "/backups/create")

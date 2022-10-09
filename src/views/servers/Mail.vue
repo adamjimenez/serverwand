@@ -133,31 +133,27 @@ export default {
 
       api
         .get("servers/" + this.serverId + "/messages")
-        .then(function (response) {
-          console.log(response);
-          self.data = response.data.item;
-          self.items = response.data.messages;
+        .then(response => {
+            console.log(response);
+            self.data=response.data.item;
+            self.items=response.data.messages;
 
-          self.items = [];
-          response.data.messages.forEach((element) => {
-            self.items.push({
-              id: element.id,
-              size: element.size,
-              sender: element.sender,
-              recipient: element.recipient,
-              date: element.date,
-              //selected: false,
+            self.items=[];
+            response.data.messages.forEach((element) => {
+              self.items.push({
+                id: element.id,
+                size: element.size,
+                sender: element.sender,
+                recipient: element.recipient,
+                date: element.date,
+                //selected: false,
+              });
             });
-          });
 
-          document.title = "Mail" + " | " + self.data.name;
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-        });
+            document.title="Mail"+" | "+self.data.name;
+          })
+        .catch(error => console.log(error))
+        .finally(() => self.fetching=false);
     },
     deleteMail() {
 
@@ -174,15 +170,9 @@ export default {
 
       api
         .post("servers/" + this.serverId + "/messages", { ids: ids })
-        .then(function () {
-          self.fetchData();
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-        });
+        .then(() => self.fetchData())
+        .catch((error) => console.log(error))
+        .finally(() => self.fetching=false);
     },
     view(item) {
       this.message_id = item.id;

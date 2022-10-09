@@ -104,18 +104,14 @@
         this.siteId = this.$route.params.id
  
         api.get('sites/' + this.siteId + '/settings')
-        .then(function (response) {
-          console.log(response)
-            
-          self.data = response.data.item
-          document.title = 'Settings' + ' | ' + self.data.domain
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.fetching = false
-        })
+        .then(response => {
+            console.log(response)
+
+            self.data=response.data.item
+            document.title='Settings'+' | '+self.data.domain
+          })
+        .catch((error) => console.log(error))
+        .finally(() => self.fetching = false)
       },
       empty () { 
         this.$confirm('Empty ' + this.data.domain + '?').then(res => {
@@ -126,20 +122,18 @@
             this.loading = true
 
             api.get('sites/' + this.$route.params.id + '/empty')
-            .then(function (response) {
-              console.log(response)
-              
-              if (response.data.error) {
-                self.error = response.data.error
-              }
-            })
-            .catch(function (error) {
-              console.log(error)
-            })
-            .finally(function() {
-              self.fetching = false
-              self.loading = false
-            })
+            .then(response => {
+                console.log(response)
+
+                if(response.data.error) {
+                  self.error=response.data.error
+                }
+              })
+            .catch(error => console.log(error))
+            .finally(() => {
+                self.fetching=false
+                self.loading=false
+              })
           }
         })
       },
@@ -152,22 +146,19 @@
             this.loading = true
 
             api.get('sites/' + this.$route.params.id + '/delete')
-            .then(function (response) {
-              console.log(response)
-              
-              if (response.data.error) {
-                self.error = response.data.error
-              } else {
-                self.$router.push('/sites/')
-              }
-            })
-            .catch(function (error) {
-              console.log(error)
-            })
-            .finally(function() {
-              self.fetching = false
-              self.loading = false
-            })
+            .then(response => {
+                console.log(response)
+
+                if(response.data.error)
+                  self.error=response.data.error
+                else
+                  self.$router.push('/sites/')
+              })
+            .catch(error => console.log(error))
+            .finally(() => {
+                self.fetching=false
+                self.loading=false
+              })
           }
         })
       }

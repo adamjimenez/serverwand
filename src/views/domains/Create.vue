@@ -75,19 +75,14 @@ export default {
 
       api
         .get("domains/" + this.domainId)
-        .then(function (response) {
-          console.log(response);
+        .then(response => {
+            console.log(response);
 
-          if (self.domainId) {
-            self.data = response.data.item;
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.loading = false;
-        });
+            if (self.domainId)
+              self.data=response.data.item;
+          })
+        .catch(error => console.log(error))
+        .finally(() => self.loading = false);
     },
     save() {
       var self = this;
@@ -100,13 +95,11 @@ export default {
       if (self.domainId) {
         api
           .post("domains/" + this.domainId + "/update", this.data)
-          .then(function (response) {
-            console.log(response);
-            self.$router.push("/domains/" + self.domainId + "/summary");
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+          .then(response => {
+              console.log(response);
+              self.$router.push("/domains/"+self.domainId+"/summary");
+            })
+          .catch(error => console.log(error));
       } else {
         self.loading = false;
         this.$refs.Domain.create(this.data);

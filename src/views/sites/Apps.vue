@@ -165,12 +165,6 @@
           ></v-checkbox>
 
           <v-checkbox
-            v-model="basic_auth"
-            label="Enable basic auth"
-            :disabled="dnsProviders[data.server] == ''"
-          ></v-checkbox>
-
-          <v-checkbox
             v-model="substitutions"
             label="Realtime domain substitution in HTML"
             :disabled="dnsProviders[data.server] == ''"
@@ -326,7 +320,6 @@ export default {
       app: {},
     },
     dns: true,
-    basic_auth: false,
     substitutions: false,
     dnsProviders: {},
     domainRules: [(v) => !!v || "Domain is required"],
@@ -401,6 +394,11 @@ export default {
         .get("sites/" + this.siteId + "/apps")
         .then(function (response) {
           console.log(response);
+
+          if (response.data.error) {
+            self.error = response.data.error;
+            return false;
+          }
 
           self.data = response.data.item;
           document.title = "Apps" + " | " + self.data.domain;

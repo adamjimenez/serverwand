@@ -83,14 +83,14 @@
           ></v-text-field>
 
           <v-text-field
+            v-if="data.provider === 'custom' || this.serverId > 0"
             v-model="data.ip"
             :rules="hostRules"
             label="IP"
-            required
           ></v-text-field>
 
           <div
-            v-if="data.provider!=='custom' && data.provider!=='vultr' && !unclaimed.length"
+            v-if="data.provider !== 'custom' && data.provider !== 'vultr' && !unclaimed.length"
           >
             <v-select
                 v-if="!serverId"

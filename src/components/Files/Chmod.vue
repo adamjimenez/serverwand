@@ -92,6 +92,7 @@
           ></v-text-field>
 
           <v-checkbox
+            v-if="folderSelected"
             v-model="data.recursive"
             label="Replace child permissions"
           ></v-checkbox>
@@ -111,6 +112,7 @@ export default {
     serverId: null,
     path: null,
     selected: null,
+    folderSelected: null,
   },
 
   watch: {
@@ -119,7 +121,7 @@ export default {
     },
     selected: function (newVal) {
       this.data.selected = newVal;
-    },
+    }
   },
 
   data() {
@@ -194,9 +196,7 @@ export default {
       this.fetching = true;
 
       var files = [];
-      this.selected.forEach((element) => {
-        files.push(element.id);
-      });
+      this.selected.forEach(element => files.push(element.id));
 
       api
         .post("servers/" + this.serverId + "/files", {
@@ -205,7 +205,7 @@ export default {
           recursive: this.data.recursive,
           files: files,
         })
-        .then(function (response) {
+        .then(response => {
           console.log(response);
 
           if (response.data.success) {
@@ -219,12 +219,8 @@ export default {
             self.$emit("error", error);
           }
         })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          self.fetching = false;
-        });
+        .catch(error => console.log(error))
+        .finally(() => self.fetching = false);
     },
   },
 };
