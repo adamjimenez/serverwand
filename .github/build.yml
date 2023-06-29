@@ -1,0 +1,30 @@
+name: Build and Push to Builds Repo
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build App
+        run: npm run build
+
+      - name: Push to Builds Repo
+        run: |
+          git config --global user.name "$(git log -n 1 --pretty=format:%an)"
+          git config --global user.email "$(git log -n 1 --pretty=format:%ae)"
+          cd dist
+          git init
+          git add --all
+          git commit -m 'Deploying latest build'
+          git remote add origin https://adamjimenez:${{ secrets.SSH_KEY }}@github.com/adamjimenez/serverwand-builds.git
+          git push origin master
