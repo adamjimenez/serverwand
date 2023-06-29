@@ -76,7 +76,7 @@ export default {
       this.$router.push("/domains/" + this.$route.params.id + "/edit");
     },
     deleteItem() {
-      this.$confirm("Delete " + this.data.name + "?").then((res) => {
+      this.$confirm("Delete " + this.data.domain + "?").then((res) => {
         if (res) {
           var self = this;
           this.dialog = true;
