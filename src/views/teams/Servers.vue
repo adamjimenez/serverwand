@@ -1,5 +1,9 @@
 <template>
   <div>
+    <v-alert v-if="error" type="error">
+      {{ error }}
+    </v-alert>
+    
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
@@ -182,7 +186,7 @@ export default {
 
           api
             .post("teams/" + this.id + '/servers', { delete: 1, server: id })
-            .then(response => {
+            .then(function (response) {
               console.log(response);
 
               if(response.data.error) {
@@ -192,9 +196,9 @@ export default {
               }
             })
             .catch(error => console.log(error))
-            .finally(() => {
-              self.dialog=false;
-              self.loading=false;
+            .finally(function () {
+              self.dialog = false;
+              self.loading = false;
             });
         }
       });
