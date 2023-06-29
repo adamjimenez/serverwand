@@ -9,8 +9,6 @@
     <EditFile
       ref="editFile"
       :serverId="serverId"
-      :path="path"
-      :selected="selected"
       action="files"
       @complete="fetchData()"
       @error="handleError"
@@ -212,7 +210,6 @@ export default {
       serverId: 0,
       selected: [],
       folderSelected: false,
-
       headers: [
         {
           text: "",
@@ -247,7 +244,22 @@ export default {
           cellClass: 'd-none d-sm-table-cell',
         },
       ],
+      fileToOpen: '',
     };
+  },
+  computed: {
+    dir: function () {
+      var file = this.basename(this.path);
+
+      if (file.indexOf('.') !== -1) {
+        // remove file part from path
+        var arr = this.path.split(/[\\/]/);
+        arr.pop()
+        return arr.join('/')
+      }
+
+      return this.path;
+    }
   },
   watch: {
     path: {
@@ -275,7 +287,7 @@ export default {
     var self = this;
 
     // change folder when url hash is manually edited
-    function locationHashChanged () {
+    window.onhashchange = function () {
       if (self.userHashChange) {
         self.path = location.hash.substr(1);
         self.fetchData();
@@ -284,11 +296,15 @@ export default {
       }
     };
 
-    window.onhashchange = locationHashChanged;
-
     // load initial location hash
     if(location.hash) {
       this.path = location.hash.substr(1);
+
+      var file = this.basename(this.path);
+
+      if (file.indexOf('.') !== -1) {
+        this.fileToOpen = file;
+      }
     }
     
     this.fetchData();
@@ -305,8 +321,7 @@ export default {
       if (this.search) {
         this.items = [];
 
-        api.event(
-          'servers/' + this.serverId + '/files?path=' + encodeURIComponent(this.path) + '&search=' + encodeURIComponent(this.search),
+        api.event('servers/' + this.serverId + '/files?path=' + encodeURIComponent(this.dir) + '&search=' + encodeURIComponent(this.search),
           result => {
             let files = result.msg.split("\n");
 
@@ -335,10 +350,15 @@ export default {
 
         api
           .post("servers/" + this.serverId + "/files", { 
-            path: this.path
+            path: this.dir
           })
           .then(response => {
             console.log(response);
+
+            if (response.data.error) {
+              self.error = response.data.error;
+              return;
+            }
 
             self.server = response.data.item;
 
@@ -366,8 +386,26 @@ export default {
           .finally(() => {
             self.fetching = false;
             self.selected = [];
-          });
 
+            // open file if we have one
+            if (self.fileToOpen) {
+              var file = self.fileToOpen;
+              var line = 1;
+              if (file.indexOf(':') !== -1) {
+                var arr = file.split(':');
+                file = arr[0];
+                line = arr[1];
+              }
+
+              self.items.forEach(async item => {
+                if (item.name === file) {
+                  self.fileToOpen = '';
+                  await self.$refs.editFile.open(item);
+                  self.$refs.editFile.goToLine(line);
+                }
+              });
+            }
+          });
       }
     },
     open(item) {
@@ -385,9 +423,9 @@ export default {
       this.search = '';
       var index = this.path.lastIndexOf("/");
       if (index !== -1) {
-        this.path = this.path.substr(0, index);
+        this.path = this.dir.substr(0, index);
 
-        if (!this.path) {
+        if (!this.dir) {
           this.path = "/";
         }
       }

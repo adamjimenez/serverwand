@@ -36,19 +36,11 @@ export default {
 
   props: {
     serverId: null,
-    path: null,
-    selected: null,
     action: null,
     save: null
   },
 
   watch: {
-    path: function (newVal) {
-      this.data.path = newVal;
-    },
-    selected: function (newVal) {
-      this.data.selected = newVal;
-    },
     dialog: function (value) {
       // clear models
       if (value === false) 
@@ -68,6 +60,12 @@ export default {
   },
 
   methods: {
+    basename(path) {
+      return path.split(/[\\/]/).pop();
+    },
+    getEditor() {
+      return this.$refs.editor.getEditor();
+    },
     setLanguage() {
       if (!this.$refs.editor) {
         return;
@@ -87,7 +85,7 @@ export default {
       var self = this;
 
       this.$emit("loading", true);
-      api
+      return api
         .post("servers/" + this.serverId + "/" + this.action, {
           cmd: 'get',
           id: item.id,
@@ -97,7 +95,7 @@ export default {
 
           if (response.data.success !== false) {
             self.data.id = item.id;
-            self.data.file = item.name;
+            self.data.file = self.basename(item.id);
             self.data.content = response.data.content;
             self.dialog = true;
 
@@ -142,6 +140,16 @@ export default {
           self.$emit("loading", false);
         });
     },
+    goToLine(line) {
+      line = parseInt(line);
+      
+      var editor = this.$refs.editor.getEditor();
+      editor.setPosition({ lineNumber: line, column: 1 });
+      editor.revealLineInCenter(line);
+      editor.focus();
+
+      //console.log(editor)
+    }
   },
 };
 </script>

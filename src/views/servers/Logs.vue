@@ -1,11 +1,26 @@
 <template>
   <div>
-    <v-card>
+    <v-alert v-if="error" type="error">
+      {{ error }}
+    </v-alert>
+
+    <EditFile
+      ref="editFile"
+      :serverId="serverId"
+      action="files"
+      @complete="fetchLog()"
+      @error="handleError"
+      @loading="handleLoading"
+    />
+
+    <v-card :loading="fetching">
       <v-card-title primary-title>
         <v-select :items="logs" label="Log" @change="fetchLog"></v-select>
 
+        <v-text-field label="Filter" v-model="filter"></v-text-field>
+
         <v-btn @click="fetchLog()" :disabled="!log">
-          <i class="fas fa-redo-alt"></i>
+          <i class="fas fa-redo-alt" :class="fetching ? 'fa-spin' : ''"></i>
         </v-btn>
       </v-card-title>
       <v-card-text>
@@ -14,7 +29,7 @@
           v-html="logContent"
           class="serverstatus"
         ></div>
-        <pre v-else>{{ logContent }}</pre>
+        <div class="pre" v-else v-html="filteredLog"></div>
       </v-card-text>
     </v-card>
   </div>
@@ -22,8 +37,12 @@
 
 <script>
 import api from "../../services/api";
+import EditFile from "../../components/Files/EditFile";
 
 export default {
+  components: {
+    EditFile,
+  },
   data() {
     return {
       error: "",
@@ -100,6 +119,7 @@ export default {
       ],
       log: "",
       logContent: "",
+      filter: '',
     };
   },
   created() {
@@ -107,6 +127,49 @@ export default {
     // already being observed
     this.serverId = this.$route.params.id;
     this.fetchData();
+
+    var self = this;
+
+    window.onhashchange = async function () {      
+      var path = location.hash.substr(1);
+
+      if (!path) {
+        return;
+      }
+
+      var file = path;
+      var line = 1;
+      if (file.indexOf(':') !== -1) {
+        var arr = file.split(':');
+        file = arr[0];
+        line = arr[1];
+      }
+
+      self.fecthing = true;
+      await self.$refs.editFile.open({
+        id: file,
+        name: file,
+      });
+      
+      self.$refs.editFile.goToLine(line);
+      location.hash = '';
+    };
+  },
+  computed: {
+    filteredLog: function () {
+      const pathRegex = /(\/(var|etc)[^\s:\\']+( on line [0-9]+))/g;
+
+      var lines = this.logContent.split("\n");
+      return lines.filter((line) => line.toLowerCase().
+        includes(this.filter.toLowerCase())).
+        join("\n").
+        replace(pathRegex, '<a href="' + location.pathname + '#$1">$1</a>').
+        replace(/( on line )([0-9]+)/g, ':$2').
+        replace(/(PHP Fatal error)/g, '<span class="error">$1</span>').
+        replace(/(PHP Parse error)/g, '<span class="error">$1</span>').
+        replace(/(PHP Warning)/g, '<span class="warning">$1</span>')
+        ;
+    }
   },
   methods: {
     fetchData() {
@@ -137,6 +200,8 @@ export default {
     fetchLog(log) {
       var self = this;
 
+      this.fetching = true;
+
       if (log) {
         self.log = log;
       } else if (!self.log) {
@@ -150,14 +215,24 @@ export default {
         .then(function (response) {
           console.log(response);
           self.logContent = response.data.content;
+        })
+        .finally(function() {
+          self.fetching = false;
         });
+    },
+    handleError(error) {
+      this.error = error;
+    },
+    handleLoading(loading) {
+      this.fetching = loading;
     },
   },
 };
 </script>
 
 <style>
-pre {
-  overflow: scroll;
+.pre {
+  font-family: monospace;
+  white-space: pre-wrap;
 }
 </style>
