@@ -1,7 +1,10 @@
 <template>
     <div>
+        <v-alert v-if="error" type="error">
+          {{ error }}
+        </v-alert>
 
-        <v-switch v-model="data.active" label="IP restrictions" @change="toggle()" class="mx-3"></v-switch>
+        <v-switch v-model="data.active" label="IP restrictions" @change="toggle" class="mx-3"></v-switch>
         
         <div v-if="data.active">
             <v-list>
@@ -88,6 +91,7 @@ export default {
                 ) ||
                 "Invalid IP address",
             },
+            error: null,
         };
     },
 
@@ -113,8 +117,6 @@ export default {
 
                     if (!response.data.success) {
                         self.error = response.data.error;
-                    } else {
-                        self.$emit("save");
                     }
                 })
                 .catch(function (error) {
@@ -122,6 +124,7 @@ export default {
                 })
                 .finally(function () {
                     self.fetching = false;
+                    self.$emit("save");
                 });
         },
         addItem() {
@@ -142,15 +145,14 @@ export default {
 
                             if (!response.data.success) {
                                 self.error = response.data.error;
-                            } else {
-                                self.$emit("save");
                             }
                         })
                         .catch(function (error) {
                             console.log(error);
                         })
                         .finally(() => {
-                            this.fetching = false;                  
+                            this.fetching = false;
+                            self.$emit("save");     
                         });
                 }
             });
