@@ -3,6 +3,12 @@
     <v-alert v-if="error" type="error">
       {{ error }}
     </v-alert>
+    <v-alert v-if="data.app.public_dir_exists === false" type="error">
+      Missing public dir.
+      <span v-if="data.app.git_url">
+        Add a pubic folder to your Git repository and re-pull.
+      </span>
+    </v-alert>
 
     <Loading :value="loading" />
 
@@ -120,11 +126,14 @@
           <v-text-field
             v-model="data.git_url"
             label="Git URL"
+            hint="e.g. https://github.com/<user>/<repo>.git"
             required
           ></v-text-field>
 
+          <v-checkbox v-model="data.public_dir" label="Clone in public dir"></v-checkbox>
+
           <v-btn
-            :disabled="fetching"
+            :disabled="!data.git_url || fetching"
             :loading="fetching"
             color="success"
             @click="submitGit()"
@@ -254,7 +263,7 @@
               ></v-text-field>
             </v-col>
 
-            <v-col>
+            <v-col cols="1">
               <Copy :val="data.app.git_url" />
             </v-col>
           </v-row>
@@ -263,12 +272,13 @@
             <v-col>
               <v-text-field
                 v-model="data.app.ssh_key"
-                label="SSH key: save to your git host in order to push to this repository"
+                label="SSH key"
+                hint="Save to GitHub or Bitbucket in order to push to this repository"
                 readonly
               ></v-text-field>
             </v-col>
 
-            <v-col>
+            <v-col cols="1">
               <Copy :val="data.app.ssh_key" />
             </v-col>
           </v-row>
@@ -277,12 +287,13 @@
             <v-col>
               <v-text-field
                 v-model="data.app.webhook_url"
-                label="Git Pull Webhook: use this webhook to initiiate a Git Pull"
+                label="Git Pull Webhook"
+                hint="Use this webhook to initiiate a Git Pull"
                 readonly
               ></v-text-field>
             </v-col>
 
-            <v-col>
+            <v-col cols="1">
               <Copy :val="data.app.webhook_url" />
             </v-col>
           </v-row>
@@ -490,6 +501,7 @@ export default {
         api
           .post("sites/" + this.siteId + "/apps", {
             git_url: this.data.git_url,
+            public_dir: this.data.public_dir,
           })
           .then(function (response) {
             console.log(response);
