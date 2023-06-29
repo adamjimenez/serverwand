@@ -102,13 +102,13 @@ export default {
         },
         {
           text: "From ",
-          value: "from",
+          value: "sender",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
           text: "To ",
-          value: "to",
+          value: "recipient",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
