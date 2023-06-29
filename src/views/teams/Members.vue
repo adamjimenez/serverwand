@@ -1,5 +1,9 @@
 <template>
   <div>
+    <v-alert v-if="error" type="error">
+      {{ error }}
+    </v-alert>
+    
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
@@ -173,7 +177,7 @@ export default {
           this.loading = true;
 
           api
-            .post("teams/" + this.id, { delete: 1, user: user })
+            .post("teams/" + this.id + '/members', { delete: 1, user: user })
             .then(function (response) {
               console.log(response);
 
