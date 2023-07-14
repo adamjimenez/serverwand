@@ -62,17 +62,16 @@
                 <v-card>
                   <div class="feature">
                     <v-card-text>
-                      <div>
-                        <div class="icon">
-                          <i class="fas fa-hdd"></i>
-                        </div>
-
-                        <div class="label">{{ disk.name }}</div>
+                      <div class="icon">
+                        <i class="fas fa-hdd"></i>
                       </div>
+
+                      <div class="label">{{ disk.name }}</div>
 
                       <div class="pt-3" style="clear: both">
                         <v-list-item-title>
-                          <v-progress-linear :model-value="(1 - disk.free / disk.space) * 100" height="20" color="primary"></v-progress-linear>
+                          <v-progress-linear :model-value="(1 - disk.free / disk.space) * 100" height="20"
+                            color="primary"></v-progress-linear>
                         </v-list-item-title>
                         <v-list-item-subtitle>
                           {{ prettyBytes(disk.free * 1024) }} free of
@@ -89,13 +88,11 @@
               <v-card>
                 <div class="feature">
                   <v-card-text>
-                    <div>
-                      <div class="icon">
-                        <i class="fas fa-clock"></i>
-                      </div>
-
-                      <div class="label">Uptime</div>
+                    <div class="icon">
+                      <i class="fas fa-clock"></i>
                     </div>
+
+                    <div class="label">Uptime</div>
 
                     <div class="pt-3" style="clear: both; font-size: 14px">
                       {{ data.uptime }}
@@ -109,11 +106,10 @@
 
       <v-layout row class="mx-1">
         <v-row>
-          <v-col cols="12" md="6">
+          <v-col cols="12" sm="6">
             <v-card>
-              <v-list two-line>
-                <v-list-item>
-                  <v-list-item-title v-html="`Updates`"></v-list-item-title>
+              <v-list lines="two">
+                <v-list-item title="Updates">
                   <div v-if="data.updates >= 0">
                     <v-list-item-subtitle>
                       {{ data.updates }} updates,
@@ -126,43 +122,30 @@
                     <UpdatesConfig :serverId="serverId" />
                   </div>
                 </v-list-item>
-              </v-list>
 
-              <v-list two-line>
-                <v-list-item>
-                  <v-list-item-title v-html="`Hostname`"></v-list-item-title>
+                <v-list-item title="Hostname">
                   <v-list-item-subtitle v-if="data.hostname">
                     <Copy :val="data.hostname" text />
                     <Edit :val="data.hostname" hideText label="Hostname" name="hostname"
                       :path="'servers/' + this.serverId + '/hostname'" @save="fetchData(true)" />
                   </v-list-item-subtitle>
                 </v-list-item>
-              </v-list>
 
-              <v-list two-line>
-                <v-list-item>
-                  <v-list-item-title v-html="`IP address`"></v-list-item-title>
+                <v-list-item title="IP address">
                   <v-list-item-subtitle>
                     <Copy :val="data.ip" text />
                   </v-list-item-subtitle>
                 </v-list-item>
-              </v-list>
 
-              <v-list two-line>
-                <v-list-item>
-                  <v-list-item-title v-html="`IPv6 address`"></v-list-item-title>
+                <v-list-item title="IPv6 address">
                   <v-list-item-subtitle>
                     <Copy :val="data.ipv6" text />
                   </v-list-item-subtitle>
                 </v-list-item>
-              </v-list>
 
-              <v-list two-line>
-                <v-list-item>
-                  <v-list-item-title v-html="`Time Zone`"></v-list-item-title>
+                <v-list-item title="Time Zone">
                   <v-list-item-subtitle>
                     {{ data.timeZone }}
-
                     <TimeZone :serverId="serverId" @save="fetchData(true)" />
                   </v-list-item-subtitle>
                 </v-list-item>
@@ -170,63 +153,31 @@
 
             </v-card>
           </v-col>
-        </v-row>
 
-        <v-row>
-          <v-col cols="12" xs="6">
+          <v-col cols="12" sm="6">
             <v-card>
-              <v-list two-line>
-                <v-list-item>
-                  <v-list-item-title v-html="`Operating system`"></v-list-item-title>
-                  <v-list-item-subtitle>
-                    {{ data.os }}
-                  </v-list-item-subtitle>
-                </v-list-item>
-              </v-list>
+              <v-list lines="two">
+                <v-list-item title="Operating system" :subtitle="data.os"></v-list-item>
 
-              <v-list two-line>
-                <v-list-item>
-                  <v-list-item-title v-html="`Kernel version`"></v-list-item-title>
-                  <v-list-item-subtitle>
-                    {{ data.kernel }}
-                  </v-list-item-subtitle>
-                </v-list-item>
-              </v-list>
+                <v-list-item title="Kernel version" :subtitle="data.kernel"></v-list-item>
 
-              <v-list two-line>
-                <v-list-item>
-                  <v-list-item-title v-html="`Apache`"></v-list-item-title>
-                  <v-list-item-subtitle v-html="data.apache"></v-list-item-subtitle>
-                </v-list-item>
-              </v-list>
+                <v-list-item title="Apache" :subtitle="data.apache"></v-list-item>
 
-              <v-list two-line>
-                <v-list-item>
-                  <v-list-item-title v-html="`PHP`"></v-list-item-title>
+                <v-list-item title="PHP">
                   <v-list-item-subtitle>
                     {{ data.php }}
                     <PhpConfig :serverId="serverId" />
                   </v-list-item-subtitle>
                 </v-list-item>
-              </v-list>
 
-              <v-list two-line>
-                <v-list-item>
-                  <v-list-item-title v-html="`MariaDb`"></v-list-item-title>
+                <v-list-item title="MariaDb">
                   <v-list-item-subtitle>
                     {{ data.mariadb }}
                     <MysqlConfig :serverId="serverId" />
                   </v-list-item-subtitle>
                 </v-list-item>
-              </v-list>
 
-              <v-list two-line>
-                <v-list-item>
-                  <v-list-item-title v-html="`Postfix`"></v-list-item-title>
-                  <v-list-item-subtitle>
-                    {{ data.postfix }}
-                  </v-list-item-subtitle>
-                </v-list-item>
+                <v-list-item title="Postfix" :subtitle="data.postfix"></v-list-item>
               </v-list>
             </v-card>
           </v-col></v-row>

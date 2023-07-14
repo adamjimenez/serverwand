@@ -7,17 +7,10 @@
     <v-container v-if="!fetching" fluid>
       <v-row>
         <v-col>
-          <v-list-item>
+          <v-list-item :title="data.name" :subtitle="data.hostname">
             <template v-slot:prepend>
               <ServerIcon :provider="data.provider"></ServerIcon>
             </template>
-
-            <v-list-item-title>
-              {{ data.name }}
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              {{ data.hostname }}
-            </v-list-item-subtitle>
           </v-list-item>
         </v-col>
 
