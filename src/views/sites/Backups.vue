@@ -25,11 +25,9 @@
       <v-list v-if="data.items.length > 0">
         <v-list group>
 
-          <v-list-item v-for="(item, i) in data.items" :key="`item-${i}`" :title="item.name" @click="restore(item.name)">
+          <v-list-item v-for="(item, i) in data.items" :key="`item-${i}`" :title="item.name" :subtitle="item.date + ' - ' + prettyBytes(item.size)" @click="restore(item)">
             <template v-slot:append>
-                <v-list-item-subtitle>{{ item.date }} -
-                  {{ util.prettyBytes(item.size) }}</v-list-item-subtitle>
-              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item.line)" @click.stop>
+              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
                 <v-icon size="small">mdi:mdi-delete</v-icon>
               </v-btn>
             </template>
@@ -153,7 +151,7 @@ export default {
       if (
         await this.$refs.confirm.open(
           "Confirm",
-          "Delete " + item
+          "Delete " + item.name
         )
       ) {
 
@@ -161,7 +159,7 @@ export default {
         self.fetching = true;
 
         api
-          .post("sites/" + this.domainId + "/backups", { ids: [item] })
+          .post("sites/" + this.domainId + "/backups", { ids: [item.name] })
           .then(function () {
             self.fetchData();
           })
@@ -175,7 +173,7 @@ export default {
       if (
         await this.$refs.confirm.open(
           "Confirm",
-          "Restore " + item
+          "Restore " + item.name
         )
       ) {
 
@@ -183,7 +181,7 @@ export default {
         self.fetching = true;
 
         api
-          .post("sites/" + this.domainId + "/backups", { restore: item })
+          .post("sites/" + this.domainId + "/backups", { restore: item.name })
           .then(function () {
             self.fetchData();
           })
