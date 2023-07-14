@@ -7,121 +7,74 @@
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
-      <TogglePasswordAuthentication
-        :serverId="serverId"
-        :passwordAuthentication="data.password_authentication"
-      />
 
       <v-list>
-        <v-list-item-group>
-          <template v-for="(item, i) in data.users">
-            <v-list-item
-              :key="`item-${i}`"
-              :value="item"
-              @click="editItem(item)"
-            >
-              <template v-slot:default>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ item.name }}
-                    <v-icon x-small right v-if="item.sudo">fas fa-crown</v-icon>
-                  </v-list-item-title>
-                </v-list-item-content>
+        <v-list-item>
+          <TogglePasswordAuthentication :serverId="serverId" :passwordAuthentication="data.password_authentication" />
+        </v-list-item>
 
-                <v-list-item-action>
-                  <v-btn
-                    icon
-                    :disabled="loading"
-                    :loading="loading"
-                    @click="openKeys(item)"
-                    @click.stop
-                    title="Authorized keys"
-                  >
-                    <v-icon small>vpn_key</v-icon>
-                  </v-btn>
-                </v-list-item-action>
+        <v-list-item v-for="(item, i) in data.users" :key="`item-${i}`" :title="item.ip" :subtitle="item.label">
+          <v-list-item-title>
+            {{ item.name }}
+            <v-icon v-if="item.sudo" size="x-small" class="ml-2">fas fa-crown</v-icon>
+          </v-list-item-title>
 
-                <v-list-item-action>
-                  <v-btn
-                    icon
-                    :disabled="loading"
-                    :loading="loading"
-                    @click="deleteItem(item.name)"
-                    @click.stop
-                  >
-                    <v-icon small>delete</v-icon>
-                  </v-btn>
-                </v-list-item-action>
-              </template>
-            </v-list-item>
+          <template v-slot:append>
+            <v-btn icon :disabled="loading" :loading="loading" @click="openKeys(item)" @click.stop
+              title="Authorized keys">
+              <v-icon size="small">mdi:mdi-key</v-icon>
+            </v-btn>
+            <v-btn icon :disabled="loading" :loading="loading" @click="deleteItem(item.name)" @click.stop>
+              <v-icon size="small">mdi:mdi-delete</v-icon>
+            </v-btn>
           </template>
-        </v-list-item-group>
+        </v-list-item>
+
       </v-list>
+
       <v-container class="mt-5" fluid>
         <v-row>
-          <v-btn @click="addItem()" class="mr-3"> Add system user </v-btn>
+          <v-btn @click="addItem" class="mr-3"> Add system user </v-btn>
           <ClearSSHUser :serverId="serverId" :server="data" />
         </v-row>
       </v-container>
     </v-card>
 
-    <v-navigation-drawer app v-model="userDrawer" temporary right>
+    <v-dialog v-model="userDrawer">
       <v-card>
         <v-card-title> System user </v-card-title>
 
         <v-card-text>
-          <v-text-field
-            v-model="system_user.name"
-            label="User"
-            required
-          ></v-text-field>
+          <v-text-field v-model="system_user.name" label="User" required></v-text-field>
 
-          <v-text-field
-            v-model="system_user.password"
-            type="password"
-            label="Password"
-            required
-            autocomplete="new-password"
-          ></v-text-field>
+          <v-text-field v-model="system_user.password" type="password" label="Password" required
+            autocomplete="new-password"></v-text-field>
 
           <v-switch v-model="system_user.sudo" label="sudo"></v-switch>
 
-          <v-switch
-            :disabled="!system_user.sudo"
-            v-model="system_user.sudo_without_password"
-            label="sudo without password"
-          ></v-switch>
+          <v-switch :disabled="!system_user.sudo" v-model="system_user.sudo_without_password"
+            label="sudo without password"></v-switch>
 
-          <v-btn
-            :disabled="fetching"
-            :loading="loading"
-            color="success"
-            @click="saveUser"
-          >
+          <v-btn :disabled="!system_user.name" :loading="loading" color="success" @click="saveUser">
             Save
           </v-btn>
         </v-card-text>
       </v-card>
-    </v-navigation-drawer>
+    </v-dialog>
 
-    <v-navigation-drawer app v-model="keyDrawer" temporary right>
+    <v-dialog v-model="keyDrawer">
       <v-card>
         <v-card-title> Add key for {{ user.name }} </v-card-title>
 
         <v-card-text>
           <v-text-field v-model="key" label="key"></v-text-field>
 
-          <v-btn
-            :disabled="fetching"
-            :loading="loading"
-            color="success"
-            @click="saveKey"
-          >
+          <v-btn :disabled="!key" :loading="loading" color="success" @click="saveKey">
             Save
           </v-btn>
         </v-card-text>
       </v-card>
-    </v-navigation-drawer>
+    </v-dialog>
 
     <v-dialog v-model="showKeys">
       <v-card :loading="fetching">
@@ -131,57 +84,42 @@
           <div>Public SSH key</div>
 
           <v-list>
-            <v-list-item-group>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-subtitle>
-                    {{ user.key }}
-                  </v-list-item-subtitle>
-                </v-list-item-content>
+            <v-list group>
 
-                <v-list-item-action>
+              <v-list-item>
+                <v-list-item-subtitle style="white-space: nowrap;">
+                  {{ user.key }}
+                </v-list-item-subtitle>
+
+                <template v-slot:append>
                   <v-btn icon :disabled="fetching" :loading="fetching">
                     <Copy :val="user.key" />
                   </v-btn>
-                </v-list-item-action>
+                </template>
               </v-list-item>
-            </v-list-item-group>
+            </v-list>
           </v-list>
 
           <div>Authorized keys</div>
 
           <v-list v-if="!fetching">
-            <v-list-item-group>
-              <template v-for="(item, i) in keys">
-                <v-list-item :key="`item-${i}`" :value="item">
-                  <template v-slot:default>
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        {{ item.name }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle>
-                        {{ item.key }}
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
+            <v-list group>
 
-                    <v-list-item-action>
-                      <v-btn icon :disabled="fetching" :loading="fetching">
-                        <Copy :val="item.key" />
-                      </v-btn>
-                      <v-btn
-                        icon
-                        :disabled="fetching"
-                        :loading="fetching"
-                        @click="deleteKey(item.line)"
-                        @click.stop
-                      >
-                        <v-icon small>delete</v-icon>
-                      </v-btn>
-                    </v-list-item-action>
-                  </template>
-                </v-list-item>
-              </template>
-            </v-list-item-group>
+              <v-list-item v-for="(item, i) in keys" :key="`item-${i}`" :title="item.name">
+                <v-list-item-subtitle style="white-space: nowrap;">
+                  {{ item.key }}
+                </v-list-item-subtitle>
+                <template v-slot:append>
+                  <v-btn icon :disabled="fetching" :loading="fetching">
+                    <Copy :val="item.key" />
+                  </v-btn>
+                  <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteKey(item.line)" @click.stop>
+                    <v-icon size="small">mdi:mdi-delete</v-icon>
+                  </v-btn>
+                </template>
+              </v-list-item>
+
+            </v-list>
           </v-list>
         </v-card-text>
 
@@ -191,11 +129,12 @@
       <v-card>
         <div>
           <v-card-title primary-title>
-            <v-btn @click="addKey()"> Add Key </v-btn>
+            <v-btn @click="addKey"> Add Key </v-btn>
           </v-card-title>
         </div>
       </v-card>
     </v-dialog>
+    <Confirm ref="confirm" />
   </div>
 </template>
 
@@ -205,6 +144,7 @@ import Loading from "../../components/Loading";
 import Copy from "../../components/Copy";
 import TogglePasswordAuthentication from "../../components/TogglePasswordAuthentication";
 import ClearSSHUser from "../../components/ClearSSHUser";
+import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
@@ -212,6 +152,7 @@ export default {
     Copy,
     TogglePasswordAuthentication,
     ClearSSHUser,
+    Confirm,
   },
   data() {
     return {
@@ -281,31 +222,34 @@ export default {
       this.system_user = user;
       this.userDrawer = true;
     },
-    deleteItem(user) {
-      this.$confirm("Delete " + user + "?").then((res) => {
-        if (res) {
-          var self = this;
-          this.fetching = true;
-          this.error = "";
+    deleteItem: async function (user) {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Delete " + user + "?"
+        )
+      ) {
+        var self = this;
+        this.fetching = true;
+        this.error = "";
 
-          api
-            .post("servers/" + this.serverId + "/systemusers", { user: user })
-            .then(function (response) {
-              console.log(response);
+        api
+          .post("servers/" + this.serverId + "/systemusers", { user: user })
+          .then(function (response) {
+            console.log(response);
 
-              if (!response.data.success) {
-                self.error = response.data.error;
-                self.fetching = false;
-              } else {
-                self.fetchData();
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
+            if (!response.data.success) {
+              self.error = response.data.error;
               self.fetching = false;
-            });
-        }
-      });
+            } else {
+              self.fetchData();
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+            self.fetching = false;
+          });
+      }
 
       return false;
     },

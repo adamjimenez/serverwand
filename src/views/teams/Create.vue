@@ -10,20 +10,10 @@
       <v-card-title>Team details</v-card-title>
 
       <v-card-text>
-        <v-form v-if="!loading" ref="form" v-model="valid" lazy-validation>
-          <v-text-field
-            v-model="data.name"
-            :rules="nameRules"
-            label="Name"
-            required
-          ></v-text-field>
+        <v-form v-if="!loading" v-model="valid" lazy-validation>
+          <v-text-field v-model="data.name" :rules="nameRules" label="Name" required></v-text-field>
 
-          <v-btn
-            :disabled="loading"
-            :loading="loading"
-            color="success"
-            @click="validate"
-          >
+          <v-btn :disabled="!valid" :loading="loading" color="success" @click="validate">
             Save
           </v-btn>
         </v-form>
@@ -83,27 +73,25 @@ export default {
     validate() {
       var self = this;
 
-      if (this.$refs.form.validate()) {
-        this.details = "";
-        this.loading = true;
+      this.details = "";
+      this.loading = true;
 
-        api
-          .post("teams/" + self.id, this.data)
-          .then(function (response) {
-            console.log(response);
-            if (response.data.id) {
-              self.$router.push("/teams/" + response.data.id + "/members");
-            } else if (response.data.error) {
-              self.error = response.data.error;
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          .finally(function () {
-            self.loading = false;
-          });
-      }
+      api
+        .post("teams/" + self.id, this.data)
+        .then(function (response) {
+          console.log(response);
+          if (response.data.id) {
+            self.$router.push("/teams/" + response.data.id + "/members");
+          } else if (response.data.error) {
+            self.error = response.data.error;
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .finally(function () {
+          self.loading = false;
+        });
     },
   },
 };

@@ -1,31 +1,28 @@
 <template>
-  <v-layout row>
-    <v-flex>
-      <v-alert v-if="error" type="error">
-        {{ error }}
-      </v-alert>
+  <div>
+    <v-alert v-if="error" type="error">
+      {{ error }}
+    </v-alert>
 
-      <Loading :value="loading" />
+    <Loading :value="loading" />
 
-      <v-card flat :loading="fetching">
-        <v-card-title primary-title>
-          <div class="headline">Users</div>
-        </v-card-title>
+    <v-card :loading="fetching">
+      <v-card-title primary-title>
+        <div class="headline">Users</div>
+      </v-card-title>
 
-        <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
-          <template v-slot:item.name="{ item }">
-            <v-list-item>
+      <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
+        <template v-slot:item.name="{ item }">
+          <v-list-item :to="'/users/' + item.raw.id + '/summary'" :title="item.raw.name">
+            <template v-slot:prepend>
               <v-icon class="mr-3">fas fa-user</v-icon>
+            </template>
+          </v-list-item>
+        </template>
+      </v-data-table>
 
-              <router-link :to="'/users/' + item.id + '/summary'">
-                <v-list-item-title v-html="item.name"></v-list-item-title>
-              </router-link>
-            </v-list-item>
-          </template>
-        </v-data-table>
-      </v-card>
-    </v-flex>
-  </v-layout>
+    </v-card>
+  </div>
 </template>
 
 <script>
@@ -34,7 +31,7 @@ import Loading from "../components/Loading";
 
 export default {
   components: {
-    Loading,
+    Loading
   },
   data() {
     return {
@@ -50,8 +47,8 @@ export default {
       selected: [],
       headers: [
         {
-          text: "Name ",
-          value: "name",
+          title: "Name ",
+          key: "name",
         },
       ],
     };
@@ -97,6 +94,7 @@ export default {
 .results a {
   color: inherit !important;
 }
+
 .results .v-list__tile__sub-title {
   opacity: 0.7;
 }

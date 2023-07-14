@@ -2,7 +2,7 @@
   <span>
     <v-tooltip top>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" icon @click="clean()">
+        <v-btn icon @click="clean()">
           <v-icon small>fas fa-broom</v-icon>
         </v-btn>
       </template>
@@ -13,7 +13,7 @@
       <v-card :loading="fetching">
         <v-card-title> Clean files </v-card-title>
         <v-card-subtitle>
-          {{ sumSize(selectedFiles) | prettyBytes }} to be removed
+          {{ prettyBytes(sumSize(selectedFiles)) }} to be removed
         </v-card-subtitle>
 
         <v-card-text>
@@ -29,7 +29,7 @@
           >
             <template v-slot:item.size="{ item }">
               <div v-if="item.size > 0">
-                {{ item.size | prettyBytes }}
+                {{ prettyBytes(item.size) }}
               </div>
             </template>
           </v-data-table>
@@ -58,6 +58,7 @@
 
 <script>
 import api from "../services/api";
+import util from "../services/util";
 
 export default {
   props: {
@@ -70,8 +71,8 @@ export default {
       showClean: false,
       selectedFiles: [],
       cleanHeaders: [
-        { text: "File", value: "file" },
-        { text: "Size", value: "size" },
+        { title: "File", key: "file" },
+        { title: "Size", key: "size" },
       ],
       files: [],
     };
@@ -112,6 +113,9 @@ export default {
       api
         .post("servers/" + this.serverId + "/clean", { files: files })
         .then(() => self.clean());
+    },
+    prettyBytes(value) {
+      return util.prettyBytes(value);
     },
   },
 };

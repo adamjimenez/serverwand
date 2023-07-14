@@ -1,21 +1,19 @@
 <template>
   <span ref="container">
-    <v-tooltip top v-if="text">
-      <template v-slot:activator="{ on }">
-        <span v-on="on" @click="copy(val)" @mouseleave="resetCopyText()">
+    <v-tooltip :text="copyText" top v-if="text">
+      <template v-slot:activator="{ props }">
+        <span v-bind="props" @click="copy(val)" @mouseleave="resetCopyText">
           {{ val }}
         </span>
       </template>
-      <span>{{ copyText }}</span>
     </v-tooltip>
 
-    <v-tooltip top v-else>
-      <template v-slot:activator="{ on }">
-        <v-btn v-on="on" icon @click="copy(val)" @mouseleave="resetCopyText()">
-          <v-icon small>file_copy</v-icon>
+    <v-tooltip :text="copyText" top v-else>
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props" icon @click="copy(val)" @mouseleave="resetCopyText">
+          <v-icon size="small">mdi:mdi-content-copy</v-icon>
         </v-btn>
       </template>
-      <span>{{ copyText }}</span>
     </v-tooltip>
   </span>
 </template>

@@ -12,7 +12,7 @@
       >
 
         <template v-slot:item.created="{ item }">
-          {{ item.created | formatDate }}
+          {{ formatDate(item.created) }}
         </template>
 
         <template v-slot:item.actions="{ item }">
@@ -37,7 +37,7 @@
       </div>
     </v-card>
 
-    <v-navigation-drawer app v-model="drawer" temporary right>
+    <v-dialog v-model="drawer">
       <v-card>
         <v-card-title> Subscription </v-card-title>
 
@@ -55,7 +55,7 @@
           ></v-select>
 
           <v-btn
-            :disabled="dialog"
+            :disabled="!data.domain || !data.product"
             :loading="loading"
             color="success"
             @click="saveItem"
@@ -64,17 +64,21 @@
           </v-btn>
         </v-card-text>
       </v-card>
-    </v-navigation-drawer>
+    </v-dialog>
+    <Confirm ref="confirm" />
   </div>
 </template>
 
 <script>
 import api from "../../services/api";
 import Loading from "../../components/Loading";
+import Confirm from "../../components/ConfirmDialog.vue";
+import util from "../../services/util";
 
 export default {
   components: {
     Loading,
+    Confirm
   },
   data() {
     return {
@@ -97,16 +101,16 @@ export default {
       products: [],
       headers: [
         {
-          text: "Domain",
-          value: "domain",
+          title: "Domain",
+          key: "domain",
         },
         {
-          text: "Name",
-          value: "name",
+          title: "Name",
+          key: "name",
         },
         {
-          text: "Created",
-          value: "created",
+          title: "Created",
+          key: "created",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
@@ -150,7 +154,7 @@ export default {
 
           response.data.products.forEach((element) => {
             self.products.push({
-              text: element.name,
+              title: element.name,
               value: element.id,
             });
           });
@@ -206,11 +210,13 @@ export default {
           });
       }
     },
-    deleteItem(id) {
-      this.$confirm("Delete subscription?").then((res) => {
-        if (!res) {
-          return;
-        }
+    deleteItem: async function(item) {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Delete " + item.id
+        )
+      ) {
 
         var self = this;
         this.error = "";
@@ -218,7 +224,7 @@ export default {
         this.loading = true;
 
         api
-          .post("users/" + this.id + "/subscriptions/" + id, { delete: 1 })
+          .post("users/" + this.id + "/subscriptions/" + item.id, { delete: 1 })
           .then(function (response) {
             console.log(response);
 
@@ -235,7 +241,10 @@ export default {
             self.dialog = false;
             self.loading = false;
           });
-      });
+      };
+    },
+    formatDate(value) {
+      return util.formatDate(value);
     },
   },
 };

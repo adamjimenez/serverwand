@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="value" persistent content content-class="centered-dialog">
+  <v-dialog v-model="show" persistent content content-class="centered-dialog">
     <v-container fill-height>
       <v-card color="primary" dark>
         <v-card-text>
@@ -17,7 +17,9 @@
 export default {
   name: "Loading",
   data: () => {
-    return {} 
+    return {
+      show: false
+    }
   },
   props: {
     value: {
@@ -29,6 +31,11 @@ export default {
       default: "Summoning...",
     },
   },
+  watch: {
+    value: function (newVal) {
+      this.show = newVal;
+    }
+  }
 };
 </script>
 

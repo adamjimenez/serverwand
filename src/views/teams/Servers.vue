@@ -3,35 +3,22 @@
     <v-alert v-if="error" type="error">
       {{ error }}
     </v-alert>
-    
+
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
       <v-list>
-        <v-list-item-group>
-          <template v-for="(item, i) in data.servers">
-            <v-list-item :key="`item-${i}`" :value="item">
-              <template v-slot:default>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ item.name }}
-                  </v-list-item-title>
-                </v-list-item-content>
+        <v-list group>
 
-                <v-list-item-action>
-                  <v-btn
-                    icon
-                    :disabled="fetching"
-                    :loading="fetching"
-                    @click="deleteItem(item.id)"
-                  >
-                    <v-icon small>delete</v-icon>
-                  </v-btn>
-                </v-list-item-action>
-              </template>
-            </v-list-item>
-          </template>
-        </v-list-item-group>
+          <v-list-item v-for="(item, i) in data.servers" :key="`item-${i}`" :title="item.name">
+            <template v-slot:append>
+              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
+                <v-icon size="small">mdi:mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-list-item>
+
+        </v-list>
       </v-list>
     </v-card>
 
@@ -43,23 +30,14 @@
       </div>
     </v-card>
 
-    <v-navigation-drawer app v-model="drawer" temporary right>
+    <v-dialog v-model="drawer">
       <v-card>
         <v-card-title> Server </v-card-title>
 
         <v-card-text>
-          <v-select
-            v-model="data.server"
-            :items="servers"
-            label="Server"
-          ></v-select>
+          <v-select v-model="data.server" :items="servers" label="Server"></v-select>
 
-          <v-btn
-            :disabled="dialog"
-            :loading="dialog"
-            color="success"
-            @click="saveItem"
-          >
+          <v-btn :disabled="!data.server" :loading="dialog" color="success" @click="saveItem">
             Save
           </v-btn>
 
@@ -69,17 +47,20 @@
           </p>
         </v-card-text>
       </v-card>
-    </v-navigation-drawer>
+    </v-dialog>
+    <Confirm ref="confirm" />
   </div>
 </template>
 
 <script>
 import api from "../../services/api";
 import Loading from "../../components/Loading";
+import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
     Loading,
+    Confirm
   },
   data() {
     return {
@@ -121,29 +102,29 @@ export default {
       api
         .get("teams/" + this.id)
         .then(response => {
-            console.log(response);
-            self.data=response.data.item;
-            document.title="Servers"+" | "+self.data.name;
-          })
+          console.log(response);
+          self.data = response.data.item;
+          document.title = "Servers" + " | " + self.data.name;
+        })
         .catch(error => console.log(error))
-        .finally(() => self.fetching=false);
+        .finally(() => self.fetching = false);
 
       api
         .get("servers/")
         .then(response => {
-            console.log(response);
+          console.log(response);
 
-            response.data.items.forEach((element) => {
-              self.servers.push({
-                text: element.name,
-                value: element.id,
-              });
+          response.data.items.forEach((element) => {
+            self.servers.push({
+              title: element.name,
+              value: element.id,
             });
-          })
+          });
+        })
         .catch(error => console.log(error))
-        .finally(() => self.loading=false);
+        .finally(() => self.loading = false);
 
-      api.get("settings/profile").then(response => self.useMasterPassword=response.data.profile.prefs.useMasterPassword);
+      api.get("settings/profile").then(response => self.useMasterPassword = response.data.profile.prefs.useMasterPassword);
     },
     addItem() {
       this.server.name = "";
@@ -160,48 +141,52 @@ export default {
         api
           .post("teams/" + this.id + '/servers', { server: this.data.server })
           .then(response => {
-              console.log(response);
+            console.log(response);
 
-              if(!response.data.success) {
-                self.error=response.data.error;
-              } else {
-                self.drawer=false;
-                self.fetchData();
-              }
-            })
+            if (!response.data.success) {
+              self.error = response.data.error;
+            } else {
+              self.drawer = false;
+              self.fetchData();
+            }
+          })
           .catch(error => {
-              console.log(error);
-              self.dialog=false;
-            })
-          .finally(() => self.dialog=false);
+            console.log(error);
+            self.dialog = false;
+          })
+          .finally(() => self.dialog = false);
       }
     },
-    deleteItem(id) {
-      this.$confirm("Delete server?").then((res) => {
-        if (res) {
-          var self = this;
-          this.error = "";
-          this.dialog = true;
-          this.loading = true;
+    deleteItem: async function (item) {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Delete " + item.name
+        )
+      ) {
+        var self = this;
+        this.error = "";
+        this.dialog = true;
+        this.loading = true;
 
-          api
-            .post("teams/" + this.id + '/servers', { delete: 1, server: id })
-            .then(function (response) {
-              console.log(response);
+        api
+          .post("teams/" + this.id + '/servers', { delete: 1, server: item.id })
+          .then(function (response) {
+            console.log(response);
 
-              if(response.data.error) {
-                self.error=response.data.error;
-              } else {
-                self.fetchData();
-              }
-            })
-            .catch(error => console.log(error))
-            .finally(function () {
-              self.dialog = false;
-              self.loading = false;
-            });
-        }
-      });
+            if (response.data.error) {
+              self.error = response.data.error;
+            } else {
+              self.fetchData();
+            }
+          })
+          .catch(error => console.log(error))
+          .finally(function () {
+            self.dialog = false;
+            self.loading = false;
+          });
+      }
+      ;
     },
   },
 };

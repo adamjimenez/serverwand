@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-btn @click="open()" title="New file">
-      <v-icon>mdi-file-outline</v-icon>
+      <v-icon>mdi:mdi-file-outline</v-icon>
     </v-btn>
     <v-dialog app v-model="dialog">
       <v-card :loading="fetching">

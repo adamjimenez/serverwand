@@ -95,28 +95,28 @@ export default {
       selected: false,
       headers: [
         {
-          text: "",
-          value: "",
+          title: "",
+          key: "",
         },
         {
-          text: "",
-          value: "",
+          title: "",
+          key: "",
         },
         {
-          text: "PID",
-          value: "id",
+          title: "PID",
+          key: "id",
         },
         {
-          text: "Name",
-          value: "name",
+          title: "Name",
+          key: "name",
         },
         {
-          text: "Status",
-          value: "status",
+          title: "Status",
+          key: "status",
         },
         {
-          text: "Ports",
-          value: "port",
+          title: "Ports",
+          key: "port",
         },
       ],
       error_log: "",
@@ -204,7 +204,7 @@ export default {
       var ids = [];
       this.items.forEach((element) => {
         if (element.selected) {
-          ids.push(element.id);
+          ids.push(element);
         }
       });
 

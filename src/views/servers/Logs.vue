@@ -4,31 +4,29 @@
       {{ error }}
     </v-alert>
 
-    <EditFile
-      ref="editFile"
-      :serverId="serverId"
-      action="files"
-      @complete="fetchLog()"
-      @error="handleError"
-      @loading="handleLoading"
-    />
+    <EditFile ref="editFile" :serverId="serverId" action="files" @complete="fetchLog()" @error="handleError"
+      @loading="handleLoading" />
 
     <v-card :loading="fetching">
       <v-card-title primary-title>
-        <v-select :items="logs" label="Log" @change="fetchLog"></v-select>
+        <v-row>
+          <v-col>
+            <v-select :items="logs" label="Log" @update:modelValue="fetchLog"></v-select>
+          </v-col>
 
-        <v-text-field label="Filter" v-model="filter"></v-text-field>
+          <v-col>
+            <v-text-field label="Filter" v-model="filter"></v-text-field>
+          </v-col>
 
-        <v-btn @click="fetchLog()" :disabled="!log">
-          <i class="fas fa-redo-alt" :class="fetching ? 'fa-spin' : ''"></i>
-        </v-btn>
+          <v-col cols="1">
+            <v-btn @click="fetchLog()" :disabled="!log" icon>
+              <i class="fas fa-redo-alt" :class="fetching ? 'fa-spin' : ''"></i>
+            </v-btn>
+          </v-col>
+        </v-row>
       </v-card-title>
       <v-card-text>
-        <div
-          v-if="log == 'serverstatus'"
-          v-html="logContent"
-          class="serverstatus"
-        ></div>
+        <div v-if="log == 'serverstatus'" v-html="logContent" class="serverstatus"></div>
         <div class="pre" v-else v-html="filteredLog"></div>
       </v-card-text>
     </v-card>
@@ -82,39 +80,39 @@ export default {
       logs: [
         {
           value: "journal",
-          text: "Journal",
+          title: "Journal",
         },
         {
           value: "auth",
-          text: "Auth",
+          title: "Auth",
         },
         {
           value: "apache_access",
-          text: "Apache Access",
+          title: "Apache Access",
         },
         {
           value: "apache_error",
-          text: "Apache Error",
+          title: "Apache Error",
         },
         {
           value: "mail",
-          text: "Mail",
+          title: "Mail",
         },
         {
           value: "mysql",
-          text: "MySQL",
+          title: "MySQL",
         },
         {
           value: "fail2ban",
-          text: "Fail2ban",
+          title: "Fail2ban",
         },
         {
           value: "letsencrypt",
-          text: "Letsencrypt",
+          title: "Letsencrypt",
         },
         {
           value: "serverstatus",
-          text: "Server Status",
+          title: "Server Status",
         },
       ],
       log: "",
@@ -130,7 +128,7 @@ export default {
 
     var self = this;
 
-    window.onhashchange = async function () {      
+    window.onhashchange = async function () {
       var path = location.hash.substr(1);
 
       if (!path) {
@@ -150,7 +148,7 @@ export default {
         id: file,
         name: file,
       });
-      
+
       self.$refs.editFile.goToLine(line);
       location.hash = '';
     };
@@ -216,7 +214,7 @@ export default {
           console.log(response);
           self.logContent = response.data.content;
         })
-        .finally(function() {
+        .finally(function () {
           self.fetching = false;
         });
     },

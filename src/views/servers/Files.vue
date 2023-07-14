@@ -111,7 +111,7 @@
         <v-row>
           <v-col class="flex-grow-0">
             <v-btn icon @click="upLevel()" :disabled="path === '/'" title="Up one level">
-              <v-icon small>arrow_upward</v-icon>
+              <v-icon small>mdi:mdi-arrow-up</v-icon>
             </v-btn>
           </v-col>
 
@@ -138,27 +138,27 @@
       </v-container>
 
       <v-data-table
-        v-model="selected"
+        v-model="selectedIds"
         :headers="headers"
         :items="items"
         class="results"
         ref="results"
         show-select
         mobile-breakpoint="0"
-        @click:row="open"
+        @click:row="function(event, item) { open(item.item.raw) }"
       >
 
         <template v-slot:item.size="{ item }">
-          {{ item.size | prettyBytes }}
+          {{ prettyBytes(item.raw.size) }}
         </template>
 
         <template v-slot:item.modified="{ item }">
-          {{ item.modified | formatDate }}
+          {{ formatDate(item.raw.modified) }}
         </template>
 
         <template v-slot:item.owner="{ item }">
-          {{ item.owner }}
-          {{ item.group }}
+          {{ item.raw.owner }}
+          {{ item.raw.group }}
         </template>
 
       </v-data-table>
@@ -168,6 +168,7 @@
 
 <script>
 import api from "../../services/api";
+import util from "../../services/util";
 import Loading from "../../components/Loading";
 import NewFile from "../../components/Files/NewFile";
 import NewFolder from "../../components/Files/NewFolder";
@@ -208,38 +209,38 @@ export default {
       fetching: false,
       userHashChange: true,
       serverId: 0,
-      selected: [],
+      selectedIds: [],
       folderSelected: false,
       headers: [
         {
-          text: "",
-          value: "",
+          title: "",
+          key: "",
         },
         {
-          text: "Name ",
-          value: "name",
+          title: "Name ",
+          key: "name",
         },
         {
-          text: "Size ",
-          value: "size",
+          title: "Size ",
+          key: "size",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: "Last modified ",
-          value: "modified",
+          title: "Last modified ",
+          key: "modified",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: "Permissions ",
-          value: "perms",
+          title: "Permissions ",
+          key: "perms",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: "Owner ",
-          value: "owner",
+          title: "Owner ",
+          key: "owner",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
@@ -249,16 +250,26 @@ export default {
   },
   computed: {
     dir: function () {
-      var file = this.basename(this.path);
+      let path = this.path;
 
-      if (file.indexOf('.') !== -1) {
-        // remove file part from path
-        var arr = this.path.split(/[\\/]/);
-        arr.pop()
-        return arr.join('/')
+      if (!path.endsWith('/')) {
+        let pos = path.lastIndexOf('/');
+        if (pos !== -1) {
+          path = path.substr(0, pos);
+        }
       }
 
-      return this.path;
+      return path;
+    },
+    selected: function () {
+      let selected = [];
+
+      var self = this;
+      this.selectedIds.forEach(function (id) {
+        selected.push(self.items.find(obj => obj.id === id))
+      });
+
+      return selected;
     }
   },
   watch: {
@@ -385,7 +396,7 @@ export default {
           })
           .finally(() => {
             self.fetching = false;
-            self.selected = [];
+            self.selectedIds = [];
 
             // open file if we have one
             if (self.fileToOpen) {
@@ -438,6 +449,12 @@ export default {
     handleLoading(loading) {
       this.fetching = loading;
     },
+    prettyBytes(value) {
+      return util.prettyBytes(value);
+    },
+    formatDate(value) {
+      return util.formatDate(value);
+    }
   },
 };
 </script>

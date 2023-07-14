@@ -30,7 +30,7 @@
       >
 
         <template v-slot:item.size="{ item }">
-          <span>{{ item.size | prettyBytes }}</span>
+          <span>{{ prettyBytes(item.raw.size) }}</span>
         </template>
 
       </v-data-table>
@@ -48,13 +48,13 @@
 
     <v-dialog app v-model="emailDrawer">
       <v-card>
-        <v-card-title> Message: {{ message_id }} </v-card-title>
+        <v-card-title> Message: {{ messageId }} </v-card-title>
 
         <v-card-text>
           <iframe
             width="100%"
             height="315"
-            :src="message_url"
+            :src="messageUrl"
             frameborder="0"
           ></iframe>
         </v-card-text>
@@ -65,6 +65,7 @@
 
 <script>
 import api from "../../services/api";
+import util from "../../services/util";
 import Loading from "../../components/Loading";
 
 export default {
@@ -78,8 +79,8 @@ export default {
       data: {},
       details: "",
       message: "",
-      message_url: "",
-      message_id: "",
+      messageId: "",
+      messageUrl: "",
       loading: false,
       fetching: false,
       emailDrawer: false,
@@ -87,34 +88,34 @@ export default {
       selected: [],
       headers: [
         {
-          text: "",
-          value: "",
+          title: "",
+          key: "",
         },
         {
-          text: "ID ",
-          value: "id",
+          title: "ID ",
+          key: "id",
         },
         {
-          text: "Size ",
-          value: "size",
+          title: "Size ",
+          key: "size",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: "From ",
-          value: "sender",
+          title: "From ",
+          key: "sender",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: "To ",
-          value: "recipient",
+          title: "To ",
+          key: "recipient",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: "Date ",
-          value: "date",
+          title: "Date ",
+          key: "date",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
@@ -156,13 +157,12 @@ export default {
         .finally(() => self.fetching=false);
     },
     deleteMail() {
-
       var self = this;
 
       // get selected ids
       var ids = [];
       this.selected.forEach((element) => {
-        ids.push(element.id);
+        ids.push(element);
       });
       
       // process deletions
@@ -174,14 +174,17 @@ export default {
         .catch((error) => console.log(error))
         .finally(() => self.fetching=false);
     },
-    view(item) {
-      this.message_id = item.id;
-      this.message_url =
+    view(event, item) {
+      this.messageId = item.item.raw.id
+      this.messageUrl =
         "https://serverwand.com/api/servers/" +
         this.serverId +
         "/messages/" +
-        this.message_id;
+        this.messageId;
       this.emailDrawer = true;
+    },
+    prettyBytes(value) {
+      return util.prettyBytes(value);
     },
   },
 };

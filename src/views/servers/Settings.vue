@@ -7,15 +7,13 @@
     <Loading :value="fetching" />
 
     <v-card class="pa-3">
-      <v-row>
-        <v-col>
-          <div class="ma-3">
-            <v-btn @click="editServer"> Edit </v-btn>
-            <Reboot :serverId="serverId" class="mx-3" />
-            <Disconnect :serverId="serverId" :server="data" />
-          </div>
-        </v-col>
-      </v-row>
+      <v-card-text>
+        <v-row>
+          <v-btn @click="editServer"> Edit </v-btn>
+          <Reboot :serverId="serverId" class="mx-3" />
+          <Disconnect :serverId="serverId" :server="data" />
+        </v-row>
+      </v-card-text>
     </v-card>
 
     <v-card class="ma-3 pa-3">
@@ -24,7 +22,7 @@
       </v-card-title>
 
       <v-form ref="form">
-        
+
         <v-container>
           <v-row>
             <v-col>
@@ -34,8 +32,8 @@
               </div>
             </v-col>
             <v-col>
-              <v-text-field v-model="data.notifications.disk_usage.threshold" label="Usage threshold" value="90" min="0"
-                max="100" type="number" suffix="%" :disabled="!data.notifications.disk_usage.active" />
+              <v-text-field v-model="data.notifications.disk_usage.threshold" label="Usage threshold" min="0" max="100"
+                type="number" suffix="%" :disabled="!data.notifications.disk_usage.active" />
             </v-col>
           </v-row>
 
@@ -47,8 +45,8 @@
               </div>
             </v-col>
             <v-col>
-              <v-text-field v-model="data.notifications.mail_queue.threshold" label="Mail queue threshold" value="100"
-                min="0" type="number" suffix="Emails" :disabled="!data.notifications.mail_queue.active" />
+              <v-text-field v-model="data.notifications.mail_queue.threshold" label="Mail queue threshold" min="0"
+                type="number" suffix="Emails" :disabled="!data.notifications.mail_queue.active" />
             </v-col>
           </v-row>
 
@@ -60,20 +58,16 @@
               </div>
             </v-col>
             <v-col>
-              <v-text-field v-model="data.notifications.db_connections.threshold" label="Connection threshold"
-                value="100" min="0" max="100" type="number" suffix="%"
-                :disabled="!data.notifications.db_connections.active" />
+              <v-text-field v-model="data.notifications.db_connections.threshold" label="Connection threshold" min="0"
+                max="100" type="number" suffix="%" :disabled="!data.notifications.db_connections.active" />
             </v-col>
           </v-row>
         </v-container>
 
-
-        <v-btn color="success my-5" @click="saveNotifications">
+        <v-btn color="success my-5" @click="saveNotifications" :disabled="!changed">
           Save
         </v-btn>
-
       </v-form>
-
 
     </v-card>
   </div>
@@ -103,7 +97,13 @@ export default {
           db_connections: {},
         }
       },
+      orig: {}
     };
+  },
+  computed: {
+    changed: function () {
+      return JSON.stringify(this.data) !== JSON.stringify(this.orig)
+    }
   },
   created() {
     // fetch the data when the view is created and the data is
@@ -131,6 +131,7 @@ export default {
 
           if (response.data.item) {
             self.data = response.data.item;
+            self.orig = JSON.parse(JSON.stringify(response.data.item));
             document.title = "Settings | " + self.data.name;
           }
         })

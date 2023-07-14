@@ -4,21 +4,25 @@
       {{ error }}
     </v-alert>
 
-    <v-dialog app v-model="dialog">
-      <v-card :loading="fetching">
-        <v-card-title> {{ data.file }} </v-card-title>
+    <v-dialog v-model="dialog">
+      <v-card :loading="fetching" style="height: 95vh;">
+
+        <v-toolbar :title="data.file">
+          <v-spacer></v-spacer>
+          <v-btn @click="saveFile" v-if="save !== 'false'" fab icon> 
+            <v-icon>mdi:mdi-content-save</v-icon>
+          </v-btn>
+        </v-toolbar>
 
         <v-card-text>
           <MonacoEditor
             class="editor"
             ref="editor"
-            v-model="data.content"
+            :language="language"
+            v-model:value="data.content"
             theme="vs-dark"
-            :options="{ automaticLayout: true }"
-            @editorDidMount="setLanguage"
           />
 
-          <v-btn color="primary" @click="saveFile" v-if="save !== 'false'"> Save </v-btn>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -27,7 +31,7 @@
 
 <script>
 import api from "../../services/api";
-import MonacoEditor from "vue-monaco";
+import MonacoEditor from "monaco-editor-vue3";
 
 export default {
   components: {
@@ -43,8 +47,9 @@ export default {
   watch: {
     dialog: function (value) {
       // clear models
-      if (value === false) 
-        window.monaco.editor.getModels().forEach(model => model.dispose());
+      if (value === false) {
+        //window.monaco.editor.getModels().forEach(model => model.dispose());
+      }
     },
   },
 
@@ -56,6 +61,7 @@ export default {
       },
       error: "",
       dialog: false,
+      language: 'javascript'
     };
   },
 
@@ -64,27 +70,15 @@ export default {
       return path.split(/[\\/]/).pop();
     },
     getEditor() {
-      return this.$refs.editor.getEditor();
-    },
-    setLanguage() {
-      if (!this.$refs.editor) {
-        return;
-      }
-
-      var editor = this.$refs.editor.getEditor();
-
-      const model = window.monaco.editor.createModel(
-        this.data.content,
-        undefined, // language
-        window.monaco.Uri.file(this.data.file) // uri
-      );
-
-      editor.setModel(model);
+      return this.$refs.editor.editor;
     },
     open(item) {
       var self = this;
 
       this.$emit("loading", true);
+
+      console.log(item.id);
+      
       return api
         .post("servers/" + this.serverId + "/" + this.action, {
           cmd: 'get',
@@ -100,7 +94,7 @@ export default {
             self.dialog = true;
 
             // set language
-            self.setLanguage();
+            //self.setLanguage();
           } else {
             self.$emit("error", response.data.error);
           }
@@ -142,13 +136,10 @@ export default {
     },
     goToLine(line) {
       line = parseInt(line);
-      
-      var editor = this.$refs.editor.getEditor();
+      var editor = this.getEditor()
       editor.setPosition({ lineNumber: line, column: 1 });
       editor.revealLineInCenter(line);
       editor.focus();
-
-      //console.log(editor)
     }
   },
 };

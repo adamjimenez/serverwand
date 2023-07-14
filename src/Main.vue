@@ -1,62 +1,28 @@
 <template>
   <div class="page-container">
     <v-app>
-      <v-navigation-drawer app v-model="drawer">
-        <v-layout column fill-height>
-          <v-toolbar flat max-height="64">
-            <v-list>
-              <v-list-item>
-                <v-list-item-title class="title">
-                  <router-link to="/servers">
-                    <v-icon left color="primary">fas fa-magic</v-icon>
-                    <strong>SERVERWAND</strong>
-                  </router-link>
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-toolbar>
+      <v-navigation-drawer v-model="drawer">
+        <v-list nav>
+          <v-list-item>
+            <v-list-item-title>
+              <router-link to="/servers">
+                <v-list-item>
+                  <template v-slot:prepend>
+                    <v-icon class="mr-2" size="large">fas fa-magic</v-icon>
+                  </template>
 
-          <v-list dense class="pt-0">
-            <v-list-item
-              v-for="item in filtered"
-              :key="item.title"
-              :to="item.to"
-            >
-              <v-list-item-content>
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-          <v-spacer></v-spacer>
+                  <v-list-item-title>
+                    <h1>SERVERWAND</h1>
+                  </v-list-item-title>
+                </v-list-item>
+              </router-link>
+            </v-list-item-title>
+          </v-list-item>
 
-          <!--
-          <v-list>
-            <v-layout row justify-center>
-              <v-flex xs2>
-                <p class="text-xs-right" style="margin-top: 18px;">
-                  Light
-                </p>
-              </v-flex>
-              <v-flex xs3>
-                <v-card flat class="themeSwitchContainer">
-                  <v-card-text>
-                    <p class="text-xs-center">
-                      <v-switch
-                        v-model="dark"
-                      ></v-switch>
-                    </p>
-                  </v-card-text>
-                </v-card>
-              </v-flex>
-              <v-flex xs2>
-                <p class="text-xs-left" style="margin-top: 18px;">
-                  Dark
-                </p>
-              </v-flex>
-            </v-layout>
-          </v-list>
-          -->
-        </v-layout>
+          <v-list-item v-for="item in filtered" :key="item.title" :to="item.to" :active="isActive(item.to)">
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
       </v-navigation-drawer>
 
       <v-app-bar app flat>
@@ -81,25 +47,13 @@
           <span class="headline">Master password required</span>
         </v-card-title>
         <v-card-text>
-          <v-text-field
-            v-model="masterPassword"
-            type="password"
-            label="Master password"
-            required
-            browser-autocomplete="new-password"
-          ></v-text-field>
+          <v-text-field v-model="masterPassword" type="password" label="Master password" required
+            browser-autocomplete="new-password"></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            color="blue darken-1"
-            flat
-            @click="masterPasswordDialog = false"
-            >Close</v-btn
-          >
-          <v-btn color="blue darken-1" flat @click="submitMasterPassword()"
-            >OK</v-btn
-          >
+          <v-btn color="blue darken-1" flat @click="masterPasswordDialog = false">Close</v-btn>
+          <v-btn color="blue darken-1" flat @click="submitMasterPassword()">OK</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -110,25 +64,13 @@
           <span class="headline">Reset key</span>
         </v-card-title>
         <v-card-text>
-          <v-text-field
-            v-model="data.user"
-            label="Username"
-            required
-          ></v-text-field>
-
-          <v-text-field
-            type="password"
-            v-model="data.pass"
-            label="Password"
-            required
-          ></v-text-field>
+          <v-text-field v-model="data.user" label="Username" required></v-text-field>
+          <v-text-field type="password" v-model="data.pass" label="Password" required></v-text-field>
         </v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="resetKeyDialog = false"
-            >Close</v-btn
-          >
+          <v-btn color="blue darken-1" flat @click="resetKeyDialog = false">Close</v-btn>
           <v-btn color="blue darken-1" flat @click="submitResetKey()">OK</v-btn>
         </v-card-actions>
       </v-card>
@@ -159,7 +101,7 @@ export default {
       items: [
         { title: "Servers", to: "/servers", restricted: true },
         { title: "Sites", to: "/sites", restricted: false },
-        { title: "Domains", to: "/Domains", restricted: false },
+        { title: "Domains", to: "/domains", restricted: false },
         { title: "Teams", to: "/teams", restricted: true },
         { title: "Users", to: "/users", restricted: true },
       ],
@@ -299,6 +241,9 @@ export default {
           self.loading = false;
         });
     },
+    isActive(to) {
+      return location.pathname.startsWith(to);
+    }
   },
 };
 </script>
@@ -306,6 +251,7 @@ export default {
 <style>
 a {
   text-decoration: none;
+  color: #A25C57;
 }
 
 /*

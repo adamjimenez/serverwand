@@ -1,59 +1,32 @@
 <template>
-  <v-layout row>
-    <v-flex>
-      <v-alert v-if="error" type="error">
-        {{ error }}
-      </v-alert>
+  <div>
+    <v-alert v-if="error" type="error">
+      {{ error }}
+    </v-alert>
 
-      <Loading :value="loading" />
+    <Loading :value="loading" />
 
-      <v-card :loading="fetching">
-        <v-card-title primary-title>
-          <div class="headline">Teams</div>
-        </v-card-title>
+    <v-card :loading="fetching">
+      <v-card-title primary-title>
+        <div class="headline">Teams</div>
+      </v-card-title>
 
-        <v-list two-line v-if="items.length" class="results">
-          <template v-for="(item, index) in items">
-            <v-list-item
-              v-if="
-                index >= (page - 1) * items_per_page &&
-                index < page * items_per_page
-              "
-              :key="item.name"
-            >
-              <v-list-item-avatar>
-                <v-icon>fas fa-users</v-icon>
-              </v-list-item-avatar>
-
-              <v-list-item-content>
-                <router-link :to="'/teams/' + item.id + '/members'">
-                  <v-list-item-title v-html="item.name"></v-list-item-title>
-                  <v-list-item-subtitle>
-                    {{ item.members }} member{{ item.members != 1 ? "s" : "" }},
-                    {{ item.servers }} server{{ item.servers != 1 ? "s" : "" }}
-                  </v-list-item-subtitle>
-                </router-link>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-        </v-list>
-
-        <v-list v-else>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>
-                <router-link to="/teams/create"> Add a team </router-link>
-              </v-list-item-title>
-            </v-list-item-content>
+      <v-data-table :headers="headers" :items="items" class="results" mobile-breakpoint="0">
+        <template v-slot:item.name="{ item }">
+          <v-list-item :to="'/teams/' + item.raw.id + '/members'" :title="item.raw.name">
+            <v-list-item-subtitle>
+              {{ item.raw.members }} member{{ item.raw.members != 1 ? "s" : "" }},
+              {{ item.raw.servers }} server{{ item.raw.servers != 1 ? "s" : "" }}
+            </v-list-item-subtitle>
+            <template v-slot:prepend>
+              <v-icon>fas fa-users</v-icon>
+            </template>
           </v-list-item>
-        </v-list>
+        </template>
+      </v-data-table>
 
-        <div v-if="items.length > items_per_page" class="text-xs-center">
-          <v-pagination v-model="page" :length="pages"></v-pagination>
-        </div>
-      </v-card>
-    </v-flex>
-  </v-layout>
+    </v-card>
+  </div>
 </template>
 
 <script>
@@ -70,9 +43,12 @@ export default {
       loading: false,
       error: null,
       items: [],
-      page: 1,
-      pages: 1,
-      items_per_page: 10,
+      headers: [
+        {
+          title: "Name ",
+          key: "name",
+        },
+      ],
     };
   },
   created() {
@@ -94,9 +70,6 @@ export default {
         .then(response => {
           console.log(response);
           self.items = response.data.items;
-          self.pages = self.items.length
-            ? Math.ceil(self.items.length / self.items_per_page)
-            : 1;
         })
         .catch(error => console.log(error))
         .finally(() => self.fetching = false);
@@ -107,6 +80,6 @@ export default {
 
 <style>
 .results a {
-  color: inherit;
+  color: inherit !important;
 }
 </style>

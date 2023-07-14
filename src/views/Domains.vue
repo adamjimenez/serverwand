@@ -1,40 +1,37 @@
 <template>
-  <v-layout row>
-    <v-flex>
-      <v-alert v-if="error" type="error">
-        {{ error }}
-      </v-alert>
+  <v-layout row><v-row>
+      <v-col cols="12">
+        <v-alert v-if="error" type="error">
+          {{ error }}
+        </v-alert>
 
-      <Loading :value="loading" />
+        <Loading :value="loading" />
 
-      <v-card flat :loading="fetching">
-        <v-card-title primary-title>
-          <div class="headline">Domains</div>
-        </v-card-title>
+        <v-card flat :loading="fetching">
+          <v-card-title primary-title>
+            <div class="headline">Domains</div>
+          </v-card-title>
 
-        <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
-          <template v-slot:item.domain="{ item }">
-            <v-list-item>
-              <v-icon class="mr-3">fas fa-globe</v-icon>
+          <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
+            <template v-slot:item.domain="{ item }">
 
-              <router-link :to="'/domains/' + item.id + '/summary'">
-                <v-list-item-title
-                  v-html="item.domain"
-                ></v-list-item-title>
-                <v-list-item-subtitle></v-list-item-subtitle>
-              </router-link>
-            </v-list-item>
-          </template>
-          <template v-slot:item.registrar="{ item }">
-            {{ item.registrar ? registrars[item.registrar].label : "" }}
-          </template>
-          <template v-slot:item.auto_renew="{ item }">
-            {{ item.auto_renew ? "Yes" : "" }}
-          </template>
+              <v-list-item :to="'/domains/' + item.raw.id + '/summary'" :title="item.raw.domain">
+                <template v-slot:prepend>
+                      <v-icon class="mr-3">fas fa-globe</v-icon>
+                </template>
+              </v-list-item>
 
-        </v-data-table>
-      </v-card>
-    </v-flex>
+            </template>
+            <template v-slot:item.registrar="{ item }">
+              {{ item.raw.registrar ? registrars[item.raw.registrar].label : "" }}
+            </template>
+            <template v-slot:item.auto_renew="{ item }">
+              {{ item.raw.auto_renew ? "Yes" : "" }}
+            </template>
+
+          </v-data-table>
+        </v-card>
+      </v-col></v-row>
   </v-layout>
 </template>
 
@@ -59,23 +56,23 @@ export default {
       selected: [],
       headers: [
         {
-          text: "Domain ",
-          value: "domain",
+          title: "Domain ",
+          key: "domain",
         },
         {
-          text: "Registrar ",
-          value: "registrar",
+          title: "Registrar ",
+          key: "registrar",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: "Auto renew ",
-          value: "auto_renew",
+          title: "Auto renew ",
+          key: "auto_renew",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         } /*, {
-          text: 'Expiration ',
-          value: 'expiration'
+          title: 'Expiration ',
+          key: 'expiration'
         }*/,
       ],
     };
@@ -93,25 +90,25 @@ export default {
       api
         .get("domains/")
         .then((response) => {
-            console.log(response);
+          console.log(response);
 
-            if(response.data.error) {
-              self.error=response.data.error;
-              return false;
-            }
+          if (response.data.error) {
+            self.error = response.data.error;
+            return false;
+          }
 
-            self.items=response.data.items;
+          self.items = response.data.items;
 
-            response.data.provider_tokens.forEach((element) => {
-              self.registrars[element.id]=element;
-            });
+          response.data.provider_tokens.forEach((element) => {
+            self.registrars[element.id] = element;
+          });
 
-            response.data.items.forEach((element) => {
-              self.filtered.push(element);
-            });
-          })
+          response.data.items.forEach((element) => {
+            self.filtered.push(element);
+          });
+        })
         .catch(error => console.log(error))
-        .finally(() => self.fetching=false);
+        .finally(() => self.fetching = false);
     },
   },
 };
@@ -121,6 +118,7 @@ export default {
 .results a {
   color: inherit !important;
 }
+
 .results .v-list__tile__sub-title {
   opacity: 0.7;
 }

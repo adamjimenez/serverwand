@@ -35,10 +35,10 @@
           ></v-checkbox>
 
           <v-btn
-            :disabled="loading"
+            :disabled="!valid"
             :loading="loading"
             color="success"
-            @click="validate"
+            @click="save"
           >
             Save
           </v-btn>
@@ -120,7 +120,7 @@ export default {
 
           response.data.items.forEach((element) => {
             self.servers.push({
-              text: element.name,
+              title: element.name,
               value: element.id,
             });
 
@@ -170,11 +170,7 @@ export default {
         this.$refs.Site.create(this.data);
       }
     },
-    validate() {
-      if (this.$refs.form.validate()) {
-        this.save();
-      }
-    },
   },
+
 };
 </script>

@@ -25,28 +25,17 @@
 
       <v-container v-if="data.app" class="ma-0">
         <v-row>
-            <v-btn
-              @click="gitInfo = true"
-              title="Git info"
-              v-if="data.app.git_url"
-              class="mt-3"
-            >
-              <v-icon>fab fa-git</v-icon>
-            </v-btn>
-            <v-btn @click="clearLogs" title="Clear logs" v-if="data.app.isNode"
-              class="mt-3">
-              <v-icon>block</v-icon>
-            </v-btn>
-            <v-btn @click="showCloneApp = true" title="Copy app"
-              class="mt-3">
-              <v-icon>mdi-content-copy</v-icon>
-            </v-btn>
-            <v-switch
-              v-if="data.app.isNode"
-              v-model="data.app.online"
-              :label="data.app.status"
-              @change="toggleStatus()"
-            ></v-switch>
+          <v-btn @click="gitInfo = true" title="Git info" v-if="data.app.git_url" class="mt-3">
+            <v-icon>fab fa-git</v-icon>
+          </v-btn>
+          <v-btn @click="clearLogs" title="Clear logs" v-if="data.app.isNode" class="mt-3">
+            <v-icon>block</v-icon>
+          </v-btn>
+          <v-btn @click="showCloneApp = true" title="Copy app" class="mt-3">
+            <v-icon>mdi:mdi-content-copy</v-icon>
+          </v-btn>
+          <v-switch v-if="data.app.isNode" v-model="data.app.online" :label="data.app.status"
+            @change="toggleStatus()"></v-switch>
         </v-row>
       </v-container>
 
@@ -59,28 +48,16 @@
             <v-card-subtitle>
               {{ data.app.version }}
 
-              <div
-                v-if="data.app.latest && data.app.latest !== data.app.version"
-              >
+              <div v-if="data.app.latest && data.app.latest !== data.app.version">
                 <p>Latest: {{ data.app.latest }}</p>
-                <v-btn color="blue darken-1" @click="install(data.app.name)"
-                  >Upgrade</v-btn
-                >
+                <v-btn color="blue darken-1" @click="install(data.app.name)">Upgrade</v-btn>
               </div>
             </v-card-subtitle>
 
             <v-card-text v-if="data.app.isNode">
-              <v-textarea
-                label="Ouput log"
-                readonly
-                :value="data.app.output_log"
-              ></v-textarea>
+              <v-textarea label="Ouput log" readonly :value="data.app.output_log"></v-textarea>
 
-              <v-textarea
-                label="Error log"
-                readonly
-                :value="data.app.error_log"
-              ></v-textarea>
+              <v-textarea label="Error log" readonly :value="data.app.error_log"></v-textarea>
             </v-card-text>
           </v-card>
         </div>
@@ -95,24 +72,16 @@
       <div v-else>
         <v-card class="mx-auto">
           <v-list>
-            <v-list-item-group>
-              <template v-for="(item, i) in apps">
-                <v-list-item
-                  :key="`item-${i}`"
-                  :value="item"
-                  @click="install(item.name)"
-                >
-                  <v-list-item-icon>
+            <v-list group>
+              <v-list-item v-for="(item, i) in apps" :key="`item-${i}`" :title="item.label" :value="item"
+                @click="install(item.name)">
+                <template v-slot:prepend>
+                  <v-icon>
                     <i :class="item.icon"></i>
-                  </v-list-item-icon>
-                  <v-list-item-content>
-                    <v-list-item-title>
-                      {{ item.label }}
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </template>
-            </v-list-item-group>
+                  </v-icon>
+                </template>
+              </v-list-item>
+            </v-list>
           </v-list>
         </v-card>
       </div>
@@ -123,21 +92,12 @@
         <v-card-title> Git </v-card-title>
 
         <v-card-text>
-          <v-text-field
-            v-model="data.git_url"
-            label="Git URL"
-            hint="e.g. https://github.com/<user>/<repo>.git"
-            required
-          ></v-text-field>
+          <v-text-field v-model="data.git_url" label="Git URL" hint="e.g. https://github.com/<user>/<repo>.git"
+            required></v-text-field>
 
           <v-checkbox v-model="data.public_dir" label="Clone in public dir"></v-checkbox>
 
-          <v-btn
-            :disabled="!data.git_url || fetching"
-            :loading="fetching"
-            color="success"
-            @click="submitGit()"
-          >
+          <v-btn :disabled="!data.git_url || fetching" :loading="fetching" color="success" @click="submitGit()">
             Save
           </v-btn>
         </v-card-text>
@@ -153,31 +113,14 @@
         <v-card-title> Clone App </v-card-title>
 
         <v-card-text>
-          <v-text-field
-            v-model="data.stagingDomain"
-            :rules="domainRules"
-            label="Staging Domain"
-            required
-          ></v-text-field>
+          <v-text-field v-model="data.stagingDomain" :rules="domainRules" label="Staging Domain" required></v-text-field>
 
-          <v-select
-            v-model="data.server"
-            :items="server_opts"
-            label="Server"
-            required
-          ></v-select>
+          <v-select v-model="data.server" :items="server_opts" label="Server" required></v-select>
 
-          <v-checkbox
-            v-model="dns"
-            label="Configure DNS"
-            :disabled="dnsProviders[data.server] == ''"
-          ></v-checkbox>
+          <v-checkbox v-model="dns" label="Configure DNS" :disabled="dnsProviders[data.server] == ''"></v-checkbox>
 
-          <v-checkbox
-            v-model="substitutions"
-            label="Realtime domain substitution in HTML"
-            :disabled="dnsProviders[data.server] == ''"
-          ></v-checkbox>
+          <v-checkbox v-model="substitutions" label="Realtime domain substitution in HTML"
+            :disabled="dnsProviders[data.server] == ''"></v-checkbox>
 
           <v-btn color="primary" @click="cloneApp"> Save </v-btn>
         </v-card-text>
@@ -205,103 +148,76 @@
             <v-card v-if="fullDb == '0'">
               <v-card-text>
                 <v-row>
-                  <v-checkbox
-                    class="mx-2"
-                    label="Select all"
-                    @click="selectAll"
-                    v-model="allSelected"
-                  ></v-checkbox>
+                  <v-checkbox class="mx-2" label="Select all" @click="selectAll" v-model="allSelected"></v-checkbox>
                 </v-row>
 
                 <div>
                   <v-row>
-                    <v-checkbox
-                      class="mx-2"
-                      v-model="tableNames"
-                      v-for="table in tables"
-                      :key="table"
-                      :value="table"
-                      :label="table"
-                    ></v-checkbox>
+                    <v-checkbox class="mx-2" v-model="tableNames" v-for="table in tables" :key="table" :value="table"
+                      :label="table"></v-checkbox>
                   </v-row>
                 </div>
               </v-card-text>
             </v-card>
           </div>
 
-          <v-btn
-            color="primary"
-            @click="sync"
-            :disabled="
-              (!files && !database) || (fullDb <= 0 && tableNames.length === 0)
-            "
-            class="my-3"
-          >
+          <v-btn color="primary" @click="sync" :disabled="(!files && !database) || (fullDb <= 0 && tableNames.length === 0)
+            " class="my-3">
             Continue
           </v-btn>
         </v-card-text>
       </v-card>
     </v-dialog>
 
-    <v-dialog app v-model="gitInfo">
+    <v-dialog v-model="gitInfo">
       <v-card :loading="fetching">
         <v-card-title> Git info </v-card-title>
 
         <v-card-text>
-          <v-row>
-            <v-col>
-              <v-btn @click="gitPull"> Pull </v-btn>
-            </v-col>
-          </v-row>
+          <v-container fluid>
+            <v-row>
+              <v-col>
+                <v-btn @click="gitPull"> Pull </v-btn>
+              </v-col>
+            </v-row>
 
-          <v-row>
-            <v-col>
-              <v-text-field
-                v-model="data.app.git_url"
-                label="Git URL"
-                readonly
-              ></v-text-field>
-            </v-col>
+            <v-row>
+              <v-col>
+                <v-text-field v-model="data.app.git_url" label="Git URL" readonly></v-text-field>
+              </v-col>
 
-            <v-col cols="1">
-              <Copy :val="data.app.git_url" />
-            </v-col>
-          </v-row>
+              <v-col cols="1">
+                <Copy :val="data.app.git_url" />
+              </v-col>
+            </v-row>
 
-          <v-row>
-            <v-col>
-              <v-text-field
-                v-model="data.app.ssh_key"
-                label="SSH key"
-                hint="Save to GitHub or Bitbucket in order to push to this repository"
-                readonly
-              ></v-text-field>
-            </v-col>
+            <v-row>
+              <v-col>
+                <v-text-field v-model="data.app.ssh_key" label="SSH key"
+                  hint="Save to GitHub or Bitbucket in order to push to this repository" readonly></v-text-field>
+              </v-col>
 
-            <v-col cols="1">
-              <Copy :val="data.app.ssh_key" />
-            </v-col>
-          </v-row>
+              <v-col cols="1">
+                <Copy :val="data.app.ssh_key" />
+              </v-col>
+            </v-row>
 
-          <v-row>
-            <v-col>
-              <v-text-field
-                v-model="data.app.webhook_url"
-                label="Git Pull Webhook"
-                hint="Use this webhook to initiiate a Git Pull"
-                readonly
-              ></v-text-field>
-            </v-col>
+            <v-row>
+              <v-col>
+                <v-text-field v-model="data.app.webhook_url" label="Git Pull Webhook"
+                  hint="Use this webhook to initiiate a Git Pull" readonly></v-text-field>
+              </v-col>
 
-            <v-col cols="1">
-              <Copy :val="data.app.webhook_url" />
-            </v-col>
-          </v-row>
+              <v-col cols="1">
+                <Copy :val="data.app.webhook_url" />
+              </v-col>
+            </v-row></v-container>
         </v-card-text>
       </v-card>
     </v-dialog>
 
     <Site ref="Site" @error="handleError" />
+    <Confirm ref="confirm" />
   </div>
 </template>
 
@@ -310,12 +226,14 @@ import api from "../../services/api";
 import Loading from "../../components/Loading";
 import Copy from "../../components/Copy";
 import Site from "../../components/Site";
+import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
     Loading,
     Copy,
     Site,
+    Confirm,
   },
   data: () => ({
     siteId: null,
@@ -432,39 +350,44 @@ export default {
           self.fetching = false;
         });
     },
-    install(app) {
+    install: async function(app) {
       if (app === "git") {
         this.drawer = true;
         return;
       }
 
-      this.$confirm("Install " + app + "?").then((res) => {
-        if (res) {
-          var self = this;
-          this.error = "";
-          this.fetching = true;
-          this.loading = true;
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Install " + app
+        )
+      ) {
 
-          api
-            .post("sites/" + this.$route.params.id + "/apps", { app: app })
-            .then(function (response) {
-              console.log(response);
+        var self = this;
+        this.error = "";
+        this.fetching = true;
+        this.loading = true;
 
-              if (response.data.error) {
-                self.error = response.data.error;
-              } else {
-                self.fetchData();
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-            })
-            .finally(function () {
-              self.fetching = false;
-              self.loading = false;
-            });
-        }
-      });
+        api
+          .post("sites/" + this.$route.params.id + "/apps", { app: app })
+          .then(function (response) {
+            console.log(response);
+
+            if (response.data.error) {
+              self.error = response.data.error;
+            } else {
+              self.fetchData();
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .finally(function () {
+            self.fetching = false;
+            self.loading = false;
+          });
+      }
+
     },
     clearLogs() {
       var self = this;
@@ -489,7 +412,7 @@ export default {
           console.log(error);
           self.fetching = false;
         })
-        .finally(function () {});
+        .finally(function () { });
     },
     submitGit() {
       var self = this;
@@ -518,7 +441,7 @@ export default {
             console.log(error);
             self.fetching = false;
           })
-          .finally(function () {});
+          .finally(function () { });
       }
     },
     cloneApp() {
@@ -548,7 +471,7 @@ export default {
         .catch(function (error) {
           console.log(error);
         })
-        .finally(function () {});
+        .finally(function () { });
     },
     sync() {
       var self = this;

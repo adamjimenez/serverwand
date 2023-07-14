@@ -4,30 +4,17 @@
 
     <v-card class="pa-3" :loading="fetching">
       <v-list>
-        <v-list-item-group>
-          <template v-for="(item, i) in user_sites">
-            <v-list-item :key="`item-${i}`" :value="item">
-              <template v-slot:default>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ item.domain }}
-                  </v-list-item-title>
-                </v-list-item-content>
+        <v-list group>
 
-                <v-list-item-action>
-                  <v-btn
-                    icon
-                    :disabled="fetching"
-                    :loading="fetching"
-                    @click="deleteItem(item.id)"
-                  >
-                    <v-icon small>delete</v-icon>
-                  </v-btn>
-                </v-list-item-action>
-              </template>
-            </v-list-item>
-          </template>
-        </v-list-item-group>
+          <v-list-item v-for="(item, i) in user_sites" :key="`item-${i}`" :title="item.domain">
+            <template v-slot:append>
+              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
+                <v-icon size="small">mdi:mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-list-item>
+
+        </v-list>
       </v-list>
     </v-card>
 
@@ -39,45 +26,41 @@
       </div>
     </v-card>
 
-    <v-navigation-drawer app v-model="drawer" temporary right>
+    <v-dialog v-model="drawer">
       <v-card>
         <v-card-title> Domain </v-card-title>
 
         <v-card-text>
           <v-select v-model="data.domain" :items="sites" label="Site">
             <template slot="item" slot-scope="data">
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ data.item.text }}
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  {{ servers[data.item.server] }}
-                </v-list-item-subtitle>
-              </v-list-item-content> </template
-            >>
+              <v-list-item-title>
+                {{ data.item.text }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                {{ servers[data.item.server] }}
+              </v-list-item-subtitle>
+            </template>
           </v-select>
 
-          <v-btn
-            :disabled="dialog"
-            :loading="dialog"
-            color="success"
-            @click="saveItem"
-          >
+          <v-btn :disabled="!data.domain" :loading="dialog" color="success" @click="saveItem">
             Save
           </v-btn>
         </v-card-text>
       </v-card>
-    </v-navigation-drawer>
+    </v-dialog>
+    <Confirm ref="confirm" />
   </div>
 </template>
 
 <script>
 import api from "../../services/api";
 import Loading from "../../components/Loading";
+import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
     Loading,
+    Confirm
   },
   data() {
     return {
@@ -138,7 +121,7 @@ export default {
 
           response.data.items.forEach((element) => {
             self.sites.push({
-              text: element.domain,
+              title: element.domain,
               value: element.id,
               server: element.server,
             });
@@ -146,7 +129,7 @@ export default {
 
           api.get("servers/").then(function (response) {
             response.data.items.forEach((element) => {
-              self.$set(self.servers, element.id, element.name);
+              self.servers[element.id] = element.name;
             });
           });
         })
@@ -190,11 +173,13 @@ export default {
           });
       }
     },
-    deleteItem(id) {
-      this.$confirm("Delete domain?").then((res) => {
-        if (!res) {
-          return;
-        }
+    deleteItem: async function(item) {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Delete " + item.domain
+        )
+      ) {
 
         var self = this;
         this.error = "";
@@ -202,7 +187,7 @@ export default {
         this.loading = true;
 
         api
-          .post("users/" + this.id + "/sites", { delete: 1, domain: id })
+          .post("users/" + this.id + "/sites", { delete: 1, domain: item.id })
           .then(function (response) {
             console.log(response);
 
@@ -219,7 +204,7 @@ export default {
             self.dialog = false;
             self.loading = false;
           });
-      });
+      };
     },
   },
 };

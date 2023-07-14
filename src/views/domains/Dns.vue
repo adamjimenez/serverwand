@@ -132,24 +132,24 @@ export default {
       authRequired: false,
       headers: [
         {
-          text: "Type ",
-          value: "type",
+          title: "Type ",
+          key: "type",
         },
         {
-          text: "Name ",
-          value: "name",
+          title: "Name ",
+          key: "name",
         },
         {
-          text: "Target ",
-          value: "target",
+          title: "Target ",
+          key: "target",
         },
         {
-          text: "Priority ",
-          value: "priority",
+          title: "Priority ",
+          key: "priority",
         },
         {
-          text: "",
-          value: "actions",
+          title: "",
+          key: "actions",
           sortable: false,
         },
       ],

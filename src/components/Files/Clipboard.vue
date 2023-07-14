@@ -3,17 +3,17 @@
     <v-row>
       <v-col class="flex-grow-0" v-if="selected.length">
         <v-btn @click="cut()" title="Cut">
-          <v-icon>content_cut</v-icon>
+          <v-icon>mdi:mdi-content-cut</v-icon>
         </v-btn>
       </v-col>
       <v-col class="flex-grow-0" v-if="selected.length">
         <v-btn @click="copy()" title="Copy">
-          <v-icon>file_copy</v-icon>
+          <v-icon>mdi:mdi-content-copy</v-icon>
         </v-btn>
       </v-col>
       <v-col class="flex-grow-0" v-if="data.items.length && path != data.src">
         <v-btn @click="paste()" title="Paste">
-          <v-icon>content_paste</v-icon>
+          <v-icon>mdi:mdi-content-paste</v-icon>
         </v-btn>
       </v-col>
     </v-row>

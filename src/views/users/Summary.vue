@@ -7,76 +7,55 @@
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
-      <v-list>
+      <v-list lines="two">
         <v-list-item>
-          <v-list-item-content>
             <v-list-item-title> Name </v-list-item-title>
             <v-list-item-subtitle>
               {{ data.name }}
             </v-list-item-subtitle>
-          </v-list-item-content>
         </v-list-item>
-        <v-divider></v-divider>
 
         <v-list-item>
-          <v-list-item-content>
             <v-list-item-title> Surname </v-list-item-title>
             <v-list-item-subtitle>
               {{ data.surname }}
             </v-list-item-subtitle>
-          </v-list-item-content>
         </v-list-item>
-        <v-divider></v-divider>
 
         <v-list-item>
-          <v-list-item-content>
             <v-list-item-title> Email </v-list-item-title>
             <v-list-item-subtitle>
               {{ data.email }}
             </v-list-item-subtitle>
-          </v-list-item-content>
         </v-list-item>
-        <v-divider></v-divider>
 
         <v-list-item>
-          <v-list-item-content>
             <v-list-item-title> Address </v-list-item-title>
             <v-list-item-subtitle>
               {{ data.address }}
             </v-list-item-subtitle>
-          </v-list-item-content>
         </v-list-item>
-        <v-divider></v-divider>
 
         <v-list-item>
-          <v-list-item-content>
             <v-list-item-title> City </v-list-item-title>
             <v-list-item-subtitle>
               {{ data.city }}
             </v-list-item-subtitle>
-          </v-list-item-content>
         </v-list-item>
-        <v-divider></v-divider>
 
         <v-list-item>
-          <v-list-item-content>
             <v-list-item-title> Postcode </v-list-item-title>
             <v-list-item-subtitle>
               {{ data.postcode }}
             </v-list-item-subtitle>
-          </v-list-item-content>
         </v-list-item>
-        <v-divider></v-divider>
 
         <v-list-item>
-          <v-list-item-content>
             <v-list-item-title> Telephone </v-list-item-title>
             <v-list-item-subtitle>
               {{ data.tel }}
             </v-list-item-subtitle>
-          </v-list-item-content>
         </v-list-item>
-        <v-divider></v-divider>
       </v-list>
     </v-card>
   </div>

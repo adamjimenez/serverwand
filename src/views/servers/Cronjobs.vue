@@ -8,56 +8,42 @@
 
     <v-card class="pa-3" :loading="fetching">
       <v-list>
-        <v-list-item-group>
-          <template v-for="(item, i) in data.cronjobs">
-            <v-list-item
-              :key="`item-${i}`"
-              :value="item"
-              @click="editItem(item)"
-            >
-              <template v-slot:default>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    <v-icon v-if="item.active === false">block</v-icon>
-                    {{ item.command }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    {{ item.user }}
-                    {{ item.minute }}
-                    {{ item.hour }}
-                    {{ item.dom }}
-                    {{ item.mon }}
-                    {{ item.dow }}
-                  </v-list-item-subtitle>
-                </v-list-item-content>
+        <v-list group>
 
-                <v-list-item-action>
-                  <v-btn
-                    icon
-                    :disabled="fetching"
-                    :loading="fetching"
-                    @click="deleteItem(item.line)"
-                    @click.stop
-                  >
-                    <v-icon small>delete</v-icon>
-                  </v-btn>
-                </v-list-item-action>
-              </template>
-            </v-list-item>
-          </template>
-        </v-list-item-group>
+          <v-list-item v-for="(item, i) in data.cronjobs" :key="`item-${i}`" :title="item.name" @click="editItem(item)">
+            <template v-slot:default>
+
+              <v-list-item-title>
+                <v-icon v-if="item.active === false">mdi:mdi-block</v-icon>
+                {{ item.command }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                {{ item.user }}
+                {{ item.minute }}
+                {{ item.hour }}
+                {{ item.dom }}
+                {{ item.mon }}
+                {{ item.dow }}
+              </v-list-item-subtitle>
+            </template>
+            <template v-slot:append>
+              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item.line)" @click.stop>
+                <v-icon size="small">mdi:mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-list-item>
+
+        </v-list>
       </v-list>
     </v-card>
 
     <v-card>
-      <div>
-        <v-card-title primary-title>
-          <v-btn @click="addItem()"> Add cron job </v-btn>
-        </v-card-title>
-      </div>
+      <v-card-title primary-title>
+        <v-btn @click="addItem()"> Add cron job </v-btn>
+      </v-card-title>
     </v-card>
 
-    <v-navigation-drawer app v-model="drawer" temporary right>
+    <v-dialog v-model="drawer">
       <v-card>
         <v-form ref="cronjobForm">
           <v-card-title> Cronjob </v-card-title>
@@ -65,83 +51,48 @@
           <v-card-text>
             <v-switch v-model="cronjob.active" label="Active"></v-switch>
 
-            <v-text-field
-              v-model="cronjob.line"
-              label="Line"
-              v-show="false"
-            ></v-text-field>
+            <v-text-field v-model="cronjob.line" label="Line" v-show="false"></v-text-field>
 
-            <v-text-field
-              v-model="cronjob.command"
-              label="Command"
-              required
-              :rules="[rules.required]"
-            ></v-text-field>
+            <v-text-field v-model="cronjob.command" label="Command" required :rules="[rules.required]"></v-text-field>
 
-            <v-text-field
-              v-model="cronjob.user"
-              label="User"
-              required
-              :rules="[rules.required, rules.alpha]"
-            ></v-text-field>
+            <v-text-field v-model="cronjob.user" label="User" required
+              :rules="[rules.required, rules.alpha]"></v-text-field>
 
-            <v-text-field
-              v-model="cronjob.minute"
-              label="Minute"
-              required
-              :rules="[rules.required, rules.minute]"
-            ></v-text-field>
+            <v-text-field v-model="cronjob.minute" label="Minute" required
+              :rules="[rules.required, rules.minute]"></v-text-field>
 
-            <v-text-field
-              v-model="cronjob.hour"
-              label="Hour"
-              required
-              :rules="[rules.required, rules.hour]"
-            ></v-text-field>
+            <v-text-field v-model="cronjob.hour" label="Hour" required
+              :rules="[rules.required, rules.hour]"></v-text-field>
 
-            <v-text-field
-              v-model="cronjob.dom"
-              label="Day of month"
-              required
-              :rules="[rules.required, rules.dom]"
-            ></v-text-field>
+            <v-text-field v-model="cronjob.dom" label="Day of month" required
+              :rules="[rules.required, rules.dom]"></v-text-field>
 
-            <v-text-field
-              v-model="cronjob.mon"
-              label="Month"
-              required
-              :rules="[rules.required, rules.mon]"
-            ></v-text-field>
+            <v-text-field v-model="cronjob.mon" label="Month" required
+              :rules="[rules.required, rules.mon]"></v-text-field>
 
-            <v-text-field
-              v-model="cronjob.dow"
-              label="Day of week"
-              required
-              :rules="[rules.required, rules.dow]"
-            ></v-text-field>
+            <v-text-field v-model="cronjob.dow" label="Day of week" required
+              :rules="[rules.required, rules.dow]"></v-text-field>
 
-            <v-btn
-              :disabled="fetching"
-              :loading="fetching"
-              color="success"
-              @click="saveCronjob"
-            >
+            <v-btn :disabled="fetching" :loading="fetching" color="success" @click="saveCronjob">
               Save
             </v-btn>
           </v-card-text>
         </v-form>
       </v-card>
-    </v-navigation-drawer>
+    </v-dialog>
+    <Confirm ref="confirm" />
   </div>
 </template>
 
 <script>
 import api from "../../services/api";
 import Loading from "../../components/Loading";
+import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
     Loading,
+    Confirm,
   },
   data() {
     return {
@@ -183,35 +134,35 @@ export default {
       logs: [
         {
           value: "journal",
-          text: "Journal",
+          title: "Journal",
         },
         {
           value: "auth",
-          text: "Auth",
+          title: "Auth",
         },
         {
           value: "apache_access",
-          text: "Apache Access",
+          title: "Apache Access",
         },
         {
           value: "apache_error",
-          text: "Apache Error",
+          title: "Apache Error",
         },
         {
           value: "mysql",
-          text: "MySQL",
+          title: "MySQL",
         },
         {
           value: "fail2ban",
-          text: "Fail2ban",
+          title: "Fail2ban",
         },
         {
           value: "letsencrypt",
-          text: "Letsencrypt",
+          title: "Letsencrypt",
         },
         {
           value: "serverstatus",
-          text: "Server Status",
+          title: "Server Status",
         },
       ],
       log: "",
@@ -259,31 +210,34 @@ export default {
       this.cronjob = JSON.parse(JSON.stringify(cronjob));
       this.drawer = true;
     },
-    deleteItem(line) {
-      this.$confirm("Delete cron job?").then((res) => {
-        if (res) {
-          var self = this;
-          this.fetching = true;
-          this.error = "";
+    deleteItem: async function (line) {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Are you sure you want to delete this item?"
+        )
+      ) {
+        var self = this;
+        this.fetching = true;
+        this.error = "";
 
-          api
-            .post("servers/" + this.serverId + "/cronjobs", { line: line })
-            .then(function (response) {
-              console.log(response);
+        api
+          .post("servers/" + this.serverId + "/cronjobs", { line: line })
+          .then(function (response) {
+            console.log(response);
 
-              if (!response.data.success) {
-                self.fetching = false;
-                self.error = response.data.error;
-              } else {
-                self.fetchData();
-              }
-            })
-            .catch(function (error) {
+            if (!response.data.success) {
               self.fetching = false;
-              console.log(error);
-            });
-        }
-      });
+              self.error = response.data.error;
+            } else {
+              self.fetchData();
+            }
+          })
+          .catch(function (error) {
+            self.fetching = false;
+            console.log(error);
+          });
+      }
     },
     saveCronjob() {
       var self = this;

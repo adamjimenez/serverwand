@@ -1,15 +1,20 @@
 <template>
   <div v-if="selected.length">
     <v-btn @click="deleteItem()" title="Delete">
-      <v-icon>delete</v-icon>
+      <v-icon>mdi:mdi-delete</v-icon>
     </v-btn>
+    <Confirm ref="confirm" />
   </div>
 </template>
 
 <script>
 import api from "../../services/api";
+import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
+  components: {
+    Confirm
+  },
   props: {
     serverId: null,
     path: null,
@@ -34,41 +39,44 @@ export default {
   },
 
   methods: {
-    deleteItem() {
-      this.$confirm("Delete selected files?").then((res) => {
+    deleteItem: async function () {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Delete selected files?"
+        )
+      ) {
+        var self = this;
+        this.fetching = true;
 
-        if (res) {
-          var self = this;
-          this.fetching = true;
+        var files = [];
+        this.selected.forEach(element => files.push(element.id));
 
-          var files = [];
-          this.selected.forEach(element => files.push(element.id));
+        api
+          .post("servers/" + this.serverId + "/files", {
+            cmd: 'delete',
+            files: files,
+          })
+          .then(response => {
+            console.log(response);
 
-          api
-            .post("servers/" + this.serverId + "/files", {
-              cmd: 'delete',
-              files: files,
-            })
-            .then(response => {
-              console.log(response);
+            if (response.data.success) {
+              self.$emit("complete");
+            } else {
+              var error = response.data.error
+                ? response.data.error
+                : response.data;
 
-              if (response.data.success) {
-                self.$emit("complete");
-              } else {
-                var error = response.data.error
-                  ? response.data.error
-                  : response.data;
-
-                self.$emit("error", error);
-              }
-            })
-            .catch(error => {
-              console.log(error);
-            })
-            .finally(() => self.fetching = false);
-        }
-      });
-    },
+              self.$emit("error", error);
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          })
+          .finally(() => self.fetching = false);
+      }
+    }
   },
-};
+}
+
 </script>

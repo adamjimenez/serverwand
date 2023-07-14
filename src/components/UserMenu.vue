@@ -1,10 +1,9 @@
 <template>
     <v-menu offset-y left>
-      <template v-slot:activator="{ on }">
+      <template v-slot:activator="{ props }">
         <v-btn
           icon
-          v-on="on"
-          value:="menu"
+          v-bind="props"
         >
             <i class="material-icons">account_circle</i>
         </v-btn>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn @click="open()" title="New folder"> <v-icon>mdi-folder-outline</v-icon>  </v-btn>
+    <v-btn @click="open()" title="New folder"> <v-icon>mdi:mdi-folder-outline</v-icon>  </v-btn>
     <v-dialog app v-model="dialog">
       <v-card :loading="fetching">
         <v-card-title> New folder </v-card-title>

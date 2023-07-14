@@ -13,57 +13,33 @@
 
           <v-col class="flex-grow-0">
             <v-btn title="Create backup" ref="uploadFolderButton" @click="createBackup()">
-              <v-icon>add</v-icon>
+              <v-icon>mdi:mdi-plus</v-icon>
             </v-btn>
           </v-col>
 
-          <Upload
-            :serverId="serverId"
-            :path="path"
-            :dropZone="$refs.results"
-            @complete="fetchData()"
-            @error="handleError"        
-          />
+          <Upload :serverId="serverId" :path="path" :dropZone="$refs.results" @complete="fetchData()"
+            @error="handleError" />
         </v-row>
       </v-container>
 
       <v-list v-if="data.items.length > 0">
-        <v-list-item-group>
-          <template v-for="(item, i) in data.items">
-            <v-list-item
-              :key="`item-${i}`"
-              :value="item"
-              @click="restore(item.name)"
-              @click.stop
-            >
-              <template v-slot:default>
-                <v-list-item-content>
-                  <v-list-item-title>{{ item.name }}</v-list-item-title>
-                  <v-list-item-subtitle
-                    >{{ item.date }} -
-                    {{ item.size | prettyBytes }}</v-list-item-subtitle
-                  >
-                </v-list-item-content>
+        <v-list group>
 
-                <v-list-item-action>
-                  <v-btn icon @click="download(item)" @click.stop>
-                    <v-icon small>download</v-icon>
-                  </v-btn>
-                </v-list-item-action>
-
-                <v-list-item-action>
-                  <v-btn icon @click="deleteBackup(item.name)" @click.stop>
-                    <v-icon small>delete</v-icon>
-                  </v-btn>
-                </v-list-item-action>
-              </template>
-            </v-list-item>
-          </template>
-        </v-list-item-group>
+          <v-list-item v-for="(item, i) in data.items" :key="`item-${i}`" :title="item.name" @click="restore(item.name)">
+            <template v-slot:append>
+                <v-list-item-subtitle>{{ item.date }} -
+                  {{ util.prettyBytes(item.size) }}</v-list-item-subtitle>
+              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item.line)" @click.stop>
+                <v-icon size="small">mdi:mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-list-item>
+        </v-list>
       </v-list>
 
       <v-card-text v-else> Empty </v-card-text>
     </v-card>
+    <Confirm ref="confirm" />
 
   </div>
 </template>
@@ -72,11 +48,14 @@
 import api from "../../services/api";
 import Loading from "../../components/Loading";
 import Upload from "../../components/Files/Upload";
+import Confirm from "../../components/ConfirmDialog.vue";
+import util from "../../services/util";
 
 export default {
   components: {
     Loading,
     Upload,
+    Confirm,
   },
   data() {
     return {
@@ -170,11 +149,13 @@ export default {
       console.log("https://" + this.data.server.ip + "/backups/" + item.name);
       window.open("https://" + this.data.server.ip + "/backups/" + item.name);
     },
-    deleteBackup(item) {
-      this.$confirm("Delete " + item + "?").then((res) => {
-        if (!res) {
-          return;
-        }
+    deleteItem: async function (item) {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Delete " + item
+        )
+      ) {
 
         var self = this;
         self.fetching = true;
@@ -188,13 +169,15 @@ export default {
             console.log(error);
             self.fetching = false;
           });
-      });
+      }
     },
-    restore(item) {
-      this.$confirm("Restore " + item + "?").then((res) => {
-        if (!res) {
-          return;
-        }
+    restore: async function (item) {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Restore " + item
+        )
+      ) {
 
         var self = this;
         self.fetching = true;
@@ -208,13 +191,16 @@ export default {
             console.log(error);
             self.fetching = false;
           });
-      });
+      };
     },
     handleError(error) {
       this.error = error;
     },
     handleLoading(loading) {
       this.fetching = loading;
+    },
+    prettyBytes(value) {
+      return util.prettyBytes(value);
     },
   },
 };

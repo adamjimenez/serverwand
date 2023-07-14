@@ -1,17 +1,26 @@
 <template>
+  <div>
+
     <v-btn :disabled="fetching" :loading="fetching" @click="reboot">
-        Reboot
+      Reboot
     </v-btn>
+    <Confirm ref="confirm" />
+  </div>
 </template>
 
 <script>
 import api from "../services/api";
+import Confirm from "./ConfirmDialog.vue";
 
 export default {
+  components: {
+    Confirm,
+  },
+
   props: {
     serverId: null,
-  }, 
-  
+  },
+
   data() {
     return {
       fetching: false
@@ -19,25 +28,28 @@ export default {
   },
 
   methods: {
-    reboot() {
-      this.$confirm("Reboot server?").then((res) => {
-        if (res) {
-          var self = this;
-          this.fetching = true;
+    reboot: async function () {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Reboot server?"
+        )
+      ) {
+        var self = this;
+        this.fetching = true;
 
-          api
-            .get("servers/" + this.serverId + "/reboot")
-            .then(response => {
-              console.log(response);
+        api
+          .get("servers/" + this.serverId + "/reboot")
+          .then(response => {
+            console.log(response);
 
-              if (response.data.success) {
-                this.$router.push("/servers");
-              }
-            })
-            .catch(error => console.log(error))
-            .finally(() => self.fetching = false);
-        }
-      });
+            if (response.data.success) {
+              this.$router.push("/servers");
+            }
+          })
+          .catch(error => console.log(error))
+          .finally(() => self.fetching = false);
+      }
     },
   },
 };

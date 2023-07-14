@@ -3,8 +3,7 @@
 
     <v-tooltip top>
         <template v-slot:activator="{ on }">
-            <v-btn                            
-                v-on="on"
+            <v-btn
                 icon
                 @click="upgrade()"
             >

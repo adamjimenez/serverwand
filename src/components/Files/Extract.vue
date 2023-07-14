@@ -12,10 +12,10 @@
 
     <v-col
       class="flex-grow-0"
-      v-if="selected.length === 1 && ['zip', 'gz', 'tar'].indexOf(fileExtension(selected[0].name)) !== -1"
+      v-if="selected?.length === 1 && ['zip', 'gz', 'tar'].indexOf(fileExtension(selected[0])) !== -1"
     >
       <v-btn @click="extract()" :disabled="!selected" title="Extract">
-        <v-icon>mdi-folder-zip-outline</v-icon>
+        <v-icon>mdi:mdi-folder-zip-outline</v-icon>
       </v-btn>
     </v-col>
 
@@ -53,9 +53,9 @@ export default {
   },
 
   methods: {
-    fileExtension(filename) {
-      var dot = filename.lastIndexOf(".");
-      return dot === -1 ? "" : filename.substr(dot + 1, filename.length);
+    fileExtension(file) {
+      var dot = file.name.lastIndexOf(".");
+      return dot === -1 ? "" : file.name.substr(dot + 1, file.name.length);
     },
 
     extract() {

@@ -22,9 +22,14 @@ jobs:
         run: |
           git config --global user.name "$(git log -n 1 --pretty=format:%an)"
           git config --global user.email "$(git log -n 1 --pretty=format:%ae)"
-          cd dist
+          mkdir new
+          cd new
           git init
-          git add --all
-          git commit -m 'Deploying latest build'
           git remote add origin https://adamjimenez:${{ secrets.SSH_KEY }}@github.com/adamjimenez/serverwand-builds.git
-          git push origin master
+          git pull origin master
+          rm -Rf *
+          cp -r ../dist/* .
+
+          git add --all          
+          git commit -m 'Deploying latest build'
+          git push origin master --force

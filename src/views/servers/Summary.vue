@@ -7,269 +7,229 @@
     <v-card class="pa-3" :loading="fetching">
       <v-container class="ma-0">
         <v-layout row wrap>
-          <v-flex xs12 sm6 md3>
-            <v-card>
-              <div class="feature">
-                <v-card-text>
-                  <div>
-                    <div class="icon">
-                      <i class="fas fa-microchip"></i>
-                    </div>
-
-                    <div class="label">CPU</div>
-                  </div>
-
-                  <div class="pt-3" style="clear: both; font-size: 12px">
-                    <div style="font-size: 20px">
-                      {{ data.cores }} core<span v-if="data.cores > 1">s</span>
-                    </div>
-                    {{ data.cpu }}
-                  </div>
-                </v-card-text>
-              </div>
-            </v-card>
-          </v-flex>
-
-          <v-flex xs12 sm6 md3>
-            <v-card>
-              <div class="feature">
-                <v-card-text>
-                  <div>
-                    <div class="icon">
-                      <i class="fas fa-memory"></i>
-                    </div>
-
-                    <div class="label">Memory Usage</div>
-                  </div>
-
-                  <div class="pt-3" style="clear: both">
-                    <v-list-item-title>
-                      <v-progress-linear
-                        :value="data.mem_perc"
-                        height="20"
-                      ></v-progress-linear>
-                    </v-list-item-title>
-                    <v-list-item-subtitle>
-                      {{ (data.mem_free * 1024) | prettyBytes }} free of
-                      {{ (data.mem_total * 1024) | prettyBytes }}
-                    </v-list-item-subtitle>
-                  </div>
-                </v-card-text>
-              </div>
-            </v-card>
-          </v-flex>
-
-          <template v-for="(disk, i) in data.disks">
-            <v-flex xs12 sm6 md3 :key="`item-${i}`" :value="disk">
+          <v-row>
+            <v-col cols="12" sm="6" md="3">
               <v-card>
                 <div class="feature">
                   <v-card-text>
                     <div>
                       <div class="icon">
-                        <i class="fas fa-hdd"></i>
+                        <i class="fas fa-microchip"></i>
                       </div>
 
-                      <div class="label">{{ disk.name }}</div>
+                      <div class="label">CPU</div>
+                    </div>
+
+                    <div class="pt-3" style="clear: both; font-size: 12px">
+                      <div style="font-size: 20px">
+                        {{ data.cores }} core<span v-if="data.cores > 1">s</span>
+                      </div>
+                      {{ data.cpu }}
+                    </div>
+                  </v-card-text>
+                </div>
+              </v-card>
+            </v-col>
+
+            <v-col cols="12" sm="6" md="3">
+              <v-card>
+                <div class="feature">
+                  <v-card-text>
+                    <div>
+                      <div class="icon">
+                        <i class="fas fa-memory"></i>
+                      </div>
+
+                      <div class="label">Memory Usage</div>
                     </div>
 
                     <div class="pt-3" style="clear: both">
                       <v-list-item-title>
-                        <v-progress-linear
-                          :value="(1 - disk.free / disk.space) * 100"
-                          height="20"
-                        ></v-progress-linear>
+                        <v-progress-linear :model-value="data.mem_perc" height="20" color="primary"></v-progress-linear>
                       </v-list-item-title>
                       <v-list-item-subtitle>
-                        {{ (disk.free * 1024) | prettyBytes }} free of
-                        {{ (disk.space * 1024) | prettyBytes }}
+                        {{ prettyBytes(data.mem_free * 1024) }} free of
+                        {{ prettyBytes(data.mem_total * 1024) }}
                       </v-list-item-subtitle>
                     </div>
                   </v-card-text>
                 </div>
               </v-card>
-            </v-flex>
-          </template>
+            </v-col>
 
-          <v-flex xs12 sm6 md3>
-            <v-card>
-              <div class="feature">
-                <v-card-text>
-                  <div>
-                    <div class="icon">
-                      <i class="fas fa-clock"></i>
+            <template v-for="(disk, i) in data.disks" :key="`item-${i}`">
+              <v-col cols="12" sm="6" md="3">
+                <v-card>
+                  <div class="feature">
+                    <v-card-text>
+                      <div>
+                        <div class="icon">
+                          <i class="fas fa-hdd"></i>
+                        </div>
+
+                        <div class="label">{{ disk.name }}</div>
+                      </div>
+
+                      <div class="pt-3" style="clear: both">
+                        <v-list-item-title>
+                          <v-progress-linear :model-value="(1 - disk.free / disk.space) * 100" height="20" color="primary"></v-progress-linear>
+                        </v-list-item-title>
+                        <v-list-item-subtitle>
+                          {{ prettyBytes(disk.free * 1024) }} free of
+                          {{ prettyBytes(disk.space * 1024) }}
+                        </v-list-item-subtitle>
+                      </div>
+                    </v-card-text>
+                  </div>
+                </v-card>
+              </v-col>
+            </template>
+
+            <v-col cols="12" sm="6" md="3">
+              <v-card>
+                <div class="feature">
+                  <v-card-text>
+                    <div>
+                      <div class="icon">
+                        <i class="fas fa-clock"></i>
+                      </div>
+
+                      <div class="label">Uptime</div>
                     </div>
 
-                    <div class="label">Uptime</div>
-                  </div>
-
-                  <div class="pt-3" style="clear: both; font-size: 14px">
-                    {{ data.uptime }}
-                  </div>
-                </v-card-text>
-              </div>
-            </v-card>
-          </v-flex>
+                    <div class="pt-3" style="clear: both; font-size: 14px">
+                      {{ data.uptime }}
+                    </div>
+                  </v-card-text>
+                </div>
+              </v-card>
+            </v-col></v-row>
         </v-layout>
       </v-container>
 
       <v-layout row class="mx-1">
-        <v-flex md6 xs12>
-          <v-card>
-            <v-list two-line>
-              <v-list-item>
-                <v-list-item-content>
+        <v-row>
+          <v-col cols="12" md="6">
+            <v-card>
+              <v-list two-line>
+                <v-list-item>
                   <v-list-item-title v-html="`Updates`"></v-list-item-title>
-                  <v-list-item-subtitle v-if="data.updates >= 0">
-                    <div>
+                  <div v-if="data.updates >= 0">
+                    <v-list-item-subtitle>
                       {{ data.updates }} updates,
                       {{ data.security_updates }} security updates.
                       <span v-if="data.reboot_required">Reboot required.</span>
-                    </div>
+                    </v-list-item-subtitle>
 
                     <Upgrade :serverId="serverId" @closed="fetchData(true)" />
 
                     <UpdatesConfig :serverId="serverId" />
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+                  </div>
+                </v-list-item>
+              </v-list>
 
-            <v-list two-line>
-              <v-list-item>
-                <v-list-item-content>
+              <v-list two-line>
+                <v-list-item>
                   <v-list-item-title v-html="`Hostname`"></v-list-item-title>
                   <v-list-item-subtitle v-if="data.hostname">
                     <Copy :val="data.hostname" text />
-                    <Edit
-                      :val="data.hostname"
-                      hideText
-                      label="Hostname"
-                      name="hostname"
-                      :path="'servers/' + this.serverId + '/hostname'"
-                      @save="fetchData(true)"
-                    />
+                    <Edit :val="data.hostname" hideText label="Hostname" name="hostname"
+                      :path="'servers/' + this.serverId + '/hostname'" @save="fetchData(true)" />
                   </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+                </v-list-item>
+              </v-list>
 
-            <v-list two-line>
-              <v-list-item>
-                <v-list-item-content>
+              <v-list two-line>
+                <v-list-item>
                   <v-list-item-title v-html="`IP address`"></v-list-item-title>
                   <v-list-item-subtitle>
                     <Copy :val="data.ip" text />
                   </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+                </v-list-item>
+              </v-list>
 
-            <v-list two-line>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title
-                    v-html="`IPv6 address`"
-                  ></v-list-item-title>
+              <v-list two-line>
+                <v-list-item>
+                  <v-list-item-title v-html="`IPv6 address`"></v-list-item-title>
                   <v-list-item-subtitle>
                     <Copy :val="data.ipv6" text />
                   </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+                </v-list-item>
+              </v-list>
 
-            <v-list two-line>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title
-                    v-html="`Time Zone`"
-                  ></v-list-item-title>
+              <v-list two-line>
+                <v-list-item>
+                  <v-list-item-title v-html="`Time Zone`"></v-list-item-title>
                   <v-list-item-subtitle>
                     {{ data.timeZone }}
-                    
+
                     <TimeZone :serverId="serverId" @save="fetchData(true)" />
                   </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+                </v-list-item>
+              </v-list>
 
-          </v-card>
-        </v-flex>
+            </v-card>
+          </v-col>
+        </v-row>
 
-        <v-flex xs6>
-          <v-card>
-            <v-list two-line>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title
-                    v-html="`Operating system`"
-                  ></v-list-item-title>
+        <v-row>
+          <v-col cols="12" xs="6">
+            <v-card>
+              <v-list two-line>
+                <v-list-item>
+                  <v-list-item-title v-html="`Operating system`"></v-list-item-title>
                   <v-list-item-subtitle>
                     {{ data.os }}
                   </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+                </v-list-item>
+              </v-list>
 
-            <v-list two-line>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title
-                    v-html="`Kernel version`"
-                  ></v-list-item-title>
+              <v-list two-line>
+                <v-list-item>
+                  <v-list-item-title v-html="`Kernel version`"></v-list-item-title>
                   <v-list-item-subtitle>
                     {{ data.kernel }}
                   </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+                </v-list-item>
+              </v-list>
 
-            <v-list two-line>
-              <v-list-item>
-                <v-list-item-content>
+              <v-list two-line>
+                <v-list-item>
                   <v-list-item-title v-html="`Apache`"></v-list-item-title>
-                  <v-list-item-subtitle
-                    v-html="data.apache"
-                  ></v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+                  <v-list-item-subtitle v-html="data.apache"></v-list-item-subtitle>
+                </v-list-item>
+              </v-list>
 
-            <v-list two-line>
-              <v-list-item>
-                <v-list-item-content>
+              <v-list two-line>
+                <v-list-item>
                   <v-list-item-title v-html="`PHP`"></v-list-item-title>
                   <v-list-item-subtitle>
                     {{ data.php }}
                     <PhpConfig :serverId="serverId" />
                   </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+                </v-list-item>
+              </v-list>
 
-            <v-list two-line>
-              <v-list-item>
-                <v-list-item-content>
+              <v-list two-line>
+                <v-list-item>
                   <v-list-item-title v-html="`MariaDb`"></v-list-item-title>
                   <v-list-item-subtitle>
                     {{ data.mariadb }}
                     <MysqlConfig :serverId="serverId" />
                   </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+                </v-list-item>
+              </v-list>
 
-            <v-list two-line>
-              <v-list-item>
-                <v-list-item-content>
+              <v-list two-line>
+                <v-list-item>
                   <v-list-item-title v-html="`Postfix`"></v-list-item-title>
                   <v-list-item-subtitle>
                     {{ data.postfix }}
                   </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-card>
-        </v-flex>
+                </v-list-item>
+              </v-list>
+            </v-card>
+          </v-col></v-row>
       </v-layout>
 
       <v-container class="ma-0">
@@ -283,6 +243,7 @@
 
 <script>
 import api from "../../services/api";
+import util from "../../services/util";
 import Copy from "../../components/Copy";
 import Edit from "../../components/Edit";
 import PhpConfig from "../../components/PhpConfig";
@@ -338,29 +299,32 @@ export default {
           clearCacheEntry: clearCacheEntry,
         })
         .then(response => {
-            console.log(response);
+          console.log(response);
 
-            if(response.data.error) {
-              self.error=response.data.error;
-            }
+          if (response.data.error) {
+            self.error = response.data.error;
+          }
 
-            if(response.data.item) {
-              self.data=response.data.item;
-            }
+          if (response.data.item) {
+            self.data = response.data.item;
+          }
 
-            if(self.data.mem_total) {
-              self.data.mem_perc=Math.round(
-                (1-self.data.mem_free/self.data.mem_total)*100
-              );
-            }
+          if (self.data.mem_total) {
+            self.data.mem_perc = Math.round(
+              (1 - self.data.mem_free / self.data.mem_total) * 100
+            );
+          }
 
-            self.hostname=self.data.hostname;
+          self.hostname = self.data.hostname;
 
-            document.title="Summary | "+self.data.name;
-          })
+          document.title = "Summary | " + self.data.name;
+        })
         .catch(error => console.log(error))
         .finally(() => self.fetching = false);
     },
+    prettyBytes(value) {
+      return util.prettyBytes(value);
+    }
   },
 };
 </script>

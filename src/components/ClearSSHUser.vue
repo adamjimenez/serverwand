@@ -1,21 +1,24 @@
 <template>
-  <v-btn
-    :disabled="fetching"
-    :loading="fetching"
-    @click="clearSSHUser"
-  >
-    Clear SSH user
-  </v-btn>
+  <div>
+    <v-btn :disabled="fetching" :loading="fetching" @click="clearSSHUser">
+      Clear SSH user
+    </v-btn>
+    <Confirm ref="confirm" />
+  </div>
 </template>
 
 <script>
 import api from "../services/api";
+import Confirm from "./ConfirmDialog.vue";
 
 export default {
+  components: {
+    Confirm,
+  },
   props: {
     serverId: null,
-  }, 
-  
+  },
+
   data() {
     return {
       fetching: false
@@ -23,8 +26,13 @@ export default {
   },
 
   methods: {
-    clearSSHUser() {
-      this.$confirm("Clear the default SSH user used for terminal access?").then((res) => {
+    clearSSHUser: async function() {      
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Clear the default SSH user used for terminal access?"
+        )
+      ) {
         if (res) {
           var self = this;
           self.fetching = true;
@@ -33,18 +41,18 @@ export default {
               ssh_username: "",
             })
             .then(response => {
-                console.log(response);
+              console.log(response);
 
-                if(!response.data.success) {
-                  self.error=response.data.error;
-                } else {
-                  self.$emit('complete');
-                }
-              })
+              if (!response.data.success) {
+                self.error = response.data.error;
+              } else {
+                self.$emit('complete');
+              }
+            })
             .catch(error => console.log(error))
             .finally(() => self.fetching = false);
         }
-      });
+      };
     },
   },
 };

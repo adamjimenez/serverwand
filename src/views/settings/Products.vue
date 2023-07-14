@@ -8,29 +8,17 @@
 
     <v-card class="mx-auto">
       <v-list>
-        <v-list-item-group>
-          <template v-for="(item, i) in items">
-            <v-list-item :key="`item-${i}`" :value="item">
-              <template v-slot:default>
-                <v-list-item-content>
-                  <v-list-item-title @click="editItem(item)">
-                    {{ item.name }}
-                  </v-list-item-title>
-                </v-list-item-content>
-
-                <v-list-item-action>
-                  <v-btn
-                    :disabled="dialog"
-                    :loading="dialog"
-                    @click="deleteItem(item.id)"
-                  >
-                    <v-icon small>delete</v-icon>
-                  </v-btn>
-                </v-list-item-action>
+        <v-list group>
+          <template v-for="(item, i) in items" :key="`item-${i}`">
+            <v-list-item :title="item.name" @click="editItem(item)">
+              <template v-slot:append>
+                <v-btn :disabled="dialog" :loading="dialog" @click.stop="deleteItem(item.id)">
+                  <v-icon size="small">mdi:mdi-delete</v-icon>
+                </v-btn>
               </template>
             </v-list-item>
           </template>
-        </v-list-item-group>
+        </v-list>
       </v-list>
     </v-card>
 
@@ -42,7 +30,7 @@
       </div>
     </v-card>
 
-    <v-navigation-drawer v-model="drawer" temporary right app>
+    <v-dialog v-model="drawer">
       <v-card>
         <v-card-title> Product </v-card-title>
 
@@ -72,7 +60,7 @@
           ></v-select>
 
           <v-btn
-            :disabled="fetching"
+            :disabled="!data.name || !data.product_type || !data.price || !data.period"
             :loading="fetching"
             color="success"
             @click="saveItem"
@@ -81,17 +69,20 @@
           </v-btn>
         </v-card-text>
       </v-card>
-    </v-navigation-drawer>
+    </v-dialog>
+    <Confirm ref="confirm" />
   </div>
 </template>
 
 <script>
 import api from "../../services/api";
 import Loading from "../../components/Loading";
+import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
     Loading,
+    Confirm,
   },
   data() {
     return {
@@ -102,29 +93,29 @@ export default {
       },
       product_types: [
         {
-          text: "Domain renewal",
+          title: "Domain renewal",
           value: "domain renewal",
         },
         {
-          text: "Hosting",
+          title: "Hosting",
           value: "hosting",
         },
         {
-          text: "Custom",
+          title: "Custom",
           value: "custom",
         },
       ],
       periods: [
         {
-          text: "One off",
+          title: "One off",
           value: "one-off",
         },
         {
-          text: "Monthly",
+          title: "Monthly",
           value: "monthly",
         },
         {
-          text: "Yearly",
+          title: "Yearly",
           value: "yearly",
         },
       ],
@@ -176,11 +167,13 @@ export default {
       this.data = JSON.parse(JSON.stringify(item));
       this.drawer = true;
     },
-    deleteItem(id) {
-      this.$confirm("Delete subscription?").then((res) => {
-        if (!res) {
-          return;
-        }
+    deleteItem: async function (id) {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Are you sure you want to delete this item?"
+        )
+      ) {
 
         var self = this;
         this.error = "";
@@ -199,7 +192,7 @@ export default {
           .catch(function (error) {
             console.log(error);
           });
-      });
+      };
     },
     saveItem() {
       var self = this;

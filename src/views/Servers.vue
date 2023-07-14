@@ -1,59 +1,53 @@
 <template>
-  <v-layout row>
-    <v-flex>
-      <v-alert v-if="error" type="error">
-        {{ error }}
-      </v-alert>
+  <v-layout row><v-row>
+      <v-col cols="12">
+        <v-alert v-if="error" type="error">
+          {{ error }}
+        </v-alert>
 
-      <Loading :value="loading" />
+        <Loading :value="loading" />
 
-      <v-card :loading="fetching">
-        <v-card-title primary-title>
-          <div class="headline">Servers</div>
-        </v-card-title>
+        <v-card :loading="fetching">
+          <v-card-title primary-title>
+            <div class="headline">Servers</div>
+          </v-card-title>
 
-        <div v-if="items.length">
-          <v-card flat>
-            <v-card-text>
-              <v-select
-                v-model="provider"
-                :items="provider_opts"
-                label="Provider"
-              ></v-select>
-            </v-card-text>
-          </v-card>
+          <div v-if="items.length">
+            <v-card flat>
+              <v-card-text>
+                <v-select v-model="provider" :items="provider_opts" label="Provider"></v-select>
+              </v-card-text>
+            </v-card>
 
-          <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
+            <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
 
-            <template v-slot:item.server="{ item }">
-              <v-list-item>
-                <ServerIcon :provider="item.provider"></ServerIcon>
+              <template v-slot:item.name="{ item }">
 
-                <router-link :to="'/servers/' + item.id + '/summary'" class="ml-3">
-                  <v-list-item-title
-                    v-html="item.name"
-                  ></v-list-item-title>
-                  <v-list-item-subtitle
-                    v-html="item.hostname"
-                  ></v-list-item-subtitle>
-                </router-link>
-              </v-list-item>
-            </template>
+                <v-list-item :to="'/servers/' + item.raw.id + '/summary'">
 
-          </v-data-table>
-        </div>
+                  <template v-slot:prepend>
+                    <ServerIcon :provider="item.raw.provider"></ServerIcon>
+                  </template>
 
-        <v-list v-else>
-          <v-list-item>
-            <v-list-item-content>
+                  <v-list-item-title>{{ item.raw.name }}</v-list-item-title>
+                  <v-list-item-subtitle>{{ item.raw.hostname }}</v-list-item-subtitle>
+                </v-list-item>
+
+              </template>
+
+            </v-data-table>
+          </div>
+
+          <v-list v-else>
+            <v-list-item>
               <v-list-item-title>
                 <router-link to="/servers/create"> Add a server </router-link>
               </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-card>
-    </v-flex>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-layout>
 </template>
 
@@ -79,42 +73,42 @@ export default {
       provider: "*",
       provider_opts: [
         {
-          text: "All",
+          title: "All",
           value: "*",
         },
         {
-          text: "Linode",
+          title: "Linode",
           value: "linode",
         },
         {
-          text: "Digital Ocean",
+          title: "Digital Ocean",
           value: "digitalocean",
         },
         {
-          text: "Other",
+          title: "Other",
           value: "",
         },
       ],
       headers: [
         {
-          text: "Server ",
-          value: "server",
+          title: "Server ",
+          key: "name",
         },
         {
-          text: "Region ",
-          value: "region",
+          title: "Region ",
+          key: "region",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: "Image ",
-          value: "image",
+          title: "Image ",
+          key: "image",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: "Type ",
-          value: "type",
+          title: "Type ",
+          key: "type",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
@@ -146,13 +140,13 @@ export default {
       api
         .get("servers/")
         .then(response => {
-            console.log(response);
-            self.items=response.data.items;
+          console.log(response);
+          self.items = response.data.items;
 
-            response.data.items.forEach((element) => {
-              self.filtered.push(element);
-            });
-          })
+          response.data.items.forEach((element) => {
+            self.filtered.push(element);
+          });
+        })
         .catch(error => console.log(error))
         .finally(() => self.fetching = false);
     },

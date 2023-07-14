@@ -1,53 +1,49 @@
 <template>
   <v-layout row>
-    <v-flex>
-      <v-alert v-if="error" type="error">
-        {{ error }}
-      </v-alert>
+    <v-row>
+      <v-col cols="12">
+        <v-alert v-if="error" type="error">
+          {{ error }}
+        </v-alert>
 
-      <Loading :value="loading" />
+        <Loading :value="loading" />
 
-      <v-card flat :loading="fetching">
-        <v-card-title primary-title>
-          <div class="headline">Sites</div>
-        </v-card-title>
+        <v-card flat :loading="fetching">
+          <v-card-title primary-title>
+            <div class="headline">Sites</div>
+          </v-card-title>
 
-        <v-card flat>
-          <v-card-text>
-            <v-select
-              v-model="server"
-              :items="server_opts"
-              label="Server"
-            ></v-select>
-          </v-card-text>
+          <v-card flat>
+            <v-card-text>
+              <v-select v-model="server" :items="server_opts" label="Server"></v-select>
+            </v-card-text>
+          </v-card>
+
+          <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
+            <template v-slot:item.domain="{ item }">
+
+              <v-list-item :to="'/sites/' + item.raw.id + '/summary'" :title="item.raw.domain" :subtitle="servers[item.raw.server]">
+                <template v-slot:prepend>
+                  <SiteIcon :app="item.app"></SiteIcon>
+                </template>
+              </v-list-item>
+
+            </template>
+            <template v-slot:item.usage="{ item }">
+              <div v-if="item.raw.usage > 0">
+                {{ prettyBytes(item.raw.usage * 1024) }}
+              </div>
+            </template>
+          </v-data-table>
         </v-card>
-
-        <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
-          <template v-slot:item.domain="{ item }">
-            <v-list-item>
-              <SiteIcon :app="item.app"></SiteIcon>
-
-              <router-link :to="'/sites/' + item.id + '/summary'" class="ml-3">
-                <v-list-item-title v-html="item.domain"></v-list-item-title>
-                <v-list-item-subtitle>
-                  {{ servers[item.server] }}
-                </v-list-item-subtitle>
-              </router-link>
-            </v-list-item>
-          </template>
-          <template v-slot:item.usage="{ item }">
-            <div v-if="item.usage > 0">
-              {{ (item.usage * 1024) | prettyBytes }}
-            </div>
-          </template>
-        </v-data-table>
-      </v-card>
-    </v-flex>
+      </v-col>
+    </v-row>
   </v-layout>
 </template>
 
 <script>
 import api from "../services/api";
+import util from "../services/util";
 import Loading from "../components/Loading";
 import SiteIcon from "../components/SiteIcon";
 
@@ -67,7 +63,7 @@ export default {
       server: "*",
       server_opts: [
         {
-          text: "All",
+          title: "All",
           value: "*",
         },
       ],
@@ -76,24 +72,24 @@ export default {
       selected: [],
       headers: [
         {
-          text: "Domain ",
-          value: "domain",
+          title: "Domain ",
+          key: "domain",
         },
         {
-          text: "IP ",
-          value: "ip",
+          title: "IP ",
+          key: "ip",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: "MX ",
-          value: "mx",
+          title: "MX ",
+          key: "mx",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: "Usage ",
-          value: "usage",
+          title: "Usage ",
+          key: "usage",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
@@ -141,12 +137,11 @@ export default {
 
           api.get("servers/").then(function (response) {
             response.data.items.forEach((element) => {
-              self.$set(self.servers, element.id, element.name);
-
               self.server_opts.push({
-                text: element.name,
+                title: element.name,
                 value: element.id,
               });
+              self.servers[element.id] = element.name
             });
           });
         })
@@ -159,6 +154,9 @@ export default {
           if (localStorage.server) self.server = localStorage.server;
         });
     },
+    prettyBytes(value) {
+      return util.prettyBytes(value);
+    },
   },
 };
 </script>
@@ -167,6 +165,7 @@ export default {
 .results a {
   color: inherit !important;
 }
+
 .results .v-list__tile__sub-title {
   opacity: 0.7;
 }

@@ -8,7 +8,9 @@
 
 <script>
 import api from "../../services/api";
-import router from "../../router";
+import { useRoute } from 'vue-router'
+
+const router = useRoute()
 
 export default {
   data: () => ({

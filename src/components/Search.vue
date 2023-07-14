@@ -1,29 +1,13 @@
 <template>
   <div style="flex: 1; padding: 0 10px; margin-bottom: -20px">
-    <v-autocomplete
-      v-model="model"
-      :items="items"
-      label="Search"
-      persistent-hint
-      @input="afterselection"
-      ref="autocomplete"
-    >
-      <template slot="item" slot-scope="data">
-        <template v-if="(typeof data.item) !== 'object'" >
-          <v-list-item-content v-text="data.item"></v-list-item-content>
-        </template>
-        <template v-else>
-          <v-list-item-avatar>
-            <v-icon>{{ data.item.avatar }}</v-icon>
-          </v-list-item-avatar>
-          <v-list-item-content class="results">
-            <v-list-item-title>{{ data.item.text }}</v-list-item-title>
-            <v-list-item-subtitle
-              v-html="data.item.subtitle"
-            ></v-list-item-subtitle>
-          </v-list-item-content>
-        </template>
+    <v-autocomplete v-model="model" :items="items" label="Search" persistent-hint @update:modelValue="afterselection"
+      ref="autocomplete">
+
+      <template v-slot:item="{ props, item }">
+        <v-list-item v-bind="props" :prepend-icon="item?.raw?.avatar" :title="item?.raw?.title"
+          :subtitle="item?.raw?.subtitle"></v-list-item>
       </template>
+
     </v-autocomplete>
   </div>
 </template>
@@ -43,7 +27,7 @@ export default {
     // already being observed
     this.fetchData();
 
-    this.$eventHub.on("itemsChanged", this.fetchData);
+    //this.$eventHub.on("itemsChanged", this.fetchData);
   },
 
   methods: {
@@ -53,81 +37,81 @@ export default {
       this.loading = true;
 
       api
-        .get("sites/")
-        .then(response => {
-            console.log(response);
-            response.data.items.forEach((element) => {
-              let avatar='fas fa-sitemap';
-
-              // determine icon
-              switch(element.app) {
-                case 'wordpress':
-                  avatar='fab fa-wordpress';
-                  break;
-                case 'git':
-                  avatar='fab fa-git';
-                  break;
-                case 'node':
-                  avatar='fab fa-node-js';
-                  break;
-                case 'joomla':
-                  avatar='fab fa-joomla';
-                  break;
-                case 'drupal':
-                  avatar='fab fa-drupal';
-                  break;
-                case 'magento':
-                  avatar='fab fa-magento';
-                  break;
-                case 'roundcube':
-                  avatar='fas fa-envelope';
-                  break;
-                case 'shiftlib':
-                  avatar='fas fa-user-edit';
-                  break;
-              }
-
-              self.items.push({
-                text: element.domain,
-                subtitle: self.servers[element.server],
-                value: "/sites/"+element.id+"/summary",
-                avatar: avatar,
-              });
-            });
-          })
-        .catch(error => console.log(error))
-        .finally(() => self.loading = false);
-
-      api
         .get("servers/")
         .then((response) => {
-            console.log(response);
-            response.data.items.forEach((element) => {
-              self.$set(self.servers, element.id, element.name);
+          console.log(response);
+          response.data.items.forEach((element) => {
+            // determine icon
+            let avatar = 'fas fa-server';
+            switch (element.provider) {
+              case 'linode':
+                avatar = 'fab fa-linode';
+                break;
+              case 'digitalocean':
+                avatar = 'fab fa-digital-ocean';
+                break;
+            }
 
-              // determine icon
-              let avatar='fas fa-server';
-              switch(element.provider) {
-                case 'linode':
-                  avatar='fab fa-linode';
-                  break;
-                case 'digitalocean':
-                  avatar='fab fa-digital-ocean';
-                  break;
-              }
-
-              self.items.push({
-                text: element.name,
-                subtitle: element.hostname,
-                value: "/servers/"+element.id+"/summary",
-                avatar: avatar,
-              });
+            self.items.push({
+              title: element.name,
+              subtitle: element.hostname,
+              value: "/servers/" + element.id + "/summary",
+              avatar: avatar,
             });
-          })
+
+            self.servers[element.id] = element.name;
+          });
+        })
         .catch(error => console.log(error))
         .finally(() => {
-            self.loading=false;
+          self.loading = false;
+        });
+
+      api
+        .get("sites/")
+        .then(response => {
+          console.log(response);
+          response.data.items.forEach((element) => {
+            let avatar = 'fas fa-sitemap';
+
+            // determine icon
+            switch (element.app) {
+              case 'wordpress':
+                avatar = 'fab fa-wordpress';
+                break;
+              case 'git':
+                avatar = 'fab fa-git';
+                break;
+              case 'node':
+                avatar = 'fab fa-node-js';
+                break;
+              case 'joomla':
+                avatar = 'fab fa-joomla';
+                break;
+              case 'drupal':
+                avatar = 'fab fa-drupal';
+                break;
+              case 'magento':
+                avatar = 'fab fa-magento';
+                break;
+              case 'roundcube':
+                avatar = 'fas fa-envelope';
+                break;
+              case 'shiftlib':
+                avatar = 'fas fa-user-edit';
+                break;
+            }
+
+            self.items.push({
+              title: element.domain,
+              subtitle: self.servers[element.server],
+              value: "/sites/" + element.id + "/summary",
+              avatar: avatar,
+            });
           });
+        })
+        .catch(error => console.log(error))
+        .finally(() => self.loading = false);
     },
     afterselection() {
       this.$nextTick(() => {

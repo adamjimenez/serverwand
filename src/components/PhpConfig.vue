@@ -2,14 +2,14 @@
   <span>
     <v-tooltip top>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" icon @click="edit()">
+        <v-btn icon @click="edit()">
           <v-icon small>fas fa-wrench</v-icon>
         </v-btn>
       </template>
       <span>Configure PHP</span>
     </v-tooltip>
 
-    <v-navigation-drawer app v-model="drawer" temporary right>
+    <v-dialog v-model="drawer">
       <v-card>
         <v-card-title> Edit PHP config </v-card-title>
 
@@ -26,7 +26,7 @@
           </v-btn>
         </v-card-text>
       </v-card>
-    </v-navigation-drawer>
+    </v-dialog>
   </span>
 </template>
 

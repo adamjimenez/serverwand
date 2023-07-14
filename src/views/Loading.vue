@@ -2,9 +2,11 @@
   <div class="page-container">
     <v-app :dark="dark">
       <v-layout>
-        <v-flex xs12 sm6 offset-sm3>
-          <Loading value="true" />
-        </v-flex>
+        <v-row>
+          <v-col cols="12" sm="6" md="4">
+            <Loading value="true" />
+          </v-col>
+        </v-row>
       </v-layout>
     </v-app>
   </div>

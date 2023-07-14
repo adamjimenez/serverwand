@@ -4,33 +4,17 @@
 
     <v-card class="pa-3" :loading="fetching">
       <v-list>
-        <v-list-item-group>
-          <template v-for="(item, i) in notes">
-            <v-list-item :key="`item-${i}`" :value="item">
-              <template v-slot:default>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    <span style="white-space: pre">{{ item.note }}</span>
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    {{ item.created }}
-                  </v-list-item-subtitle>
-                </v-list-item-content>
+        <v-list group>
 
-                <v-list-item-action>
-                  <v-btn
-                    icon
-                    :disabled="fetching"
-                    :loading="fetching"
-                    @click="deleteItem(item.id)"
-                  >
-                    <v-icon small>delete</v-icon>
-                  </v-btn>
-                </v-list-item-action>
-              </template>
-            </v-list-item>
-          </template>
-        </v-list-item-group>
+          <v-list-item v-for="(item, i) in notes" :key="`item-${i}`" :title="item.note" :subtitle="item.created">
+            <template v-slot:append>
+              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
+                <v-icon size="small">mdi:mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-list-item>
+
+        </v-list>
       </v-list>
     </v-card>
 
@@ -42,7 +26,7 @@
       </div>
     </v-card>
 
-    <v-navigation-drawer app v-model="drawer" temporary right>
+    <v-dialog v-model="drawer">
       <v-card>
         <v-card-title> Note </v-card-title>
 
@@ -50,7 +34,7 @@
           <v-textarea v-model="data.note" label="Note"></v-textarea>
 
           <v-btn
-            :disabled="dialog"
+            :disabled="!data.note"
             :loading="loading"
             color="success"
             @click="saveItem"
@@ -59,17 +43,20 @@
           </v-btn>
         </v-card-text>
       </v-card>
-    </v-navigation-drawer>
+    </v-dialog>
+    <Confirm ref="confirm" />
   </div>
 </template>
 
 <script>
 import api from "../../services/api";
 import Loading from "../../components/Loading";
+import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
     Loading,
+    Confirm
   },
   data() {
     return {
@@ -149,11 +136,13 @@ export default {
           .finally(() => self.dialog = false);
       }
     },
-    deleteItem(id) {
-      this.$confirm("Delete note?").then(res => {
-        if (!res) {
-          return;
-        }
+    deleteItem: async function(item) {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Delete note"
+        )
+      ) {
 
         var self = this;
         this.error = "";
@@ -161,7 +150,7 @@ export default {
         this.loading = true;
 
         api
-          .post("users/" + this.id + "/notes", { delete: 1, domain: id })
+          .post("users/" + this.id + "/notes", { delete: 1, note: item.id })
           .then(response => {
               console.log(response);
 
@@ -175,7 +164,7 @@ export default {
               self.dialog=false;
               self.loading=false;
             });
-      });
+      };
     },
   },
 };

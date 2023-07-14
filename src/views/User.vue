@@ -1,37 +1,41 @@
 <template>
-  <v-layout row>
-    <v-flex>
-      <v-alert v-if="error" type="error">
-        {{ error }}
-      </v-alert>
+  <div>
+    <v-alert v-if="error" type="error">
+      <div v-html="error"></div>
+    </v-alert>
 
-      <Loading :value="fetching" />
+    <Loading :value="fetching" />
 
-      <v-list two-line v-if="!fetching">
-        <v-list-item>
-          <v-list-item-avatar>
-            <v-icon left>fas fa-user</v-icon>
-          </v-list-item-avatar>
-          <v-list-item-content>
+    <v-container v-if="!fetching" fluid>
+      <v-row>
+
+        <v-col>
+          <v-list-item>
+            <template v-slot:prepend>
+              <v-icon left>fas fa-user</v-icon>
+            </template>
+
             <v-list-item-title>
               {{ data.name }}
             </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
+          </v-list-item>
+        </v-col>
 
-      <v-tabs>
-        <v-tab :to="'/users/' + userId + '/summary'">Summary</v-tab>
-        <v-tab :to="'/users/' + userId + '/sites'">Sites</v-tab>
-        <v-tab :to="'/users/' + userId + '/domains'">Domains</v-tab>
-        <v-tab :to="'/users/' + userId + '/invoices'">Invoices</v-tab>
-        <v-tab :to="'/users/' + userId + '/subscriptions'">Subscriptions</v-tab>
-        <v-tab :to="'/users/' + userId + '/notes'">Notes</v-tab>
-        <v-tab :to="'/users/' + userId + '/settings'">Settings</v-tab>
-      </v-tabs>
-      <router-view></router-view>
-    </v-flex>
-  </v-layout>
+      </v-row>
+    </v-container>
+
+    <v-tabs>
+      <v-tab :to="'/users/' + userId + '/summary'">Summary</v-tab>
+      <v-tab :to="'/users/' + userId + '/sites'">Sites</v-tab>
+      <v-tab :to="'/users/' + userId + '/domains'">Domains</v-tab>
+      <v-tab :to="'/users/' + userId + '/invoices'">Invoices</v-tab>
+      <v-tab :to="'/users/' + userId + '/subscriptions'">Subscriptions</v-tab>
+      <v-tab :to="'/users/' + userId + '/notes'">Notes</v-tab>
+      <v-tab :to="'/users/' + userId + '/settings'">Settings</v-tab>
+    </v-tabs>
+    <router-view></router-view>
+
+  </div>
 </template>
 
 <script>

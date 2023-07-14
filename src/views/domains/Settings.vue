@@ -11,27 +11,25 @@
 
       <v-card>
         <v-card-title primary-title>
-          <v-btn
-            :disabled="dialog"
-            :loading="dialog"
-            @click="deleteItem"
-            color="error"
-          >
+          <v-btn :disabled="dialog" :loading="dialog" @click="deleteItem" color="error">
             Delete
           </v-btn>
         </v-card-title>
       </v-card>
     </v-card>
+    <Confirm ref="confirm" />
   </div>
 </template>
 
 <script>
 import api from "../../services/api";
 import Loading from "../../components/Loading";
+import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
     Loading,
+    Confirm
   },
   data() {
     return {
@@ -75,33 +73,36 @@ export default {
     editItem() {
       this.$router.push("/domains/" + this.$route.params.id + "/edit");
     },
-    deleteItem() {
-      this.$confirm("Delete " + this.data.domain + "?").then((res) => {
-        if (res) {
-          var self = this;
-          this.dialog = true;
-          this.loading = true;
+    deleteItem: async function () {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Delete " + this.data.domain
+        )
+      ) {
+        var self = this;
+        this.dialog = true;
+        this.loading = true;
 
-          api
-            .post("domains/" + this.id, { delete: 1 })
-            .then(function (response) {
-              console.log(response);
+        api
+          .post("domains/" + this.id, { delete: 1 })
+          .then(function (response) {
+            console.log(response);
 
-              if (response.data.error) {
-                self.error = response.data.error;
-              } else {
-                self.$router.push("/domains/");
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-            })
-            .finally(function () {
-              self.dialog = false;
-              self.loading = false;
-            });
-        }
-      });
+            if (response.data.error) {
+              self.error = response.data.error;
+            } else {
+              self.$router.push("/domains/");
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .finally(function () {
+            self.dialog = false;
+            self.loading = false;
+          });
+      }
     },
   },
 };

@@ -1,63 +1,49 @@
 <template>
   <div>
-    <v-layout row>
-      <v-flex>
-        <v-alert v-if="error" type="error">
-          <div v-html="error"></div>
-        </v-alert>
+    <v-alert v-if="error" type="error">
+      <div v-html="error"></div>
+    </v-alert>
 
-        <v-list v-if="!fetching">
+    <v-container v-if="!fetching" fluid>
+      <v-row>
+        <v-col>
           <v-list-item>
-            <v-list-item-content>
-              <v-container class="mx-0" style="max-width: 100%">
-                <v-row>
-                  <v-col>
-                    <v-list-item class="px-0">
-                      <v-list-item-icon>
-                        <ServerIcon :provider="data.provider"></ServerIcon>
-                      </v-list-item-icon>
+            <template v-slot:prepend>
+              <ServerIcon :provider="data.provider"></ServerIcon>
+            </template>
 
-                      <v-list-item-content class="py-0">
-                        <v-list-item-title>
-                          {{ data.name }}
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                          {{ data.hostname }}
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-col>
-
-                  <v-col align="right">
-                    <v-btn color="success" @click="terminal">
-                      <v-icon small>fas fa-terminal</v-icon>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-list-item-content>
+            <v-list-item-title>
+              {{ data.name }}
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              {{ data.hostname }}
+            </v-list-item-subtitle>
           </v-list-item>
-        </v-list>
+        </v-col>
 
-        <v-tabs show-arrows>
-          <v-tab :to="'/servers/' + serverId + '/summary'">Summary</v-tab>
-          <v-tab :to="'/servers/' + serverId + '/Files'">Files</v-tab>
-          <v-tab :to="'/servers/' + serverId + '/services'">Services</v-tab>
-          <v-tab :to="'/servers/' + serverId + '/cronjobs'">Cronjobs</v-tab>
-          <v-tab :to="'/servers/' + serverId + '/database'">Database</v-tab>
-          <v-tab :to="'/servers/' + serverId + '/systemusers'"
-            >System users</v-tab
-          >
-          <v-tab :to="'/servers/' + serverId + '/firewall'">Firewall</v-tab>
-          <v-tab :to="'/servers/' + serverId + '/mail'">Mail</v-tab>
-          <v-tab :to="'/servers/' + serverId + '/apps'">Apps</v-tab>
-          <v-tab :to="'/servers/' + serverId + '/logs'">Logs</v-tab>
-          <v-tab :to="'/servers/' + serverId + '/backups'">Cloud backups</v-tab>
-          <v-tab :to="'/servers/' + serverId + '/settings'">Settings</v-tab>
-        </v-tabs>
-        <router-view></router-view>
-      </v-flex>
-    </v-layout>
+        <v-col class="text-right">
+          <v-btn color="success" @click="terminal">
+            <v-icon small>fas fa-terminal</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <v-tabs show-arrows>
+      <v-tab :to="'/servers/' + serverId + '/summary'">Summary</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/Files'">Files</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/services'">Services</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/cronjobs'">Cronjobs</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/database'">Database</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/systemusers'">System users</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/firewall'">Firewall</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/mail'">Mail</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/apps'">Apps</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/logs'">Logs</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/backups'">Cloud backups</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/settings'">Settings</v-tab>
+    </v-tabs>
+    <router-view></router-view>
 
     <v-dialog v-model="chooseUser">
       <v-card :loading="fetching">
@@ -65,19 +51,9 @@
 
         <v-card-text>
           <div v-if="users.length">
-            <v-select
-              v-model="ssh_username"
-              :items="users"
-              label="User"
-            ></v-select>
+            <v-select v-model="ssh_username" :items="users" label="User"></v-select>
 
-            <v-btn
-              :disabled="ssh_username.length === 0"
-              color="success"
-              @click="saveKeyAndContinue"
-              right
-              class="ml-3"
-            >
+            <v-btn :disabled="ssh_username.length === 0" color="success" @click="saveKeyAndContinue" right class="ml-3">
               Save Key and Continue
             </v-btn>
           </div>
@@ -151,22 +127,22 @@ export default {
       api
         .get("servers/" + this.serverId + "/systemusers")
         .then(response => {
-            console.log(response);
+          console.log(response);
 
-            if(response.data.error) {
-              self.error=response.data.error;
-              return false;
-            }
+          if (response.data.error) {
+            self.error = response.data.error;
+            return false;
+          }
 
-            response.data.item.users.forEach((element) => {
-              self.users.push({
-                text: element.name,
-                value: element.name,
-              });
+          response.data.item.users.forEach((element) => {
+            self.users.push({
+              text: element.name,
+              value: element.name,
             });
-          })
+          });
+        })
         .catch(error => console.log(error))
-        .finally(() => self.fetching=false);
+        .finally(() => self.fetching = false);
     },
     saveKey(key) {
       var self = this;
@@ -178,17 +154,17 @@ export default {
           { key: key }
         )
         .then(response => {
-            console.log(response);
+          console.log(response);
 
-            if(!response.data.success) {
-              self.fetching=false;
-              self.error=response.data.error;
-            } else {
-              self.saveSSHUser();
-            }
-          })
+          if (!response.data.success) {
+            self.fetching = false;
+            self.error = response.data.error;
+          } else {
+            self.saveSSHUser();
+          }
+        })
         .catch(error => {
-          self.fetching=false;
+          self.fetching = false;
           console.log(error);
         });
     },
@@ -200,19 +176,19 @@ export default {
           ssh_username: self.ssh_username,
         })
         .then(response => {
-            console.log(response);
+          console.log(response);
 
-            if(!response.data.success) {
-              self.error=response.data.error;
-            } else {
-              self.data.ssh_username=self.ssh_username;
-              self.terminal();
-            }
-          })
+          if (!response.data.success) {
+            self.error = response.data.error;
+          } else {
+            self.data.ssh_username = self.ssh_username;
+            self.terminal();
+          }
+        })
         .catch(error => console.log(error))
         .finally(() => {
-          self.fetching=false;
-          self.chooseUser=false;
+          self.fetching = false;
+          self.chooseUser = false;
         });
     },
     saveKeyAndContinue() {
@@ -223,16 +199,16 @@ export default {
       api
         .post("https://shiftedit.net/api/prefs")
         .then(response => {
-            console.log(response);
+          console.log(response);
 
-            if(response.data.error) {
-              self.error=response.data.error;
-              self.chooseUser=false;
-            } else {
-              console.log(response.data.public_key);
-              self.saveKey(response.data.public_key);
-            }
-          })
+          if (response.data.error) {
+            self.error = response.data.error;
+            self.chooseUser = false;
+          } else {
+            console.log(response.data.public_key);
+            self.saveKey(response.data.public_key);
+          }
+        })
         .catch(error => console.log(error));
     },
     terminal() {
@@ -244,7 +220,7 @@ export default {
           this.data.hostname +
           "&user=" +
           this.data.ssh_username;
-          
+
         if (window.ssh_path) {
           url += "&path=" + window.ssh_path;
         }

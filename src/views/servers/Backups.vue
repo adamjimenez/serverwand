@@ -16,8 +16,8 @@
     <v-card class="pa-3">
       <v-row>
         <v-col class="flex-grow-0">
-          <v-btn @click="configure" title="Configure S3">
-            <v-icon>settings</v-icon>
+          <v-btn @click="configure" title="Configure S3" icon>
+            <v-icon>mdi:mdi-settings</v-icon>
           </v-btn>
         </v-col>
         <v-col class="flex-grow-0" v-if="s3.access_key">
@@ -26,12 +26,12 @@
         <!--
         <v-col class="flex-grow-0" v-if="s3.access_key">
           <v-btn @click="fetchData()">
-            <v-icon>refresh</v-icon>
+            <v-icon>mdi:mdi-refresh</v-icon>
           </v-btn>
         </v-col>
         -->
         <v-col>
-          <v-switch v-model="s3.active" label="Nightly backups" class="my-0" @change="toggleBackups()"></v-switch>
+          <v-switch v-model="s3.active" label="Nightly backups" class="my-0" @change="toggleBackups()" hide-details></v-switch>
         </v-col>
       </v-row>
     </v-card>
@@ -50,7 +50,7 @@
             <v-row>
               <v-col class="flex-grow-0">
                 <v-btn icon @click="upLevel()" :disabled="path === '/'">
-                  <v-icon small>arrow_upward</v-icon>
+                  <v-icon small>mdi:mdi-arrow-up</v-icon>
                 </v-btn>
               </v-col>
 
@@ -67,13 +67,13 @@
                   class="results" 
                   ref="results"
                   mobile-breakpoint="0"    
-                  @click:row="open"                  
+                  @click:row="function(event, item) { open(item.item.raw) }"                  
                   v-model="selected"
                   show-select
                 >
 
                   <template v-slot:item.modified="{ item }">
-                    {{ item.modified | formatDate }}
+                    {{ formatDate(item.modified) }}
                   </template>
 
                 </v-data-table>
@@ -88,40 +88,36 @@
                   :headers="backupHeaders"
                   :items="backups"
                   mobile-breakpoint="0"                  
-                  @click:row="browse"
+                  @click:row="function(event, item) { browse(item.item.raw) }"
                 >
 
                   <template v-slot:item.name="{ item }">
-                    <span @click="browse(item)">{{ item.name }}</span>
+                    <span @click="browse(item.raw)">{{ item.raw.name }}</span>
                   </template>
 
                   <template v-slot:item.timestamp="{ item }">
-                    {{ item.timestamp | formatDate }}
+                    {{ formatDate(item.raw.timestamp) }}
                   </template>
 
                   <template v-slot:item.complete="{ item }">
-                    {{ item.complete ? 'Complete' : 'Incomplete' }}
+                    {{ item.raw.complete ? 'Complete' : 'Incomplete' }}
                   </template>
 
                   <template v-slot:item.automatic="{ item }">
-                    {{ item.automatic ? 'Automatic' : 'Manual' }}
+                    {{ item.raw.automatic ? 'Automatic' : 'Manual' }}
                   </template>
 
                   <template v-slot:item.duration="{ item }">
-                    {{ Math.round(item.duration / 60) }}m
+                    {{ Math.round(item.raw.duration / 60) }}m
                   </template>
 
                   <template v-slot:item.size="{ item }">
-                    {{ item.size | prettyBytes }}
-                  </template>
-
-                  <template v-slot:item.size="{ item }">
-                    {{ item.size | prettyBytes }}
+                    {{ prettyBytes(item.raw.size) }}
                   </template>
 
                   <template v-slot:item.actions="{ item }">
                     <v-btn icon :disabled="loading" :loading="loading" @click="deleteSnapshot(item.name)" @click.stop>
-                      <v-icon small>delete</v-icon>
+                      <v-icon small>mdi:mdi-delete</v-icon>
                     </v-btn>
                   </template>
 
@@ -169,6 +165,7 @@ import Loading from "../../components/Loading";
 import Restore from "../../components/CloudBackups/Restore";
 import Snapshot from "../../components/CloudBackups/Snapshot";
 import EditFile from "../../components/Files/EditFile";
+import util from "../../services/util";
 
 export default {
   components: {
@@ -197,102 +194,102 @@ export default {
       selected: [],
       hosts: [
         {
-          text: "AWS",
+          title: "AWS",
           value: "",
         },
         {
-          text: "Linode (Atlanta, GA)",
+          title: "Linode (Atlanta, GA)",
           value: "https://us-southeast-1.linodeobjects.com",
         },
         {
-          text: "Linode (Frankfurt, DE)",
+          title: "Linode (Frankfurt, DE)",
           value: "https://eu-central-1.linodeobjects.com",
         },
         {
-          text: "Linode (Newark, NJ)",
+          title: "Linode (Newark, NJ)",
           value: "https://us-east-1.linodeobjects.com",
         },
         {
-          text: "Linode (Singapore, SG)",
+          title: "Linode (Singapore, SG)",
           value: "https://ap-south-1.linodeobjects.com",
         },
         {
-          text: "Digital Ocean (NYC3)",
+          title: "Digital Ocean (NYC3)",
           value: "https://nyc3.digitaloceanspaces.com",
         },
         {
-          text: "Digital Ocean (SFO3)",
+          title: "Digital Ocean (SFO3)",
           value: "https://sfo3.digitaloceanspaces.com",
         },
         {
-          text: "Digital Ocean (AMS3)",
+          title: "Digital Ocean (AMS3)",
           value: "https://ams3.digitaloceanspaces.com",
         },
         {
-          text: "Digital Ocean (SGP1)",
+          title: "Digital Ocean (SGP1)",
           value: "https://sgp1.digitaloceanspaces.com",
         },
         {
-          text: "Digital Ocean (FRA1)",
+          title: "Digital Ocean (FRA1)",
           value: "https://fra1.digitaloceanspaces.com",
         },
         {
-          text: "Vultr",
+          title: "Vultr",
           value: "https://ewr1.vultrobjects.com",
         },
       ],
 
       headers: [
         {
-          text: "Name ",
-          value: "name",
+          title: "Name ",
+          key: "name",
         },
         {
-          text: "Size ",
-          value: "size",
+          title: "Size ",
+          key: "size",
         },
         {
-          text: "Last modified ",
-          value: "modified",
+          title: "Last modified ",
+          key: "modified",
         },
       ],
 
       backupHeaders: [
         {
-          text: "Name",
-          value: "name",
+          title: "Name",
+          key: "name",
         },
         {
-          text: "Date",
-          value: "date",
+          title: "Date",
+          key: "date",
         },
         {
-          text: "Status",
-          value: "complete",
+          title: "Status",
+          key: "complete",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: "Type",
-          value: "automatic",
+          title: "Type",
+          key: "automatic",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: "Duration",
-          value: "duration",
+          title: "Duration",
+          key: "duration",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: "Size",
-          value: "size",
+          title: "Size",
+          key: "size",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: " ",
-          value: "action",
+          title: " ",
+          key: "action",
         },
       ],
     };
@@ -356,6 +353,7 @@ export default {
         });
     },
     browse(item) {
+      console.log(item)
       this.path = "/" + item.name;
       this.list();
     },
@@ -504,6 +502,12 @@ export default {
         .finally(function () {
           self.fetching = false;
         });
+    },
+    formatDate(value) {
+      return util.formatDate(value);
+    },
+    prettyBytes(value) {
+      return util.prettyBytes(value);
     },
   },
 };

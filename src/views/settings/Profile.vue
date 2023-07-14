@@ -23,9 +23,8 @@
       </v-card-text>
 
       <v-expansion-panels>
-        <v-expansion-panel v-model="passwordPanel" expand>
-          <v-expansion-panel-header>Reset password</v-expansion-panel-header>
-          <v-expansion-panel-content>
+        <v-expansion-panel v-model="passwordPanel" expand title="Reset password">
+          <v-expansion-panel-text>
             <v-card tile flat>
               <v-card-text>
                 <v-text-field
@@ -40,7 +39,7 @@
                 <v-btn color="primary" @click="validate">Submit</v-btn>
               </v-card-actions>
             </v-card>
-          </v-expansion-panel-content>
+          </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
 
@@ -48,7 +47,7 @@
       <v-checkbox
         v-model="data.emails"
         label="Receive email updates"
-        @click="toggleEmails()"
+        @change="toggleEmails()"
         class="mx-3 my-0"
       ></v-checkbox>
 
@@ -56,7 +55,7 @@
       <v-checkbox
         v-model="useMasterPassword"
         label="Use a master password"
-        @click="toggleMasterPassword()"
+        @change="toggleMasterPassword()"
         class="mx-3 my-0"
       ></v-checkbox>
 

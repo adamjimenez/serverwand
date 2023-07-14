@@ -8,23 +8,19 @@
 
     <v-card class="pa-3" :loading="fetching">
       <v-list>
-        <v-list-item-group>
-          <template v-for="(item, i) in items">
-            <v-list-item :key="`item-${i}`" :value="item">
-              <template>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    <v-switch
-                      v-model="item.active"
-                      :label="item.name"
-                      @change="toggle(item)"
-                    ></v-switch>
-                  </v-list-item-title>
-                </v-list-item-content>
-              </template>
+        <v-list group>
+          <template v-for="(item, i) in items" :key="`item-${i}`">
+            <v-list-item :value="item">
+                <v-list-item-title>
+                  <v-switch
+                    v-model="item.active"
+                    :label="item.name"
+                    @change="toggle(item)"
+                  ></v-switch>
+                </v-list-item-title>
             </v-list-item>
           </template>
-        </v-list-item-group>
+        </v-list>
       </v-list>
     </v-card>
   </div>

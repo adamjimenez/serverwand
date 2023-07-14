@@ -8,11 +8,11 @@
         :items="invoices" 
         class="results"     
         mobile-breakpoint="0"   
-        @click:row="view"
+        @click:row="function(event, item) { view(item.item.raw) }"
       >
 
         <template v-slot:item.created="{ item }">
-          {{ item.created | formatDate }}
+          {{ formatDate(item.raw.created) }}
         </template>
 
         <template v-slot:item.actions="{ item }">
@@ -20,9 +20,9 @@
             icon
             :disabled="fetching"
             :loading="fetching"
-            @click="deleteItem(item.id)"
+            @click.stop="deleteItem(item.raw,id)"
           >
-            <v-icon small>delete</v-icon>
+            <v-icon size="small">mdi:mdi-delete</v-icon>
           </v-btn>
         </template>
 
@@ -43,7 +43,7 @@
 
         <v-card-text>
           <v-form>
-            <v-container>
+            <v-container fluid>
               <v-row v-for="(item, index) in data.items" v-bind:key="index">
                 <v-col cols="12" md="3">
                   <v-text-field
@@ -133,16 +133,20 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <Confirm ref="confirm" />
   </div>
 </template>
 
 <script>
 import api from "../../services/api";
 import Loading from "../../components/Loading";
+import Confirm from "../../components/ConfirmDialog.vue";
+import util from "../../services/util";
 
 export default {
   components: {
     Loading,
+    Confirm
   },
   data() {
     return {
@@ -168,26 +172,26 @@ export default {
       },
       headers: [
         {
-          text: "Invoice ",
-          value: "id",
+          title: "Invoice ",
+          key: "id",
         },
         {
-          text: "Date ",
-          value: "created",
+          title: "Date ",
+          key: "created",
         },
         {
-          text: "Total ",
-          value: "total",
+          title: "Total ",
+          key: "total",
         },
         {
-          text: "Status ",
-          value: "payment_status",
+          title: "Status ",
+          key: "payment_status",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: " ",
-          value: "actions",
+          title: " ",
+          key: "actions",
         },
       ],
     };
@@ -252,11 +256,13 @@ export default {
           });
       }
     },
-    deleteItem(id) {
-      this.$confirm("Delete invoice?").then((res) => {
-        if (!res) {
-          return;
-        }
+    deleteItem: async function(item) {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Delete " + item.id
+        )
+      ) {
 
         var self = this;
         this.error = "";
@@ -264,7 +270,7 @@ export default {
         this.loading = true;
 
         api
-          .post("users/" + this.id + "/invoices", { delete: 1, domain: id })
+          .post("users/" + this.id + "/invoices", { delete: 1, invoice: item.id })
           .then(function (response) {
             console.log(response);
 
@@ -281,7 +287,7 @@ export default {
             self.dialog = false;
             self.loading = false;
           });
-      });
+      };
     },
     addRow() {
       this.data.items.push({});
@@ -306,6 +312,9 @@ export default {
         .finally(function () {
           self.fetching = false;
         });
+    },
+    formatDate(value) {
+      return util.formatDate(value);
     },
   },
 };

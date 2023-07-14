@@ -8,30 +8,17 @@
 
     <v-card class="pa-3" :loading="fetching">
       <v-list>
-        <v-list-item-group>
-          <template v-for="(item, i) in data.members">
-            <v-list-item :key="`item-${i}`" :value="item">
-              <template v-slot:default>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ item.email }}
-                  </v-list-item-title>
-                </v-list-item-content>
+        <v-list group>
 
-                <v-list-item-action>
-                  <v-btn
-                    icon
-                    :disabled="fetching"
-                    :loading="fetching"
-                    @click="deleteItem(item.user)"
-                  >
-                    <v-icon small>delete</v-icon>
-                  </v-btn>
-                </v-list-item-action>
-              </template>
-            </v-list-item>
-          </template>
-        </v-list-item-group>
+          <v-list-item v-for="(item, i) in data.members" :key="`item-${i}`" :title="item.email">
+            <template v-slot:append>
+              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
+                <v-icon size="small">mdi:mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-list-item>
+
+        </v-list>
       </v-list>
     </v-card>
 
@@ -43,7 +30,7 @@
       </div>
     </v-card>
 
-    <v-navigation-drawer app v-model="drawer" temporary right>
+    <v-dialog v-model="drawer">
       <v-card>
         <v-card-title> Member </v-card-title>
 
@@ -55,7 +42,7 @@
           ></v-text-field>
 
           <v-btn
-            :disabled="dialog"
+            :disabled="!member.email"
             :loading="dialog"
             color="success"
             @click="saveItem"
@@ -69,17 +56,20 @@
           </p>
         </v-card-text>
       </v-card>
-    </v-navigation-drawer>
+    </v-dialog>
+    <Confirm ref="confirm" />
   </div>
 </template>
 
 <script>
 import api from "../../services/api";
 import Loading from "../../components/Loading";
+import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
     Loading,
+    Confirm
   },
   data() {
     return {
@@ -168,8 +158,13 @@ export default {
           });
       }
     },
-    deleteItem(user) {
-      this.$confirm("Delete member?").then((res) => {
+    deleteItem: async function(user) {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Delete " + user.email
+        )
+      ) {
         if (res) {
           var self = this;
           this.error = "";
@@ -177,7 +172,7 @@ export default {
           this.loading = true;
 
           api
-            .post("teams/" + this.id + '/members', { delete: 1, user: user })
+            .post("teams/" + this.id + '/members', { delete: 1, user: user.user })
             .then(function (response) {
               console.log(response);
 
@@ -195,7 +190,7 @@ export default {
               self.loading = false;
             });
         }
-      });
+      };
     },
   },
 };

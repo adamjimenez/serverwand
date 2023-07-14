@@ -8,29 +8,17 @@
 
     <v-card class="mx-auto">
       <v-list>
-        <v-list-item-group>
-          <template v-for="(item, i) in items">
-            <v-list-item :key="`item-${i}`" :value="item">
-              <template v-slot:default>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ item.label }}
-                  </v-list-item-title>
-                </v-list-item-content>
-
-                <v-list-item-action>
-                  <v-btn
-                    :disabled="dialog"
-                    :loading="dialog"
-                    @click="deleteItem(item.id)"
-                  >
-                    <v-icon small>delete</v-icon>
-                  </v-btn>
-                </v-list-item-action>
+        <v-list group>
+          <template v-for="(item, i) in items" :key="`item-${i}`">
+            <v-list-item :value="item" :title="item.label">
+              <template v-slot:append>
+                <v-btn :disabled="dialog" :loading="dialog" @click="deleteItem(item.id)">
+                  <v-icon size="small">fas fa-trash</v-icon>
+                </v-btn>
               </template>
             </v-list-item>
           </template>
-        </v-list-item-group>
+        </v-list>
       </v-list>
     </v-card>
 
@@ -42,84 +30,43 @@
       </div>
     </v-card>
 
-    <v-navigation-drawer v-model="drawer" temporary right app>
+    <v-dialog v-model="drawer">
       <v-card>
         <v-card-title> API token </v-card-title>
 
         <v-card-text>
-          <v-select
-            v-model="provider_token.provider"
-            :items="providers"
-            label="Provider"
-          ></v-select>
+          <v-select v-model="provider_token.provider" :items="providers" label="Provider"></v-select>
 
-          <v-text-field
-            v-model="provider_token.label"
-            label="Label"
-            required
-          ></v-text-field>
+          <v-text-field v-model="provider_token.label" label="Label" required></v-text-field>
 
-          <v-text-field
-            v-if="provider_token.provider === 'nominet'"
-            v-model="provider_token.username"
-            label="Username"
-            required
-          ></v-text-field>
+          <v-text-field v-if="provider_token.provider === 'nominet'" v-model="provider_token.username" label="Username"
+            required></v-text-field>
 
-          <v-text-field
-            v-if="provider_token.provider === 'nominet'"
-            v-model="provider_token.password"
-            label="Password"
-            type="password"
-            required
-          ></v-text-field>
+          <v-text-field v-if="provider_token.provider === 'nominet'" v-model="provider_token.password" label="Password"
+            type="password" required></v-text-field>
 
-          <v-text-field
-            v-model="provider_token.token"
-            label="Token"
-            required
-          ></v-text-field>
+          <v-text-field v-model="provider_token.token" label="Token" required></v-text-field>
 
-          <v-btn
-            :disabled="fetching"
-            :loading="fetching"
-            color="success"
-            @click="submitToken"
-          >
+          <v-btn :disabled="!provider_token.provider || provider_token.label == '' || provider_token.token == ''"
+            :loading="fetching" color="success" @click="submitToken">
             Save
           </v-btn>
         </v-card-text>
       </v-card>
-    </v-navigation-drawer>
-
-    <!--
-    <v-dialog
-      v-model="dialog"
-      width="630"
-    >
-      <v-card
-        color="primary"
-        dark
-      >
-        <v-card-text>
-          <div>
-              Api key: {{ details }}              
-              <Copy :val="details" />
-          </div>
-        </v-card-text>
-      </v-card>
     </v-dialog>
-    -->
+    <Confirm ref="confirm" />
   </div>
 </template>
 
 <script>
 import api from "../../services/api";
 import Loading from "../../components/Loading";
+import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
     Loading,
+    Confirm,
   },
   data() {
     return {
@@ -129,19 +76,19 @@ export default {
       },
       providers: [
         {
-          text: "Linode",
+          title: "Linode",
           value: "linode",
         },
         {
-          text: "Digital Ocean",
+          title: "Digital Ocean",
           value: "digitalocean",
         },
         {
-          text: "NameSilo",
+          title: "NameSilo",
           value: "namesilo",
         },
         {
-          text: "Nominet",
+          title: "Nominet",
           value: "nominet",
         },
       ],
@@ -158,7 +105,11 @@ export default {
       server: {
         name: "",
       },
-      provider_token: {},
+      provider_token: {
+        provider: '',
+        label: '',
+        token: '',
+      },
       drawer: false,
     };
   },
@@ -193,11 +144,13 @@ export default {
       this.data.label = "";
       this.drawer = true;
     },
-    deleteItem(id) {
-      this.$confirm("Delete subscription?").then((res) => {
-        if (!res) {
-          return;
-        }
+    deleteItem: async function (id) {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Are you sure you want to delete this item?"
+        )
+      ) {
 
         var self = this;
         this.error = "";
@@ -216,7 +169,7 @@ export default {
           .catch(function (error) {
             console.log(error);
           });
-      });
+      };
     },
     submitToken() {
       var self = this;

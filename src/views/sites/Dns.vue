@@ -49,7 +49,7 @@
       </div>
     </v-card>
 
-    <v-navigation-drawer v-model="drawer" temporary right app>
+    <v-dialog v-model="drawer">
       <v-card>
         <v-card-title> DNS Record </v-card-title>
 
@@ -80,16 +80,16 @@
           ></v-text-field>
 
           <v-btn
-            :disabled="fetching"
+            :disabled="!record.name || record.target || record.priority"
             :loading="fetching"
             color="success"
-            @click="submitItem"
+            @click="saveItem()"
           >
             Save
           </v-btn>
         </v-card-text>
       </v-card>
-    </v-navigation-drawer>
+    </v-dialog>
   </div>
 </template>
 
@@ -124,26 +124,26 @@ export default {
       authRequired: false,
       headers: [
         {
-          text: "Type ",
-          value: "type",
+          title: "Type ",
+          key: "type",
         },
         {
-          text: "Name ",
-          value: "name",
+          title: "Name ",
+          key: "name",
         },
         {
-          text: "Target ",
-          value: "target",
+          title: "Target ",
+          key: "target",
         },
         {
-          text: "Priority ",
-          value: "priority",
+          title: "Priority ",
+          key: "priority",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          text: "",
-          value: "actions",
+          title: "",
+          key: "actions",
           sortable: false,
         },
       ],
@@ -194,9 +194,6 @@ export default {
     addItem() {
       this.record = {};
       this.drawer = true;
-    },
-    submitItem() {
-      this.saveItem();
     },
     saveItem(noAuthPrompt) {
       var self = this;

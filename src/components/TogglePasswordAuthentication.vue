@@ -1,34 +1,26 @@
 <template>
   <div>
-    <v-container fluid>
-      <v-row>
-        <v-switch
-          v-model="data.passwordAuthentication"
-          label="Password Authentication"
-          @change="togglePasswordAuthentication()"
-          class="mx-3"
-        ></v-switch>
-
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-icon color="primary" v-bind="attrs" v-on="on">
-              mdi-information
+    <v-switch v-model="data.passwordAuthentication" label="Password Authentication" @change="togglePasswordAuthentication" hide-details>
+      <template v-slot:prepend>
+        <v-tooltip bottom text="We recommend this is
+            disabled in favour of key authentication.">
+          <template v-slot:activator="{ props }">
+            <v-icon color="primary" v-bind="props">
+              mdi:mdi-information
             </v-icon>
           </template>
-          <span>
-            Allow password authentication. We recommend this is
-            disabled in favour of key authentication.</span
-          >
         </v-tooltip>
-      </v-row>
-    </v-container>
+      </template>
+    </v-switch>
   </div>
 </template>
 
 <script>
 import api from "../services/api";
+import Template from '../views/auth/Template.vue';
 
 export default {
+  components: { Template },
   props: {
     serverId: null,
     passwordAuthentication: null,
@@ -66,21 +58,21 @@ export default {
           enable: this.data.passwordAuthentication,
         })
         .then(response => {
-            console.log(response);
+          console.log(response);
 
-            if(response.data.error) {
-              self.error=response.data.error;
-            } else if(response.data.success) {
-              self.$emit("complete");
-            }
-          })
+          if (response.data.error) {
+            self.error = response.data.error;
+          } else if (response.data.success) {
+            self.$emit("complete");
+          }
+        })
         .catch(error => {
-            console.log(error);
-          })
+          console.log(error);
+        })
         .finally(() => {
-            self.fetching=false;
-            self.loading=false;
-          });
+          self.fetching = false;
+          self.loading = false;
+        });
     },
   },
 };

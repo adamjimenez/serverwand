@@ -8,30 +8,17 @@
 
     <v-card class="mx-auto">
       <v-list>
-        <v-list-item-group>
-          <template v-for="(item, i) in items">
-            <v-list-item :key="`item-${i}`" :value="item">
-              <template v-slot:default>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ item.label }}<br />
-                    {{ item.api_key }}
-                  </v-list-item-title>
-                </v-list-item-content>
-
-                <v-list-item-action>
-                  <v-btn
-                    :disabled="dialog"
-                    :loading="dialog"
-                    @click="deleteItem(item.id)"
-                  >
-                    <v-icon small>delete</v-icon>
-                  </v-btn>
-                </v-list-item-action>
+        <v-list group>
+          <template v-for="(item, i) in items" :key="`item-${i}`">
+            <v-list-item :value="item" :title="item.label" :subtitle="item.api_key">
+              <template v-slot:append>
+                <v-btn :disabled="dialog" :loading="dialog" @click="deleteItem(item.id)">
+                  <v-icon size="small">fas fa-trash</v-icon>
+                </v-btn>
               </template>
             </v-list-item>
           </template>
-        </v-list-item-group>
+        </v-list>
       </v-list>
     </v-card>
 
@@ -43,24 +30,19 @@
       </div>
     </v-card>
 
-    <v-navigation-drawer app v-model="drawer" absolute temporary right>
+    <v-dialog v-model="drawer">
       <v-card>
-        <v-card-title> API key </v-card-title>
+        <v-card-title>API key</v-card-title>
 
         <v-card-text>
           <v-text-field v-model="data.label" label="Label"></v-text-field>
 
-          <v-btn
-            :disabled="dialog"
-            :loading="dialog"
-            color="success"
-            @click="saveItem"
-          >
+          <v-btn :disabled="data.label.length === 0" :loading="dialog" color="success" @click="saveItem">
             Save
           </v-btn>
         </v-card-text>
       </v-card>
-    </v-navigation-drawer>
+    </v-dialog>
 
     <v-dialog v-model="dialog" width="630">
       <v-card color="primary" dark>
@@ -72,6 +54,8 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <Confirm ref="confirm" />
+
   </div>
 </template>
 
@@ -79,11 +63,13 @@
 import api from "../../services/api";
 import Loading from "../../components/Loading";
 import Copy from "../../components/Copy";
+import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
     Loading,
     Copy,
+    Confirm,
   },
   data() {
     return {
@@ -160,24 +146,33 @@ export default {
           console.log(error);
         });
     },
-    deleteItem(id) {
+    deleteItem: async function(id) {
       var self = this;
       this.error = "";
 
-      api
-        .post("apikeys", { delete: 1, api_key: id })
-        .then(function (response) {
-          console.log(response);
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Are you sure you want to delete this item?"
+        )
+      ) {
 
-          if (response.data.error) {
-            self.error = response.data.error;
-          } else {
-            self.fetchData();
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+        api
+          .post("apikeys", { delete: 1, api_key: id })
+          .then(function (response) {
+            console.log(response);
+
+            if (response.data.error) {
+              self.error = response.data.error;
+            } else {
+              self.fetchData();
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+
+      }
     },
   },
 };

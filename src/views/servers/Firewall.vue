@@ -6,40 +6,28 @@
 
     <Loading :value="loading" />
 
-    <v-card class="pa-3" :loading="fetching">
-
-      <v-container fluid>
-        <v-row>
-          <v-card-title primary-title>
-            <v-switch v-model="active" label="Active" @change="toggle()"></v-switch>
-          </v-card-title>
-        </v-row>
-      </v-container>
-
+    <v-card :loading="fetching">
       <v-list>
-        <v-list-item-group>
-          <template v-for="(item, i) in items">
+        <v-list-item>
+          <v-switch v-model="active" label="Active" @change="toggle()" hide-details></v-switch>
+        </v-list-item>
 
-            <v-list-item :key="`item-${i}`" :value="item" @click="editItem(item)">
-              <template v-slot:default>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ item.port }}/{{ item.protocol }} {{ item.action }} from {{ item.from }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    {{ item.comment }}
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-
-                <v-list-item-action>
-                  <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
-                    <v-icon small>delete</v-icon>
-                  </v-btn>
-                </v-list-item-action>
-              </template>
-            </v-list-item>
+        <v-list-item v-for="(item, i) in items" :key="`item-${i}`" :value="item" @click="editItem(item)">
+          <template v-slot:default>
+            <v-list-item-title>
+              {{ item.port }}/{{ item.protocol }} {{ item.action }} from {{ item.from }}
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              {{ item.comment }}
+            </v-list-item-subtitle>
           </template>
-        </v-list-item-group>
+
+          <template v-slot:append>
+            <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
+              <v-icon size="small">mdi:mdi-delete</v-icon>
+            </v-btn>
+          </template>
+        </v-list-item>
       </v-list>
     </v-card>
 
@@ -53,9 +41,9 @@
       </div>
     </v-card>
 
-    <v-navigation-drawer app v-model="drawer" temporary right>
+    <v-dialog v-model="drawer">
       <v-card>
-        <v-form ref="form">
+        <v-form v-model="valid">
           <v-card-title>
             Firewall rule
           </v-card-title>
@@ -69,31 +57,31 @@
 
             <v-select v-model="item.action" :items="action" label="Action" required></v-select>
 
-            <!--
-            <v-select v-model="item.direction" :items="direction" label="Direction"></v-select>
-            -->
-
             <v-text-field v-model="item.from" label="From" :rules="[rules.ip]" placeholder="192.168.0.1"></v-text-field>
 
             <v-text-field v-model="item.comment" label="Comment"></v-text-field>
 
-            <v-btn :disabled="fetching" :loading="fetching" color="success" @click="saveItem">
+            <v-btn :disabled="!valid" :loading="fetching" color="success" @click="saveItem">
               Save
             </v-btn>
           </v-card-text>
         </v-form>
       </v-card>
-    </v-navigation-drawer>
+    </v-dialog>
+
+    <Confirm ref="confirm" />
   </div>
 </template>
 
 <script>
 import api from '../../services/api'
 import Loading from '../../components/Loading'
+import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
-    Loading
+    Loading,
+    Confirm
   },
   data() {
     return {
@@ -107,17 +95,17 @@ export default {
       drawer: false,
       serverId: 0,
       protocol: [{
-        text: 'TCP',
+        title: 'TCP',
         value: 'tcp'
       }, {
-        text: 'UDP',
+        title: 'UDP',
         value: 'udp'
       }],
       action: [{
-        text: 'Allow',
+        title: 'Allow',
         value: 'ALLOW'
       }, {
-        text: 'Deny',
+        title: 'Deny',
         value: 'DENY'
       }],
       direction: ['IN', 'OUT'],
@@ -126,6 +114,7 @@ export default {
         port: v => (!v || /^\d+(:\d+)?$/.test(v)) || '1-65535',
         ip: v => (!v || /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(v)) || 'Invalid IP address',
       },
+      valid: false,
     }
   },
   created() {
@@ -196,30 +185,42 @@ export default {
 
       this.drawer = true;
     },
-    deleteItem(item) {
-      var self = this
+    deleteItem: async function (item) {
       var label = item.port + '/' + item.protocol + ' ' + item.action + ' from ' + item.from;
 
-      this.$confirm('Delete ' + label).then(async function (res) {
-        if (res) {
-          await self.doDelete(item.id);
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Delete " + label
+        )
+      ) {
+        this.fetching = true
+        this.error = ''
+        var response = await api.post('servers/' + this.serverId + '/firewall', { id: item.id });
+        console.log(response)
 
-          if (!self.error) {
-            self.fetchData();
-          }
+        this.fetching = false;
+        if (!response.data.success) {
+          this.error = response.data.error;
+        } else {
+          self.fetchData();
         }
-      })
+      }
     },
-    doDelete(id) {
+    saveItem: async function () {
       var self = this
-      this.fetching = true
       this.error = ''
-      return api.post('servers/' + this.serverId + '/firewall', { id: id })
+      this.fetching = true
+      api.post('servers/' + this.serverId + '/firewall', this.item)
         .then(function (response) {
           console.log(response)
-
-          if (!response.data.success) {
-            self.error = response.data.error;
+          if (response.data.success) {
+            self.drawer = false
+            self.fetchData()
+          } else {
+            self.error = response.data.error
+              ? response.data.error
+              : response.data;
           }
         })
         .catch(function (error) {
@@ -228,31 +229,6 @@ export default {
         .finally(function () {
           self.fetching = false
         })
-    },
-    saveItem: async function () {
-      if (this.$refs.form.validate()) {
-        var self = this
-        this.error = ''
-        this.fetching = true
-        api.post('servers/' + this.serverId + '/firewall', this.item)
-          .then(function (response) {
-            console.log(response)
-            if (response.data.success) {
-              self.drawer = false
-              self.fetchData()
-            } else {
-              self.error = response.data.error
-                ? response.data.error
-                : response.data;
-            }
-          })
-          .catch(function (error) {
-            self.error = error
-          })
-          .finally(function () {
-            self.fetching = false
-          })
-      }
     },
   },
 }

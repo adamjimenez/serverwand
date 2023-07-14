@@ -30,12 +30,12 @@
       <v-row>
         <v-col class="flex-grow-0">
           <v-btn title="Upload file" ref="uploadFileButton">
-            <v-icon>upload</v-icon>
+            <v-icon>mdi:mdi-upload</v-icon>
           </v-btn>
         </v-col>
         <v-col class="flex-grow-0" v-if="folder">
           <v-btn title="Upload folder" ref="uploadFolderButton">
-            <v-icon>drive_folder_upload</v-icon>
+            <v-icon>mdi:mdi-folder-arrow-up</v-icon>
           </v-btn>
         </v-col>
       </v-row>

@@ -8,84 +8,65 @@
 
     <v-card class="pa-3" :loading="fetching">
       <v-layout row v-if="authRequired">
-        <v-flex xs12>
-          <v-card tile flat>
-            <v-card-text>
-              <strong>DNS auth required: </strong>
-              <v-btn @click="authPrompt()">Fix</v-btn>
-            </v-card-text>
-          </v-card>
-        </v-flex>
+        <v-row>
+          <v-col>
+            <v-card tile flat>
+              <v-card-text>
+                <strong>DNS auth required: </strong>
+                <v-btn @click="authPrompt()">Fix</v-btn>
+              </v-card-text>
+            </v-card>
+          </v-col></v-row>
       </v-layout>
 
-      <v-layout
-        row
-        v-if="
-          !authRequired &&
-          data.server &&
-          data.dns &&
-          data.dns.MX != data.server.hostname
-        "
-      >
-        <v-flex xs12>
-          <v-card tile flat>
-            <v-card-text>
-              <strong
-                >MX mismatch: {{ data.dns.MX }} !=
-                {{ data.server.hostname }}</strong
-              >
-              <v-btn v-if="data.dns.not_set" @click="fixDomainDns(data.domain)"
-                >Fix</v-btn
-              >
-            </v-card-text>
-          </v-card>
-        </v-flex>
+      <v-layout row v-if="!authRequired &&
+        data.server &&
+        data.dns &&
+        data.dns.MX != data.server.hostname
+        ">
+        <v-row>
+          <v-col cols="12">
+            <v-card tile flat>
+              <v-card-text>
+                <strong>MX mismatch: {{ data.dns.MX }} !=
+                  {{ data.server.hostname }}</strong>
+                <v-btn v-if="data.dns.not_set" @click="fixDomainDns(data.domain)">Fix</v-btn>
+              </v-card-text>
+            </v-card>
+          </v-col></v-row>
       </v-layout>
 
-      <v-layout
-        row
-        v-if="!authRequired && data.server && data.dkim && data.dkim.not_set"
-      >
-        <v-flex xs12>
-          <v-card tile flat>
-            <v-card-text>
-              <strong>Missing DKIM</strong>
-              <v-btn v-if="data.dkim.not_set" @click="fixDkim(data.domain)"
-                >Fix</v-btn
-              >
-            </v-card-text>
-          </v-card>
-        </v-flex>
+      <v-layout row v-if="!authRequired && data.server && data.dkim && data.dkim.not_set">
+        <v-row>
+          <v-col cols="12">
+            <v-card tile flat>
+              <v-card-text>
+                <strong>Missing DKIM</strong>
+                <v-btn v-if="data.dkim.not_set" @click="fixDkim(data.domain)">Fix</v-btn>
+              </v-card-text>
+            </v-card>
+          </v-col></v-row>
       </v-layout>
 
-      <v-layout
-        row
-        v-if="
-          !authRequired &&
-          data.server &&
-          data.spf &&
-          data.spf.not_set &&
-          !data.spf.SPF
-        "
-      >
-        <v-flex xs12>
-          <v-card tile flat>
-            <v-card-text>
-              <strong>Missing SPF</strong>
-              <v-btn v-if="data.spf.not_set" @click="fixSpf(data.domain)"
-                >Fix</v-btn
-              >
-            </v-card-text>
-          </v-card>
-        </v-flex>
+      <v-layout row v-if="!authRequired &&
+        data.server &&
+        data.spf &&
+        data.spf.not_set &&
+        !data.spf.SPF
+        ">
+        <v-row>
+          <v-col cols="12">
+            <v-card tile flat>
+              <v-card-text>
+                <strong>Missing SPF</strong>
+                <v-btn v-if="data.spf.not_set" @click="fixSpf(data.domain)">Fix</v-btn>
+              </v-card-text>
+            </v-card>
+          </v-col></v-row>
       </v-layout>
 
       <v-card-title primary-title v-if="data.server.mailserver">
-        <v-switch
-          v-model="data.email"
-          label="Email"
-          @change="toggleEmail()"
-        ></v-switch>
+        <v-switch v-model="data.email" label="Email" @change="toggleEmail()" hide-details=""></v-switch>
       </v-card-title>
     </v-card>
 
@@ -103,38 +84,30 @@
     <div v-if="data.server.mailserver">
       <v-card class="mx-auto">
         <v-list>
-          <v-list-item-group>
-            <template v-for="(item, i) in data.emails">
-              <v-list-item :key="`item-${i}`" :value="item" @click="editEmail(i)">
-                <template v-slot:default>
-                  <v-list-item-content>
-                    <v-list-item-title>
-                      {{ item.user }}
-                      <span v-if="item.destination">
-                        <v-icon>fas fa-long-arrow-alt-right</v-icon>
-                        {{ item.destination }}
-                      </span>
-                    </v-list-item-title>
-                    <v-list-item-subtitle>{{
-                      item.disk_usage | prettyBytes
-                    }}</v-list-item-subtitle>
-                  </v-list-item-content>
+          <v-list group>
 
-                  <v-list-item-action>
-                    <v-btn
-                      icon
-                      :disabled="fetching"
-                      :loading="fetching"
-                      @click="deleteEmail(item.user)"
-                      @click.stop
-                    >
-                      <v-icon small>delete</v-icon>
-                    </v-btn>
-                  </v-list-item-action>
-                </template>
-              </v-list-item>
-            </template>
-          </v-list-item-group>
+            <v-list-item v-for="(item, i) in data.emails" :key="`item-${i}`" :title="item.name" :subtitle="item.value"
+              @click="editItem(item)">
+
+              <v-list-item-title>
+                {{ item.user }}
+                <span v-if="item.destination">
+                  <v-icon>fas fa-long-arrow-alt-right</v-icon>
+                  {{ item.destination }}
+                </span>
+              </v-list-item-title>
+              <v-list-item-subtitle>{{
+                prettyBytes(item.disk_usage)
+              }}</v-list-item-subtitle>
+
+              <template v-slot:append>
+                <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item.user)" @click.stop>
+                  <v-icon size="small">mdi:mdi-delete</v-icon>
+                </v-btn>
+              </template>
+            </v-list-item>
+
+          </v-list>
         </v-list>
       </v-card>
 
@@ -144,56 +117,40 @@
         </v-card-text>
       </v-card>
 
-      <v-navigation-drawer v-model="drawer" fixed temporary right>
+      <v-dialog v-model="drawer">
         <v-card>
           <v-card-title> Email account </v-card-title>
 
           <v-card-text>
-            <v-text-field
-              v-model="email.user"
-              label="Name"
-              required
-              :readonly="userReadonly"
-            ></v-text-field>
+            <v-text-field v-model="email.user" label="Name" required :readonly="userReadonly"></v-text-field>
 
-            <v-text-field
-              type="password"
-              v-model="email.password"
-              label="Password"
-              required
-            ></v-text-field>
+            <v-text-field type="password" v-model="email.password" label="Password" required></v-text-field>
 
-            <v-text-field
-              v-model="email.destination"
-              label="Forwarding"
-              required
-            ></v-text-field>
+            <v-text-field v-model="email.destination" label="Forwarding" required></v-text-field>
 
-            <v-btn
-              :disabled="fetching"
-              :loading="fetching"
-              color="success"
-              @click="saveEmail()"
-            >
+            <v-btn :disabled="!email.user" :loading="fetching" color="success" @click="saveEmail()">
               Save
             </v-btn>
           </v-card-text>
         </v-card>
-      </v-navigation-drawer>
+      </v-dialog>
 
     </div>
+    <Confirm ref="confirm" />
 
-    
   </div>
 </template>
 
 <script>
 import api from "../../services/api";
 import Loading from "../../components/Loading";
+import util from "../../services/util";
+import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
     Loading,
+    Confirm,
   },
   data() {
     return {
@@ -290,10 +247,10 @@ export default {
       this.userReadonly = false;
       this.email = {};
     },
-    editEmail(index) {
+    editItem(item) {
       this.drawer = true;
       this.userReadonly = true;
-      this.email = this.data.emails[index];
+      this.email = item;
     },
     saveEmail() {
       var self = this;
@@ -323,8 +280,13 @@ export default {
           });
       }
     },
-    deleteEmail(user) {
-      this.$confirm("Delete " + user + "?").then((res) => {
+    deleteItem: async function (user) {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Delete " + user
+        )
+      ) {
         if (res) {
           var self = this;
           this.loading = true;
@@ -352,7 +314,7 @@ export default {
               self.loading = false;
             });
         }
-      });
+      }
     },
     fixDomainDns() {
       var self = this;
@@ -434,9 +396,10 @@ export default {
     },
     authPrompt() {
       this.authRequired = false;
-      window.open(
-        "https://serverwand.com/account/services/" + this.data.server.dns
-      );
+      window.open("https://serverwand.com/account/services/" + this.data.server.dns);
+    },
+    prettyBytes(value) {
+      return util.prettyBytes(value);
     },
   },
 };

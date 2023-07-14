@@ -1,35 +1,24 @@
 <template>
-    <v-menu 
-      offset-y
-      v-model="isOpen"
-    >
-      <template v-slot:activator="{ on }">
-        <v-btn
-          v-on="on"
-          value:="menu"
-          color="primary"
-          dark
-        >
-            Create
-            <v-icon dark>{{isOpen ? 'expand_less' : 'expand_more'}}</v-icon>
-        </v-btn>
-      </template>
-      <v-list>
-        <v-list-item
-          v-for="(item, index) in items"
-          :key="index"
-          @click="goto(item.to)"
-        >          
-          <v-list-item-avatar>
-            <v-icon>{{item.avatar}}</v-icon>
-          </v-list-item-avatar>
-
-          <v-list-item-content>
+  <v-menu offset-y v-model="isOpen">
+    <template v-slot:activator="{ props }">
+      <v-btn v-bind="props" style="background-color: #A25C57;">
+        Create
+        <v-icon>{{ isOpen ? 'mdi:mdi-chevron-up' : 'mdi:mdi-chevron-down' }}</v-icon>
+      </v-btn>
+    </template>
+    <v-list>
+      <v-list-item v-for="(item, index) in items" :key="index" @click="goto(item.to)">
+        <v-row>
+          <v-col cols="4">
+            <v-icon>{{ item.avatar }}</v-icon>
+          </v-col>
+          <v-col>
             <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-menu>
+          </v-col>
+        </v-row>
+      </v-list-item>
+    </v-list>
+  </v-menu>
 </template>
 
 <script>

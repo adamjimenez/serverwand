@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-btn @click="newSnapshot" title="Create snapshot">
-        <v-icon>backup</v-icon>
+    <v-btn @click="newSnapshot" title="Create snapshot" icon>
+        <v-icon>mdi:mdi-cloud-upload</v-icon>
     </v-btn>
 
     <v-dialog app v-model="dialog">

@@ -1,7 +1,7 @@
 <template>
   <div v-if="selected.length === 1">
     <v-btn @click="rename()" :disabled="!selected" title="Rename">
-      <v-icon>mdi-rename-box</v-icon>
+      <v-icon>mdi:mdi-rename-box</v-icon>
     </v-btn>
 
     <v-dialog app v-model="dialog">
@@ -40,7 +40,10 @@ export default {
   data() {
     return {
       fetching: false,
-      data: {},
+      data: {
+        path: '',
+        selected: []
+      },
       error: "",
       dialog: false,
     };
@@ -48,6 +51,7 @@ export default {
 
   methods: {
     rename() {
+      console.log(this.selected)
       this.dialog = true;
       this.data.oldName = this.selected[0].name;
       this.data.newName = this.selected[0].name;

@@ -1,7 +1,7 @@
 <template>
   <div v-if="selected.length">
     <v-btn @click="restore()" title="Restore">
-      <v-icon>restore</v-icon>
+      <v-icon>mdi:mdi-restore</v-icon>
     </v-btn>
   </div>
 </template>

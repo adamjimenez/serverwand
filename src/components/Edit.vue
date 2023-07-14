@@ -14,8 +14,8 @@
 
     <v-tooltip top>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" icon @click="edit(val)">
-          <v-icon small>create</v-icon>
+        <v-btn icon @click="edit(val)">
+          <v-icon small>mdi:mdi-pencil</v-icon>
         </v-btn>
       </template>
       <span>Edit</span>
@@ -42,9 +42,7 @@
             :label="label"
             autofocus
             :type="!password || showPassword ? 'text' : 'password'"
-            :append-icon="
-              !password ? '' : showPassword ? 'visibility_off' : 'visibility'
-            "
+            :append-icon="!password ? '' : showPassword ? 'mdi:mdi-eye-off' : 'mdi:mdi-eye'"
             @click:append="showPassword = !showPassword"
             :error-messages="errors"
           ></v-text-field>
@@ -79,11 +77,11 @@ export default {
       showPassword: false,
       yesnoItems: [
         {
-          text: "Yes",
+          title: "Yes",
           value: 1,
         },
         {
-          text: "No",
+          title: "No",
           value: 0,
         },
       ],

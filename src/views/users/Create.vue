@@ -10,7 +10,7 @@
       <v-card-title>User details</v-card-title>
 
       <v-card-text>
-        <v-form v-if="!loading" ref="form" v-model="valid" lazy-validation>
+        <v-form v-if="!loading" v-model="valid" lazy-validation>
           <v-text-field
             v-model="data.company"
             label="Company"
@@ -75,7 +75,7 @@
           ></v-text-field>
 
           <v-btn
-            :disabled="loading"
+            :disabled="!valid"
             :loading="loading"
             color="success"
             @click="validate"
@@ -143,7 +143,6 @@ export default {
     validate() {
       var self = this;
 
-      if (this.$refs.form.validate()) {
         this.details = "";
         this.loading = true;
 
@@ -163,7 +162,6 @@ export default {
           .finally(() => {
               self.loading=false;
             });
-      }
     },
   },
 };

@@ -8,96 +8,52 @@
 
     <v-card class="pa-3" :loading="fetching">
       <div v-if="data.db_name == false">
-        <v-btn
-          :disabled="loading != ''"
-          :loading="loading == 'database'"
-          @click="addDatabase"
-        >
+        <v-btn :disabled="loading != ''" :loading="loading == 'database'" @click="addDatabase">
           Add Database
         </v-btn>
       </div>
 
       <div v-else>
-        <v-layout row>
-          <v-flex xs12>
-            <v-card tile flat>
-              <v-card-text>
-                <form
-                  :action="'http://' + data.server.ip + '/phpmyadmin/'"
-                  method="post"
-                  target="_blank"
-                >
-                  <input
-                    type="hidden"
-                    name="pma_username"
-                    :value="data.db_name"
-                  />
-                  <button type="submit">
-                    PhpMyAdmin
-                    <v-icon right>open_in_new</v-icon>
-                  </button>
-                </form>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-        </v-layout>
 
-        <v-layout row>
-          <v-flex xs6>
-            <v-card tile flat>
-              <v-card-text>DB Name:</v-card-text>
-            </v-card>
-          </v-flex>
-          <v-flex xs6>
-            <v-card tile flat>
-              <v-card-text>
-                {{ data.db_name }}
-                <Copy :val="data.db_name" />
-              </v-card-text>
-            </v-card>
-          </v-flex>
-        </v-layout>
+        <v-list lines="two">
+          <v-list-item>
+            <v-list-item-title>
+              <form :action="'http://' + data.server.ip + '/phpmyadmin/'" method="post" target="_blank">
+                <input type="hidden" name="pma_username" :value="data.db_name" />
+                <button type="submit">
+                  PhpMyAdmin
+                  <v-icon right>mdi:mdi-open-in-new</v-icon>
+                </button>
+              </form>
+            </v-list-item-title>
+          </v-list-item>
 
-        <v-layout row>
-          <v-flex xs6>
-            <v-card tile flat>
-              <v-card-text>DB Username:</v-card-text>
-            </v-card>
-          </v-flex>
-          <v-flex xs6>
-            <v-card tile flat>
-              <v-card-text>
-                {{ data.db_name }}
-                <Copy :val="data.db_name" />
-              </v-card-text>
-            </v-card>
-          </v-flex>
-        </v-layout>
+          <v-list-item>
+            <v-list-item-title>DB Name</v-list-item-title>
+            <v-list-item-subtitle>
+              {{ data.db_name }}
+              <Copy :val="data.db_name" />
+            </v-list-item-subtitle>
+          </v-list-item>
 
-        <v-layout row>
-          <v-flex xs6>
-            <v-card tile flat>
-              <v-card-text>DB Password:</v-card-text>
-            </v-card>
-          </v-flex>
-          <v-flex xs6>
-            <v-card tile flat>
-              <v-card-text>
-                {{ data.db_password }}
-                <Edit
-                  :val="data.db_password"
-                  label="DB Password"
-                  name="password"
-                  password
-                  :path="'sites/' + this.domainId + '/database'"
-                />
-                <!--
-                  <Copy :val="data.auth.password" />
-                  -->
-              </v-card-text>
-            </v-card>
-          </v-flex>
-        </v-layout>
+          <v-list-item>
+            <v-list-item-title>DB Username</v-list-item-title>
+            <v-list-item-subtitle>
+              {{ data.db_name }}
+              <Copy :val="data.db_name" />
+            </v-list-item-subtitle>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-title>DB Password</v-list-item-title>
+            <v-list-item-subtitle>
+              {{ data.db_password }}
+              <Edit :val="data.db_password" label="DB Password" name="password" password
+                :path="'sites/' + this.domainId + '/database'" />
+            </v-list-item-subtitle>
+          </v-list-item>
+        </v-list>
+
       </div>
     </v-card>
   </div>
