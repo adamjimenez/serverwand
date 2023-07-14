@@ -19,7 +19,7 @@
             </v-card-text>
           </v-card>
 
-          <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
+          <v-data-table :headers="headers" :items="filtered" class="results">
             <template v-slot:item.domain="{ item }">
 
               <v-list-item :to="'/sites/' + item.raw.id + '/summary'" :title="item.raw.domain" :subtitle="servers[item.raw.server]">
@@ -46,6 +46,7 @@ import api from "../services/api";
 import util from "../services/util";
 import Loading from "../components/Loading";
 import SiteIcon from "../components/SiteIcon";
+import { useDisplay } from 'vuetify';
 
 export default {
   components: {
@@ -70,12 +71,23 @@ export default {
       searchPanel: [false],
       search: "",
       selected: [],
-      headers: [
+    };
+  },
+  computed: {
+    mobile: function () {
+      const { mobile } = useDisplay();
+      return mobile.value;
+    },
+    headers: function () {
+      var items =  [
         {
           title: "Domain ",
           key: "domain",
-        },
-        {
+        }];
+
+      if (!this.mobile) {
+        items.push(
+          {
           title: "IP ",
           key: "ip",
           class: 'd-none d-sm-table-cell',
@@ -92,9 +104,11 @@ export default {
           key: "usage",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
-        },
-      ],
-    };
+        });
+      };
+
+      return items;
+    }
   },
   created() {
     document.title = "Sites";

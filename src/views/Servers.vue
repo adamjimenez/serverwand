@@ -19,7 +19,7 @@
               </v-card-text>
             </v-card>
 
-            <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
+            <v-data-table :headers="headers" :items="filtered" class="results">
 
               <template v-slot:item.name="{ item }">
 
@@ -55,6 +55,7 @@
 import api from "../services/api";
 import Loading from "../components/Loading";
 import ServerIcon from "../components/ServerIcon";
+import { useDisplay } from 'vuetify';
 
 export default {
   components: {
@@ -89,11 +90,21 @@ export default {
           value: "",
         },
       ],
-      headers: [
-        {
+    };
+  },
+  computed: {
+    mobile: function () {
+      const { mobile } = useDisplay();
+      return mobile.value;
+    },
+    headers: function () {
+      var items =  [{
           title: "Server ",
           key: "name",
-        },
+        },];
+
+      if (!this.mobile) {
+        items.push(
         {
           title: "Region ",
           key: "region",
@@ -111,9 +122,11 @@ export default {
           key: "type",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
-        },
-      ],
-    };
+        });
+      };
+
+      return items;
+    }
   },
   created() {
     document.title = "Servers";

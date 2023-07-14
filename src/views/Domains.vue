@@ -12,12 +12,12 @@
             <div class="headline">Domains</div>
           </v-card-title>
 
-          <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
+          <v-data-table :headers="headers" :items="filtered" class="results">
             <template v-slot:item.domain="{ item }">
 
               <v-list-item :to="'/domains/' + item.raw.id + '/summary'" :title="item.raw.domain">
                 <template v-slot:prepend>
-                      <v-icon class="mr-3">fas fa-globe</v-icon>
+                  <v-icon class="mr-3">fas fa-globe</v-icon>
                 </template>
               </v-list-item>
 
@@ -38,6 +38,7 @@
 <script>
 import api from "../services/api";
 import Loading from "../components/Loading";
+import { useDisplay } from 'vuetify';
 
 export default {
   components: {
@@ -54,11 +55,26 @@ export default {
       searchPanel: [false],
       search: "",
       selected: [],
-      headers: [
+    };
+  },
+  created() {
+    document.title = "Domains";
+    this.fetchData();
+  },
+  computed: {
+    mobile: function () {
+      const { mobile } = useDisplay();
+      return mobile.value;
+    },
+    headers: function () {
+      var items =  [
         {
           title: "Domain ",
           key: "domain",
-        },
+        }];
+
+      if (!this.mobile) {
+        items.push(
         {
           title: "Registrar ",
           key: "registrar",
@@ -70,16 +86,11 @@ export default {
           key: "auto_renew",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
-        } /*, {
-          title: 'Expiration ',
-          key: 'expiration'
-        }*/,
-      ],
-    };
-  },
-  created() {
-    document.title = "Domains";
-    this.fetchData();
+        });
+      };
+
+      return items;
+    }
   },
   methods: {
     fetchData() {
