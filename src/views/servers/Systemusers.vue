@@ -13,11 +13,14 @@
           <TogglePasswordAuthentication :serverId="serverId" :passwordAuthentication="data.password_authentication" />
         </v-list-item>
 
-        <v-list-item v-for="(item, i) in data.users" :key="`item-${i}`" :title="item.ip" :subtitle="item.label">
-          <v-list-item-title>
-            {{ item.name }}
-            <v-icon v-if="item.sudo" size="x-small" class="ml-2">fas fa-crown</v-icon>
-          </v-list-item-title>
+        <v-list-item v-for="(item, i) in data.users" :key="`item-${i}`" 
+          :title="item.name" 
+          :subtitle="item.label"
+          >
+          <template v-slot:prepend>
+            <v-icon v-if="item.sudo" size="x-small">fas fa-crown</v-icon>
+            <v-icon v-else="item.sudo" size="x-small">fas fa-user</v-icon>
+          </template>
 
           <template v-slot:append>
             <v-btn icon :disabled="loading" :loading="loading" @click="openKeys(item)" @click.stop
@@ -50,10 +53,10 @@
           <v-text-field v-model="system_user.password" type="password" label="Password" required
             autocomplete="new-password"></v-text-field>
 
-          <v-switch v-model="system_user.sudo" label="sudo"></v-switch>
+          <v-switch v-model="system_user.sudo" label="sudo" color="primary"></v-switch>
 
           <v-switch :disabled="!system_user.sudo" v-model="system_user.sudo_without_password"
-            label="sudo without password"></v-switch>
+            label="sudo without password" color="primary"></v-switch>
 
           <v-btn :disabled="!system_user.name" :loading="loading" color="success" @click="saveUser">
             Save
