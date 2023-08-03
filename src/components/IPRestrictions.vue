@@ -4,7 +4,7 @@
             {{ error }}
         </v-alert>
 
-        <v-switch v-model="data.active" label="IP restrictions" @change="toggle" class="mx-3"></v-switch>
+        <v-switch v-model="data.active" label="IP restrictions" @change="toggle" class="mx-3" color="primary"></v-switch>
 
         <div v-if="data.active">
             <v-list>

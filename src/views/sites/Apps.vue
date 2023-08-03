@@ -35,7 +35,7 @@
             <v-icon>mdi:mdi-content-copy</v-icon>
           </v-btn>
           <v-switch v-if="data.app.isNode" v-model="data.app.online" :label="data.app.status"
-            @change="toggleStatus()"></v-switch>
+            @change="toggleStatus()" color="primary"></v-switch>
         </v-row>
       </v-container>
 

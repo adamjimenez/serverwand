@@ -253,36 +253,4 @@ a {
   text-decoration: none;
   color: #A25C57;
 }
-
-/*
-  .v-navigation-drawer .themeSwitchContainer {
-    background-color: transparent;
-  }
-
-  .v-navigation-drawer .v-input--selection-controls .v-input__control {
-    margin-left: 3px;
-  }
-  
-  .v-navigation-drawer .v-input--switch {
-    margin: 0;
-    padding: 0;
-  }
-  */
-
-.v-navigation-drawer .v-list__tile--link {
-  border-left-width: 5px;
-  border-left-style: solid;
-  border-left-color: transparent;
-}
-
-.v-navigation-drawer .v-list__tile--active {
-  border-left-style: solid;
-  border-left-width: 5px;
-  border-left-color: inherit;
-}
-
-.v-alert__content a {
-  color: #fff;
-  text-decoration: underline;
-}
 </style>

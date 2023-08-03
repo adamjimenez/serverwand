@@ -16,7 +16,9 @@
             </template>
 
             <v-list-item-title>
-              {{ data.domain }}
+              <a href="'http://' + data.domain" target="_blank">
+                {{ data.domain }}
+              </a>
             </v-list-item-title>
             <v-list-item-subtitle>
               <router-link :to="'/servers/' + data.server.id + '/summary'">
@@ -27,10 +29,6 @@
         </v-col>
 
         <v-col class="text-right">
-          <v-btn v-bind:href="'http://' + data.domain" target="_blank" title="Open site in new window" class="mr-3">
-            <v-icon>mdi:mdi-open-in-new</v-icon>
-          </v-btn>
-
           <v-btn color="success" v-bind:href="data.shiftedit_url" target="_blank" title="Open in ShiftEdit IDE">
             <v-icon>mdi:mdi-code-braces</v-icon>
           </v-btn>
@@ -108,7 +106,10 @@ export default {
 </script>
 
 <style>
-.v-list-item-subtitle a {
+.v-list-item a {
   color: inherit !important;
+}
+.v-list-item a:hover {
+  text-decoration: underline;
 }
 </style>

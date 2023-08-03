@@ -10,22 +10,21 @@
       <v-list>
         <v-list group>
 
-          <v-list-item v-for="(item, i) in data.cronjobs" :key="`item-${i}`" :title="item.name" @click="editItem(item)">
-            <template v-slot:default>
-
-              <v-list-item-title>
-                <v-icon v-if="item.active === false">mdi:mdi-block</v-icon>
-                {{ item.command }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ item.user }}
-                {{ item.minute }}
-                {{ item.hour }}
-                {{ item.dom }}
-                {{ item.mon }}
-                {{ item.dow }}
-              </v-list-item-subtitle>
+          <v-list-item v-for="(item, i) in data.cronjobs" :key="`item-${i}`" :title="item.command" @click="editItem(item)">
+            
+            <template v-slot:prepend>
+                <v-icon v-if="item.active === false">mdi:mdi-cancel</v-icon>
             </template>
+
+            <v-list-item-subtitle>
+              {{ item.user }}
+              {{ item.minute }}
+              {{ item.hour }}
+              {{ item.dom }}
+              {{ item.mon }}
+              {{ item.dow }}
+            </v-list-item-subtitle>
+              
             <template v-slot:append>
               <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item.line)" @click.stop>
                 <v-icon size="small">mdi:mdi-delete</v-icon>
@@ -49,7 +48,7 @@
           <v-card-title> Cronjob </v-card-title>
 
           <v-card-text>
-            <v-switch v-model="cronjob.active" label="Active"></v-switch>
+            <v-switch v-model="cronjob.active" label="Active" color="primary"></v-switch>
 
             <v-text-field v-model="cronjob.line" label="Line" v-show="false"></v-text-field>
 

@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-switch v-model="data.passwordAuthentication" label="Password Authentication" @change="togglePasswordAuthentication" hide-details>
+    <v-switch v-model="data.passwordAuthentication" label="Password Authentication" @change="togglePasswordAuthentication" hide-details color="primary">
       <template v-slot:prepend>
-        <v-tooltip bottom text="We recommend this is
+        <v-tooltip location="top" text="We recommend this is
             disabled in favour of key authentication.">
           <template v-slot:activator="{ props }">
             <v-icon color="primary" v-bind="props">

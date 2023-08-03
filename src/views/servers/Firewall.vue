@@ -9,7 +9,7 @@
     <v-card :loading="fetching">
       <v-list>
         <v-list-item>
-          <v-switch v-model="active" label="Active" @change="toggle()" hide-details></v-switch>
+          <v-switch v-model="active" label="Active" @change="toggle()" hide-details color="primary"></v-switch>
         </v-list-item>
 
         <v-list-item v-for="(item, i) in items" :key="`item-${i}`" :value="item" @click="editItem(item)">

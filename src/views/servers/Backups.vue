@@ -31,7 +31,7 @@
         </v-col>
         -->
         <v-col>
-          <v-switch v-model="s3.active" label="Nightly backups" class="my-0" @change="toggleBackups()" hide-details></v-switch>
+          <v-switch v-model="s3.active" label="Nightly backups" class="my-0" @change="toggleBackups()" hide-details color="primary"></v-switch>
         </v-col>
       </v-row>
     </v-card>

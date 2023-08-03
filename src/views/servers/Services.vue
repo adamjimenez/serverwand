@@ -16,6 +16,7 @@
                     v-model="item.active"
                     :label="item.name"
                     @change="toggle(item)"
+                    color="primary"
                   ></v-switch>
                 </v-list-item-title>
             </v-list-item>

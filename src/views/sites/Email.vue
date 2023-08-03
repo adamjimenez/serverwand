@@ -66,7 +66,7 @@
       </v-layout>
 
       <v-card-title primary-title v-if="data.server.mailserver">
-        <v-switch v-model="data.email" label="Email" @change="toggleEmail()" hide-details=""></v-switch>
+        <v-switch v-model="data.email" label="Email" @change="toggleEmail()" hide-details color="primary"></v-switch>
       </v-card-title>
     </v-card>
 

@@ -26,7 +26,7 @@
         <v-container>
           <v-row>
             <v-col>
-              <v-switch v-model="data.notifications.disk_usage.active" label="Disk usage"></v-switch>
+              <v-switch v-model="data.notifications.disk_usage.active" label="Disk usage" color="primary"></v-switch>
               <div>
                 Percentage of disk usage. Exceeding this value triggers an alert.
               </div>
@@ -39,7 +39,7 @@
 
           <v-row>
             <v-col>
-              <v-switch v-model="data.notifications.mail_queue.active" label="Mail queue"></v-switch>
+              <v-switch v-model="data.notifications.mail_queue.active" label="Mail queue" color="primary"></v-switch>
               <div>
                 Length of mail queue. Exceeding this value triggers an alert.
               </div>
@@ -52,7 +52,7 @@
 
           <v-row>
             <v-col>
-              <v-switch v-model="data.notifications.db_connections.active" label="Database connection usage"></v-switch>
+              <v-switch v-model="data.notifications.db_connections.active" label="Database connection usage" color="primary"></v-switch>
               <div>
                 Percentage of used database connections. Exceeding this value triggers an alert.
               </div>
