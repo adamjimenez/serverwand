@@ -64,6 +64,16 @@
           </v-list-item-subtitle>
         </v-list-item>
 
+        <v-list-item>
+          <v-list-item-title> Path </v-list-item-title>
+          <v-list-item-subtitle>            
+            <router-link :to="'/servers/' + data.server?.id + '/Files#' + path">
+              {{ path }}
+            </router-link>
+            <Copy :val="path" />
+          </v-list-item-subtitle>
+        </v-list-item>
+
         <div v-if="data.origin">
           <v-list-item>
             <v-list-item-title> Password protection </v-list-item-title>
@@ -158,6 +168,11 @@ export default {
   watch: {
     // call again the method if the route changes
     $route: "fetchData",
+  },
+  computed: {
+    path: function () {
+      return '/var/www/vhosts/' + this.data.domain + '/';
+    }
   },
   methods: {
     fetchData(clearCacheEntry) {

@@ -432,9 +432,9 @@ export default {
     upLevel() {
       console.log(this.path);
       this.search = '';
-      var index = this.path.lastIndexOf("/");
+      var index = this.path.substr(0, this.path.length - 1).lastIndexOf("/");
       if (index !== -1) {
-        this.path = this.dir.substr(0, index);
+        this.path = this.path.substr(0, index + 1);
 
         if (!this.dir) {
           this.path = "/";
