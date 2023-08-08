@@ -11,75 +11,26 @@
 
       <v-card-text>
         <v-form v-if="!loading" v-model="valid" lazy-validation>
-          <v-text-field
-            v-model="data.company"
-            label="Company"
-            required
-          ></v-text-field>
+          <v-text-field v-model="data.company" label="Company" required></v-text-field>
 
-          <v-text-field
-            v-model="data.name"
-            :rules="requiredRules"
-            label="Name"
-            required
-          ></v-text-field>
+          <v-text-field v-model="data.name" :rules="requiredRules" label="Name" required></v-text-field>
 
-          <v-text-field
-            v-model="data.surname"
-            :rules="requiredRules"
-            label="Surname"
-            required
-          ></v-text-field>
+          <v-text-field v-model="data.surname" :rules="requiredRules" label="Surname" required></v-text-field>
 
-          <v-text-field
-            v-model="data.email"
-            :rules="emailRules"
-            label="Email"
-            required
-          ></v-text-field>
+          <v-text-field v-model="data.email" :rules="emailRules" label="Email" required></v-text-field>
 
-          <v-text-field
-            v-model="data.password"
-            :rules="requiredRules"
-            label="Password"
-            type="password"
-            required
-          ></v-text-field>
+          <v-text-field v-model="data.password" :rules="requiredRules" label="Password" type="password"
+            required></v-text-field>
 
-          <v-text-field
-            v-model="data.address"
-            :rules="requiredRules"
-            label="Address"
-            required
-          ></v-text-field>
+          <v-text-field v-model="data.address" :rules="requiredRules" label="Address" required></v-text-field>
 
-          <v-text-field
-            v-model="data.city"
-            :rules="requiredRules"
-            label="City"
-            required
-          ></v-text-field>
+          <v-text-field v-model="data.city" :rules="requiredRules" label="City" required></v-text-field>
 
-          <v-text-field
-            v-model="data.postcode"
-            :rules="requiredRules"
-            label="Postcode"
-            required
-          ></v-text-field>
+          <v-text-field v-model="data.postcode" :rules="requiredRules" label="Postcode" required></v-text-field>
 
-          <v-text-field
-            v-model="data.tel"
-            :rules="requiredRules"
-            label="tel"
-            required
-          ></v-text-field>
+          <v-text-field v-model="data.tel" :rules="requiredRules" label="tel" required></v-text-field>
 
-          <v-btn
-            :disabled="!valid"
-            :loading="loading"
-            color="success"
-            @click="validate"
-          >
+          <v-btn :disabled="!valid" :loading="loading" color="success" @click="validate">
             Save
           </v-btn>
         </v-form>
@@ -127,41 +78,41 @@ export default {
       api
         .get("users/" + this.id)
         .then(response => {
-            console.log(response);
+          console.log(response);
 
-            if(self.id) {
-              self.data=response.data.item;
-            }
-          })
+          if (self.id) {
+            self.data = response.data.item;
+          }
+        })
         .catch(error => {
-            console.log(error);
-          })
+          console.log(error);
+        })
         .finally(() => {
-            self.loading=false;
-          });
+          self.loading = false;
+        });
     },
     validate() {
       var self = this;
 
-        this.details = "";
-        this.loading = true;
+      this.details = "";
+      this.loading = true;
 
-        api
-          .post("users/" + self.id, this.data)
-          .then(response => {
-              console.log(response);
-              if(response.data.id) {
-                self.$router.push("/users/"+response.data.id+"/summary");
-              } else if(response.data.error) {
-                self.error=response.data.error;
-              }
-            })
-          .catch(error => {
-              console.log(error);
-            })
-          .finally(() => {
-              self.loading=false;
-            });
+      api
+        .post("users/" + self.id, this.data)
+        .then(response => {
+          console.log(response);
+          if (response.data.id) {
+            self.$router.push("/users/" + response.data.id + "/summary");
+          } else if (response.data.error) {
+            self.error = response.data.error;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        })
+        .finally(() => {
+          self.loading = false;
+        });
     },
   },
 };
