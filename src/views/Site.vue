@@ -16,7 +16,7 @@
             </template>
 
             <v-list-item-title>
-              <a href="'http://' + data.domain" target="_blank">
+              <a :href="'http://' + data.domain" target="_blank">
                 {{ data.domain }}
               </a>
             </v-list-item-title>
