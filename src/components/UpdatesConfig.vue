@@ -1,8 +1,8 @@
 <template>
   <span>
-    <v-tooltip top>
-      <template v-slot:activator="{ on }">
-        <v-btn icon @click="edit()">
+    <v-tooltip location="top">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props" icon @click="edit()">
           <v-icon small>fas fa-wrench</v-icon>
         </v-btn>
       </template>
@@ -18,7 +18,8 @@
                 v-model="automatic_updates"
                 label="Automatic updates"
                 @change="toggle()"
-                class="ml-3"
+                color="primary"
+                hide-details
             ></v-switch>
         </v-card-text>
       </v-card>

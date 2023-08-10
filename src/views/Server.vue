@@ -106,6 +106,7 @@ export default {
 
           if (response.data.item) {
             self.data = response.data.item;
+            window.server = self.data;
           }
         })
         .catch(error => console.log(error))
