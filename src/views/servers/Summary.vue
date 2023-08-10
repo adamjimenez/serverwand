@@ -107,28 +107,21 @@
       <v-layout row class="mx-1">
         <v-row>
           <v-col cols="12" sm="6">
-            <v-card>
+            <v-card max-width="400">
               <v-list lines="two">
-                <v-list-item title="Updates">
-                  <div v-if="data.updates >= 0">
-                    <v-list-item-subtitle>
-                      {{ data.updates }} updates,
-                      {{ data.security_updates }} security updates.
-                      <span v-if="data.reboot_required">Reboot required.</span>
-                    </v-list-item-subtitle>
-
-                    <Upgrade :serverId="serverId" @closed="fetchData(true)" />
-
-                    <UpdatesConfig :serverId="serverId" />
-                  </div>
+                <v-list-item v-if="data.updates >= 0" title="Updates" :subtitle="data.updates + ' updates, ' + data.security_updates + ' security updates.' + (data.reboot_required ? ' Reboot required.' : '')">
+                  <template v-slot:append>
+                    <Update :serverId="serverId" @closed="fetchData(true)" />
+                    <UpdatesConfig />
+                  </template>
                 </v-list-item>
 
-                <v-list-item title="Hostname">
-                  <v-list-item-subtitle v-if="data.hostname">
-                    <Copy :val="data.hostname" text />
+                <v-list-item title="Hostname" :subtitle="data.hostname">
+                  <template v-slot:append>
+                    <Copy :val="data.hostname" />
                     <Edit :val="data.hostname" hideText label="Hostname" name="hostname"
                       :path="'servers/' + this.serverId + '/hostname'" @save="fetchData(true)" />
-                  </v-list-item-subtitle>
+                  </template>
                 </v-list-item>
 
                 <v-list-item title="IP address">
@@ -143,11 +136,10 @@
                   </v-list-item-subtitle>
                 </v-list-item>
 
-                <v-list-item title="Time Zone">
-                  <v-list-item-subtitle>
-                    {{ data.timeZone }}
+                <v-list-item title="Time Zone" :subtitle="data.timeZone">
+                  <template v-slot:append>
                     <TimeZone :serverId="serverId" @save="fetchData(true)" />
-                  </v-list-item-subtitle>
+                  </template>
                 </v-list-item>
               </v-list>
 
@@ -155,26 +147,28 @@
           </v-col>
 
           <v-col cols="12" sm="6">
-            <v-card>
+            <v-card max-width="400">
               <v-list lines="two">
-                <v-list-item title="Operating system" :subtitle="data.os"></v-list-item>
+                <v-list-item title="Operating system" :subtitle="data.os">
+                  <template v-slot:append>
+                    <Upgrade v-if="data.upgrade_available" :version="data.upgrade_available" />
+                  </template>
+                </v-list-item>
 
                 <v-list-item title="Kernel version" :subtitle="data.kernel"></v-list-item>
 
                 <v-list-item title="Apache" :subtitle="data.apache"></v-list-item>
 
-                <v-list-item title="PHP">
-                  <v-list-item-subtitle>
-                    {{ data.php }}
+                <v-list-item title="PHP" :subtitle="data.php">
+                  <template v-slot:append>
                     <PhpConfig :serverId="serverId" />
-                  </v-list-item-subtitle>
+                  </template>
                 </v-list-item>
 
-                <v-list-item title="MariaDb">
-                  <v-list-item-subtitle>
-                    {{ data.mariadb }}
+                <v-list-item title="MariaDb" :subtitle="data.mariadb">
+                  <template v-slot:append>
                     <MysqlConfig :serverId="serverId" />
-                  </v-list-item-subtitle>
+                  </template>
                 </v-list-item>
 
                 <v-list-item title="Postfix" :subtitle="data.postfix"></v-list-item>
@@ -200,8 +194,9 @@ import Edit from "../../components/Edit";
 import PhpConfig from "../../components/PhpConfig";
 import MysqlConfig from "../../components/MysqlConfig";
 import CleanUp from "../../components/CleanUp";
-import Upgrade from "../../components/Upgrade";
+import Update from "../../components/Update";
 import UpdatesConfig from "../../components/UpdatesConfig";
+import Upgrade from "../../components/Upgrade";
 import TimeZone from "../../components/TimeZone";
 
 export default {
@@ -211,8 +206,9 @@ export default {
     PhpConfig,
     MysqlConfig,
     CleanUp,
-    Upgrade,
+    Update,
     UpdatesConfig,
+    Upgrade,
     TimeZone,
   },
   data() {
