@@ -5,25 +5,24 @@
     </v-alert>
 
     <v-card class="pa-3" :loading="fetching">
-      <v-container class="ma-0">
+      <v-container class="ma-0" fluid>
         <v-layout row wrap>
           <v-row>
             <v-col cols="12" sm="6" md="3">
               <v-card>
                 <div class="feature">
                   <v-card-text>
-                    <div>
-                      <div class="icon">
+                    <div class="d-flex justify-space-between mb-3">
+                      <span class="text-h5">
                         <i class="fas fa-microchip"></i>
-                      </div>
-
-                      <div class="label">CPU</div>
+                      </span>
+                      <div class="text-subtitle-1">CPU</div>
                     </div>
 
-                    <div class="pt-3" style="clear: both; font-size: 12px">
-                      <div style="font-size: 20px">
-                        {{ data.cores }} core<span v-if="data.cores > 1">s</span>
-                      </div>
+                    <div class="text-h6">
+                      {{ data.cores }} core<span v-if="data.cores > 1">s</span><br>
+                    </div>
+                    <div class="text-body-2">
                       {{ data.cpu }}
                     </div>
                   </v-card-text>
@@ -35,22 +34,18 @@
               <v-card>
                 <div class="feature">
                   <v-card-text>
-                    <div>
-                      <div class="icon">
+                    <div class="d-flex justify-space-between mb-3">
+                      <span class="text-h5">
                         <i class="fas fa-memory"></i>
-                      </div>
-
-                      <div class="label">Memory Usage</div>
+                      </span>
+                      <div class="text-subtitle-1">Memory Usage</div>
                     </div>
 
-                    <div class="pt-3" style="clear: both">
-                      <v-list-item-title>
-                        <v-progress-linear :model-value="data.mem_perc" height="20" color="primary"></v-progress-linear>
-                      </v-list-item-title>
-                      <v-list-item-subtitle>
-                        {{ prettyBytes(data.mem_free * 1024) }} free of
-                        {{ prettyBytes(data.mem_total * 1024) }}
-                      </v-list-item-subtitle>
+                    <v-progress-linear :model-value="data.mem_perc" height="20" color="primary"></v-progress-linear>
+
+                    <div>
+                      {{ prettyBytes(data.mem_free * 1024) }} free of
+                      {{ prettyBytes(data.mem_total * 1024) }}
                     </div>
                   </v-card-text>
                 </div>
@@ -62,21 +57,21 @@
                 <v-card>
                   <div class="feature">
                     <v-card-text>
-                      <div class="icon">
-                        <i class="fas fa-hdd"></i>
+                      <div class="d-flex justify-space-between mb-3">
+                        <span class="text-h5">
+                          <i class="fas fa-hdd"></i>
+                        </span>
+                        <div class="text-subtitle-1">{{ disk.name }}</div>
                       </div>
 
-                      <div class="label">{{ disk.name }}</div>
+                      <div>
+                        <v-progress-linear :model-value="(1 - disk.free / disk.space) * 100" height="20"
+                          color="primary"></v-progress-linear>
 
-                      <div class="pt-3" style="clear: both">
-                        <v-list-item-title>
-                          <v-progress-linear :model-value="(1 - disk.free / disk.space) * 100" height="20"
-                            color="primary"></v-progress-linear>
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
+                        <div>
                           {{ prettyBytes(disk.free * 1024) }} free of
                           {{ prettyBytes(disk.space * 1024) }}
-                        </v-list-item-subtitle>
+                        </div>
                       </div>
                     </v-card-text>
                   </div>
@@ -88,13 +83,14 @@
               <v-card>
                 <div class="feature">
                   <v-card-text>
-                    <div class="icon">
-                      <i class="fas fa-clock"></i>
+                    <div class="d-flex justify-space-between mb-3">
+                      <span class="text-h5">
+                        <i class="fas fa-clock"></i>
+                      </span>
+                      <div class="text-subtitle-1">Uptime</div>
                     </div>
 
-                    <div class="label">Uptime</div>
-
-                    <div class="pt-3" style="clear: both; font-size: 14px">
+                    <div class="text-body-2">
                       {{ data.uptime }}
                     </div>
                   </v-card-text>
@@ -109,7 +105,8 @@
           <v-col cols="12" sm="6">
             <v-card max-width="400">
               <v-list lines="two">
-                <v-list-item v-if="data.updates >= 0" title="Updates" :subtitle="data.updates + ' updates, ' + data.security_updates + ' security updates.' + (data.reboot_required ? ' Reboot required.' : '')">
+                <v-list-item v-if="data.updates >= 0" title="Updates"
+                  :subtitle="data.updates + ' updates, ' + data.security_updates + ' security updates.' + (data.reboot_required ? ' Reboot required.' : '')">
                   <template v-slot:append>
                     <Update :serverId="serverId" @closed="fetchData(true)" />
                     <UpdatesConfig />
@@ -275,23 +272,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.serverstatus {
-  all: initial;
-}
-
-.feature {
-  min-height: 140px;
-}
-
-.icon {
-  font-size: 30px;
-  float: left;
-}
-
-.label {
-  float: right;
-  font-size: 12px;
-}
-</style>
