@@ -19,93 +19,91 @@
 
     <Loading :value="loading" />
 
-    <v-card class="pa-3" :loading="fetching">
-      <v-list lines="two">
-        <v-list-item v-if="!authRequired &&
-          data.server &&
-          data.dns &&
-          data.dns.A != data.server.ip
-          ">
-          <v-list-item-title> DNS mismatch </v-list-item-title>
-          <v-list-item-subtitle>
-            {{ data.dns.A }} != {{ data.server.ip }}
-            <v-btn v-if="data.dns.not_set" @click="fixDomainDns(data.domain)">Fix</v-btn>
-          </v-list-item-subtitle>
-        </v-list-item>
+    <v-card class="pa-3">
 
-        <v-list-item>
-          <v-list-item-title> Disk Usage </v-list-item-title>
-          <v-list-item-subtitle>
-            {{ prettyBytes(data.disk_usage * 1024) }}
-          </v-list-item-subtitle>
-        </v-list-item>
+      <v-card max-width="400">
+        <v-list lines="two">
+          <v-list-item v-if="!authRequired &&
+            data.server &&
+            data.dns &&
+            data.dns.A != data.server.ip
+            " title="DNS mismatch" :subtitle="data.dns.A + ' != ' + data.server.ip">
+            <template v-slot:append>
+              <v-btn v-if="data.dns.not_set" @click="fixDomainDns(data.domain)">Fix</v-btn>
+            </template>
+          </v-list-item>
 
-        <v-list-item>
-          <v-list-item-title> FTP Host </v-list-item-title>
-          <v-list-item-subtitle>
-            {{ data.domain }}
-            <Copy :val="data.domain" />
-          </v-list-item-subtitle>
-        </v-list-item>
-
-        <v-list-item>
-          <v-list-item-title> Username </v-list-item-title>
-          <v-list-item-subtitle>
-            {{ data.domain }}
-            <Copy :val="data.domain" />
-          </v-list-item-subtitle>
-        </v-list-item>
-
-        <v-list-item>
-          <v-list-item-title> Password </v-list-item-title>
-          <v-list-item-subtitle>
-            <Edit :val="data.ftp_password" label="FTP Password" name="password" password
-              :path="'sites/' + this.siteId + '/update'" @save="fetchData(true)" />
-          </v-list-item-subtitle>
-        </v-list-item>
-
-        <v-list-item>
-          <v-list-item-title> Path </v-list-item-title>
-          <v-list-item-subtitle>            
-            <router-link :to="'/servers/' + data.server?.id + '/Files#' + path">
-              {{ path }}
-            </router-link>
-            <Copy :val="path" />
-          </v-list-item-subtitle>
-        </v-list-item>
-
-        <div v-if="data.origin">
           <v-list-item>
-            <v-list-item-title> Password protection </v-list-item-title>
+            <v-list-item-title> Disk Usage </v-list-item-title>
             <v-list-item-subtitle>
-              <v-switch v-model="data.auth.active" label="Active" @change="toggleAuth()"></v-switch>
+              {{ prettyBytes(data.disk_usage * 1024) }}
             </v-list-item-subtitle>
           </v-list-item>
-          <v-divider></v-divider>
 
-          <div v-if="data.auth.active">
+          <v-list-item title="FTP Host" :subtitle="data.domain">
+            <template v-slot:append>
+              <Copy :val="data.domain" />
+            </template>
+          </v-list-item>
+
+          <v-list-item title="Username" :subtitle="data.domain">
+            <template v-slot:append>
+              <Copy :val="data.domain" />
+            </template>
+          </v-list-item>
+
+          <v-list-item title="Password" subtitle="******">
+            <template v-slot:append>
+              <Edit :val="data.ftp_password" label="FTP Password" name="password" password
+                :path="'sites/' + this.siteId + '/update'" @save="fetchData(true)" hideText />
+            </template>
+          </v-list-item>
+
+          <v-list-item title="Path" :subtitle="path">
+            <v-list-item-subtitle>
+            </v-list-item-subtitle>
+            <template v-slot:append>
+              <v-btn icon :to="'/servers/' + data.server?.id + '/Files#' + path">
+                  <i class="fas fa-folder-open"></i>
+              </v-btn>
+              <Copy :val="path" />
+            </template>
+          </v-list-item>
+
+          <div v-if="data.origin">
             <v-list-item>
-              <v-list-item-title> Username </v-list-item-title>
+              <v-list-item-title> Password protection </v-list-item-title>
               <v-list-item-subtitle>
-                {{ data.auth.username }}
-                <Copy :val="data.auth.username" text />
+                <v-switch v-model="data.auth.active" label="Active" @change="toggleAuth()"></v-switch>
               </v-list-item-subtitle>
             </v-list-item>
+            <v-divider></v-divider>
 
-            <v-list-item>
-              <v-list-item-title> Password </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ data.auth.password }}
-                <Edit :val="data.auth.password" label="Auth Password" name="password" password
-                  :path="'sites/' + this.siteId + '/auth'" @save="fetchData(true)" />
-              </v-list-item-subtitle>
-            </v-list-item>
+            <div v-if="data.auth.active">
+              <v-list-item>
+                <v-list-item-title> Username </v-list-item-title>
+                <v-list-item-subtitle>
+                  {{ data.auth.username }}
+                  <Copy :val="data.auth.username" text />
+                </v-list-item-subtitle>
+              </v-list-item>
+
+              <v-list-item>
+                <v-list-item-title> Password </v-list-item-title>
+                <v-list-item-subtitle>
+                  {{ data.auth.password }}
+                  <Edit :val="data.auth.password" label="Auth Password" name="password" password
+                    :path="'sites/' + this.siteId + '/auth'" @save="fetchData(true)" />
+                </v-list-item-subtitle>
+              </v-list-item>
+            </div>
           </div>
-        </div>
 
-        <IPRestrictions :active="data.ip_restrictions.active" :items="data.ip_restrictions.ips"
-          :path="'sites/' + this.siteId + '/iprestrictions'" @save="fetchData(true)" />
-      </v-list>
+          <IPRestrictions :active="data.ip_restrictions.active" :items="data.ip_restrictions.ips"
+            :path="'sites/' + this.siteId + '/iprestrictions'" @save="fetchData(true)" />
+        </v-list>
+      </v-card>
+
     </v-card>
   </div>
 </template>

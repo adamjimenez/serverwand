@@ -1,15 +1,17 @@
 <template>
   <span>
-    <span v-if="yesno">
-      {{ val ? "Yes" : "No" }}
-    </span>
+    <span v-if="!hideText">
+      <span v-if="yesno">
+        {{ val ? "Yes" : "No" }}
+      </span>
 
-    <span v-else-if="password">
-      {{ "******" }}
-    </span>
+      <span v-else-if="password">
+        {{ "******" }}
+      </span>
 
-    <span v-else-if="!hideText">
-      {{ val }}
+      <span v-else>
+        {{ val }}
+      </span>
     </span>
 
     <v-btn icon @click="edit(val)">
