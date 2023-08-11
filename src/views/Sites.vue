@@ -8,11 +8,7 @@
 
         <Loading :value="loading" />
 
-        <v-card flat :loading="fetching">
-          <v-card-title primary-title>
-            <div class="headline">Sites</div>
-          </v-card-title>
-
+        <v-card flat :loading="fetching" title="Sites">
           <v-card flat>
             <v-card-text>
               <v-select v-model="server" :items="server_opts" label="Server"></v-select>
@@ -21,13 +17,11 @@
 
           <v-data-table :headers="headers" :items="filtered" class="results">
             <template v-slot:item.domain="{ item }">
-
               <v-list-item :to="'/sites/' + item.raw.id + '/summary'" :title="item.raw.domain" :subtitle="servers[item.raw.server]">
                 <template v-slot:prepend>
                   <SiteIcon :app="item.raw.app"></SiteIcon>
                 </template>
               </v-list-item>
-
             </template>
             <template v-slot:item.usage="{ item }">
               <div v-if="item.raw.usage > 0">
@@ -174,13 +168,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.results a {
-  color: inherit !important;
-}
-
-.results .v-list__tile__sub-title {
-  opacity: 0.7;
-}
-</style>

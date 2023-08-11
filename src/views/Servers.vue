@@ -7,11 +7,7 @@
 
         <Loading :value="loading" />
 
-        <v-card :loading="fetching">
-          <v-card-title primary-title>
-            <div class="headline">Servers</div>
-          </v-card-title>
-
+        <v-card :loading="fetching" title="Servers">
           <div v-if="items.length">
             <v-card flat>
               <v-card-text>
@@ -20,21 +16,13 @@
             </v-card>
 
             <v-data-table :headers="headers" :items="filtered" class="results">
-
               <template v-slot:item.name="{ item }">
-
-                <v-list-item :to="'/servers/' + item.raw.id + '/summary'">
-
+                <v-list-item :to="'/servers/' + item.raw.id + '/summary'" :title="item.raw.name" :subtitle="item.raw.hostname">
                   <template v-slot:prepend>
                     <ServerIcon :provider="item.raw.provider"></ServerIcon>
                   </template>
-
-                  <v-list-item-title>{{ item.raw.name }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ item.raw.hostname }}</v-list-item-subtitle>
                 </v-list-item>
-
               </template>
-
             </v-data-table>
           </div>
 
@@ -69,8 +57,6 @@ export default {
       error: null,
       filtered: [],
       items: [],
-      page: 1,
-      pages: 1,
       provider: "*",
       provider_opts: [
         {
@@ -166,9 +152,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.results a {
-  color: inherit;
-}
-</style>

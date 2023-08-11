@@ -6,11 +6,7 @@
 
     <Loading :value="loading" />
 
-    <v-card :loading="fetching">
-      <v-card-title primary-title>
-        <div class="headline">Teams</div>
-      </v-card-title>
-
+    <v-card :loading="fetching" title="Teams">
       <v-data-table :headers="headers" :items="items" class="results" mobile-breakpoint="0">
         <template v-slot:item.name="{ item }">
           <v-list-item :to="'/teams/' + item.raw.id + '/members'" :title="item.raw.name">
@@ -77,9 +73,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.results a {
-  color: inherit !important;
-}
-</style>
