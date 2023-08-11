@@ -26,14 +26,14 @@
         <v-container>
           <v-row>
             <v-col>
-              <v-switch v-model="data.notifications.disk_usage.active" label="Disk usage" color="primary"></v-switch>
+              <v-switch v-model="data.notifications.disk_space.active" label="Disk space" color="primary"></v-switch>
               <div>
-                Percentage of disk usage. Exceeding this value triggers an alert.
+                Available disk space. Falling below this value triggers an alert.
               </div>
             </v-col>
             <v-col>
-              <v-text-field v-model="data.notifications.disk_usage.threshold" label="Usage threshold" min="0" max="100"
-                type="number" suffix="%" :disabled="!data.notifications.disk_usage.active" />
+              <v-text-field v-model="data.notifications.disk_space.threshold" label="Usage threshold" min="0" max="100"
+                type="number" suffix="GB" :disabled="!data.notifications.disk_space.active" />
             </v-col>
           </v-row>
 
@@ -92,7 +92,7 @@ export default {
       serverId: 0,
       data: {
         notifications: {
-          disk_usage: {},
+          disk_space: {},
           mail_queue: {},
           db_connections: {},
         }
