@@ -1,15 +1,14 @@
 <template>
-    <div>
-        <v-alert v-if="error" type="error">
-            {{ error }}
-        </v-alert>
+    <v-card>
+        <v-card-text>
+            <v-alert v-if="error" type="error">
+                {{ error }}
+            </v-alert>
 
-        <v-switch v-model="data.active" label="IP restrictions" @change="toggle" class="mx-3" color="primary"></v-switch>
+            <v-switch v-model="data.active" label="IP restrictions" @change="toggle" color="primary" hide-details></v-switch>
 
-        <div v-if="data.active">
-            <v-list>
-                <v-list group>
-
+            <div v-if="data.active">
+                <v-list max-width="300">
                     <v-list-item v-for="(item, i) in items" :key="`item-${i}`" :title="item.ip" :subtitle="item.label">
                         <template v-slot:append>
                             <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item.line)">
@@ -17,43 +16,34 @@
                             </v-btn>
                         </template>
                     </v-list-item>
-
                 </v-list>
-            </v-list>
 
-            <v-card>
-                <div>
-                    <v-card-title primary-title>
-                        <v-btn @click="addItem()">
-                            Add IP
-                        </v-btn>
-                    </v-card-title>
-                </div>
-            </v-card>
-        </div>
+                <v-btn @click="addItem()">
+                    Add IP
+                </v-btn>
+            </div>
 
-        <v-dialog app v-model="drawer" temporary right>
-            <v-card>
-                <v-form v-model="valid">
-                    <v-card-title> IP </v-card-title>
+            <v-dialog app v-model="drawer" temporary right>
+                <v-card title="IP">
+                    <v-form v-model="valid">
+                        <v-card-text>
+                            <v-text-field v-model="item.label" label="Label" required
+                                :rules="[rules.required]"></v-text-field>
 
-                    <v-card-text>
-                        <v-text-field v-model="item.label" label="Label" required :rules="[rules.required]"></v-text-field>
+                            <v-text-field v-model="item.ip" label="IP address" required
+                                :rules="[rules.required, rules.ip]"></v-text-field>
 
-                        <v-text-field v-model="item.ip" label="IP address" required
-                            :rules="[rules.required, rules.ip]"></v-text-field>
+                            <v-btn :disabled="!valid" :loading="fetching" color="success" @click="saveItem">
+                                Save
+                            </v-btn>
+                        </v-card-text>
+                    </v-form>
+                </v-card>
+            </v-dialog>
 
-                        <v-btn :disabled="!valid" :loading="fetching" color="success" @click="saveItem">
-                            Save
-                        </v-btn>
-                    </v-card-text>
-                </v-form>
-            </v-card>
-        </v-dialog>
-
-        <Confirm ref="confirm" />
-
-    </div>
+            <Confirm ref="confirm" />
+        </v-card-text>
+    </v-card>
 </template>
 
 <script>
@@ -99,7 +89,6 @@ export default {
     },
 
     methods: {
-
         toggle() {
             var self = this;
             this.fetching = true;

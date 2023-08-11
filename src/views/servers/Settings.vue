@@ -23,26 +23,20 @@
 
       <v-form ref="form">
 
-        <v-container>
+        <v-container fluid>
           <v-row>
             <v-col>
-              <v-switch v-model="data.notifications.disk_space.active" label="Disk space" color="primary"></v-switch>
-              <div>
-                Available disk space. Falling below this value triggers an alert.
-              </div>
+              <v-switch v-model="data.notifications.disk_space.active" label="Disk space" color="primary" messages="Available disk space. Falling below this value triggers an alert."></v-switch>
             </v-col>
             <v-col>
-              <v-text-field v-model="data.notifications.disk_space.threshold" label="Usage threshold" min="0" max="100"
+              <v-text-field v-model="data.notifications.disk_space.threshold" label="Free space threshold" min="0" max="100"
                 type="number" suffix="GB" :disabled="!data.notifications.disk_space.active" />
             </v-col>
           </v-row>
 
           <v-row>
             <v-col>
-              <v-switch v-model="data.notifications.mail_queue.active" label="Mail queue" color="primary"></v-switch>
-              <div>
-                Length of mail queue. Exceeding this value triggers an alert.
-              </div>
+              <v-switch v-model="data.notifications.mail_queue.active" label="Mail queue" color="primary" messages="Length of mail queue. Exceeding this value triggers an alert."></v-switch>
             </v-col>
             <v-col>
               <v-text-field v-model="data.notifications.mail_queue.threshold" label="Mail queue threshold" min="0"
@@ -52,10 +46,7 @@
 
           <v-row>
             <v-col>
-              <v-switch v-model="data.notifications.db_connections.active" label="Database connection usage" color="primary"></v-switch>
-              <div>
-                Percentage of used database connections. Exceeding this value triggers an alert.
-              </div>
+              <v-switch v-model="data.notifications.db_connections.active" label="Database connection usage" color="primary" messages="Percentage of used database connections. Exceeding this value triggers an alert."></v-switch>
             </v-col>
             <v-col>
               <v-text-field v-model="data.notifications.db_connections.threshold" label="Connection threshold" min="0"

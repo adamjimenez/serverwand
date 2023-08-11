@@ -19,7 +19,7 @@
           >
           <template v-slot:prepend>
             <v-icon v-if="item.sudo" size="x-small">fas fa-crown</v-icon>
-            <v-icon v-else="item.sudo" size="x-small">fas fa-user</v-icon>
+            <v-icon v-else size="x-small">fas fa-user</v-icon>
           </template>
 
           <template v-slot:append>
@@ -44,21 +44,19 @@
     </v-card>
 
     <v-dialog v-model="userDrawer">
-      <v-card>
-        <v-card-title> System user </v-card-title>
-
+      <v-card title="System user">
         <v-card-text>
           <v-text-field v-model="system_user.name" label="User" required></v-text-field>
 
           <v-text-field v-model="system_user.password" type="password" label="Password" required
             autocomplete="new-password"></v-text-field>
 
-          <v-switch v-model="system_user.sudo" label="sudo" color="primary"></v-switch>
+          <v-switch v-model="system_user.sudo" label="sudo" color="primary" hide-details></v-switch>
 
           <v-switch :disabled="!system_user.sudo" v-model="system_user.sudo_without_password"
-            label="sudo without password" color="primary"></v-switch>
+            label="sudo without password" color="primary" hide-details></v-switch>
 
-          <v-btn :disabled="!system_user.name" :loading="loading" color="success" @click="saveUser">
+          <v-btn :disabled="!system_user.name" :loading="loading" color="success" @click="saveUser" class="mt-5">
             Save
           </v-btn>
         </v-card-text>
@@ -125,8 +123,6 @@
             </v-list>
           </v-list>
         </v-card-text>
-
-        <v-card-text v-if="!keys.length"> No keys </v-card-text>
       </v-card>
 
       <v-card>
