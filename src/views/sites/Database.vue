@@ -13,48 +13,42 @@
         </v-btn>
       </div>
 
-      <div v-else>
+      <v-card max-width="300" v-else>
 
         <v-list lines="two">
-          <v-list-item>
-            <v-list-item-title>
+          <v-list-item title="PhpMyAdmin">
+            <template v-slot:append>
               <form :action="'http://' + data.server.ip + '/phpmyadmin/'" method="post" target="_blank">
                 <input type="hidden" name="pma_username" :value="data.db_name" />
-                <button type="submit">
-                  PhpMyAdmin
+                <v-btn type="submit" icon>
                   <v-icon right>mdi:mdi-open-in-new</v-icon>
-                </button>
+                </v-btn>
               </form>
-            </v-list-item-title>
+            </template>
           </v-list-item>
 
-          <v-list-item>
-            <v-list-item-title>DB Name</v-list-item-title>
-            <v-list-item-subtitle>
-              {{ data.db_name }}
+          <v-list-item title="DB Name" :subtitle="data.db_name">
+            <template v-slot:append>
               <Copy :val="data.db_name" />
-            </v-list-item-subtitle>
+            </template>
           </v-list-item>
 
-          <v-list-item>
-            <v-list-item-title>DB Username</v-list-item-title>
-            <v-list-item-subtitle>
-              {{ data.db_name }}
+          <v-list-item title="DB Username" :subtitle="data.db_name">
+            <template v-slot:append>
               <Copy :val="data.db_name" />
-            </v-list-item-subtitle>
+            </template>
           </v-list-item>
 
-          <v-list-item>
-            <v-list-item-title>DB Password</v-list-item-title>
-            <v-list-item-subtitle>
-              {{ data.db_password }}
-              <Edit :val="data.db_password" label="DB Password" name="password" password
+          <v-list-item title="DB Password" subtitle="******">
+            <template v-slot:append>
+              <Edit :val="data.db_password" label="DB Password" name="password" password hideText
                 :path="'sites/' + this.domainId + '/database'" />
-            </v-list-item-subtitle>
+            </template>
           </v-list-item>
         </v-list>
 
-      </div>
+      </v-card>
+
     </v-card>
   </div>
 </template>
