@@ -10,91 +10,83 @@
           <v-row>
             <v-col cols="12" sm="6" md="3">
               <v-card>
-                <div class="feature">
-                  <v-card-text>
-                    <div class="d-flex justify-space-between mb-3">
-                      <span class="text-h5">
-                        <i class="fas fa-microchip"></i>
-                      </span>
-                      <div class="text-subtitle-1">CPU</div>
-                    </div>
+                <v-card-text class="pa-1">
+                  <div class="d-flex justify-space-between mb-3">
+                    <span class="text-h5">
+                      <i class="fas fa-microchip"></i>
+                    </span>
+                    <div class="text-subtitle-1">CPU</div>
+                  </div>
 
-                    <div class="text-h6">
-                      {{ data.cores }} core<span v-if="data.cores > 1">s</span><br>
-                    </div>
-                    <div class="text-body-2">
-                      {{ data.cpu }}
-                    </div>
-                  </v-card-text>
-                </div>
+                  <div class="text-h6">
+                    {{ data.cores }} core<span v-if="data.cores > 1">s</span><br>
+                  </div>
+                  <div class="text-body-2">
+                    {{ data.cpu }}
+                  </div>
+                </v-card-text>
               </v-card>
             </v-col>
 
             <v-col cols="12" sm="6" md="3">
               <v-card>
-                <div class="feature">
-                  <v-card-text>
-                    <div class="d-flex justify-space-between mb-3">
-                      <span class="text-h5">
-                        <i class="fas fa-memory"></i>
-                      </span>
-                      <div class="text-subtitle-1">Memory Usage</div>
-                    </div>
+                <v-card-text class="pa-1">
+                  <div class="d-flex justify-space-between mb-3">
+                    <span class="text-h5">
+                      <i class="fas fa-memory"></i>
+                    </span>
+                    <div class="text-subtitle-1">Memory Usage</div>
+                  </div>
 
-                    <v-progress-linear :model-value="data.mem_perc" height="20" color="primary"></v-progress-linear>
+                  <v-progress-linear :model-value="data.mem_perc" height="20" color="primary"></v-progress-linear>
 
-                    <div>
-                      {{ prettyBytes(data.mem_free * 1024) }} free of
-                      {{ prettyBytes(data.mem_total * 1024) }}
-                    </div>
-                  </v-card-text>
-                </div>
+                  <div>
+                    {{ prettyBytes(data.mem_free * 1024) }} free of
+                    {{ prettyBytes(data.mem_total * 1024) }}
+                  </div>
+                </v-card-text>
               </v-card>
             </v-col>
 
             <template v-for="(disk, i) in data.disks" :key="`item-${i}`">
               <v-col cols="12" sm="6" md="3">
                 <v-card>
-                  <div class="feature">
-                    <v-card-text>
-                      <div class="d-flex justify-space-between mb-3">
-                        <span class="text-h5">
-                          <i class="fas fa-hdd"></i>
-                        </span>
-                        <div class="text-subtitle-1">{{ disk.name }}</div>
-                      </div>
+                  <v-card-text class="pa-1">
+                    <div class="d-flex justify-space-between mb-3">
+                      <span class="text-h5">
+                        <i class="fas fa-hdd"></i>
+                      </span>
+                      <div class="text-subtitle-1">{{ disk.name }}</div>
+                    </div>
+
+                    <div>
+                      <v-progress-linear :model-value="(1 - disk.free / disk.space) * 100" height="20"
+                        color="primary"></v-progress-linear>
 
                       <div>
-                        <v-progress-linear :model-value="(1 - disk.free / disk.space) * 100" height="20"
-                          color="primary"></v-progress-linear>
-
-                        <div>
-                          {{ prettyBytes(disk.free * 1024) }} free of
-                          {{ prettyBytes(disk.space * 1024) }}
-                        </div>
+                        {{ prettyBytes(disk.free * 1024) }} free of
+                        {{ prettyBytes(disk.space * 1024) }}
                       </div>
-                    </v-card-text>
-                  </div>
+                    </div>
+                  </v-card-text>
                 </v-card>
               </v-col>
             </template>
 
             <v-col cols="12" sm="6" md="3">
               <v-card>
-                <div class="feature">
-                  <v-card-text>
-                    <div class="d-flex justify-space-between mb-3">
-                      <span class="text-h5">
-                        <i class="fas fa-clock"></i>
-                      </span>
-                      <div class="text-subtitle-1">Uptime</div>
-                    </div>
+                <v-card-text class="pa-1">
+                  <div class="d-flex justify-space-between mb-3">
+                    <span class="text-h5">
+                      <i class="fas fa-clock"></i>
+                    </span>
+                    <div class="text-subtitle-1">Uptime</div>
+                  </div>
 
-                    <div class="text-body-2">
-                      {{ data.uptime }}
-                    </div>
-                  </v-card-text>
-                </div>
+                  <div class="text-body-2">
+                    {{ data.uptime }}
+                  </div>
+                </v-card-text>
               </v-card>
             </v-col></v-row>
         </v-layout>
