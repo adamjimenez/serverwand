@@ -12,7 +12,7 @@
         <v-col>
           <v-list-item>
             <template v-slot:prepend>
-              <SiteIcon :provider="data.app"></SiteIcon>
+              <SiteIcon :app="data.app"></SiteIcon>
             </template>
 
             <v-list-item-title>

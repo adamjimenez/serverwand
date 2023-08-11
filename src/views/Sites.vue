@@ -24,7 +24,7 @@
 
               <v-list-item :to="'/sites/' + item.raw.id + '/summary'" :title="item.raw.domain" :subtitle="servers[item.raw.server]">
                 <template v-slot:prepend>
-                  <SiteIcon :app="item.app"></SiteIcon>
+                  <SiteIcon :app="item.raw.app"></SiteIcon>
                 </template>
               </v-list-item>
 
