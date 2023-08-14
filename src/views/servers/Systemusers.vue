@@ -65,10 +65,10 @@
 
     <v-dialog v-model="keyDrawer">
       <v-card>
-        <v-card-title> Add key for {{ user.name }} </v-card-title>
+        <v-card-title> Upload key for {{ user.name }} </v-card-title>
 
         <v-card-text>
-          <v-text-field v-model="key" label="key"></v-text-field>
+          <v-text-field v-model="key" label="Public key"></v-text-field>
 
           <v-btn :disabled="!key" :loading="loading" color="success" @click="saveKey">
             Save
@@ -93,7 +93,7 @@
                 </v-list-item-subtitle>
 
                 <template v-slot:append>
-                  <v-btn icon :disabled="fetching" :loading="fetching">
+                  <v-btn icon :disabled="fetching" :loading="fetching" v-if="user.key">
                     <Copy :val="user.key" />
                   </v-btn>
                 </template>
@@ -128,11 +128,12 @@
       <v-card>
         <div>
           <v-card-title primary-title>
-            <v-btn @click="addKey"> Add Key </v-btn>
+            <v-btn @click="addKey"> Upload Key </v-btn>
           </v-card-title>
         </div>
       </v-card>
     </v-dialog>
+
     <Confirm ref="confirm" />
   </div>
 </template>
