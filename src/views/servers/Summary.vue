@@ -100,7 +100,9 @@
                 <v-list-item v-if="data.updates >= 0" title="Updates"
                   :subtitle="data.updates + ' updates, ' + data.security_updates + ' security updates.' + (data.reboot_required ? ' Reboot required.' : '')">
                   <template v-slot:append>
-                    <Update :serverId="serverId" @closed="fetchData(true)" />
+                    <Terminal :serverId="serverId" @closed="fetchData(true)" cmd="sudo%20apt-get%20upgrade%20-y">
+                      <v-icon small>fas fa-download</v-icon>
+                    </Terminal>
                     <UpdatesConfig />
                   </template>
                 </v-list-item>
@@ -140,7 +142,9 @@
               <v-list lines="two">
                 <v-list-item title="Operating system" :subtitle="data.os">
                   <template v-slot:append>
-                    <Upgrade v-if="data.upgrade_available" :version="data.upgrade_available" />
+                    <Terminal v-if="data.upgrade_available" :title="'Upgrade to' + data.upgrade_available" cmd="sudo%20do-release-upgrade">
+                      <v-icon small>fas fa-rocket</v-icon>
+                    </Terminal>
                   </template>
                 </v-list-item>
 
@@ -183,10 +187,9 @@ import Edit from "../../components/Edit";
 import PhpConfig from "../../components/PhpConfig";
 import MysqlConfig from "../../components/MysqlConfig";
 import CleanUp from "../../components/CleanUp";
-import Update from "../../components/Update";
 import UpdatesConfig from "../../components/UpdatesConfig";
-import Upgrade from "../../components/Upgrade";
 import TimeZone from "../../components/TimeZone";
+import Terminal from "../../components/Terminal";
 
 export default {
   components: {
@@ -195,10 +198,9 @@ export default {
     PhpConfig,
     MysqlConfig,
     CleanUp,
-    Update,
     UpdatesConfig,
-    Upgrade,
     TimeZone,
+    Terminal,
   },
   data() {
     return {

@@ -33,26 +33,24 @@ export default {
           "Clear the default SSH user used for terminal access?"
         )
       ) {
-        if (res) {
-          var self = this;
-          self.fetching = true;
-          api
-            .post("servers/" + this.serverId + "/savesshuser", {
-              ssh_username: "",
-            })
-            .then(response => {
-              console.log(response);
+        var self = this;
+        self.fetching = true;
+        api
+          .post("servers/" + this.serverId + "/savesshuser", {
+            ssh_username: "",
+          })
+          .then(response => {
+            console.log(response);
 
-              if (!response.data.success) {
-                self.error = response.data.error;
-              } else {
-                self.$emit('complete');
-              }
-            })
-            .catch(error => console.log(error))
-            .finally(() => self.fetching = false);
-        }
-      };
+            if (!response.data.success) {
+              self.error = response.data.error;
+            } else {
+              self.$emit('complete');
+            }
+          })
+          .catch(error => console.log(error))
+          .finally(() => self.fetching = false);
+      }
     },
   },
 };

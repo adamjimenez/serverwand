@@ -6,8 +6,7 @@
 
     <Loading :value="loading" />
 
-    <v-card v-if="!serverId">
-      <v-card-title>User details</v-card-title>
+    <v-card v-if="!serverId" title="User details">
 
       <v-card-text>
         <v-form v-if="!loading" v-model="valid" lazy-validation>
@@ -28,7 +27,7 @@
 
           <v-text-field v-model="data.postcode" :rules="requiredRules" label="Postcode" required></v-text-field>
 
-          <v-text-field v-model="data.tel" :rules="requiredRules" label="tel" required></v-text-field>
+          <v-text-field v-model="data.tel" :rules="requiredRules" label="Telephone" required></v-text-field>
 
           <v-btn :disabled="!valid" :loading="loading" color="success" @click="validate">
             Save
