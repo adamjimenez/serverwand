@@ -26,7 +26,7 @@
             </v-list-item-subtitle>
               
             <template v-slot:append>
-              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item.line)" @click.stop>
+              <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item.line)">
                 <v-icon size="small">mdi:mdi-delete</v-icon>
               </v-btn>
             </template>

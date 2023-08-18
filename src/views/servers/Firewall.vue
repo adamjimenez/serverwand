@@ -23,7 +23,7 @@
           </template>
 
           <template v-slot:append>
-            <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
+            <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item)">
               <v-icon size="small">mdi:mdi-delete</v-icon>
             </v-btn>
           </template>

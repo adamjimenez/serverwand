@@ -8,7 +8,7 @@
 
     <v-card class="pa-3" :loading="fetching">
 
-      <v-list>
+      <v-list max-width="600">
         <v-list-item>
           <TogglePasswordAuthentication :serverId="serverId" :passwordAuthentication="data.password_authentication" />
         </v-list-item>
@@ -16,18 +16,21 @@
         <v-list-item v-for="(item, i) in data.users" :key="`item-${i}`" 
           :title="item.name" 
           :subtitle="item.label"
+          @click="editItem(item)"
           >
           <template v-slot:prepend>
-            <v-icon v-if="item.sudo" size="x-small">fas fa-crown</v-icon>
+            <v-icon v-if="item.sudo" size="x-small" title="Sudo privileges">fas fa-crown</v-icon>
             <v-icon v-else size="x-small">fas fa-user</v-icon>
+
+            <v-icon v-if="item.sudo_without_password" size="x-small" title="Sudo without password">fas fa-lock-open</v-icon>
+            <v-icon v-else size="x-small">fas fa-lock</v-icon>
           </template>
 
           <template v-slot:append>
-            <v-btn icon :disabled="loading" :loading="loading" @click="openKeys(item)" @click.stop
-              title="Authorized keys">
+            <v-btn icon :disabled="loading" :loading="loading" @click.stop="openKeys(item)" title="Authorized keys">
               <v-icon size="small">mdi:mdi-key</v-icon>
             </v-btn>
-            <v-btn icon :disabled="loading" :loading="loading" @click="deleteItem(item.name)" @click.stop>
+            <v-btn icon :disabled="loading" :loading="loading" @click.stop="deleteItem(item.name)">
               <v-icon size="small">mdi:mdi-delete</v-icon>
             </v-btn>
           </template>
