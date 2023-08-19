@@ -23,13 +23,6 @@
         <v-col class="flex-grow-0" v-if="s3.access_key">
           <Snapshot :serverId="serverId" @complete="handleComplete" @error="handleError" />
         </v-col>
-        <!--
-        <v-col class="flex-grow-0" v-if="s3.access_key">
-          <v-btn @click="fetchData()">
-            <v-icon>mdi:mdi-refresh</v-icon>
-          </v-btn>
-        </v-col>
-        -->
         <v-col>
           <v-switch v-model="s3.active" label="Nightly backups" class="my-0" @change="toggleBackups()" hide-details color="primary"></v-switch>
         </v-col>

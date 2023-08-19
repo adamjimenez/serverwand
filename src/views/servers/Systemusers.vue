@@ -117,7 +117,7 @@
                   <v-btn icon :disabled="fetching" :loading="fetching">
                     <Copy :val="item.key" />
                   </v-btn>
-                  <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteKey(item.line)" @click.stop>
+                  <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteKey(item.line)">
                     <v-icon size="small">mdi:mdi-delete</v-icon>
                   </v-btn>
                 </template>
