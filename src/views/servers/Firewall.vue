@@ -7,7 +7,7 @@
     <Loading :value="loading" />
 
     <v-card :loading="fetching">
-      <v-list>
+      <v-list max-width="600">
         <v-list-item>
           <v-switch v-model="active" label="Active" @change="toggle()" hide-details color="primary"></v-switch>
         </v-list-item>

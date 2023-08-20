@@ -142,7 +142,7 @@
               <v-list lines="two">
                 <v-list-item title="Operating system" :subtitle="data.os">
                   <template v-slot:append>
-                    <Terminal v-if="data.upgrade_available" :title="'Upgrade to' + data.upgrade_available" cmd="sudo%20do-release-upgrade">
+                    <Terminal v-if="data.upgrade_available" :title="'Upgrade to ' + data.upgrade_available" cmd="sudo%20do-release-upgrade">
                       <v-icon small>fas fa-rocket</v-icon>
                     </Terminal>
                   </template>

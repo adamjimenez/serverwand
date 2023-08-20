@@ -23,7 +23,7 @@
       </v-container>
 
       <v-list v-if="data.items.length > 0">
-        <v-list group>
+        <v-list group max-width="600">
 
           <v-list-item v-for="(item, i) in data.items" :key="`item-${i}`" :title="item.name" :subtitle="item.date + ' - ' + prettyBytes(item.size)" @click="restore(item)">
             <template v-slot:append>
