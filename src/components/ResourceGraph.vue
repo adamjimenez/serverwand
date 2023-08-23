@@ -37,7 +37,7 @@ export default {
                 },
                 {
                     title: 'Swap',
-                    value: 's',
+                    value: 'S',
                 },
             ],
             daysAgo: 0,
@@ -45,6 +45,7 @@ export default {
             graphHeight: {
                 r: 1600,
                 d: 1600,
+                S: 1000,
             }
         };
     },
