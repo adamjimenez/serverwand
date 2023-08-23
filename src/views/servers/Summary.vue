@@ -171,9 +171,7 @@
       </v-layout>
 
       <v-container class="ma-0">
-        <v-layout row wrap>
-          <svg width="100%" viewBox="0 0 1060 400" v-html="data.graph"></svg>
-        </v-layout>
+          <ResourceGraph :serverId="serverId"></ResourceGraph>
       </v-container>
     </v-card>
   </div>
@@ -190,6 +188,7 @@ import CleanUp from "../../components/CleanUp";
 import UpdatesConfig from "../../components/UpdatesConfig";
 import TimeZone from "../../components/TimeZone";
 import Terminal from "../../components/Terminal";
+import ResourceGraph from "../../components/ResourceGraph";
 
 export default {
   components: {
@@ -201,6 +200,7 @@ export default {
     UpdatesConfig,
     TimeZone,
     Terminal,
+    ResourceGraph,
   },
   data() {
     return {
@@ -211,7 +211,6 @@ export default {
         mem_free: 0,
         mem_total: 0,
         mem_perc: 0,
-        graph: "",
       },
       details: "",
       fetching: false,
