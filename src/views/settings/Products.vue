@@ -7,18 +7,16 @@
     <Loading :value="fetching" />
 
     <v-card class="mx-auto">
-      <v-list>
-        <v-list group>
-          <template v-for="(item, i) in items" :key="`item-${i}`">
-            <v-list-item :title="item.name" @click="editItem(item)">
-              <template v-slot:append>
-                <v-btn :disabled="dialog" :loading="dialog" @click.stop="deleteItem(item.id)">
-                  <v-icon size="small">mdi:mdi-delete</v-icon>
-                </v-btn>
-              </template>
-            </v-list-item>
-          </template>
-        </v-list>
+      <v-list group max-width="600">
+        <template v-for="(item, i) in items" :key="`item-${i}`">
+          <v-list-item :title="item.name" @click="editItem(item)">
+            <template v-slot:append>
+              <v-btn :disabled="dialog" :loading="dialog" @click.stop="deleteItem(item.id)">
+                <v-icon size="small">mdi:mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-list-item>
+        </template>
       </v-list>
     </v-card>
 
@@ -35,36 +33,16 @@
         <v-card-title> Product </v-card-title>
 
         <v-card-text>
-          <v-text-field
-            v-model="data.name"
-            label="Name"
-            required
-          ></v-text-field>
+          <v-text-field v-model="data.name" label="Name" required></v-text-field>
 
-          <v-select
-            v-model="data.product_type"
-            :items="product_types"
-            label="Type"
-          ></v-select>
+          <v-select v-model="data.product_type" :items="product_types" label="Type"></v-select>
 
-          <v-text-field
-            v-model="data.price"
-            label="Price"
-            required
-          ></v-text-field>
+          <v-text-field v-model="data.price" label="Price" required></v-text-field>
 
-          <v-select
-            v-model="data.period"
-            :items="periods"
-            label="Period"
-          ></v-select>
+          <v-select v-model="data.period" :items="periods" label="Period"></v-select>
 
-          <v-btn
-            :disabled="!data.name || !data.product_type || !data.price || !data.period"
-            :loading="fetching"
-            color="success"
-            @click="saveItem"
-          >
+          <v-btn :disabled="!data.name || !data.product_type || !data.price || !data.period" :loading="fetching"
+            color="success" @click="saveItem">
             Save
           </v-btn>
         </v-card-text>

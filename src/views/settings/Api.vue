@@ -7,18 +7,16 @@
     <Loading :value="fetching" />
 
     <v-card class="mx-auto">
-      <v-list>
-        <v-list group>
-          <template v-for="(item, i) in items" :key="`item-${i}`">
-            <v-list-item :value="item" :title="item.label" :subtitle="item.api_key">
-              <template v-slot:append>
-                <v-btn :disabled="dialog" :loading="dialog" @click="deleteItem(item.id)">
-                  <v-icon size="small">fas fa-trash</v-icon>
-                </v-btn>
-              </template>
-            </v-list-item>
-          </template>
-        </v-list>
+      <v-list group max-width="600">
+        <template v-for="(item, i) in items" :key="`item-${i}`">
+          <v-list-item :value="item" :title="item.label" :subtitle="item.api_key">
+            <template v-slot:append>
+              <v-btn :disabled="dialog" :loading="dialog" @click.stop="deleteItem(item.id)">
+                <v-icon size="small">fas fa-trash</v-icon>
+              </v-btn>
+            </template>
+          </v-list-item>
+        </template>
       </v-list>
     </v-card>
 
@@ -146,7 +144,7 @@ export default {
           console.log(error);
         });
     },
-    deleteItem: async function(id) {
+    deleteItem: async function (id) {
       var self = this;
       this.error = "";
 
