@@ -107,9 +107,11 @@
                   </template>
                 </v-list-item>
 
-                <v-list-item title="Hostname" :subtitle="data.hostname">
+                <v-list-item title="Hostname">
+                  <v-list-item-subtitle>
+                    <Copy :val="data.hostname" text />
+                  </v-list-item-subtitle>
                   <template v-slot:append>
-                    <Copy :val="data.hostname" />
                     <Edit :val="data.hostname" hideText label="Hostname" name="hostname"
                       :path="'servers/' + this.serverId + '/hostname'" @save="fetchData(true)" />
                   </template>
@@ -150,7 +152,11 @@
 
                 <v-list-item title="Kernel version" :subtitle="data.kernel"></v-list-item>
 
-                <v-list-item title="Apache" :subtitle="data.apache"></v-list-item>
+                <v-list-item title="Apache" :subtitle="data.apache">
+                  <template v-slot:append>
+                    <ApacheConfig :serverId="serverId" />
+                  </template>
+                </v-list-item>
 
                 <v-list-item title="PHP" :subtitle="data.php">
                   <template v-slot:append>
@@ -164,7 +170,11 @@
                   </template>
                 </v-list-item>
 
-                <v-list-item title="Postfix" :subtitle="data.postfix"></v-list-item>
+                <v-list-item title="Postfix" :subtitle="data.postfix">
+                  <template v-slot:append>
+                    <PostfixConfig :serverId="serverId" />
+                  </template>
+                </v-list-item>
               </v-list>
             </v-card>
           </v-col></v-row>
@@ -184,6 +194,8 @@ import Copy from "../../components/Copy";
 import Edit from "../../components/Edit";
 import PhpConfig from "../../components/PhpConfig";
 import MysqlConfig from "../../components/MysqlConfig";
+import ApacheConfig from "../../components/ApacheConfig";
+import PostfixConfig from "../../components/PostfixConfig";
 import CleanUp from "../../components/CleanUp";
 import UpdatesConfig from "../../components/UpdatesConfig";
 import TimeZone from "../../components/TimeZone";
@@ -196,6 +208,8 @@ export default {
     Edit,
     PhpConfig,
     MysqlConfig,
+    ApacheConfig,
+    PostfixConfig,
     CleanUp,
     UpdatesConfig,
     TimeZone,

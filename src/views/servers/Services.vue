@@ -7,21 +7,13 @@
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
-      <v-list>
-        <v-list group>
-          <template v-for="(item, i) in items" :key="`item-${i}`">
-            <v-list-item :value="item">
-                <v-list-item-title>
-                  <v-switch
-                    v-model="item.active"
-                    :label="item.name"
-                    @change="toggle(item)"
-                    color="primary"
-                  ></v-switch>
-                </v-list-item-title>
-            </v-list-item>
-          </template>
-        </v-list>
+      <v-list group max-width="600">
+        <template v-for="(item, i) in items" :key="`item-${i}`">
+          <v-list-item :value="item">
+            <v-switch v-model="item.active" :label="item.name" @change="toggle(item)" color="primary"
+              hide-details></v-switch>
+          </v-list-item>
+        </template>
       </v-list>
     </v-card>
   </div>
@@ -59,18 +51,18 @@ export default {
       api
         .get("servers/" + this.serverId + "/services")
         .then(response => {
-            console.log(response);
+          console.log(response);
 
-            if(response.data.error) {
-              self.error=response.data.error;
+          if (response.data.error) {
+            self.error = response.data.error;
 
-              return false;
-            }
+            return false;
+          }
 
-            self.items=response.data.services;
-            self.data=response.data.item;
-            document.title="Services | "+self.data.name;
-          })
+          self.items = response.data.services;
+          self.data = response.data.item;
+          document.title = "Services | " + self.data.name;
+        })
         .catch(error => console.log(error))
         .finally(() => self.fetching = false)
     },
@@ -86,13 +78,13 @@ export default {
           action: action,
         })
         .then(response => {
-            console.log(response);
+          console.log(response);
 
-            if(!response.data.success)
-              self.error=response.data.error;
-            else
-              self.fetchData();
-          })
+          if (!response.data.success)
+            self.error = response.data.error;
+          else
+            self.fetchData();
+        })
         .catch(error => console.log(error))
         .finally(() => self.loading = false)
     },
