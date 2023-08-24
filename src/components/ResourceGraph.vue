@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 100%;">
+    <div style="width: 100%;" v-if="data.items.length">
         <v-row class="mb-3">
             <v-col>
                 <v-select v-model="resource" :items="resourceOptions" @update:modelValue="load" hide-details></v-select>
@@ -53,7 +53,8 @@ export default {
             },
             graphHeight: {
                 d: 1600,
-            }
+            },
+            timer: null,
         };
     },
 
@@ -65,11 +66,24 @@ export default {
                 .get("servers/" + this.serverId + "/graph?days_ago=" + this.daysAgo + '&resource=' + this.resource)
                 .then(response => {
                     self.data = response.data;
-                });
+                });            
         },
+        refresh() {            
+            if (this.daysAgo === 0) {
+                console.log('refresh graph');
+                this.load();
+            }
+
+            // refresh after an interval
+            var self = this;
+            clearTimeout(this.timer);
+            this.timer = setTimeout(function () {
+                self.refresh();
+            }, 1*60*1000);
+        }
     },
     created() {
-        this.load();
+        this.refresh();
     },
 };
 </script>
