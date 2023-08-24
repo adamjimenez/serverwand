@@ -103,7 +103,7 @@
                     <Terminal :serverId="serverId" @closed="fetchData(true)" cmd="sudo%20apt-get%20upgrade%20-y">
                       <v-icon small>fas fa-download</v-icon>
                     </Terminal>
-                    <UpdatesConfig />
+                    <UpdatesConfig :serverId="serverId" />
                   </template>
                 </v-list-item>
 
@@ -170,7 +170,7 @@
           </v-col></v-row>
       </v-layout>
 
-      <v-container class="ma-0">
+      <v-container fluid class="ma-0">
           <ResourceGraph :serverId="serverId"></ResourceGraph>
       </v-container>
     </v-card>
