@@ -1,14 +1,14 @@
 <template>
     <div style="width: 100%;">
-        <v-row>
-            <v-col>
-                <v-select v-model="daysAgo" :items="data.items" @update:modelValue="load" hide-details></v-select>
-            </v-col>
+        <v-row class="mb-3">
             <v-col>
                 <v-select v-model="resource" :items="resourceOptions" @update:modelValue="load" hide-details></v-select>
             </v-col>
+            <v-col>
+                <v-select v-model="daysAgo" :items="data.items" @update:modelValue="load" hide-details></v-select>
+            </v-col>
         </v-row>
-        <svg width="100%" :viewBox="'0 0 1060 ' + (graphHeight[resource] ? graphHeight[resource] : '400')" v-html="data.graph"></svg>
+        <svg width="100%" :viewBox="'0 0 1060 ' + (graphHeight[resource] ? graphHeight[resource] : '300')" v-html="data.graph"></svg>
     </div>
 </template>
   
@@ -32,6 +32,10 @@ export default {
                     value: 'r',
                 },
                 {
+                    title: 'I/O',
+                    value: 'b',
+                },
+                {
                     title: 'Disk',
                     value: 'd',
                 },
@@ -41,11 +45,14 @@ export default {
                 },
             ],
             daysAgo: 0,
-            data: {},
+            data: {
+                items: [{
+                    title: 'Today',
+                    value: 0
+                }]
+            },
             graphHeight: {
-                r: 1600,
                 d: 1600,
-                S: 1000,
             }
         };
     },
