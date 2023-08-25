@@ -1,7 +1,7 @@
 <template>
-  <div style="flex: 1; padding: 0 10px; margin-bottom: -20px">
+  <div class="flex-1-1 mx-2">
     <v-autocomplete v-model="model" :items="items" label="Search" persistent-hint @update:modelValue="afterselection"
-      ref="autocomplete">
+      ref="autocomplete" hide-details>
 
       <template v-slot:item="{ props, item }">
         <v-list-item v-bind="props" :prepend-icon="item?.raw?.avatar" :title="item?.raw?.title"

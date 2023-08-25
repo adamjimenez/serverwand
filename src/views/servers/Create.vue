@@ -9,17 +9,17 @@
     <v-card :loading="fetching" class="pb-5">
       <v-card-title>Server details</v-card-title>
 
-      <v-card-text v-if="!serverId">
+      <v-card-subtitle v-if="!serverId">
         Choose a VPS provider below or add a custom server
-      </v-card-text>
+      </v-card-subtitle>
 
-      <div v-if="!serverId">
+      <v-card-text>
 
-        <v-menu offset-y v-model="isOpen">
+        <v-menu offset-y v-model="isOpen" v-if="!serverId">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" color="primary" class="mx-3">
+            <v-btn v-bind="props" color="primary">
               {{ provider }}
-              <v-icon dark>{{ isOpen ? 'expand_less' : 'expand_more' }}</v-icon>
+              <v-icon dark>{{ isOpen ? 'mdi:mdi-chevron-up' : 'mdi:mdi-chevron-down' }}</v-icon>
             </v-btn>
           </template>
           <v-list>
@@ -31,57 +31,51 @@
           </v-list>
         </v-menu>
 
-      </div>
+        <v-form v-if="data.provider || serverId" ref="form" v-model="valid" lazy-validation class="mt-5">
 
-      <v-form v-if="data.provider || serverId" ref="form" v-model="valid" lazy-validation class="mx-3 my-5">
+          <v-select v-if="unclaimed.length" v-model="data.unclaimed" :items="unclaimed" label="Server"></v-select>
 
-        <p v-if="data.provider == 'custom' && !serverId">
-          Connect a server which is freshly installed with Ubuntu. Once configured, root login will be disabled for
-          increased security
-        </p>
+          <v-text-field v-model="data.name" :rules="nameRules" label="Name" required></v-text-field>
 
-        <v-select v-if="unclaimed.length" v-model="data.unclaimed" :items="unclaimed" label="Server"></v-select>
+          <v-text-field v-if="data.provider === 'custom' || this.serverId > 0" v-model="data.ip" :rules="hostRules"
+            label="IP"></v-text-field>
 
-        <v-text-field v-model="data.name" :rules="nameRules" label="Name" required></v-text-field>
+          <div v-if="data.provider !== 'custom' && data.provider !== 'vultr' && !unclaimed.length">
+            <v-select v-if="!serverId" v-model="data.region" :items="regions" label="Region"></v-select>
 
-        <v-text-field v-if="data.provider === 'custom' || this.serverId > 0" v-model="data.ip" :rules="hostRules"
-          label="IP"></v-text-field>
+            <v-select v-if="!serverId" v-model="data.type" :items="types" label="Type"></v-select>
 
-        <div v-if="data.provider !== 'custom' && data.provider !== 'vultr' && !unclaimed.length">
-          <v-select v-if="!serverId" v-model="data.region" :items="regions" label="Region"></v-select>
+            <v-select v-if="!serverId && images.length" v-model="data.image" :items="images" label="Image"></v-select>
+          </div>
 
-          <v-select v-if="!serverId" v-model="data.type" :items="types" label="Type"></v-select>
+          <div v-if="data.provider == 'custom' || data.provider == 'vultr'">
+            <v-text-field :disabled="serverId > 0" v-model="data.hostname" :rules="hostRules"
+              label="Host name/ IP Address" required></v-text-field>
 
-          <v-select v-if="!serverId && images.length" v-model="data.image" :items="images" label="Image"></v-select>
-        </div>
+            <div v-if="data.provider == 'custom'">
+              <v-text-field :disabled="serverId > 0" v-model="data.user" label="Username" required></v-text-field>
 
-        <div v-if="data.provider == 'custom' || data.provider == 'vultr'">
-          <v-text-field :disabled="serverId > 0" v-model="data.hostname" :rules="hostRules" label="Host name/ IP Address"
+              <v-text-field type="password" :disabled="serverId > 0" v-model="data.pass" label="Password"
+                required></v-text-field>
+            </div>
+          </div>
+
+          <v-text-field v-if="serverId > 0 || data.provider == 'custom'" v-model="data.port" label="Port"
             required></v-text-field>
 
-          <div v-if="data.provider == 'custom'">
-            <v-text-field :disabled="serverId > 0" v-model="data.user" label="Username" required></v-text-field>
+          <v-select v-model="data.dns" :items="dns" label="DNS provider"
+            v-if="(data.provider === 'custom' || serverId > 0)"></v-select>
 
-            <v-text-field type="password" :disabled="serverId > 0" v-model="data.pass" label="Password"
-              required></v-text-field>
-          </div>
-        </div>
+          <v-select v-model="data.provider_token" :items="provider_tokens" label="DNS provider API token (optional)"
+            v-if="data.dns"></v-select>
 
-        <v-text-field v-if="serverId > 0 || data.provider == 'custom'" v-model="data.port" label="Port"
-          required></v-text-field>
+          <v-checkbox v-model="data.mailserver" label="Mailserver"></v-checkbox>
 
-        <v-select v-model="data.dns" :items="dns" label="DNS provider"
-          v-if="(data.provider === 'custom' || serverId > 0)"></v-select>
-
-        <v-select v-model="data.provider_token" :items="provider_tokens" label="DNS provider API token (optional)"
-          v-if="data.dns"></v-select>
-
-        <v-checkbox v-model="data.mailserver" label="Mailserver"></v-checkbox>
-
-        <v-btn :disabled="dialog" :loading="dialog" color="success" @click="validate">
-          Save
-        </v-btn>
-      </v-form>
+          <v-btn :disabled="dialog" :loading="dialog" color="success" @click="validate">
+            Save
+          </v-btn>
+        </v-form>
+      </v-card-text>
 
     </v-card>
 
@@ -182,7 +176,7 @@ export default {
       { title: 'Linode', value: 'linode', avatar: 'fab fa-linode' },
       { title: 'DigitalOcean', value: 'digitalocean', avatar: 'fab fa-digital-ocean' },
       { title: 'Vultr', value: 'vultr', avatar: 'fas fa-server' },
-      { title: 'Custom server', value: 'custom', avatar: 'fas fa-server' }
+      { title: 'Ubuntu server', value: 'custom', avatar: 'fab fa-ubuntu' }
     ],
     isOpen: false,
     provider: 'Choose'
@@ -349,6 +343,7 @@ export default {
       if (!noAuthPrompt) {
         child = window.open('loading')
       }
+
       var self = this
       this.loading = true
       self.regions = []

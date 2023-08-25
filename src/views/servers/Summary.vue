@@ -100,7 +100,7 @@
                 <v-list-item v-if="data.updates >= 0" title="Updates"
                   :subtitle="data.updates + ' updates, ' + data.security_updates + ' security updates.' + (data.reboot_required ? ' Reboot required.' : '')">
                   <template v-slot:append>
-                    <Terminal :serverId="serverId" @closed="fetchData(true)" cmd="sudo%20apt-get%20upgrade%20-y">
+                    <Terminal :serverId="serverId" @closed="fetchData(true)" cmd="sudo%20apt-get%20upgrade%20-y" icon>
                       <v-icon small>fas fa-download</v-icon>
                     </Terminal>
                     <UpdatesConfig :serverId="serverId" />
