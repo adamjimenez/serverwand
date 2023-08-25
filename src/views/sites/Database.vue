@@ -20,6 +20,7 @@
             <template v-slot:append>
               <form :action="'http://' + data.server.ip + '/phpmyadmin/'" method="post" target="_blank">
                 <input type="hidden" name="pma_username" :value="data.db_name" />
+                <input type="hidden" name="pma_password" :value="data.db_password" />
                 <v-btn type="submit" icon>
                   <v-icon right>mdi:mdi-open-in-new</v-icon>
                 </v-btn>
@@ -28,18 +29,21 @@
           </v-list-item>
 
           <v-list-item title="DB Name" :subtitle="data.db_name">
-            <template v-slot:append>
-              <Copy :val="data.db_name" />
+            <template v-slot:subtitle>
+              <Copy :val="data.db_name" text />
             </template>
           </v-list-item>
 
           <v-list-item title="DB Username" :subtitle="data.db_name">
-            <template v-slot:append>
-              <Copy :val="data.db_name" />
+            <template v-slot:subtitle>
+              <Copy :val="data.db_name" text />
             </template>
           </v-list-item>
 
           <v-list-item title="DB Password" subtitle="******">
+            <template v-slot:subtitle>
+              <Copy :val="data.db_password" text label="******" />
+            </template>
             <template v-slot:append>
               <Edit :val="data.db_password" label="DB Password" name="password" password hideText
                 :path="'sites/' + this.domainId + '/database'" />

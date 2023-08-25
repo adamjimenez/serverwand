@@ -41,18 +41,21 @@
           </v-list-item>
 
           <v-list-item title="FTP Host" :subtitle="data.domain">
-            <template v-slot:append>
-              <Copy :val="data.domain" />
+            <template v-slot:subtitle>
+              <Copy :val="data.domain" text />
             </template>
           </v-list-item>
 
           <v-list-item title="Username" :subtitle="data.domain">
-            <template v-slot:append>
-              <Copy :val="data.domain" />
+            <template v-slot:subtitle>
+              <Copy :val="data.domain" text />
             </template>
           </v-list-item>
 
           <v-list-item title="Password" subtitle="******">
+            <template v-slot:subtitle>
+              <Copy :val="data.ftp_password" label="******" text />
+            </template>
             <template v-slot:append>
               <Edit :val="data.ftp_password" label="FTP Password" name="password" password
                 :path="'sites/' + this.siteId + '/update'" @save="fetchData(true)" hideText />

@@ -19,7 +19,7 @@
                   </div>
 
                   <div class="text-h6">
-                    {{ data.cores }} core<span v-if="data.cores > 1">s</span><br>
+                    {{ data.cores }} core<span v-if="data.cores > 1">s</span>
                   </div>
                   <div class="text-body-2">
                     {{ data.cpu }}
@@ -88,7 +88,8 @@
                   </div>
                 </v-card-text>
               </v-card>
-            </v-col></v-row>
+            </v-col>
+          </v-row>
         </v-layout>
       </v-container>
 
@@ -144,7 +145,8 @@
               <v-list lines="two">
                 <v-list-item title="Operating system" :subtitle="data.os">
                   <template v-slot:append>
-                    <Terminal v-if="data.upgrade_available" :title="'Upgrade to ' + data.upgrade_available" cmd="sudo%20do-release-upgrade">
+                    <Terminal v-if="data.upgrade_available" :title="'Upgrade to ' + data.upgrade_available"
+                      cmd="sudo%20do-release-upgrade">
                       <v-icon small>fas fa-rocket</v-icon>
                     </Terminal>
                   </template>
@@ -181,7 +183,7 @@
       </v-layout>
 
       <v-container fluid class="ma-0">
-          <ResourceGraph :serverId="serverId"></ResourceGraph>
+        <ResourceGraph :serverId="serverId"></ResourceGraph>
       </v-container>
     </v-card>
   </div>

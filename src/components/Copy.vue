@@ -3,7 +3,7 @@
     <v-tooltip :text="copyText" top v-if="text">
       <template v-slot:activator="{ props }">
         <span v-bind="props" @click="copy(val)" @mouseleave="resetCopyText">
-          {{ val }}
+          {{ label ? label : val }}
         </span>
       </template>
     </v-tooltip>
@@ -21,6 +21,7 @@
 <script>
 export default {
   props: {
+    label: null,
     val: null,
     text: Boolean,
   },

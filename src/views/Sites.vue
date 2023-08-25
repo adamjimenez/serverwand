@@ -75,26 +75,26 @@ export default {
     headers: function () {
       var items =  [
         {
-          title: "Domain ",
+          title: "Domain",
           key: "domain",
         }];
 
       if (!this.mobile) {
         items.push(
           {
-          title: "IP ",
+          title: "IP",
           key: "ip",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          title: "MX ",
+          title: "MX",
           key: "mx",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
         },
         {
-          title: "Usage ",
+          title: "Size",
           key: "usage",
           class: 'd-none d-sm-table-cell',
           cellClass: 'd-none d-sm-table-cell',
