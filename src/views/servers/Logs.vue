@@ -108,7 +108,7 @@ export default {
         },
         {
           value: "letsencrypt",
-          title: "Letsencrypt",
+          title: "Let's Encrypt",
         },
         {
           value: "serverstatus",
