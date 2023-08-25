@@ -10,7 +10,7 @@
       <v-card-title>Server details</v-card-title>
 
       <v-card-subtitle v-if="!serverId">
-        Choose a VPS provider below or add a custom server
+        Choose a VPS provider below or connect to a server freshly installed with Ubuntu
       </v-card-subtitle>
 
       <v-card-text>
@@ -31,14 +31,14 @@
           </v-list>
         </v-menu>
 
-        <v-form v-if="data.provider || serverId" ref="form" v-model="valid" lazy-validation class="mt-5">
+        <v-form v-if="data.provider || serverId" ref="form" v-model="valid" class="mt-5">
 
           <v-select v-if="unclaimed.length" v-model="data.unclaimed" :items="unclaimed" label="Server"></v-select>
 
-          <v-text-field v-model="data.name" :rules="nameRules" label="Name" required></v-text-field>
+          <v-text-field v-model="data.name" label="Name" :rules="[rules.required, rules.alphanumeric]" required></v-text-field>
 
-          <v-text-field v-if="data.provider === 'custom' || this.serverId > 0" v-model="data.ip" :rules="hostRules"
-            label="IP"></v-text-field>
+          <v-text-field v-if="data.provider === 'custom' || this.serverId > 0" v-model="data.ip" :rules="[rules.required, rules.ip]"
+            label="Server IP"></v-text-field>
 
           <div v-if="data.provider !== 'custom' && data.provider !== 'vultr' && !unclaimed.length">
             <v-select v-if="!serverId" v-model="data.region" :items="regions" label="Region"></v-select>
@@ -49,11 +49,10 @@
           </div>
 
           <div v-if="data.provider == 'custom' || data.provider == 'vultr'">
-            <v-text-field :disabled="serverId > 0" v-model="data.hostname" :rules="hostRules"
-              label="Host name/ IP Address" required></v-text-field>
+            <v-text-field :disabled="serverId > 0" v-model="data.hostname" label="Host name" :rules="[rules.required]" required></v-text-field>
 
             <div v-if="data.provider == 'custom'">
-              <v-text-field :disabled="serverId > 0" v-model="data.user" label="Username" required></v-text-field>
+              <v-text-field :disabled="serverId > 0" v-model="data.user" label="Username" :rules="[rules.required]" required></v-text-field>
 
               <v-text-field type="password" :disabled="serverId > 0" v-model="data.pass" label="Password"
                 required></v-text-field>
@@ -71,7 +70,7 @@
 
           <v-checkbox v-model="data.mailserver" label="Mailserver"></v-checkbox>
 
-          <v-btn :disabled="dialog" :loading="dialog" color="success" @click="validate">
+          <v-btn :disabled="!valid" :loading="dialog" color="success" @click="validate">
             Save
           </v-btn>
         </v-form>
@@ -154,13 +153,12 @@ export default {
       title: 'Add new',
       value: 'new'
     }],
-    nameRules: [
-      v => !!v || 'Name is required',
-      v => /^[a-zA-Z0-9_-]+$/g.test(v) || 'Must contain alphanumeric characters only',
-    ],
-    hostRules: [
-      v => !!v || 'IP is required'
-    ],
+    rules: {
+      alphanumeric: v => /^[a-zA-Z0-9_-]+$/g.test(v) || 'Must contain alphanumeric characters only',
+      required: value => !!value || 'Required.',
+      port: v => (!v || /^\d+(:\d+)?$/.test(v)) || '1-65535',
+      ip: v => (!v || /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(v)) || 'Invalid IP address',
+    },
     provider_token: {},
     drawer: false,
     dialog: false,
@@ -285,50 +283,54 @@ export default {
       );
 
     },
-    validate() {
+    validate: async function() {
       var self = this
 
-      if (this.$refs.form.validate()) {
-        this.details = ''
-        this.dialog = true
-        this.error = ''
+      const { valid } = await this.$refs.form.validate()
 
-        if (self.data.unclaimed > 0) {
-          self.serverId = self.data.unclaimed
-        }
+      if (!valid) {
+        return;
+      }
 
-        console.log('save server');
-        console.log(self.serverId);
+      this.details = ''
+      this.dialog = true
+      this.error = ''
 
-        if (self.serverId) {
-          api.post('servers/' + self.serverId + '/update', this.data)
-            .then(function () {
-              self.install()
-            })
-            .catch(function (error) {
-              console.log(error)
-            })
-        } else {
-          api.post('servers/create', this.data)
-            .then(function (response) {
-              console.log(response)
+      if (self.data.unclaimed > 0) {
+        self.serverId = self.data.unclaimed
+      }
 
-              if (!response.data.success) {
-                self.error = response.data.error;
-                self.dialog = false
-              } else if (response.data.id) {
-                self.serverId = response.data.id
+      console.log('save server');
+      console.log(self.serverId);
 
-                if (self.serverId) {
-                  self.install()
-                }
-              }
-            })
-            .catch(function (error) {
-              console.log(error)
+      if (self.serverId) {
+        api.post('servers/' + self.serverId + '/update', this.data)
+          .then(function () {
+            self.install()
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      } else {
+        api.post('servers/create', this.data)
+          .then(function (response) {
+            console.log(response)
+
+            if (!response.data.success) {
+              self.error = response.data.error;
               self.dialog = false
-            })
-        }
+            } else if (response.data.id) {
+              self.serverId = response.data.id
+
+              if (self.serverId) {
+                self.install()
+              }
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+            self.dialog = false
+          })
       }
     },
     getOptions(provider, noAuthPrompt) {
