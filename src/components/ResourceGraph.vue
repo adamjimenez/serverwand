@@ -8,7 +8,7 @@
                 <v-select v-model="daysAgo" :items="data.items" @update:modelValue="load" hide-details></v-select>
             </v-col>
         </v-row>
-        <svg width="100%" :viewBox="'0 0 1060 ' + (graphHeight[resource] ? graphHeight[resource] : '300')" v-html="data.graph"></svg>
+        <svg width="100%" :viewBox="'0 0 1000 ' + (graphHeight[resource] ? graphHeight[resource] : '300')" v-html="data.graph"></svg>
     </div>
 </template>
   
