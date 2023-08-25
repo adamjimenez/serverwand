@@ -59,14 +59,14 @@
             </template>
           </v-list-item>
 
-          <v-list-item title="Path" :subtitle="path">
+          <v-list-item title="Path">
             <v-list-item-subtitle>
+              <Copy :val="path" text />
             </v-list-item-subtitle>
             <template v-slot:append>
               <v-btn icon :to="'/servers/' + data.server?.id + '/Files#' + path">
                   <i class="fas fa-folder-open"></i>
               </v-btn>
-              <Copy :val="path" />
             </template>
           </v-list-item>
 
