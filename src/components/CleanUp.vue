@@ -13,32 +13,31 @@
       <v-card :loading="fetching">
         <v-card-title> Clean files </v-card-title>
         <v-card-subtitle>
-          {{ prettyBytes(sumSize(selectedFiles)) }} to be removed
+          {{ prettyBytes(sumSize(selected)) }} to be removed
         </v-card-subtitle>
 
         <v-card-text>
           <v-data-table
-            v-model="selectedFiles"
-            :headers="cleanHeaders"
-            :items="files"
+            v-model="selectedIds"
+            :headers="headers"
+            :items="items"
             item-key="file"
             show-select
-            class="elevation-1"
-            disable-pagination
-            :hide-default-footer="true"
+            items-per-page="-1"
           >
             <template v-slot:item.size="{ item }">
-              <div v-if="item.size > 0">
-                {{ prettyBytes(item.size) }}
+              <div v-if="item.raw.size > 0">
+                {{ prettyBytes(item.raw.size) }}
               </div>
             </template>
+            <template #bottom></template>
           </v-data-table>
         </v-card-text>
 
         <v-divider></v-divider>
 
         <v-card-actions>
-          <v-btn @click="doClean()" :disabled="selectedFiles.length === 0">
+          <v-btn @click="doClean()" :disabled="selected.length === 0">
             Remove
           </v-btn>
           <v-spacer></v-spacer>
@@ -69,13 +68,26 @@ export default {
       fetching: false,
       cleanSize: 0,
       showClean: false,
-      selectedFiles: [],
-      cleanHeaders: [
-        { title: "File", key: "file" },
+      selectedIds: [],
+      headers: [
+        { title: "File", key: "id" },
         { title: "Size", key: "size" },
       ],
-      files: [],
+      items: [],
     };
+  },
+
+  computed: {
+    selected: function () {
+      let selected = [];
+
+      var self = this;
+      this.selectedIds.forEach(function (id) {
+        selected.push(self.items.find(obj => obj.id === id))
+      });
+
+      return selected;
+    }
   },
 
   methods: {
@@ -97,9 +109,9 @@ export default {
       api
         .get("servers/" + this.serverId + "/clean", { clearCacheEntry: true })
         .then(response => {
-          self.files=response.data.files;
-          self.cleanSize=response.data.size;
-          self.fetching=false;
+          self.items = response.data.files;
+          self.cleanSize = response.data.size;
+          self.fetching = false;
         });
   },
 
@@ -108,7 +120,7 @@ export default {
       this.fetching = true;
 
       var files = [];
-      this.selectedFiles.forEach(item => files.push(item.file));
+      this.selected.forEach(item => files.push(item.id));
 
       api
         .post("servers/" + this.serverId + "/clean", { files: files })
