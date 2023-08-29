@@ -68,7 +68,7 @@
                         {{ prettyBytes(disk.space * 1024) }}
                       </div>
 
-                      <CleanUp :serverId="serverId"></CleanUp>
+                      <CleanUp v-if="i === 0" :serverId="serverId"></CleanUp>
                     </div>
                   </v-card-text>
                 </v-card>
