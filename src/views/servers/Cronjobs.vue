@@ -7,32 +7,30 @@
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
-      <v-list>
-        <v-list group>
+      <v-list group>
 
-          <v-list-item v-for="(item, i) in data.cronjobs" :key="`item-${i}`" :title="item.command" @click="editItem(item)">
-            
-            <template v-slot:prepend>
-                <v-icon v-if="item.active === false">mdi:mdi-cancel</v-icon>
-            </template>
+        <v-list-item v-for="(item, i) in data.cronjobs" :key="`item-${i}`" :title="item.command" @click="editItem(item)">
 
-            <v-list-item-subtitle>
-              {{ item.user }}
-              {{ item.minute }}
-              {{ item.hour }}
-              {{ item.dom }}
-              {{ item.mon }}
-              {{ item.dow }}
-            </v-list-item-subtitle>
-              
-            <template v-slot:append>
-              <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item.line)">
-                <v-icon size="small">mdi:mdi-delete</v-icon>
-              </v-btn>
-            </template>
-          </v-list-item>
+          <template v-slot:prepend>
+            <v-icon v-if="item.active === false">mdi:mdi-cancel</v-icon>
+          </template>
 
-        </v-list>
+          <v-list-item-subtitle>
+            {{ item.user }}
+            {{ item.minute }}
+            {{ item.hour }}
+            {{ item.dom }}
+            {{ item.mon }}
+            {{ item.dow }}
+          </v-list-item-subtitle>
+
+          <template v-slot:append>
+            <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item.line)">
+              <v-icon size="small">mdi:mdi-delete</v-icon>
+            </v-btn>
+          </template>
+        </v-list-item>
+
       </v-list>
     </v-card>
 

@@ -1,21 +1,16 @@
 <template>
     <span>
-        <v-tooltip top>
-            <template v-slot:activator="{ on }">
-                <v-btn icon @click="edit()">
-                    <v-icon small>fas fa-wrench</v-icon>
-                </v-btn>
-            </template>
-            <span>Configure Postfix</span>
-        </v-tooltip>
+        <v-btn icon @click="edit()">
+            <v-icon small>fas fa-wrench</v-icon>
+        </v-btn>
 
         <v-dialog v-model="drawer">
             <v-card>
                 <v-card-title> Edit Postfix config </v-card-title>
 
                 <v-card-text>
-                    <v-text-field v-for="(item, i) in config" :key="`item-${i}`" :label="item.name"
-                        v-model="item.value" :type="isNaN(item.value) ? 'text' : 'number'"></v-text-field>
+                    <v-text-field v-for="(item, i) in config" :key="`item-${i}`" :label="item.name" v-model="item.value"
+                        :type="isNaN(item.value) ? 'text' : 'number'"></v-text-field>
 
                 </v-card-text>
                 <v-card-actions>
@@ -70,7 +65,7 @@ export default {
         save() {
             var self = this;
             this.fetching = true;
-            
+
             // get changes
             let changes = {};
             this.config.forEach(function (val) {

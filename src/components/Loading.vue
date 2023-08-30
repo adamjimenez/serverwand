@@ -1,11 +1,11 @@
 <template>
   <v-dialog v-model="show" persistent content content-class="centered-dialog">
     <v-container fill-height>
-      <v-card color="primary" dark>
+      <v-card color="primary">
         <v-card-text>
           <v-layout row>
             <i class="fas fa-magic fa-2x faa-horizontal animated"></i>
-            <h2 style="margin-left: 10px">{{ message }}</h2>
+            <h2 class="ml-2">{{ message }}</h2>
           </v-layout>
         </v-card-text>
       </v-card>

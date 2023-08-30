@@ -5,8 +5,7 @@
     </v-btn>
 
     <v-dialog app v-model="dialog">
-      <v-card :loading="fetching">
-        <v-card-title> Rename </v-card-title>
+      <v-card :loading="fetching" title="Rename">
 
         <v-card-text>
           <v-text-field

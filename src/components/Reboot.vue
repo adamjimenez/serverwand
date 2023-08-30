@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <v-btn :disabled="fetching" :loading="fetching" @click="reboot">
       Reboot
     </v-btn>

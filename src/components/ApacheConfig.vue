@@ -10,9 +10,7 @@
         </v-tooltip>
 
         <v-dialog v-model="drawer" scrollable max-width="600">
-            <v-card>
-                <v-card-title> Edit Apache config </v-card-title>
-
+            <v-card title="Edit Apache config">
                 <v-card-text>
                     <v-list group>
                         <template v-for="(item, i) in items" :key="`item-${i}`">
