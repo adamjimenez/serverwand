@@ -9,13 +9,22 @@
         <v-card-title> File ownership </v-card-title>
 
         <v-card-text>
-          <v-text-field
+
+          <v-autocomplete
             v-model="data.owner"
             label="Owner"
+            :items="users"
             autofocus
-          ></v-text-field>
+            hide-details          
+          ></v-autocomplete>
 
-          <v-text-field v-model="data.group" label="Group"></v-text-field>
+          <v-autocomplete
+            v-model="data.group"
+            label="Group"
+            :items="groups"
+            autofocus
+            hide-details          
+          ></v-autocomplete>
 
           <v-checkbox
             v-if="folderSelected"
@@ -43,7 +52,7 @@ export default {
 
   watch: {
     path: function (newVal) {
-        this.data.path = newVal;
+      this.data.path = newVal;
     },
     selected: function (newVal) {
       this.data.selected = newVal;
@@ -56,6 +65,8 @@ export default {
       data: {
         recursive: false,
       },
+      groups: [],
+      users: [],
       error: "",
       dialog: false,
     };
@@ -64,6 +75,15 @@ export default {
   methods: {
     chown() {
       this.dialog = true;
+
+      var self = this;
+
+      api
+        .get("servers/" + this.serverId + "/usersAndGroups")
+        .then(response => {          
+            self.groups = response.data.groups;
+            self.users = response.data.users;
+        });
 
       if (this.selected.length === 1) {
         this.data.owner = this.selected[0].owner;
