@@ -9,7 +9,7 @@
 
 <script>
 import api from "../../services/api";
-import Confirm from "../../components/ConfirmDialog.vue";
+import Confirm from "../ConfirmDialog.vue";
 
 export default {
   components: {
