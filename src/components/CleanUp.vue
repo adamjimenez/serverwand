@@ -1,30 +1,15 @@
 <template>
   <span>
-    <v-tooltip top>
-      <template v-slot:activator="{ on }">
-        <v-btn icon @click="clean()">
-          <v-icon small>fas fa-broom</v-icon>
-        </v-btn>
-      </template>
-      <span>Disk Clean Up</span>
-    </v-tooltip>
+    <v-btn icon @click="clean()">
+      <v-icon small>fas fa-broom</v-icon>
+    </v-btn>
 
     <v-dialog app scrollable v-model="showClean">
-      <v-card :loading="fetching">
-        <v-card-title> Clean files </v-card-title>
-        <v-card-subtitle>
-          {{ prettyBytes(sumSize(selected)) }} to be removed
-        </v-card-subtitle>
+      <v-card :loading="fetching" title="Clean files" :subtitle="prettyBytes(sumSize(selected)) + ' to be removed'">
 
         <v-card-text>
-          <v-data-table
-            v-model="selectedIds"
-            :headers="headers"
-            :items="items"
-            item-key="file"
-            show-select
-            items-per-page="-1"
-          >
+          <v-data-table v-model="selectedIds" :headers="headers" :items="items" item-key="file" show-select
+            items-per-page="-1">
             <template v-slot:item.size="{ item }">
               <div v-if="item.raw.size > 0">
                 {{ prettyBytes(item.raw.size) }}
@@ -41,12 +26,10 @@
             Remove
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn
-            @click="
-              $emit('closed');
-              showClean = false;
-            "
-          >
+          <v-btn @click="
+            $emit('closed');
+          showClean = false;
+          ">
             Close
           </v-btn>
         </v-card-actions>
@@ -112,8 +95,13 @@ export default {
           self.items = response.data.files;
           self.cleanSize = response.data.size;
           self.fetching = false;
+
+          self.selectedIds = [];
+          self.items.forEach(function (item) {
+            self.selectedIds.push(item.id);
+          });
         });
-  },
+    },
 
     doClean() {
       var self = this;
