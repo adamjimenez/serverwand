@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-alert v-if="error" type="error" :text="error"></v-alert>
-    
+
     <v-alert v-if="data.app.public_dir_exists === false" type="error">
       Missing public dir.
       <span v-if="data.app.git_url">
@@ -11,65 +11,58 @@
 
     <Loading :value="loading" />
 
-    <v-card class="pa-3" :loading="fetching">
-      <v-layout v-if="data.origin" row>
-        <v-card>
-          <v-card-text>
-            <v-btn @click="openSync(data.origin)"> Push </v-btn>
-
-            <v-btn @click="openSync(siteId)"> Pull </v-btn>
-          </v-card-text>
-        </v-card>
-      </v-layout>
-
-      <v-container v-if="data.app" class="ma-0">
-        <v-row>
-          <v-btn @click="gitInfo = true" title="Git info" v-if="data.app.git_url" class="mt-3">
-            <v-icon>fab fa-git</v-icon>
-          </v-btn>
-          <v-btn @click="clearLogs" title="Clear logs" v-if="data.app.isNode" class="mt-3">
-            <v-icon>block</v-icon>
-          </v-btn>
-          <v-btn @click="showCloneApp = true" title="Copy app" class="mt-3">
-            <v-icon>mdi:mdi-content-copy</v-icon>
-          </v-btn>
-          <v-switch v-if="data.app.isNode" v-model="data.app.online" :label="data.app.status"
-            @change="toggleStatus()" color="primary"></v-switch>
-        </v-row>
-      </v-container>
-
-      <div v-if="data.app">
-        <div v-if="data.app.name">
+    <v-card :loading="fetching">
+      <v-card-text>
+        <v-layout v-if="data.origin" row>
           <v-card>
-            <v-card-title>
-              {{ data.app.name }}
-            </v-card-title>
-            <v-card-subtitle>
-              {{ data.app.version }}
-
-              <div v-if="data.app.latest && data.app.latest !== data.app.version">
-                <p>Latest: {{ data.app.latest }}</p>
-                <v-btn color="blue darken-1" @click="install(data.app.name)">Upgrade</v-btn>
-              </div>
-            </v-card-subtitle>
-
-            <v-card-text v-if="data.app.isNode">
-              <v-textarea label="Ouput log" readonly :value="data.app.output_log"></v-textarea>
-
-              <v-textarea label="Error log" readonly :value="data.app.error_log"></v-textarea>
+            <v-card-text>
+              <v-btn @click="openSync(data.origin)"> Push </v-btn>
+              <v-btn @click="openSync(siteId)"> Pull </v-btn>
             </v-card-text>
           </v-card>
-        </div>
+        </v-layout>
 
-        <div v-else>
-          <v-card class="pa-3">
+        <v-container v-if="data.app">
+          <v-row>
+            <v-btn @click="gitInfo = true" title="Git info" v-if="data.app.git_url">
+              <v-icon>fab fa-git</v-icon>
+            </v-btn>
+            <v-btn @click="clearLogs" title="Clear logs" v-if="data.app.isNode">
+              <v-icon>block</v-icon>
+            </v-btn>
+            <v-btn @click="showCloneApp = true" title="Copy app">
+              <v-icon>mdi:mdi-content-copy</v-icon>
+            </v-btn>
+            <v-switch v-if="data.app.isNode" v-model="data.app.online" :label="data.app.status" @change="toggleStatus()"
+              color="primary" hide-details></v-switch>
+
+            <v-btn v-if="data.app.name === 'wordpress'" @click="openWordpress" title="Open Wordpress">
+              <v-icon>fab fa-wordpress</v-icon>
+            </v-btn>
+          </v-row>
+        </v-container>
+
+        <div v-if="data.app">
+          <div v-if="data.app.name">
+            <v-card :title="data.app.name" :subtitle="data.app.version">
+              <v-card-actions v-if="data.app.latest && data.app.latest !== data.app.version">
+                <v-btn @click="install(data.app.name)" prepend-icon="fas fa-download">
+                  Install {{ data.app.latest }}</v-btn>
+              </v-card-actions>
+
+              <v-card-text v-if="data.app.isNode">
+                <v-textarea label="Ouput log" readonly :value="data.app.output_log"></v-textarea>
+                <v-textarea label="Error log" readonly :value="data.app.error_log"></v-textarea>
+              </v-card-text>
+            </v-card>
+          </div>
+
+          <v-card class="pa-3" v-else>
             <v-card-text> Unrecognised application</v-card-text>
           </v-card>
         </div>
-      </div>
 
-      <div v-else>
-        <v-card class="mx-auto">
+        <v-card class="mx-auto" v-else>
           <v-list>
             <v-list group>
               <v-list-item v-for="(item, i) in apps" :key="`item-${i}`" :title="item.label" :value="item"
@@ -83,13 +76,11 @@
             </v-list>
           </v-list>
         </v-card>
-      </div>
+      </v-card-text>
     </v-card>
 
     <v-navigation-drawer v-model="drawer" temporary right app>
-      <v-card>
-        <v-card-title> Git </v-card-title>
-
+      <v-card title="Git">
         <v-card-text>
           <v-text-field v-model="data.git_url" label="Git URL" hint="e.g. https://github.com/<user>/<repo>.git"
             required></v-text-field>
@@ -104,12 +95,8 @@
     </v-navigation-drawer>
 
     <v-dialog v-model="showCloneApp">
-      <v-card>
-        <v-alert v-if="error" type="error">
-          {{ error }}
-        </v-alert>
-
-        <v-card-title> Clone App </v-card-title>
+      <v-card title="Clone App">
+        <v-alert v-if="error" type="error" :text="error"></v-alert>
 
         <v-card-text>
           <v-text-field v-model="data.stagingDomain" :rules="domainRules" label="Staging Domain" required></v-text-field>
@@ -169,9 +156,7 @@
     </v-dialog>
 
     <v-dialog v-model="gitInfo">
-      <v-card :loading="fetching">
-        <v-card-title> Git info </v-card-title>
-
+      <v-card :loading="fetching" title="Git info">
         <v-card-text>
           <v-container fluid>
             <v-row>
@@ -349,7 +334,7 @@ export default {
           self.fetching = false;
         });
     },
-    install: async function(app) {
+    install: async function (app) {
       if (app === "git") {
         this.drawer = true;
         return;
@@ -574,6 +559,9 @@ export default {
         .finally(function () {
           self.fetching = false;
         });
+    },
+    openWordpress() {
+      window.open('https://' + this.data.domain + '/wp-admin/');
     },
     handleError(error) {
       this.error = error;

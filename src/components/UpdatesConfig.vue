@@ -10,9 +10,7 @@
     </v-tooltip>
 
     <v-dialog v-model="drawer">
-      <v-card>
-        <v-card-title> Configure Updates </v-card-title>
-
+      <v-card title="Configure Updates">
         <v-card-text>
             <v-switch
                 v-model="automatic_updates"

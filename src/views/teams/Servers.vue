@@ -4,10 +4,9 @@
 
     <Loading :value="loading" />
 
-    <v-card class="pa-3" :loading="fetching">
-      <v-list>
-        <v-list group>
-
+    <v-card :loading="fetching">
+      <v-card-text>
+        <v-list max-width="600">
           <v-list-item v-for="(item, i) in data.servers" :key="`item-${i}`" :title="item.name">
             <template v-slot:append>
               <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
@@ -15,23 +14,15 @@
               </v-btn>
             </template>
           </v-list-item>
-
         </v-list>
-      </v-list>
-    </v-card>
-
-    <v-card>
-      <div>
-        <v-card-title primary-title>
-          <v-btn @click="addItem()"> Add server </v-btn>
-        </v-card-title>
-      </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn @click="addItem()"> Add server </v-btn>
+      </v-card-actions>
     </v-card>
 
     <v-dialog v-model="drawer">
-      <v-card>
-        <v-card-title> Server </v-card-title>
-
+      <v-card title="Server">
         <v-card-text>
           <v-select v-model="data.server" :items="servers" label="Server"></v-select>
 
@@ -39,7 +30,7 @@
             Save
           </v-btn>
 
-          <p v-if="useMasterPassword" style="font-size: 12px; margin-top: 20px">
+          <p v-if="useMasterPassword" style="font-size: 12px;" class="mt-3">
             Note: Server keys shared with other users will not be encrypted with
             your master password
           </p>

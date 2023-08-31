@@ -1,13 +1,12 @@
 <template>
   <div>
     <v-alert v-if="error" type="error" :text="error"></v-alert>
-    
+
     <Loading :value="loading" />
 
-    <v-card class="pa-3" :loading="fetching">
-      <v-list>
-        <v-list group>
-
+    <v-card :loading="fetching">
+      <v-card-text>
+        <v-list max-width="600">
           <v-list-item v-for="(item, i) in data.members" :key="`item-${i}`" :title="item.email">
             <template v-slot:append>
               <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
@@ -15,36 +14,19 @@
               </v-btn>
             </template>
           </v-list-item>
-
         </v-list>
-      </v-list>
-    </v-card>
-
-    <v-card>
-      <div>
-        <v-card-title primary-title>
-          <v-btn @click="addItem()"> Add member </v-btn>
-        </v-card-title>
-      </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn @click="addItem()"> Add member </v-btn>
+      </v-card-actions>
     </v-card>
 
     <v-dialog v-model="drawer">
-      <v-card>
-        <v-card-title> Member </v-card-title>
-
+      <v-card title="Member">
         <v-card-text>
-          <v-text-field
-            v-model="member.email"
-            label="Email"
-            required
-          ></v-text-field>
+          <v-text-field v-model="member.email" label="Email" required></v-text-field>
 
-          <v-btn
-            :disabled="!member.email"
-            :loading="dialog"
-            color="success"
-            @click="saveItem"
-          >
+          <v-btn :disabled="!member.email" :loading="dialog" color="success" @click="saveItem">
             Save
           </v-btn>
 
@@ -156,7 +138,7 @@ export default {
           });
       }
     },
-    deleteItem: async function(user) {
+    deleteItem: async function (user) {
       if (
         await this.$refs.confirm.open(
           "Confirm",
