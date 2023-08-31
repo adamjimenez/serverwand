@@ -2,9 +2,7 @@
   <v-layout row>
     <v-row>
       <v-col cols="12">
-        <v-alert v-if="error" type="error">
-          {{ error }}
-        </v-alert>
+        <v-alert v-if="error" type="error" :text="error"></v-alert>
 
         <Loading :value="loading" />
 
@@ -84,20 +82,14 @@ export default {
           {
           title: "IP",
           key: "ip",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
         },
         {
           title: "MX",
           key: "mx",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
         },
         {
           title: "Size",
           key: "usage",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
         });
       };
 

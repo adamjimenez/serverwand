@@ -1,9 +1,7 @@
 <template>
   <v-layout row><v-row>
       <v-col cols="12">
-        <v-alert v-if="error" type="error">
-          {{ error }}
-        </v-alert>
+        <v-alert v-if="error" type="error" :text="error"></v-alert>
 
         <Loading :value="loading" />
 
@@ -94,20 +92,14 @@ export default {
         {
           title: "Region ",
           key: "region",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
         },
         {
           title: "Image ",
           key: "image",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
         },
         {
           title: "Type ",
           key: "type",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
         });
       };
 
