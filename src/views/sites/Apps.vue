@@ -1,8 +1,7 @@
 <template>
   <div>
-    <v-alert v-if="error" type="error">
-      {{ error }}
-    </v-alert>
+    <v-alert v-if="error" type="error" :text="error"></v-alert>
+    
     <v-alert v-if="data.app.public_dir_exists === false" type="error">
       Missing public dir.
       <span v-if="data.app.git_url">

@@ -1,39 +1,20 @@
 <template>
   <div>
-    <v-card>
+    <v-card max-width="600">
       <v-card-text>
-        <v-alert v-if="error" type="error">
-          {{ error }}
-        </v-alert>
+        <v-alert v-if="error" type="error" :text="error"></v-alert>
 
-        <v-text-field
-          v-model="data.edition"
-          label="Edition"
-          disabled
-          readonly
-        ></v-text-field>
+        <v-text-field v-model="data.edition" label="Edition" disabled readonly></v-text-field>
 
-        <v-text-field
-          v-model="data.email"
-          :rules="usernameRules"
-          label="Email"
-          disabled
-          required
-        ></v-text-field>
-      </v-card-text>
+        <v-text-field v-model="data.email" :rules="usernameRules" label="Email" disabled required></v-text-field>
 
       <v-expansion-panels>
-        <v-expansion-panel v-model="passwordPanel" expand title="Reset password">
+        <v-expansion-panel v-model="passwordPanel" expand title="Change password">
           <v-expansion-panel-text>
             <v-card tile flat>
               <v-card-text>
-                <v-text-field
-                  type="password"
-                  v-model="data.password"
-                  :rules="passwordRules"
-                  label="Password"
-                  required
-                ></v-text-field>
+                <v-text-field type="password" v-model="data.password" :rules="passwordRules" label="Password"
+                  required></v-text-field>
               </v-card-text>
               <v-card-actions>
                 <v-btn color="primary" @click="validate">Submit</v-btn>
@@ -43,30 +24,17 @@
         </v-expansion-panel>
       </v-expansion-panels>
 
-      <v-card-subtitle>Preferences</v-card-subtitle>
-      <v-checkbox
-        v-model="data.emails"
-        label="Receive email updates"
-        @change="toggleEmails()"
-        class="mx-3 my-0"
-      ></v-checkbox>
+      <v-checkbox v-model="data.emails" label="Receive email updates" @change="toggleEmails()"></v-checkbox>
 
-      <v-card-subtitle>Security</v-card-subtitle>
-      <v-checkbox
-        v-model="useMasterPassword"
-        label="Use a master password"
-        @change="toggleMasterPassword()"
-        class="mx-3 my-0"
-      ></v-checkbox>
+      <v-checkbox v-model="useMasterPassword" label="Use a master password" @change="toggleMasterPassword()"></v-checkbox>
+      </v-card-text>
 
       <v-card-actions>
-        <v-btn @click="changeMasterPassword()" :disabled="!useMasterPassword"
-          >Change master password</v-btn
-        >
+        <v-btn @click="changeMasterPassword()" :disabled="!useMasterPassword">Change master password</v-btn>
       </v-card-actions>
     </v-card>
 
-    <v-dialog v-model="masterPasswordDialog" persistent max-width="600px">
+    <v-dialog v-model="masterPasswordDialog" persistent max-width="600">
       <v-card>
         <v-card-title>
           <span class="headline">Master password</span>
@@ -75,30 +43,14 @@
         <v-card-text>
           <p>A Master Password is used to protect your server keys</p>
 
-          <v-text-field
-            v-model="mp.current"
-            type="password"
-            label="Current password"
-            required
-            autocomplete="new-password"
-            :disabled="!data.prefs.useMasterPassword"
-          ></v-text-field>
+          <v-text-field v-model="mp.current" type="password" label="Current password" required autocomplete="new-password"
+            :disabled="!data.prefs.useMasterPassword"></v-text-field>
 
-          <v-text-field
-            v-model="mp.password"
-            type="password"
-            label="Enter new password"
-            required
-            autocomplete="new-password"
-          ></v-text-field>
+          <v-text-field v-model="mp.password" type="password" label="Enter new password" required
+            autocomplete="new-password"></v-text-field>
 
-          <v-text-field
-            v-model="mp.confirm"
-            type="password"
-            label="Re-enter password"
-            required
-            autocomplete="new-password"
-          ></v-text-field>
+          <v-text-field v-model="mp.confirm" type="password" label="Re-enter password" required
+            autocomplete="new-password"></v-text-field>
 
           <p>
             Please make sure you remember the Master Password you have set. If
@@ -109,19 +61,11 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" @click="masterPasswordDialog = false"
-            >Close</v-btn
-          >
-          <v-btn
-            color="blue darken-1"
-            @click="saveMasterPassword()"
-            :disabled="
-              !mp.password ||
-              mp.password != mp.confirm ||
-              (data.prefs.useMasterPassword && !mp.current)
-            "
-            >Save</v-btn
-          >
+          <v-btn color="blue darken-1" @click="masterPasswordDialog = false">Close</v-btn>
+          <v-btn color="blue darken-1" @click="saveMasterPassword()" :disabled="!mp.password ||
+            mp.password != mp.confirm ||
+            (data.prefs.useMasterPassword && !mp.current)
+            ">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -134,27 +78,15 @@
         <v-card-text>
           <p>Once removed your passwords will no longer be protected</p>
 
-          <v-text-field
-            v-model="mp.password"
-            type="password"
-            label="Current password"
-            required
-            browser-autocomplete="new-password"
-          ></v-text-field>
+          <v-text-field v-model="mp.password" type="password" label="Current password" required
+            browser-autocomplete="new-password"></v-text-field>
 
-          <v-checkbox
-            v-model="mp.forceRemove"
-            label="Force remove password (will lose existing passwords)"
-          ></v-checkbox>
+          <v-checkbox v-model="mp.forceRemove" label="Force remove password (will lose existing passwords)"></v-checkbox>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" @click="removePasswordDialog = false"
-            >Close</v-btn
-          >
-          <v-btn color="blue darken-1" @click="removeMasterPassword()"
-            >Save</v-btn
-          >
+          <v-btn color="blue darken-1" @click="removePasswordDialog = false">Close</v-btn>
+          <v-btn color="blue darken-1" @click="removeMasterPassword()">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

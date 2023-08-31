@@ -21,17 +21,13 @@
     </v-card>
 
     <v-card>
-      <div>
-        <v-card-title primary-title>
-          <v-btn @click="addItem()"> Add API key </v-btn>
-        </v-card-title>
-      </div>
+      <v-card-title primary-title>
+        <v-btn @click="addItem()"> Add API key </v-btn>
+      </v-card-title>
     </v-card>
 
     <v-dialog v-model="drawer">
-      <v-card>
-        <v-card-title>API key</v-card-title>
-
+      <v-card title="API Key">
         <v-card-text>
           <v-text-field v-model="data.label" label="Label"></v-text-field>
 
@@ -43,12 +39,10 @@
     </v-dialog>
 
     <v-dialog v-model="dialog" width="630">
-      <v-card color="primary" dark>
+      <v-card color="primary">
         <v-card-text>
-          <div>
-            Api key: {{ details }}
-            <Copy :val="details" />
-          </div>
+          Api key: {{ details }}
+          <Copy :val="details" />
         </v-card-text>
       </v-card>
     </v-dialog>

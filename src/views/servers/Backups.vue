@@ -1,12 +1,8 @@
 <template>
   <div>
-    <v-alert v-if="error" type="error">
-      {{ error }}
-    </v-alert>
+    <v-alert v-if="error" type="error" :text="error"></v-alert>
 
-    <v-alert v-if="message" type="info">
-      {{ message }}
-    </v-alert>
+    <v-alert v-if="message" type="info" :text="message"></v-alert>
 
     <Loading :value="loading" />
 

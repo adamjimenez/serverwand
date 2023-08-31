@@ -4,7 +4,7 @@
       <v-icon>mdi:mdi-file-key-outline</v-icon>
     </v-btn>
 
-    <v-dialog app v-model="dialog" width="unset">
+    <v-dialog app v-model="dialog" width="600">
       <v-card :loading="fetching" flat>
         <v-card-title> File permissions </v-card-title>
 

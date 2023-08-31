@@ -1,8 +1,6 @@
 <template>
   <div>
-    <v-alert v-if="error" type="error">
-      {{ error }}
-    </v-alert>
+    <v-alert v-if="error" type="error" :text="error"></v-alert>
 
     <Loading :value="fetching" />
 
@@ -21,17 +19,13 @@
     </v-card>
 
     <v-card>
-      <div>
-        <v-card-title primary-title>
-          <v-btn @click="addItem()"> Add Product </v-btn>
-        </v-card-title>
-      </div>
+      <v-card-title primary-title>
+        <v-btn @click="addItem()"> Add Product </v-btn>
+      </v-card-title>
     </v-card>
 
     <v-dialog v-model="drawer">
-      <v-card>
-        <v-card-title> Product </v-card-title>
-
+      <v-card title="Product">
         <v-card-text>
           <v-text-field v-model="data.name" label="Name" required></v-text-field>
 

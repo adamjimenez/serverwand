@@ -1,8 +1,6 @@
 <template>
   <div>
-    <v-alert v-if="error" type="error">
-      {{ error }}
-    </v-alert>
+    <v-alert v-if="error" type="error" :text="error"></v-alert>
 
     <v-card class="pa-3" :loading="fetching">
       <v-container class="ma-0" fluid>
@@ -63,7 +61,7 @@
                       <v-progress-linear :model-value="(1 - disk.free / disk.space) * 100" height="20"
                         color="primary"></v-progress-linear>
 
-                      <div>
+                      <div :title="prettyBytes((disk.space - disk.free) * 1024) + ' used'">
                         {{ prettyBytes(disk.free * 1024) }} free of
                         {{ prettyBytes(disk.space * 1024) }}
                       </div>

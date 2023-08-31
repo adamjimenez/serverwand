@@ -1,12 +1,10 @@
 <template>
   <div>
-    <v-alert v-if="error" type="error">
-      {{ error }}
-    </v-alert>
+    <v-alert v-if="error" type="error" :text="error"></v-alert>
 
     <Loading :value="loading" />
 
-    <v-card v-if="!serverId">
+    <v-card>
       <v-card-title>Domain details</v-card-title>
 
       <v-card-text>
@@ -20,7 +18,7 @@
           ></v-text-field>
 
           <v-btn
-            :disabled="loading"
+            :disabled="domainId > 0"
             :loading="loading"
             color="success"
             @click="validate"
@@ -63,7 +61,7 @@ export default {
 
   created() {
     document.title = "Domain details";
-    this.domainId = this.$route.params.id;
+    this.domainId = parseInt(this.$route.params.id);
     this.fetchData();
   },
 

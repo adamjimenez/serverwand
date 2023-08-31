@@ -1,8 +1,6 @@
 <template>
   <div>
-    <v-alert v-if="error" type="error">
-      {{ error }}
-    </v-alert>
+    <v-alert v-if="error" type="error" :text="error"></v-alert>
 
     <v-alert v-if="enablingSSL" class="ma-0">
       <strong>Enabling SSL</strong>
