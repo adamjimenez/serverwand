@@ -4,35 +4,25 @@
 
     <Loading :value="loading" />
 
-    <v-card class="pa-3" :loading="fetching">
-      <v-list>
-        <v-list group>
-
-          <v-list-item v-for="(item, i) in data.variables" :key="`item-${i}`" :title="item.name" :subtitle="item.value" @click="editItem(item)">
+    <v-card :loading="fetching">
+      <v-card-text>
+        <v-list max-width="600">
+          <v-list-item v-for="(item, i) in data.variables" :key="`item-${i}`" :title="item.name" :subtitle="item.value"
+            @click="editItem(item)">
             <template v-slot:append>
-              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item.line)" @click.stop>
-                <v-icon size="small">mdi:mdi-delete</v-icon>
-              </v-btn>
+              <v-btn :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item.line)" icon="mdi:mdi-delete" size="small"></v-btn>
             </template>
           </v-list-item>
-
         </v-list>
-      </v-list>
-    </v-card>
-
-    <v-card>
-      <div>
-        <v-card-title primary-title>
-          <v-btn @click="addItem()"> Add variable </v-btn>
-        </v-card-title>
-      </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn @click="addItem()" text="Add variable"></v-btn>
+      </v-card-actions>
     </v-card>
 
     <v-dialog v-model="drawer">
-      <v-card>
+      <v-card title="Variable">
         <v-form v-model="valid">
-          <v-card-title> Variable </v-card-title>
-
           <v-card-text>
             <v-text-field v-model="item.line" label="Line" v-show="false"></v-text-field>
 

@@ -82,37 +82,32 @@
     <div v-if="data.server.mailserver">
       <v-card class="mx-auto">
         <v-list>
-          <v-list group>
 
-            <v-list-item v-for="(item, i) in data.emails" :key="`item-${i}`" :title="item.name" :subtitle="item.value"
-              @click="editItem(item)">
+          <v-list-item v-for="(item, i) in data.emails" :key="`item-${i}`" :title="item.name" :subtitle="item.value"
+            @click="editItem(item)">
 
-              <v-list-item-title>
-                {{ item.user }}
-                <span v-if="item.destination">
-                  <v-icon>fas fa-long-arrow-alt-right</v-icon>
-                  {{ item.destination }}
-                </span>
-              </v-list-item-title>
-              <v-list-item-subtitle>{{
-                prettyBytes(item.disk_usage)
-              }}</v-list-item-subtitle>
+            <v-list-item-title>
+              {{ item.user }}
+              <span v-if="item.destination">
+                <v-icon>fas fa-long-arrow-alt-right</v-icon>
+                {{ item.destination }}
+              </span>
+            </v-list-item-title>
+            <v-list-item-subtitle>{{
+              prettyBytes(item.disk_usage)
+            }}</v-list-item-subtitle>
 
-              <template v-slot:append>
-                <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item.user)" @click.stop>
-                  <v-icon size="small">mdi:mdi-delete</v-icon>
-                </v-btn>
-              </template>
-            </v-list-item>
+            <template v-slot:append>
+              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item.user)" @click.stop>
+                <v-icon size="small">mdi:mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-list-item>
 
-          </v-list>
         </v-list>
-      </v-card>
-
-      <v-card>
-        <v-card-text>
+        <v-card-actions>
           <v-btn @click="addEmail()"> Add email </v-btn>
-        </v-card-text>
+        </v-card-actions>
       </v-card>
 
       <v-dialog v-model="drawer">
@@ -126,9 +121,7 @@
 
             <v-text-field v-model="email.destination" label="Forwarding" required></v-text-field>
 
-            <v-btn :disabled="!email.user" :loading="fetching" color="success" @click="saveEmail()">
-              Save
-            </v-btn>
+            <v-btn :disabled="!email.user" :loading="fetching" color="success" @click="saveEmail()" text="Save"></v-btn>
           </v-card-text>
         </v-card>
       </v-dialog>

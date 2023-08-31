@@ -4,47 +4,41 @@
 
     <Loading :value="loading" />
 
-    <v-card class="pa-3" :loading="fetching">
-      <v-dialog v-model="authRequired" max-width="240">
-        <v-card tile flat>
-          <v-card-text>
-            <strong>DNS auth required</strong>
-            <v-btn @click="authPrompt()">Fix</v-btn>
-          </v-card-text>
-        </v-card>
-      </v-dialog>
+    <v-dialog v-model="authRequired" max-width="240">
+      <v-card tile flat>
+        <v-card-text>
+          <strong>DNS auth required</strong>
+          <v-btn @click="authPrompt()">Fix</v-btn>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
 
-      <v-data-table :headers="headers" :items="data.records" class="results" mobile-breakpoint="0" @click:row="editItem">
+    <v-data-table :headers="headers" :items="data.records" class="results" mobile-breakpoint="0" @click:row="editItem">
 
-        <template v-slot:item.type="{ item }">
-          <span>{{ item.raw.type }}</span>
-        </template>
+      <template v-slot:item.type="{ item }">
+        <span>{{ item.raw.type }}</span>
+      </template>
 
-        <template v-slot:item.priority="{ item }">
-          <span v-if="item.type === 'MX'">{{ item.priority }}</span>
-        </template>
+      <template v-slot:item.priority="{ item }">
+        <span v-if="item.type === 'MX'">{{ item.priority }}</span>
+      </template>
 
-        <template v-slot:item.actions="{ item }">
-          <v-icon small @click.stop="deleteItem(item)">
-            mdi:mdi-delete
-          </v-icon>
-        </template>
+      <template v-slot:item.actions="{ item }">
+        <v-icon small @click.stop="deleteItem(item)">
+          mdi:mdi-delete
+        </v-icon>
+      </template>
 
-      </v-data-table>
-    </v-card>
+    </v-data-table>
 
     <v-card>
-      <div>
-        <v-card-title primary-title>
-          <v-btn @click="addItem()"> Add a DNS Record </v-btn>
-        </v-card-title>
-      </div>
+      <v-card-actions>
+        <v-btn @click="addItem()"> Add DNS Record </v-btn>
+      </v-card-actions>
     </v-card>
 
     <v-dialog v-model="drawer">
-      <v-card>
-        <v-card-title> DNS Record </v-card-title>
-
+      <v-card title="DNS Record">
         <v-card-text>
           <v-select :items="recordType" label="Type" v-model="record.type"></v-select>
 
@@ -214,7 +208,7 @@ export default {
       this.record = JSON.parse(JSON.stringify(data.item.raw));
       this.drawer = true;
     },
-    deleteItem: async function(item) {
+    deleteItem: async function (item) {
       if (
         await this.$refs.confirm.open(
           "Confirm",

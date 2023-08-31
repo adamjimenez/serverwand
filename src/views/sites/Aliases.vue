@@ -6,39 +6,36 @@
 
     <v-card class="pa-3" :loading="fetching">
       <v-list max-width="600">
-        <v-list group>
 
-          <v-list-item v-for="(item, i) in data.aliases" :key="`item-${i}`" :title="item.domain" :subtitle="item.value">
-            <v-list-item-subtitle>
-              <span v-if="item.redirect">
-                Redirect
-              </span>
-              <span v-else>
-                Alias
-              </span>
-            </v-list-item-subtitle>
-            <template v-slot:append>
-              <v-list-item-action v-if="item.dns.A != data.server.ip">
-                <v-tooltip top>
-                  <template v-slot:activator="{ on }">
-                    <v-btn icon @click="fixAliasDns(item.domain)">
-                      <v-icon small>build</v-icon>
-                    </v-btn>
-                  </template>
+        <v-list-item v-for="(item, i) in data.aliases" :key="`item-${i}`" :title="item.domain" :subtitle="item.value">
+          <v-list-item-subtitle>
+            <span v-if="item.redirect">
+              Redirect
+            </span>
+            <span v-else>
+              Alias
+            </span>
+          </v-list-item-subtitle>
+          <template v-slot:append>
+            <v-list-item-action v-if="item.dns.A != data.server.ip">
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-btn icon @click="fixAliasDns(item.domain)">
+                    <v-icon small>fas fa-wrench</v-icon>
+                  </v-btn>
+                </template>
 
-                  <span>Fix DNS mismatch ({{ item.dns.A }} => {{ data.server.ip }})</span>
-                </v-tooltip>
-              </v-list-item-action>
+                <span>Fix DNS mismatch ({{ item.dns.A }} => {{ data.server.ip }})</span>
+              </v-tooltip>
+            </v-list-item-action>
 
-              <v-list-item-action>
-                <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteAlias(item.domain)">
-                  <v-icon size="small">mdi:mdi-delete</v-icon>
-                </v-btn>
-              </v-list-item-action>
-            </template>
-          </v-list-item>
+            <v-list-item-action>
+              <v-btn :disabled="fetching" :loading="fetching" @click="deleteAlias(item.domain)" icon="mdi:mdi-delete"
+                size="small"></v-btn>
+            </v-list-item-action>
+          </template>
+        </v-list-item>
 
-        </v-list>
       </v-list>
     </v-card>
 
@@ -53,11 +50,7 @@
     </v-card>
 
     <v-dialog v-model="drawer">
-      <v-card>
-        <v-card-title>
-          Domain alias
-        </v-card-title>
-
+      <v-card title="Domain alias">
         <v-card-text>
           <v-text-field v-model="alias.alias" label="Alias" required></v-text-field>
 
@@ -65,9 +58,7 @@
 
           <v-checkbox v-model="alias.redirect" label="Redirect"></v-checkbox>
 
-          <v-btn :disabled="!alias.alias" :loading="fetching" color="success" @click="submitAlias">
-            Save
-          </v-btn>
+          <v-btn :disabled="!alias.alias" :loading="fetching" color="success" @click="submitAlias" text="Save"></v-btn>
         </v-card-text>
       </v-card>
     </v-dialog>

@@ -4,26 +4,24 @@
 
     <Loading :value="loading" />
 
-    <v-card class="pa-3" :loading="fetching" ref="results">
+    <v-card :loading="fetching" ref="results">
+      <v-card-text>
+        <v-container fluid>
+          <v-row>
+            <v-col class="flex-grow-0">
+              <v-btn title="Create backup" ref="uploadFolderButton" @click="createBackup()">
+                <v-icon>mdi:mdi-plus</v-icon>
+              </v-btn>
+            </v-col>
 
-      <v-container fluid>
-        <v-row>
+            <Upload :serverId="serverId" :path="path" :dropZone="$refs.results" @complete="fetchData()"
+              @error="handleError" />
+          </v-row>
+        </v-container>
 
-          <v-col class="flex-grow-0">
-            <v-btn title="Create backup" ref="uploadFolderButton" @click="createBackup()">
-              <v-icon>mdi:mdi-plus</v-icon>
-            </v-btn>
-          </v-col>
-
-          <Upload :serverId="serverId" :path="path" :dropZone="$refs.results" @complete="fetchData()"
-            @error="handleError" />
-        </v-row>
-      </v-container>
-
-      <v-list v-if="data.items.length > 0">
-        <v-list group max-width="600">
-
-          <v-list-item v-for="(item, i) in data.items" :key="`item-${i}`" :title="item.name" :subtitle="item.date + ' - ' + prettyBytes(item.size)" @click="restore(item)">
+        <v-list v-if="data.items.length > 0" max-width="600">
+          <v-list-item v-for="(item, i) in data.items" :key="`item-${i}`" :title="item.name"
+            :subtitle="item.date + ' - ' + prettyBytes(item.size)" @click="restore(item)">
             <template v-slot:append>
               <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
                 <v-icon size="small">mdi:mdi-delete</v-icon>
@@ -31,12 +29,9 @@
             </template>
           </v-list-item>
         </v-list>
-      </v-list>
-
-      <v-card-text v-else> Empty </v-card-text>
+      </v-card-text>
     </v-card>
     <Confirm ref="confirm" />
-
   </div>
 </template>
 

@@ -104,7 +104,6 @@
                     <Terminal :serverId="serverId" @closed="fetchData(true)" cmd="sudo%20apt-get%20upgrade%20-y" icon>
                       <v-icon small>fas fa-download</v-icon>
                     </Terminal>
-                    <UpdatesConfig :serverId="serverId" />
                   </template>
                 </v-list-item>
 
@@ -146,9 +145,10 @@
                 <v-list-item title="Operating system" :subtitle="data.os">
                   <template v-slot:append>
                     <Terminal v-if="data.upgrade_available" :title="'Upgrade to ' + data.upgrade_available"
-                      cmd="sudo%20do-release-upgrade">
+                      cmd="sudo%20do-release-upgrade" icon>
                       <v-icon small>fas fa-rocket</v-icon>
                     </Terminal>
+                    <UpdatesConfig :serverId="serverId" />
                   </template>
                 </v-list-item>
 
