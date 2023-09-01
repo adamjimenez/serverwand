@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-btn @click="terminal" v-bind="$attrs">
+        <v-btn @click="terminal" v-bind="$attrs" :disabled="!serverId || fetching">
             <slot></slot>
         </v-btn>
 
@@ -60,7 +60,7 @@ export default {
         fetchData() {
             var self = this;
             this.error = "";
-            // this.fetching = true
+            this.fetching = true
             this.serverId = this.$route.params.id;
 
             api
