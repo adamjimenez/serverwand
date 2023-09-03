@@ -27,10 +27,8 @@
           </v-list-item>
         </v-col>
 
-        <v-col class="text-right" style="display: flex; align-items: center; justify-content: end;">
-          <v-btn color="success" v-bind:href="data.shiftedit_url" target="_blank" title="Open in ShiftEdit IDE">
-            <v-icon>mdi:mdi-code-braces</v-icon>
-          </v-btn>
+        <v-col class="d-flex align-center justify-end">
+          <v-btn color="success" v-bind:href="data.shiftedit_url" target="_blank" title="Open in ShiftEdit IDE" icon="mdi:mdi-code-braces" size="small"></v-btn>
         </v-col>
       </v-row>
     </v-container>

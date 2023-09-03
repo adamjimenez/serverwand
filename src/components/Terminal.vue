@@ -1,5 +1,5 @@
 <template>
-    <div style="height: 100%; display: flex; align-items: center; justify-content: end;">
+    <div class="d-flex align-center justify-end h-100">
         <v-btn @click="terminal" v-bind="$attrs" :disabled="!serverId || fetching">
             <slot></slot>
         </v-btn>

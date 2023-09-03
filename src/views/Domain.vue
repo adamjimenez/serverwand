@@ -10,20 +10,15 @@
       <v-row>
 
         <v-col>
-          <v-list-item>
+          <v-list-item :title="data.domain">
             <template v-slot:prepend>
               <v-icon left>fas fa-globe</v-icon>
             </template>
-
-            <v-list-item-title>
-              {{ data.domain }}
-            </v-list-item-title>
           </v-list-item>
         </v-col>
 
-        <v-col class="text-right">
-          <v-btn v-bind:href="'http://' + data.domain" target="_blank" title="Open site in new window" class="mr-3">
-            <v-icon>mdi:mdi-open-in-new</v-icon>
+        <v-col class="d-flex align-center justify-end">
+          <v-btn v-bind:href="'http://' + data.domain" target="_blank" title="Open site in new window" icon="mdi:mdi-open-in-new" size="small">
           </v-btn>
         </v-col>
       </v-row>

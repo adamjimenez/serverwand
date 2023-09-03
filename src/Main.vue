@@ -8,7 +8,7 @@
               <router-link to="/servers">
                 <v-list-item>
                   <template v-slot:prepend>
-                    <v-icon class="mr-2" size="large">fas fa-magic</v-icon>
+                    <v-icon class="mr-3" size="large">fas fa-magic</v-icon>
                   </template>
 
                   <v-list-item-title>
@@ -26,7 +26,7 @@
       </v-navigation-drawer>
 
       <v-app-bar app flat>
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer" size="small"></v-app-bar-nav-icon>
         <CreateMenu v-if="!restricted" />
         <Search />
         <UserMenu />

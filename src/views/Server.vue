@@ -15,8 +15,8 @@
         </v-col>
 
         <v-col class="text-right">
-          <Terminal :data="data" color="success">            
-            <v-icon small>fas fa-terminal</v-icon>
+          <Terminal :data="data" color="success" icon size="small">
+            <v-icon icon="fas fa-terminal"></v-icon>
           </Terminal>
         </v-col>
       </v-row>

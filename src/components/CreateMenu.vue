@@ -1,9 +1,7 @@
 <template>
   <v-menu offset-y v-model="isOpen">
     <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" style="background-color: #A25C57;">
-        <v-icon>mdi:mdi-plus</v-icon>
-      </v-btn>
+      <v-btn v-bind="props" icon="mdi:mdi-plus" color="primary" variant="flat" size="small" class="mx-1"></v-btn>
     </template>
     <v-list>
       <v-list-item v-for="(item, index) in items" :key="index" @click="goto(item.to)">
