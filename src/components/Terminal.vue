@@ -186,7 +186,7 @@ export default {
                     this.data.ssh_username;
 
                 if (this.cmd) {
-                    url += '&cmd=' + this.cmd;
+                    url += '&cmd=' + encodeURIComponent(this.cmd);
                 }
 
                 if (window.ssh_path) {

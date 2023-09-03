@@ -89,6 +89,10 @@ export default {
           title: "Apache Access",
         },
         {
+          value: "other_vhosts",
+          title: "Other Vhosts",
+        },
+        {
           value: "apache_error",
           title: "Apache Error",
         },
