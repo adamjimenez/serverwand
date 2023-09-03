@@ -2,8 +2,7 @@
   <v-menu offset-y v-model="isOpen">
     <template v-slot:activator="{ props }">
       <v-btn v-bind="props" style="background-color: #A25C57;">
-        Create
-        <v-icon>{{ isOpen ? 'mdi:mdi-chevron-up' : 'mdi:mdi-chevron-down' }}</v-icon>
+        <v-icon>mdi:mdi-plus</v-icon>
       </v-btn>
     </template>
     <v-list>

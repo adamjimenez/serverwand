@@ -4,7 +4,7 @@
       <div v-html="error"></div>
     </v-alert>
 
-    <v-container v-if="!fetching" fluid>
+    <v-container v-if="!fetching" fluid class="py-1">
       <v-row>
         <v-col>
           <v-list-item :title="data.name" :subtitle="data.hostname">

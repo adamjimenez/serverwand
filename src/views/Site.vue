@@ -6,9 +6,8 @@
 
     <Loading :value="fetching" />
 
-    <v-container v-if="!fetching" fluid>
+    <v-container v-if="!fetching" fluid class="py-1">
       <v-row>
-
         <v-col>
           <v-list-item>
             <template v-slot:prepend>
@@ -28,7 +27,7 @@
           </v-list-item>
         </v-col>
 
-        <v-col class="text-right">
+        <v-col class="text-right" style="display: flex; align-items: center; justify-content: end;">
           <v-btn color="success" v-bind:href="data.shiftedit_url" target="_blank" title="Open in ShiftEdit IDE">
             <v-icon>mdi:mdi-code-braces</v-icon>
           </v-btn>
