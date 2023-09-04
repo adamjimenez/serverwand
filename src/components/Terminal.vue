@@ -201,10 +201,3 @@ export default {
     },
 };
 </script>
-
-<style>
-.v-alert__content a {
-    color: #fff !important;
-    text-decoration: underline !important;
-}
-</style>

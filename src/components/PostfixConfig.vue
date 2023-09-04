@@ -5,13 +5,10 @@
         </v-btn>
 
         <v-dialog v-model="drawer">
-            <v-card>
-                <v-card-title> Edit Postfix config </v-card-title>
-
+            <v-card title="Edit Postfix config">
                 <v-card-text>
                     <v-text-field v-for="(item, i) in config" :key="`item-${i}`" :label="item.name" v-model="item.value"
                         :type="isNaN(item.value) ? 'text' : 'number'"></v-text-field>
-
                 </v-card-text>
                 <v-card-actions>
                     <v-btn :disabled="!changed" :loading="fetching" color="success" @click="save" variant="flat">

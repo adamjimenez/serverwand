@@ -7,7 +7,6 @@
         <v-list-item v-bind="props" :prepend-icon="item?.raw?.avatar" :title="item?.raw?.title"
           :subtitle="item?.raw?.subtitle"></v-list-item>
       </template>
-
     </v-autocomplete>
   </div>
 </template>
@@ -123,9 +122,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.results a {
-  color: inherit !important;
-}
-</style>

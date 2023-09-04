@@ -3,9 +3,7 @@
     <Loading :value="loading" />
 
     <v-dialog v-model="authRequired">
-      <v-card>
-        <v-card-title> Auth required </v-card-title>
-
+      <v-card title="Auth required">
         <v-card-text>
           <v-btn @click="authPrompt()"> Continue </v-btn>
         </v-card-text>
