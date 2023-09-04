@@ -4,15 +4,10 @@
       <v-btn v-bind="props" icon="mdi:mdi-plus" color="primary" variant="flat" size="small" class="mx-1"></v-btn>
     </template>
     <v-list>
-      <v-list-item v-for="(item, index) in items" :key="index" @click="goto(item.to)">
-        <v-row>
-          <v-col cols="4">
-            <v-icon>{{ item.avatar }}</v-icon>
-          </v-col>
-          <v-col>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-col>
-        </v-row>
+      <v-list-item v-for="(item, index) in items" :key="index" @click="goto(item.to)" :title="item.title">
+        <template v-slot:prepend>
+          <v-icon :icon="item.avatar"></v-icon>
+        </template>
       </v-list-item>
     </v-list>
   </v-menu>

@@ -3,25 +3,19 @@
     <v-app>
       <v-navigation-drawer v-model="drawer">
         <v-list nav>
-          <v-list-item>
-            <v-list-item-title>
-              <router-link to="/servers">
-                <v-list-item>
-                  <template v-slot:prepend>
-                    <v-icon class="mr-3" size="large">fas fa-magic</v-icon>
-                  </template>
+          <router-link to="/servers" class="text-decoration-none text-primary">
+            <v-list-item class="my-1" title="ServerWand">
+              <template v-slot:prepend>
+                <v-icon class="mr-3" size="large" color="primary">fas fa-magic</v-icon>
+              </template>
+              <template v-slot:title>
+                <h1>SERVERWAND</h1>
+              </template>
+            </v-list-item>
+          </router-link>
 
-                  <v-list-item-title>
-                    <h1>SERVERWAND</h1>
-                  </v-list-item-title>
-                </v-list-item>
-              </router-link>
-            </v-list-item-title>
-          </v-list-item>
-
-          <v-list-item v-for="item in filtered" :key="item.title" :to="item.to" :active="isActive(item.to)">
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
+          <v-list-item v-for="item in filtered" :key="item.title" :to="item.to" :active="isActive(item.to)"
+            :title="item.title"></v-list-item>
         </v-list>
       </v-navigation-drawer>
 
@@ -247,10 +241,3 @@ export default {
   },
 };
 </script>
-
-<style>
-a {
-  text-decoration: none;
-  color: #A25C57;
-}
-</style>
