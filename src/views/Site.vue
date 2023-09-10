@@ -105,6 +105,7 @@ export default {
 <style>
 .v-list-item a {
   color: inherit !important;
+  text-decoration: none;
 }
 .v-list-item a:hover {
   text-decoration: underline;
