@@ -14,7 +14,7 @@
       <v-card max-width="300" v-else>
 
         <v-list lines="two">
-          <v-list-item title="PhpMyAdmin">
+          <v-list-item title="PhpMyAdmin" v-if="data.server.ip">
             <template v-slot:append>
               <form :action="'http://' + data.server.ip + '/phpmyadmin/'" method="post" target="_blank">
                 <input type="hidden" name="pma_username" :value="data.db_name" />
