@@ -36,7 +36,6 @@ export default {
         .post("sites/create", data)
         .then(response => {
             if(response.data.site_id) {
-              self.$eventHub.emit("itemsChanged");
               self.$router.push("/sites/"+response.data.site_id+"/summary");
             } else if(response.data.error) {
               if(response.data.error === "auth") {
