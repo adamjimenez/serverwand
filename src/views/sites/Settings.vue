@@ -94,7 +94,7 @@ export default {
           console.log(response)
 
           self.data = response.data.item
-          document.title = 'Settings' + ' | ' + self.data.domain
+          document.title = 'Settings' + ' | ' + self.data?.domain
         })
         .catch((error) => console.log(error))
         .finally(() => self.fetching = false)
