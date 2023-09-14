@@ -2,14 +2,6 @@
   <div>
     <v-alert v-if="error" type="error" :text="error"></v-alert>
 
-    <v-alert v-if="enablingSSL" class="ma-0">
-      <strong>Enabling SSL</strong>
-    </v-alert>
-
-    <v-alert v-if="data.dns && data.dns.updating" class="ma-0">
-      <strong>Checking DNS..</strong>
-    </v-alert>
-
     <v-alert v-if="authRequired" class="ma-0">
       <strong>DNS auth required: </strong>
       <v-btn @click="authPrompt()">Fix</v-btn>
@@ -20,16 +12,9 @@
     <v-card class="pa-3">
 
       <v-card max-width="400">
+
         <v-list lines="two">
-          <v-list-item v-if="!authRequired &&
-            data.server &&
-            data.dns &&
-            data.dns.A != data.server.ip
-            " title="DNS mismatch" :subtitle="data.dns.A + ' != ' + data.server.ip">
-            <template v-slot:append>
-              <v-btn v-if="data.dns.not_set" @click="fixDomainDns(data.domain)">Fix</v-btn>
-            </template>
-          </v-list-item>
+          <DNS :server="data.server"></DNS>
 
           <v-list-item>
             <v-list-item-title> Disk Usage </v-list-item-title>
@@ -116,6 +101,7 @@ import Loading from "../../components/Loading";
 import Copy from "../../components/Copy";
 import Edit from "../../components/Edit";
 import IPRestrictions from "../../components/IPRestrictions";
+import DNS from "../../components/DNS";
 
 export default {
   components: {
@@ -123,6 +109,7 @@ export default {
     Copy,
     Edit,
     IPRestrictions,
+    DNS,
   },
   data() {
     return {
@@ -140,7 +127,6 @@ export default {
       details: "",
       loading: false,
       fetching: false,
-      enablingSSL: false,
       passwordPanel: [false],
       passwordFormValid: true,
       showPassword: false,
