@@ -8,7 +8,6 @@
       @closed="fetchData(true)" />
 
     <v-card>
-
       <v-list>
         <v-list-item>
           <v-list-item-title>
@@ -20,7 +19,6 @@
           </v-list-item-subtitle>
         </v-list-item>
       </v-list>
-
     </v-card>
 
     <v-card>
