@@ -98,7 +98,6 @@ export default {
           console.log(response);
 
           if (response.data.success) {
-            self.val = self.data.val;
             self.dialog = false;
             self.$emit("save");
           } else {
