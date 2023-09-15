@@ -274,7 +274,6 @@ export default {
           self.dialog = false;
 
           if (!self.error) {
-            self.$eventHub.$emit('itemsChanged')
             self.$router.push('/servers/' + self.serverId + '/summary')
           }
         }

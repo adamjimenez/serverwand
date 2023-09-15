@@ -39,7 +39,6 @@ export default {
         .post("domains/create", data)
         .then(response => {
             if(response.data.domain_id) {
-              self.$eventHub.emit("itemsChanged");
               self.$router.push(
                 "/domains/"+response.data.domain_id+"/summary"
               );
