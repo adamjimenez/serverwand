@@ -125,7 +125,7 @@
           <v-col cols="2">
             <v-text-field
               placeholder="Search"
-              prepend-inner-icon="search"
+              prepend-inner-icon="mdi:mdi-magnify"
               v-model="search"
               class="ma-0 pa-0"
               @change="fetchData"
