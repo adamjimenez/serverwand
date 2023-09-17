@@ -18,7 +18,7 @@
           ></v-text-field>
 
           <v-btn
-            :disabled="domainId > 0"
+            :disabled="domainId > 0 || !data.domain"
             :loading="loading"
             color="success"
             @click="validate"
