@@ -9,11 +9,11 @@
       <v-card-title primary-title>
         <v-row>
           <v-col>
-            <v-select :items="logs" label="Log" @update:modelValue="fetchLog"></v-select>
+            <v-select :items="logs" label="Log" @update:modelValue="fetchLog" hide-details></v-select>
           </v-col>
 
           <v-col>
-            <v-text-field label="Filter" v-model="filter"></v-text-field>
+            <v-text-field label="Filter" v-model="filter" hide-details></v-text-field>
           </v-col>
 
           <v-col cols="1">

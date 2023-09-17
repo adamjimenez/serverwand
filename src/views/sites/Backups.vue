@@ -9,7 +9,7 @@
         <v-container fluid>
           <v-row>
             <v-col class="flex-grow-0">
-              <v-btn title="Create backup" ref="uploadFolderButton" @click="createBackup()">
+              <v-btn title="Create backup" ref="uploadFolderButton" @click="createBackup()" icon>
                 <v-icon>mdi:mdi-plus</v-icon>
               </v-btn>
             </v-col>

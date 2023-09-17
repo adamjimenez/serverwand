@@ -9,28 +9,24 @@
     <EditFile ref="editFile" :serverId="serverId" :path="path" :selected="selected" action="backups" save="false"
       @complete="list()" @error="handleError" />
 
-    <v-card class="pa-3">
-      <v-row>
-        <v-col class="flex-grow-0">
-          <v-btn @click="configure" title="Configure S3" icon>
-            <v-icon>mdi:mdi-settings</v-icon>
-          </v-btn>
-        </v-col>
-        <v-col class="flex-grow-0" v-if="s3.access_key">
-          <Snapshot :serverId="serverId" @complete="handleComplete" @error="handleError" />
-        </v-col>
-        <v-col>
-          <v-switch v-model="s3.active" label="Nightly backups" class="my-0" @change="toggleBackups()" hide-details color="primary"></v-switch>
-        </v-col>
-      </v-row>
-    </v-card>
-
-    <v-card :loading="fetching">
+    <v-card :loading="fetching" class="pa-3">
       <v-container fluid>
         <v-row>
           <v-col class="flex-grow-0">
+            <v-btn @click="configure" title="Configure S3" icon>
+              <v-icon>mdi:mdi-settings</v-icon>
+            </v-btn>
+          </v-col>
+          <v-col class="flex-grow-0" v-if="s3.access_key">
+            <Snapshot :serverId="serverId" @complete="handleComplete" @error="handleError" />
+          </v-col>
+          <v-col class="flex-grow-0">
             <Restore :serverId="serverId" :path="path" :selected="selected" @complete="handleComplete"
               @error="handleError" />
+          </v-col>
+          <v-col>
+            <v-switch v-model="s3.active" label="Nightly backups" class="my-0" @change="toggleBackups()" hide-details
+              color="primary"></v-switch>
           </v-col>
         </v-row>
 
@@ -44,22 +40,14 @@
               </v-col>
 
               <v-col>
-                <v-text-field v-model="path" class="ma-0 pa-0" @change="list" @keydown.enter="list"></v-text-field>
+                <v-text-field v-model="path" class="ma-0 pa-0" @change="list" @keydown.enter="list" hide-details></v-text-field>
               </v-col>
             </v-row>
 
             <v-row>
               <v-col cols="12">
-                <v-data-table 
-                  :headers="headers" 
-                  :items="items" 
-                  class="results" 
-                  ref="results"
-                  mobile-breakpoint="0"    
-                  @click:row="function(event, item) { open(item.item.raw) }"                  
-                  v-model="selected"
-                  show-select
-                >
+                <v-data-table :headers="headers" :items="items" class="results" ref="results" mobile-breakpoint="0"
+                  @click:row="function (event, item) { open(item.item.raw) }" v-model="selected" show-select>
 
                   <template v-slot:item.modified="{ item }">
                     {{ formatDate(item.modified) }}
@@ -73,12 +61,8 @@
           <div v-else>
             <v-row>
               <v-col cols="12">
-                <v-data-table 
-                  :headers="backupHeaders"
-                  :items="backups"
-                  mobile-breakpoint="0"                  
-                  @click:row="function(event, item) { browse(item.item.raw) }"
-                >
+                <v-data-table :headers="backupHeaders" :items="backups" mobile-breakpoint="0"
+                  @click:row="function (event, item) { browse(item.item.raw) }">
 
                   <template v-slot:item.name="{ item }">
                     <span @click="browse(item.raw)">{{ item.raw.name }}</span>
