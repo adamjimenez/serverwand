@@ -13,8 +13,11 @@
             v-for="(item, index) in items"
             :key="index"
             @click="goto(item.to)"
-          >
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
+            :title="item.value"
+          >            
+            <template v-slot:prepend>
+              <v-icon>{{ item.icon }}</v-icon>
+            </template>
           </v-list-item>
       </v-list>
     </v-menu>
@@ -24,8 +27,8 @@
 export default {
   data: () => ({
     items: [
-      { title: "Settings", to: "/settings/profile" },
-      { title: "Log out", to: "/auth/logout" },
+      { value: "Settings", to: "/settings/profile", icon: 'fas fa-wrench' },
+      { value: "Log out", to: "/auth/logout", icon: 'fas fa-sign-out-alt' },
     ],
   }),
 
