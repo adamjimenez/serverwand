@@ -12,7 +12,7 @@
           <v-list-item :value="item" :title="item.label" :subtitle="item.api_key">
             <template v-slot:append>
               <v-btn :disabled="dialog" :loading="dialog" @click.stop="deleteItem(item.id)">
-                <v-icon size="small">fas fa-trash</v-icon>
+                <v-icon size="small">mdi:mdi-delete</v-icon>
               </v-btn>
             </template>
           </v-list-item>
