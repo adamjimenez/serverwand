@@ -1,6 +1,6 @@
 <template>
   <div v-if="selected.length === 1 && selected[0].type === 'file'">
-    <v-btn @click="download()" title="Download">
+    <v-btn @click="download()" title="Download" icon>
       <v-icon>mdi:mdi-download</v-icon>
     </v-btn>
   </div>

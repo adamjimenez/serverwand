@@ -1,6 +1,6 @@
 <template>
   <div v-if="selected.length">
-    <v-btn @click="deleteItem()" title="Delete">
+    <v-btn @click="deleteItem()" title="Delete" icon>
       <v-icon>mdi:mdi-delete</v-icon>
     </v-btn>
     <Confirm ref="confirm" />

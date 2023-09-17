@@ -14,7 +14,7 @@
       class="flex-grow-0"
       v-if="selected?.length === 1 && ['zip', 'gz', 'tar'].indexOf(fileExtension(selected[0])) !== -1"
     >
-      <v-btn @click="extract()" :disabled="!selected" title="Extract">
+      <v-btn @click="extract()" :disabled="!selected" title="Extract" icon>
         <v-icon>mdi:mdi-folder-zip-outline</v-icon>
       </v-btn>
     </v-col>

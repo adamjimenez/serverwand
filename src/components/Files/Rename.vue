@@ -1,6 +1,6 @@
 <template>
   <div v-if="selected.length === 1">
-    <v-btn @click="rename()" :disabled="!selected" title="Rename">
+    <v-btn @click="rename()" :disabled="!selected" title="Rename" icon>
       <v-icon>mdi:mdi-rename-box</v-icon>
     </v-btn>
 

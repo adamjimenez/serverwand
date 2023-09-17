@@ -1,6 +1,6 @@
 <template>
   <div v-if="selected.length">
-    <v-btn @click="chmod()" :disabled="!selected" title="Change Permissions">
+    <v-btn @click="chmod()" :disabled="!selected" title="Change Permissions" icon>
       <v-icon>mdi:mdi-file-key-outline</v-icon>
     </v-btn>
 

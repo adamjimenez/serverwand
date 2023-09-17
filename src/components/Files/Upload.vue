@@ -26,15 +26,15 @@
       </v-progress-linear>
     </v-alert>
 
-    <v-col class="flex-grow-0" style="min-width: 176px">
+    <v-col class="flex-grow-0">
       <v-row>
         <v-col class="flex-grow-0">
-          <v-btn title="Upload file" ref="uploadFileButton">
+          <v-btn title="Upload file" ref="uploadFileButton" icon>
             <v-icon>mdi:mdi-upload</v-icon>
           </v-btn>
         </v-col>
         <v-col class="flex-grow-0" v-if="folder">
-          <v-btn title="Upload folder" ref="uploadFolderButton">
+          <v-btn title="Upload folder" ref="uploadFolderButton" icon>
             <v-icon>mdi:mdi-folder-arrow-up</v-icon>
           </v-btn>
         </v-col>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn @click="open()" title="New file">
+    <v-btn @click="open()" title="New file" icon>
       <v-icon>mdi:mdi-file-outline</v-icon>
     </v-btn>
     <v-dialog app v-model="dialog">

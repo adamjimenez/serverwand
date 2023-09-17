@@ -1,6 +1,6 @@
 <template>
   <div v-if="selected.length">
-    <v-btn @click="chown()" :disabled="!selected" title="Change owner">
+    <v-btn @click="chown()" :disabled="!selected" title="Change owner" icon>
       <v-icon>mdi:mdi-account</v-icon>
     </v-btn>
 
