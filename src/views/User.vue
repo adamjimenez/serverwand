@@ -10,14 +10,10 @@
       <v-row>
 
         <v-col>
-          <v-list-item>
+          <v-list-item :title="data.name">
             <template v-slot:prepend>
               <v-icon left>fas fa-user</v-icon>
             </template>
-
-            <v-list-item-title>
-              {{ data.name }}
-            </v-list-item-title>
           </v-list-item>
         </v-col>
 
