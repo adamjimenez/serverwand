@@ -4,25 +4,18 @@
       <div v-html="error"></div>
     </v-alert>
 
-    <v-container v-if="!fetching" fluid class="py-1">
-      <v-row>
-        <v-col>
-          <v-list-item :title="data.name" :subtitle="data.hostname">
-            <template v-slot:prepend>
-              <ServerIcon :provider="data.provider"></ServerIcon>
-            </template>
-          </v-list-item>
-        </v-col>
+    <v-list-item :title="data.name" :subtitle="data.hostname">
+      <template v-slot:prepend>
+        <ServerIcon :provider="data.provider"></ServerIcon>
+      </template>
+      <template v-slot:append>
+        <Terminal :data="data" color="success" icon size="small">
+          <v-icon icon="fas fa-terminal"></v-icon>
+        </Terminal>
+      </template>
+    </v-list-item>
 
-        <v-col class="text-right">
-          <Terminal :data="data" color="success" icon size="small">
-            <v-icon icon="fas fa-terminal"></v-icon>
-          </Terminal>
-        </v-col>
-      </v-row>
-    </v-container>
-
-    <v-tabs show-arrows>
+    <v-tabs>
       <v-tab :to="'/servers/' + serverId + '/summary'">Summary</v-tab>
       <v-tab :to="'/servers/' + serverId + '/Files'">Files</v-tab>
       <v-tab :to="'/servers/' + serverId + '/services'">Services</v-tab>

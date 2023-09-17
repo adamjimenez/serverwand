@@ -6,34 +6,27 @@
 
     <Loading :value="fetching" />
 
-    <v-container v-if="!fetching" fluid class="py-1">
-      <v-row>
-        <v-col>
-          <v-list-item>
-            <template v-slot:prepend>
-              <SiteIcon :app="data.app"></SiteIcon>
-            </template>
+    <v-list-item :title="data.name" :subtitle="data.hostname">
+      <template v-slot:prepend>
+        <SiteIcon :app="data.app"></SiteIcon>
+      </template>
+      <v-list-item-title>
+        <a :href="'http://' + data.domain" target="_blank">
+          {{ data.domain }}
+        </a>
+      </v-list-item-title>
+      <v-list-item-subtitle>
+        <router-link :to="'/servers/' + data.server.id + '/summary'">
+          {{ data.server.name }}
+        </router-link>
+      </v-list-item-subtitle>
+      <template v-slot:append>
+        <v-btn color="success" v-bind:href="data.shiftedit_url" target="_blank" title="Open in ShiftEdit IDE"
+          icon="mdi:mdi-code-braces" size="small"></v-btn>
+      </template>
+    </v-list-item>
 
-            <v-list-item-title>
-              <a :href="'http://' + data.domain" target="_blank">
-                {{ data.domain }}
-              </a>
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              <router-link :to="'/servers/' + data.server.id + '/summary'">
-                {{ data.server.name }}
-              </router-link>
-            </v-list-item-subtitle>
-          </v-list-item>
-        </v-col>
-
-        <v-col class="d-flex align-center justify-end">
-          <v-btn color="success" v-bind:href="data.shiftedit_url" target="_blank" title="Open in ShiftEdit IDE" icon="mdi:mdi-code-braces" size="small"></v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
-
-    <v-tabs show-arrows>
+    <v-tabs>
       <v-tab :to="'/sites/' + domainId + '/summary'">Summary</v-tab>
       <v-tab :to="'/sites/' + domainId + '/database'">Database</v-tab>
       <v-tab :to="'/sites/' + domainId + '/variables'">Variables</v-tab>
@@ -107,6 +100,7 @@ export default {
   color: inherit !important;
   text-decoration: none;
 }
+
 .v-list-item a:hover {
   text-decoration: underline;
 }
