@@ -4,12 +4,12 @@
       <v-app-bar-nav-icon @click.stop="rail = !rail" size="small"></v-app-bar-nav-icon>
 
       <router-link to="/servers" class="text-decoration-none text-primary">
-        <v-list-item class="my-1" title="ServerWand">
+        <v-list-item class="my-1">
           <template v-slot:prepend>
-            <v-icon class="mr-3" size="large" color="primary">fas fa-magic</v-icon>
+            <v-icon class="mr-0" size="large" color="primary">fas fa-magic</v-icon>
           </template>
-          <template v-slot:title>
-            <h2>ServerWand</h2>
+          <template v-slot:title v-if="!mobile">
+            <h2 class="ml-2">ServerWand</h2>
           </template>
         </v-list-item>
       </router-link>
@@ -18,7 +18,7 @@
       <UserMenu />
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" expand-on-hover :rail="rail" permanent>
+    <v-navigation-drawer v-model="drawer" :expand-on-hover="!mobile" disable-route-watcher :rail="rail" permanent>
       <v-list nav>
         <v-list-item base-color="primary" variant="flat" :to="createLink">
           <template v-slot:prepend>
@@ -86,6 +86,7 @@ import UserMenu from "./components/UserMenu";
 import api from "./services/api";
 import axios from "axios";
 import { sha256 } from "js-sha256";
+import { useDisplay } from 'vuetify';
 
 export default {
   components: {
@@ -247,6 +248,10 @@ export default {
     }
   },
   computed: {
+    mobile: function () {
+      const { mobile } = useDisplay();
+      return mobile.value;
+    },
     createLink: function () {
       let parts = this.$route.path.split('/');
       parts.shift();
