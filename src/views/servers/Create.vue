@@ -13,30 +13,17 @@
 
       <v-card-text>
 
-        <v-menu offset-y v-model="isOpen" v-if="!serverId">
-          <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" color="primary">
-              {{ provider }}
-              <v-icon dark>{{ isOpen ? 'mdi:mdi-chevron-up' : 'mdi:mdi-chevron-down' }}</v-icon>
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item v-for="(item, index) in items" :key="index" @click="getOptions(item.value)" :title="item.title">
-              <template v-slot:prepend>
-                <v-icon>{{ item.avatar }}</v-icon>
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-menu>
+        <v-list :items="items" @click:select="getOptions"></v-list>
 
         <v-form v-if="data.provider || serverId" ref="form" v-model="valid" class="mt-5">
 
           <v-select v-if="unclaimed.length" v-model="data.unclaimed" :items="unclaimed" label="Server"></v-select>
 
-          <v-text-field v-model="data.name" label="Name" :rules="[rules.required, rules.alphanumeric]" required></v-text-field>
+          <v-text-field v-model="data.name" label="Name" :rules="[rules.required, rules.alphanumeric]"
+            required></v-text-field>
 
-          <v-text-field v-if="data.provider === 'custom' || this.serverId > 0" v-model="data.ip" :rules="[rules.required, rules.ip]"
-            label="Server IP"></v-text-field>
+          <v-text-field v-if="data.provider === 'custom' || this.serverId > 0" v-model="data.ip"
+            :rules="[rules.required, rules.ip]" label="Server IP"></v-text-field>
 
           <div v-if="data.provider !== 'custom' && data.provider !== 'vultr' && !unclaimed.length">
             <v-select v-if="!serverId" v-model="data.region" :items="regions" label="Region"></v-select>
@@ -47,10 +34,12 @@
           </div>
 
           <div v-if="data.provider == 'custom' || data.provider == 'vultr'">
-            <v-text-field :disabled="serverId > 0" v-model="data.hostname" label="Host name" :rules="[rules.required]" required></v-text-field>
+            <v-text-field :disabled="serverId > 0" v-model="data.hostname" label="Host name" :rules="[rules.required]"
+              required></v-text-field>
 
             <div v-if="data.provider == 'custom'">
-              <v-text-field :disabled="serverId > 0" v-model="data.user" label="Username" :rules="[rules.required]" required></v-text-field>
+              <v-text-field :disabled="serverId > 0" v-model="data.user" label="Username" :rules="[rules.required]"
+                required></v-text-field>
 
               <v-text-field type="password" :disabled="serverId > 0" v-model="data.pass" label="Password"
                 required></v-text-field>
@@ -169,10 +158,10 @@ export default {
     images: [],
     unclaimed: [],
     items: [
-      { title: 'Linode', value: 'linode', avatar: 'fab fa-linode' },
-      { title: 'DigitalOcean', value: 'digitalocean', avatar: 'fab fa-digital-ocean' },
-      { title: 'Vultr', value: 'vultr', avatar: 'fas fa-server' },
-      { title: 'Ubuntu server', value: 'custom', avatar: 'fab fa-ubuntu' }
+      { title: 'Linode', value: 'linode', props: { prependIcon: 'fab fa-linode' } },
+      { title: 'DigitalOcean', value: 'digitalocean', props: { prependIcon: 'fab fa-digital-ocean' }},
+      { title: 'Vultr', value: 'vultr', props: { prependIcon: 'fas fa-server' }},
+      { title: 'Ubuntu server', value: 'custom', props: { prependIcon: 'fab fa-ubuntu' }}
     ],
     isOpen: false,
     provider: 'Choose'
@@ -280,7 +269,7 @@ export default {
       );
 
     },
-    validate: async function() {
+    validate: async function () {
       var self = this
 
       const { valid } = await this.$refs.form.validate()
@@ -330,7 +319,8 @@ export default {
           })
       }
     },
-    getOptions(provider, noAuthPrompt) {
+    getOptions(item, noAuthPrompt) {
+      let provider = item.id;
       this.data.provider = provider
       this.provider = provider
 
@@ -360,7 +350,7 @@ export default {
             var interval = setInterval(function () {
               if (child.closed) {
                 clearInterval(interval)
-                self.getOptions(provider, true)
+                self.getOptions(item, true)
                 return
               }
             }, 500)
