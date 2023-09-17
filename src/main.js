@@ -54,7 +54,7 @@ const vuetify = createVuetify({
 const routes = [
   {
     path: '/',
-    redirect: 'Servers',
+    redirect: 'servers',
     component: () => import('./Main.vue'),
     children: [
       {
