@@ -26,6 +26,11 @@
                 {{ prettyBytes(item.raw.usage * 1024) }}
               </div>
             </template>
+            <template v-slot:item.transfer="{ item }">
+              <div v-if="item.raw.transfer > 0">
+                {{ prettyBytes(item.raw.transfer * 1024) }}
+              </div>
+            </template>
           </v-data-table>
         </v-card>
       </v-col>
@@ -90,6 +95,10 @@ export default {
         {
           title: "Size",
           key: "usage",
+        },
+        {
+          title: "Transfer",
+          key: "transfer",
         });
       };
 

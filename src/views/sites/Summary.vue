@@ -23,6 +23,13 @@
             </v-list-item-subtitle>
           </v-list-item>
 
+          <v-list-item>
+            <v-list-item-title> Data Transfer </v-list-item-title>
+            <v-list-item-subtitle>
+              {{ prettyBytes(data.transfer * 1024) }}
+            </v-list-item-subtitle>
+          </v-list-item>
+
           <v-list-item title="FTP Host" :subtitle="data.domain">
             <template v-slot:subtitle>
               <Copy :val="data.domain" text />
@@ -51,7 +58,7 @@
             </v-list-item-subtitle>
             <template v-slot:append>
               <v-btn icon :to="'/servers/' + data.server?.id + '/Files#' + path">
-                  <i class="fas fa-folder-open"></i>
+                <i class="fas fa-folder-open"></i>
               </v-btn>
             </template>
           </v-list-item>
@@ -118,6 +125,7 @@ export default {
       error: null,
       data: {
         disk_usage: 0,
+        transfer: 0,
         server: {},
         app: {},
         dns: {},
