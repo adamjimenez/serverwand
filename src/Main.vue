@@ -1,40 +1,48 @@
 <template>
-  <div class="page-container">
-    <v-app>
-      <v-navigation-drawer v-model="drawer">
-        <v-list nav>
-          <router-link to="/servers" class="text-decoration-none text-primary">
-            <v-list-item class="my-1" title="ServerWand">
-              <template v-slot:prepend>
-                <v-icon class="mr-3" size="large" color="primary">fas fa-magic</v-icon>
-              </template>
-              <template v-slot:title>
-                <h1>SERVERWAND</h1>
-              </template>
-            </v-list-item>
-          </router-link>
+  <v-app>
+    <v-app-bar app flat>
+      <v-app-bar-nav-icon @click.stop="rail = !rail" size="small"></v-app-bar-nav-icon>
 
-          <v-list-item v-for="item in filtered" :key="item.title" :to="item.to" :active="isActive(item.to)"
-            :title="item.title"></v-list-item>
-        </v-list>
-      </v-navigation-drawer>
+      <router-link to="/servers" class="text-decoration-none text-primary">
+        <v-list-item class="my-1" title="ServerWand">
+          <template v-slot:prepend>
+            <v-icon class="mr-3" size="large" color="primary">fas fa-magic</v-icon>
+          </template>
+          <template v-slot:title>
+            <h2>ServerWand</h2>
+          </template>
+        </v-list-item>
+      </router-link>
 
-      <v-app-bar app flat>
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer" size="small"></v-app-bar-nav-icon>
-        <CreateMenu v-if="!restricted" />
-        <Search />
-        <UserMenu />
-      </v-app-bar>
+      <Search />
+      <UserMenu />
+    </v-app-bar>
 
-      <v-main>
-        <v-container fluid>
-          <router-view :restricted="restricted"></router-view>
-        </v-container>
-      </v-main>
+    <v-navigation-drawer v-model="drawer" expand-on-hover :rail="rail" permanent>
+      <v-list nav>
+        <v-list-item base-color="primary" variant="flat" :to="createLink">
+          <template v-slot:prepend>
+            <v-icon size="small" style="width: 24px; text-align: center;">mdi:mdi-plus</v-icon>
+          </template>
+          Create
+        </v-list-item>
 
-      <v-footer app></v-footer>
-    </v-app>
+        <v-list-item v-for="item in filtered" :key="item.title" :to="item.to" :active="isActive(item.to)"
+          :title="item.title">
+          <template v-slot:prepend>
+            <v-icon size="small" style="width: 24px; text-align: center;">{{ item.icon }}</v-icon>
+          </template>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 
+    <v-main>
+      <v-container fluid>
+        <router-view :restricted="restricted"></router-view>
+      </v-container>
+    </v-main>
+
+    <v-footer app></v-footer>
     <v-dialog v-model="masterPasswordDialog" persistent max-width="600px">
       <v-card>
         <v-card-title>
@@ -69,12 +77,11 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </div>
+  </v-app>
 </template>
 
 <script>
 import Search from "./components/Search";
-import CreateMenu from "./components/CreateMenu";
 import UserMenu from "./components/UserMenu";
 import api from "./services/api";
 import axios from "axios";
@@ -83,7 +90,6 @@ import { sha256 } from "js-sha256";
 export default {
   components: {
     Search,
-    CreateMenu,
     UserMenu,
   },
   data() {
@@ -91,19 +97,20 @@ export default {
       serverId: 0,
       data: {},
       dark: false,
-      drawer: null,
+      drawer: true,
       items: [
-        { title: "Servers", to: "/servers", restricted: true },
-        { title: "Sites", to: "/sites", restricted: false },
-        { title: "Domains", to: "/domains", restricted: false },
-        { title: "Teams", to: "/teams", restricted: true },
-        { title: "Users", to: "/users", restricted: true },
+        { title: "Servers", to: "/servers", restricted: true, icon: "fas fa-server" },
+        { title: "Sites", to: "/sites", restricted: false, icon: "fas fa-sitemap" },
+        { title: "Domains", to: "/domains", restricted: false, icon: "fas fa-globe" },
+        { title: "Teams", to: "/teams", restricted: true, icon: "fas fa-users" },
+        { title: "Users", to: "/users", restricted: true, icon: "fas fa-user" },
       ],
       filtered: [],
       resetKeyDialog: false,
       masterPasswordDialog: false,
       masterPassword: "",
       restricted: false,
+      rail: true,
     };
   },
   created() {
@@ -239,5 +246,18 @@ export default {
       return location.pathname.startsWith(to);
     }
   },
+  computed: {
+    createLink: function () {
+      let parts = this.$route.path.split('/');
+      parts.shift();
+
+      let section = parts[0];
+      if (!['servers', 'sites', 'domains', 'teams', 'users'].includes(parts[0])) {
+        section = 'servers';
+      }
+
+      return '/' + section + '/create';
+    }
+  }
 };
 </script>
