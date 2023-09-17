@@ -275,6 +275,7 @@ export default {
       handler: function (newValue) {
         window.ssh_path = newValue;
 
+        this.selectedIds = [];
         // change location hash without triggering a reload
         this.userHashChange = false;
         location.hash = newValue;
@@ -429,6 +430,7 @@ export default {
     },
     upLevel() {
       console.log(this.path);
+
       this.search = '';
       var index = this.path.substr(0, this.path.length - 1).lastIndexOf("/");
       if (index !== -1) {
