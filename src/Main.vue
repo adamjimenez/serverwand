@@ -3,12 +3,12 @@
     <v-app-bar app flat>
       <v-app-bar-nav-icon @click.stop="rail = !rail" size="small"></v-app-bar-nav-icon>
 
-      <router-link to="/servers" class="text-decoration-none text-primary">
+      <router-link to="/servers" class="text-decoration-none text-primary" v-if="!mobile">
         <v-list-item class="my-1">
           <template v-slot:prepend>
             <v-icon class="mr-0" size="large" color="primary">fas fa-magic</v-icon>
           </template>
-          <template v-slot:title v-if="!mobile">
+          <template v-slot:title>
             <h2 class="ml-2">ServerWand</h2>
           </template>
         </v-list-item>

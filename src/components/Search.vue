@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1-1">
+  <div class="flex-1-1 mx-2">
     <v-autocomplete v-model="model" :items="items" label="Search" @update:modelValue="afterselection"
       ref="autocomplete" hide-details prepend-inner-icon="mdi:mdi-magnify" append-icon="">
 
