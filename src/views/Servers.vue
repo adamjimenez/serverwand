@@ -20,8 +20,8 @@
             <v-data-table :headers="headers" :items="filtered" class="results">
               <template v-slot:item.name="{ item }">
                 <v-list-item :to="'/servers/' + item.raw.id + '/summary'" :title="item.raw.name"
-                  :subtitle="item.raw.hostname">
-                  <template v-slot:prepend>
+                  :subtitle="item.raw.hostname" class="px-0">
+                  <template v-slot:prepend v-if="!mobile">
                     <ServerIcon :provider="item.raw.provider"></ServerIcon>
                   </template>
                 </v-list-item>

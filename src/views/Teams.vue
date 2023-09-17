@@ -7,12 +7,12 @@
     <v-card :loading="fetching" title="Teams">
       <v-data-table :headers="headers" :items="items" class="results" mobile-breakpoint="0">
         <template v-slot:item.name="{ item }">
-          <v-list-item :to="'/teams/' + item.raw.id + '/members'" :title="item.raw.name">
+          <v-list-item :to="'/teams/' + item.raw.id + '/members'" :title="item.raw.name" class="px-0">
             <v-list-item-subtitle>
               {{ item.raw.members }} member{{ item.raw.members != 1 ? "s" : "" }},
               {{ item.raw.servers }} server{{ item.raw.servers != 1 ? "s" : "" }}
             </v-list-item-subtitle>
-            <template v-slot:prepend>
+            <template v-slot:prepend v-if="!mobile">
               <v-icon>fas fa-users</v-icon>
             </template>
           </v-list-item>
@@ -26,6 +26,7 @@
 <script>
 import api from "../services/api";
 import Loading from "../components/Loading";
+import { useDisplay } from 'vuetify';
 
 export default {
   components: {
@@ -68,6 +69,12 @@ export default {
         .catch(error => console.log(error))
         .finally(() => self.fetching = false);
     },
+  },
+  computed: {
+    mobile: function () {
+      const { mobile } = useDisplay();
+      return mobile.value;
+    }
   },
 };
 </script>

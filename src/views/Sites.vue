@@ -15,8 +15,8 @@
 
           <v-data-table :headers="headers" :items="filtered" class="results">
             <template v-slot:item.domain="{ item }">
-              <v-list-item :to="'/sites/' + item.raw.id + '/summary'" :title="item.raw.domain" :subtitle="servers[item.raw.server]">
-                <template v-slot:prepend>
+              <v-list-item :to="'/sites/' + item.raw.id + '/summary'" :title="item.raw.domain" :subtitle="servers[item.raw.server]" class="px-0">
+                <template v-slot:prepend v-if="!mobile">
                   <SiteIcon :app="item.raw.app"></SiteIcon>
                 </template>
               </v-list-item>
@@ -78,7 +78,7 @@ export default {
     headers: function () {
       var items =  [
         {
-          title: "Domain",
+          title: "Site",
           key: "domain",
         }];
 

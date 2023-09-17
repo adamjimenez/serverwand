@@ -7,8 +7,8 @@
     <v-card :loading="fetching" title="Users">
       <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
         <template v-slot:item.name="{ item }">
-          <v-list-item :to="'/users/' + item.raw.id + '/summary'" :title="item.raw.name">
-            <template v-slot:prepend>
+          <v-list-item :to="'/users/' + item.raw.id + '/summary'" :title="item.raw.name" class="px-0">
+            <template v-slot:prepend v-if="!mobile">
               <v-icon>fas fa-user</v-icon>
             </template>
           </v-list-item>
@@ -21,6 +21,7 @@
 <script>
 import api from "../services/api";
 import Loading from "../components/Loading";
+import { useDisplay } from 'vuetify';
 
 export default {
   components: {
@@ -76,6 +77,12 @@ export default {
           if (localStorage.server) self.server = localStorage.server;
         });
     },
+  },
+  computed: {
+    mobile: function () {
+      const { mobile } = useDisplay();
+      return mobile.value;
+    }
   },
 };
 </script>

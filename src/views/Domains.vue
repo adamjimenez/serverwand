@@ -8,8 +8,8 @@
         <v-card flat :loading="fetching" title="Domains">
           <v-data-table :headers="headers" :items="filtered" class="results">
             <template v-slot:item.domain="{ item }">
-              <v-list-item :to="'/domains/' + item.raw.id + '/summary'" :title="item.raw.domain">
-                <template v-slot:prepend>
+              <v-list-item :to="'/domains/' + item.raw.id + '/summary'" :title="item.raw.domain" class="px-0">
+                <template v-slot:prepend v-if="!mobile">
                   <v-icon>fas fa-globe</v-icon>
                 </template>
               </v-list-item>
