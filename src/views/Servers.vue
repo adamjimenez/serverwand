@@ -9,7 +9,7 @@
           <div v-if="items.length">
             <v-card flat>
               <v-card-text>
-                <v-select v-model="provider" :items="provider_opts" label="Provider">
+                <v-select v-model="provider" :items="provider_opts" label="Provider" hide-details>
                   <template v-slot:item="{ props, item }">
                     <v-list-item v-bind="props" :prepend-icon="item?.raw?.icon" :title="item?.raw?.title"></v-list-item>
                   </template>
@@ -17,7 +17,7 @@
               </v-card-text>
             </v-card>
 
-            <v-data-table :headers="headers" :items="filtered" class="results">
+            <v-data-table :headers="headers" :items="filtered">
               <template v-slot:item.name="{ item }">
                 <v-list-item :to="'/servers/' + item.raw.id + '/summary'" :title="item.raw.name"
                   :subtitle="item.raw.hostname" class="px-0">

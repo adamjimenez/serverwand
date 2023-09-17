@@ -5,7 +5,7 @@
     <Loading :value="loading" />
 
     <v-card :loading="fetching" title="Teams">
-      <v-data-table :headers="headers" :items="items" class="results" mobile-breakpoint="0">
+      <v-data-table :headers="headers" :items="items">
         <template v-slot:item.name="{ item }">
           <v-list-item :to="'/teams/' + item.raw.id + '/members'" :title="item.raw.name" class="px-0">
             <v-list-item-subtitle>

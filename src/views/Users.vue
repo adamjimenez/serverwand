@@ -5,7 +5,7 @@
     <Loading :value="loading" />
 
     <v-card :loading="fetching" title="Users">
-      <v-data-table :headers="headers" :items="filtered" class="results" mobile-breakpoint="0">
+      <v-data-table :headers="headers" :items="filtered">
         <template v-slot:item.name="{ item }">
           <v-list-item :to="'/users/' + item.raw.id + '/summary'" :title="item.raw.name" class="px-0">
             <template v-slot:prepend v-if="!mobile">

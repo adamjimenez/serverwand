@@ -9,11 +9,11 @@
         <v-card flat :loading="fetching" title="Sites">
           <v-card flat>
             <v-card-text>
-              <v-select v-model="server" :items="server_opts" label="Server"></v-select>
+              <v-select v-model="server" :items="server_opts" label="Server" hide-details></v-select>
             </v-card-text>
           </v-card>
 
-          <v-data-table :headers="headers" :items="filtered" class="results">
+          <v-data-table :headers="headers" :items="filtered">
             <template v-slot:item.domain="{ item }">
               <v-list-item :to="'/sites/' + item.raw.id + '/summary'" :title="item.raw.domain" :subtitle="servers[item.raw.server]" class="px-0">
                 <template v-slot:prepend v-if="!mobile">
