@@ -9,13 +9,18 @@
           <div v-if="items.length">
             <v-card flat>
               <v-card-text>
-                <v-select v-model="provider" :items="provider_opts" label="Provider"></v-select>
+                <v-select v-model="provider" :items="provider_opts" label="Provider">
+                  <template v-slot:item="{ props, item }">
+                    <v-list-item v-bind="props" :prepend-icon="item?.raw?.icon" :title="item?.raw?.title"></v-list-item>
+                  </template>
+                </v-select>
               </v-card-text>
             </v-card>
 
             <v-data-table :headers="headers" :items="filtered" class="results">
               <template v-slot:item.name="{ item }">
-                <v-list-item :to="'/servers/' + item.raw.id + '/summary'" :title="item.raw.name" :subtitle="item.raw.hostname">
+                <v-list-item :to="'/servers/' + item.raw.id + '/summary'" :title="item.raw.name"
+                  :subtitle="item.raw.hostname">
                   <template v-slot:prepend>
                     <ServerIcon :provider="item.raw.provider"></ServerIcon>
                   </template>
@@ -60,18 +65,27 @@ export default {
         {
           title: "All",
           value: "*",
+          icon: "fas fa-asterisk",
         },
         {
           title: "Linode",
           value: "linode",
+          icon: "fab fa-linode",
         },
         {
           title: "Digital Ocean",
           value: "digitalocean",
+          icon: "fab fa-digital-ocean",
+        },
+        {
+          title: "Vultr",
+          value: "",
+          icon: "fas fa-server",
         },
         {
           title: "Other",
           value: "",
+          icon: "fab fa-ubuntu",
         },
       ],
     };
@@ -82,25 +96,25 @@ export default {
       return mobile.value;
     },
     headers: function () {
-      var items =  [{
-          title: "Server ",
-          key: "name",
-        },];
+      var items = [{
+        title: "Server ",
+        key: "name",
+      },];
 
       if (!this.mobile) {
         items.push(
-        {
-          title: "Region ",
-          key: "region",
-        },
-        {
-          title: "Image ",
-          key: "image",
-        },
-        {
-          title: "Type ",
-          key: "type",
-        });
+          {
+            title: "Region ",
+            key: "region",
+          },
+          {
+            title: "Image ",
+            key: "image",
+          },
+          {
+            title: "Type ",
+            key: "type",
+          });
       };
 
       return items;
