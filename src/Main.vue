@@ -18,7 +18,7 @@
       <UserMenu />
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" :expand-on-hover="!mobile" disable-route-watcher :rail="rail" permanent>
+    <v-navigation-drawer :expand-on-hover="!mobile" disable-route-watcher :rail="rail" permanent>
       <v-list nav>
         <v-list-item base-color="primary" variant="flat" :to="createLink">
           <template v-slot:prepend>
@@ -98,7 +98,6 @@ export default {
       serverId: 0,
       data: {},
       dark: false,
-      drawer: true,
       items: [
         { title: "Servers", to: "/servers", restricted: true, icon: "fas fa-server" },
         { title: "Sites", to: "/sites", restricted: false, icon: "fas fa-sitemap" },
@@ -157,6 +156,10 @@ export default {
       this.dark = true;
       this.$vuetify.theme.dark = true;
     }
+
+    if (localStorage.rail === 'false') {
+      this.rail = false;
+    }
   },
   watch: {
     dark(newDark) {
@@ -176,6 +179,9 @@ export default {
         return self.restricted ? !item.restricted : true;
       });
     },
+    rail(value) {
+      localStorage.rail = value;
+    }
   },
   methods: {
     fetchData() {
