@@ -59,7 +59,7 @@
 
                     <div>
                       <v-progress-linear :model-value="(1 - disk.free / disk.space) * 100" height="20"
-                        color="primary"></v-progress-linear>
+                        :color="disk.free > 5000000 ? 'primary' : 'error'"></v-progress-linear>
 
                       <div :title="prettyBytes((disk.space - disk.free) * 1024) + ' used'">
                         {{ prettyBytes(disk.free * 1024) }} free of
