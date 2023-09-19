@@ -5,7 +5,8 @@
                 {{ error }}
             </v-alert>
 
-            <v-switch v-model="data.active" label="IP restrictions" @change="toggle" color="primary" hide-details></v-switch>
+            <v-switch v-model="data.active" label="IP restrictions" @change="toggle" color="primary"
+                hide-details></v-switch>
 
             <div v-if="data.active">
                 <v-list max-width="300">
@@ -124,29 +125,27 @@ export default {
                     "Are you sure you want to delete this item?"
                 )
             ) {
-                if (res) {
-                    var self = this;
-                    this.fetching = true;
-                    this.error = "";
+                var self = this;
+                this.fetching = true;
+                this.error = "";
 
-                    api
-                        .post(this.path, { line: line })
-                        .then(function (response) {
-                            console.log(response);
+                api
+                    .post(this.path, { line: line })
+                    .then(function (response) {
+                        console.log(response);
 
-                            if (!response.data.success) {
-                                self.error = response.data.error;
-                            }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        })
-                        .finally(() => {
-                            this.fetching = false;
-                            self.$emit("save");
-                        });
-                }
-            };
+                        if (!response.data.success) {
+                            self.error = response.data.error;
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+                    .finally(() => {
+                        this.fetching = false;
+                        self.$emit("save");
+                    });
+            }
         },
         saveItem() {
             var self = this;

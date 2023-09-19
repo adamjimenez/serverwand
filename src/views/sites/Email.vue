@@ -278,33 +278,31 @@ export default {
           "Delete " + user
         )
       ) {
-        if (res) {
-          var self = this;
-          this.loading = true;
-          this.error = "";
+        var self = this;
+        this.loading = true;
+        this.error = "";
 
-          api
-            .post("sites/" + this.domainId + "/email", {
-              delete: 1,
-              user: user,
-            })
-            .then(function (response) {
-              console.log(response);
+        api
+          .post("sites/" + this.domainId + "/email", {
+            delete: 1,
+            user: user,
+          })
+          .then(function (response) {
+            console.log(response);
 
-              if (!response.data.success) {
-                self.error = response.data.error;
-                self.loading = false;
-              } else {
-                self.fetchData();
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-            })
-            .finally(function () {
+            if (!response.data.success) {
+              self.error = response.data.error;
               self.loading = false;
-            });
-        }
+            } else {
+              self.fetchData();
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .finally(function () {
+            self.loading = false;
+          });
       }
     },
     fixDomainDns() {

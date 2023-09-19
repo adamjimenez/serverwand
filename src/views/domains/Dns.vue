@@ -17,11 +17,7 @@
       <v-data-table :headers="headers" :items="data.records" class="results">
         <template v-slot:body="prop">
           <tbody>
-            <tr
-              v-for="item in prop.items"
-              :key="item.id"
-              @click="editItem(item)"
-            >
+            <tr v-for="item in prop.items" :key="item.id" @click="editItem(item)">
               <td class="text-start">
                 {{ item.type }}
               </td>
@@ -60,52 +56,33 @@
         <v-card-title> DNS Record </v-card-title>
 
         <v-card-text>
-          <v-select
-            :items="recordType"
-            label="Type"
-            v-model="record.type"
-          ></v-select>
+          <v-select :items="recordType" label="Type" v-model="record.type"></v-select>
 
-          <v-text-field
-            v-model="record.name"
-            label="Hostname"
-            required
-          ></v-text-field>
+          <v-text-field v-model="record.name" label="Hostname" required></v-text-field>
 
-          <v-text-field
-            v-model="record.target"
-            label="Target"
-            required
-          ></v-text-field>
+          <v-text-field v-model="record.target" label="Target" required></v-text-field>
 
-          <v-text-field
-            v-if="record.type === 'MX'"
-            v-model="record.priority"
-            label="Priority"
-            required
-          ></v-text-field>
+          <v-text-field v-if="record.type === 'MX'" v-model="record.priority" label="Priority" required></v-text-field>
 
-          <v-btn
-            :disabled="fetching"
-            :loading="fetching"
-            color="success"
-            @click="submitItem"
-          >
+          <v-btn :disabled="fetching" :loading="fetching" color="success" @click="submitItem">
             Save
           </v-btn>
         </v-card-text>
       </v-card>
     </v-navigation-drawer>
+    <Confirm ref="confirm" />
   </div>
 </template>
 
 <script>
 import api from "../../services/api";
 import Loading from "../../components/Loading";
+import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
     Loading,
+    Confirm,
   },
   data() {
     return {
@@ -246,32 +223,35 @@ export default {
       this.record = JSON.parse(JSON.stringify(item));
       this.drawer = true;
     },
-    deleteItem(item) {
-      this.$confirm("Delete record?").then((res) => {
-        if (res) {
-          this.fetching = true;
-          this.error = "";
+    deleteItem: async function (item) {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          'Delete record?'
+        )
+      ) {
+        this.fetching = true;
+        this.error = "";
 
-          var self = this;
-          api
-            .post("domains/" + this.domainId + "/records/" + item.id, {
-              delete: 1,
-            })
-            .then(function (response) {
-              console.log(response);
+        var self = this;
+        api
+          .post("domains/" + this.domainId + "/records/" + item.id, {
+            delete: 1,
+          })
+          .then(function (response) {
+            console.log(response);
 
-              if (!response.data.success) {
-                self.error = response.data.error;
-              } else {
-                self.fetchData();
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-              self.fetching = false;
-            });
-        }
-      });
+            if (!response.data.success) {
+              self.error = response.data.error;
+            } else {
+              self.fetchData();
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+            self.fetching = false;
+          });
+      }
     },
     authPrompt() {
       this.authRequired = false;

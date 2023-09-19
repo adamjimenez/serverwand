@@ -11,16 +11,14 @@
           <TogglePasswordAuthentication :serverId="serverId" :passwordAuthentication="data.password_authentication" />
         </v-list-item>
 
-        <v-list-item v-for="(item, i) in data.users" :key="`item-${i}`" 
-          :title="item.name" 
-          :subtitle="item.label"
-          @click="editItem(item)"
-          >
+        <v-list-item v-for="(item, i) in data.users" :key="`item-${i}`" :title="item.name" :subtitle="item.label"
+          @click="editItem(item)">
           <template v-slot:prepend>
             <v-icon v-if="item.sudo" size="x-small" title="Sudo privileges">fas fa-crown</v-icon>
             <v-icon v-else size="x-small">fas fa-user</v-icon>
 
-            <v-icon v-if="item.sudo_without_password" size="x-small" title="Sudo without password">fas fa-lock-open</v-icon>
+            <v-icon v-if="item.sudo_without_password" size="x-small" title="Sudo without password">fas
+              fa-lock-open</v-icon>
             <v-icon v-else size="x-small">fas fa-lock</v-icon>
           </template>
 
@@ -299,34 +297,37 @@ export default {
           self.fetching = false;
         });
     },
-    deleteKey(line) {
-      this.$confirm("Delete key?").then((res) => {
-        if (res) {
-          var self = this;
-          this.fetching = true;
-          this.error = "";
+    deleteKey: async function (line) {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Delete key?"
+        )
+      ) {
+        var self = this;
+        this.fetching = true;
+        this.error = "";
 
-          api
-            .post(
-              "servers/" + this.serverId + "/systemusers/" + this.user.name,
-              { line: line }
-            )
-            .then(function (response) {
-              console.log(response);
+        api
+          .post(
+            "servers/" + this.serverId + "/systemusers/" + this.user.name,
+            { line: line }
+          )
+          .then(function (response) {
+            console.log(response);
 
-              if (!response.data.success) {
-                self.fetching = false;
-                self.error = response.data.error;
-              } else {
-                self.openKeys(self.user);
-              }
-            })
-            .catch(function (error) {
+            if (!response.data.success) {
               self.fetching = false;
-              console.log(error);
-            });
-        }
-      });
+              self.error = response.data.error;
+            } else {
+              self.openKeys(self.user);
+            }
+          })
+          .catch(function (error) {
+            self.fetching = false;
+            console.log(error);
+          });
+      }
     },
     addKey() {
       this.showKeys = false;

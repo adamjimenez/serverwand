@@ -10,7 +10,8 @@
           <v-list-item v-for="(item, i) in data.variables" :key="`item-${i}`" :title="item.name" :subtitle="item.value"
             @click="editItem(item)">
             <template v-slot:append>
-              <v-btn :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item.line)" icon="mdi:mdi-delete" size="small"></v-btn>
+              <v-btn :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item.line)" icon="mdi:mdi-delete"
+                size="small"></v-btn>
             </template>
           </v-list-item>
         </v-list>
@@ -122,28 +123,26 @@ export default {
           "Delete Variable?"
         )
       ) {
-        if (res) {
-          var self = this;
-          this.fetching = true;
-          this.error = "";
+        var self = this;
+        this.fetching = true;
+        this.error = "";
 
-          api
-            .post("sites/" + this.siteId + "/variables", { line: line })
-            .then(function (response) {
-              console.log(response);
+        api
+          .post("sites/" + this.siteId + "/variables", { line: line })
+          .then(function (response) {
+            console.log(response);
 
-              if (!response.data.success) {
-                self.fetching = false;
-                self.error = response.data.error;
-              } else {
-                self.fetchData();
-              }
-            })
-            .catch(function (error) {
+            if (!response.data.success) {
               self.fetching = false;
-              console.log(error);
-            });
-        }
+              self.error = response.data.error;
+            } else {
+              self.fetchData();
+            }
+          })
+          .catch(function (error) {
+            self.fetching = false;
+            console.log(error);
+          });
       };
     },
     saveItem() {

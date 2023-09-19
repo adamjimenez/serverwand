@@ -4,7 +4,7 @@
       <v-app-bar-nav-icon @click.stop="rail = !rail" size="small"></v-app-bar-nav-icon>
 
       <router-link to="/servers" class="text-decoration-none text-primary" v-if="!mobile">
-        <v-list-item class="my-1">
+        <v-list-item>
           <template v-slot:prepend>
             <v-icon class="mr-0 pl-3" size="large" color="primary">fas fa-magic</v-icon>
           </template>
