@@ -34,7 +34,7 @@
                 </v-list-item>
               </template>
 
-              <template v-slot:item.status="{ item }">
+              <template v-slot:item.connected="{ item }">
                 <v-list-item>
                   <template v-slot:prepend>
                     <v-icon color="error" v-if="item.raw.connected == 0">
@@ -123,7 +123,7 @@ export default {
         key: "name",
       }, {
         title: "Status ",
-        key: "status",
+        key: "connected",
       }];
 
       if (!this.mobile) {
