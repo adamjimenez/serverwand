@@ -23,7 +23,10 @@
           <v-list-item v-for="(item, i) in data.items" :key="`item-${i}`" :title="item.name"
             :subtitle="item.date + ' - ' + prettyBytes(item.size)" @click="restore(item)">
             <template v-slot:append>
-              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
+              <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="download(item)">
+                <v-icon size="small">mdi:mdi-download</v-icon>
+              </v-btn>
+              <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item)">
                 <v-icon size="small">mdi:mdi-delete</v-icon>
               </v-btn>
             </template>
