@@ -58,7 +58,7 @@ export default {
       filtered: [],
       items: [],
       servers: {},
-      server: "*",
+      server: null,
       server_opts: [],
       searchPanel: [false],
       search: "",
@@ -114,7 +114,11 @@ export default {
         }
       });
 
-      localStorage.server = this.server;
+      if (this.server) {
+        localStorage.server = this.server;
+      } else {
+        delete localStorage.server;
+      }
     },
   },
   methods: {
