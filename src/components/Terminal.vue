@@ -63,6 +63,10 @@ export default {
             this.fetching = true
             this.serverId = this.$route.params.id;
 
+            if (!this.serverId) {
+                return;
+            }
+
             api
                 .get("servers/" + this.serverId)
                 .then(response => {
