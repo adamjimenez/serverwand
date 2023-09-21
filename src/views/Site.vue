@@ -8,7 +8,7 @@
 
     <v-list-item :title="data.name" :subtitle="data.hostname">
       <template v-slot:prepend>
-        <SiteIcon :app="data.app"></SiteIcon>
+        <SiteIcon :app="data.app" :to="'http://' + data.domain + (data.app == 'wordpress' ? '/wp-admin' : '')"></SiteIcon>        
       </template>
       <v-list-item-title>
         <a :href="'http://' + data.domain" target="_blank">

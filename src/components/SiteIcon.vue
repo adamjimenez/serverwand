@@ -1,5 +1,5 @@
 <template>
-    <v-icon v-if="app === 'wordpress'">fab fa-wordpress</v-icon>
+    <v-icon v-if="app === 'wordpress'" @click.stop="openLink">fab fa-wordpress</v-icon>
     <v-icon v-else-if="app === 'git'">fab fa-git</v-icon>
     <v-icon v-else-if="app === 'node'">fab fa-node-js</v-icon>
     <v-icon v-else-if="app === 'joomla'">fab fa-joomla</v-icon>
@@ -14,6 +14,14 @@
 export default {
   props: {
     app: null,
-  },  
+    to: null,
+  },
+  methods: {
+    openLink() {
+      if (this.to) {
+        window.open(this.to);
+      }
+    },
+  }
 };
 </script>
