@@ -9,8 +9,8 @@
         <template v-slot:item.name="{ item }">
           <v-list-item :to="'/teams/' + item.raw.id + '/members'" :title="item.raw.name" class="px-0">
             <v-list-item-subtitle>
-              {{ item.raw.members }} member{{ item.raw.members != 1 ? "s" : "" }},
-              {{ item.raw.servers }} server{{ item.raw.servers != 1 ? "s" : "" }}
+              {{ item.raw.members.length }} member{{ item.raw.members.length != 1 ? "s" : "" }},
+              {{ item.raw.servers.length }} server{{ item.raw.servers.length != 1 ? "s" : "" }}
             </v-list-item-subtitle>
             <template v-slot:prepend v-if="!mobile">
               <v-icon>fas fa-users</v-icon>
@@ -40,7 +40,7 @@ export default {
       items: [],
       headers: [
         {
-          title: "Name ",
+          title: "Name",
           key: "name",
         },
       ],
