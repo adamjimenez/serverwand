@@ -83,7 +83,7 @@
             :serverId="serverId" 
             :path="path" 
             :selected="selected" 
-            @complete="fetchData"
+            @complete="fetchData()"
             @error="handleError"
             @loading="handleLoading"
             />
@@ -264,7 +264,10 @@ export default {
 
       var self = this;
       this.selectedIds.forEach(function (id) {
-        selected.push(self.items.find(obj => obj.id === id))
+        var item = self.items.find(obj => obj.id === id);
+        if (item) {
+          selected.push(item)
+        }
       });
 
       return selected;

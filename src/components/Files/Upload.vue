@@ -112,7 +112,7 @@ export default {
         this.r.assignBrowse(this.$refs.uploadFolderButton.$el, true);
       }
 
-      this.r.on("fileAdded", () => {
+      this.r.on("fileAdded", function() {
         self.error = "";
         this.opts.query.path = self.path;
         this.upload();
@@ -135,7 +135,7 @@ export default {
         }
       });
 
-      this.r.on("complete", () => {
+      this.r.on("complete", function () {
         //clear upload queue so you can upload the same file
         this.cancel();
 
