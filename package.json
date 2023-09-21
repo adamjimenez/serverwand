@@ -8,7 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.3",
+    "@fortawesome/fontawesome-free": "^6.4.2",
     "@mdi/font": "^7.2.96",
     "axios": "^0.21.1",
     "axios-cache-adapter": "^2.7.3",
