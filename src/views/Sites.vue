@@ -6,7 +6,7 @@
 
         <Loading :value="loading" />
 
-        <v-card flat :loading="fetching" title="Sites">
+        <v-card flat :loading="fetching">
           <v-card flat>
             <v-card-text>
               <v-select v-model="server" :items="server_opts" label="Server" hide-details clearable></v-select>
