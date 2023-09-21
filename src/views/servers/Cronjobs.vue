@@ -50,8 +50,7 @@
 
             <v-text-field v-model="cronjob.command" label="Command" required :rules="[rules.required]"></v-text-field>
 
-            <v-text-field v-model="cronjob.user" label="User" required
-              :rules="[rules.required, rules.alpha]"></v-text-field>
+            <v-autocomplete v-model="cronjob.user" label="User" :items="users" autofocus hide-details></v-autocomplete>
 
             <v-text-field v-model="cronjob.minute" label="Minute" required
               :rules="[rules.required, rules.minute]"></v-text-field>
@@ -162,6 +161,7 @@ export default {
       ],
       log: "",
       logContent: "",
+      users: [],
     };
   },
   created() {
@@ -194,6 +194,12 @@ export default {
         })
         .finally(function () {
           self.fetching = false;
+        });
+
+      api
+        .get("servers/" + this.serverId + "/usersAndGroups")
+        .then(response => {
+          self.users = response.data.users;
         });
     },
     addItem() {
