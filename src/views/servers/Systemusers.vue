@@ -13,16 +13,18 @@
 
         <v-list-item v-for="(item, i) in data.users" :key="`item-${i}`" :title="item.name" :subtitle="item.label"
           @click="editItem(item)">
-          <template v-slot:prepend>
-            <v-icon v-if="item.sudo" size="x-small" title="Sudo privileges">fas fa-crown</v-icon>
-            <v-icon v-else size="x-small">fas fa-user</v-icon>
-
-            <v-icon v-if="item.sudo_without_password" size="x-small" title="Sudo without password">fas
-              fa-lock-open</v-icon>
-            <v-icon v-else size="x-small">fas fa-lock</v-icon>
-          </template>
-
           <template v-slot:append>
+            <span class="d-block" style="width: 32px;">
+              <v-icon v-if="item.sudo" size="x-small" title="Sudo privileges" color="primary">fas fa-crown</v-icon>
+              <v-icon v-else size="x-small" title="Non-sudo user" color="primary">fas fa-user</v-icon>
+            </span>
+
+            <span class="d-block" style="width: 32px;">
+              <v-icon v-if="item.sudo_without_password" size="x-small" title="Sudo without password" color="primary">fas
+                fa-lock-open</v-icon>
+              <v-icon v-else size="x-small" color="primary" title="Sudo with password">fas fa-lock</v-icon>
+            </span>
+
             <v-btn icon :disabled="loading" :loading="loading" @click.stop="openKeys(item)" title="Authorized keys">
               <v-icon size="small">mdi:mdi-key</v-icon>
             </v-btn>
