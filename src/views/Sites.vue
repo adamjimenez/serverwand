@@ -9,7 +9,7 @@
         <v-card flat :loading="fetching" title="Sites">
           <v-card flat>
             <v-card-text>
-              <v-select v-model="server" :items="server_opts" label="Server" hide-details></v-select>
+              <v-select v-model="server" :items="server_opts" label="Server" hide-details clearable></v-select>
             </v-card-text>
           </v-card>
 
@@ -59,12 +59,7 @@ export default {
       items: [],
       servers: {},
       server: "*",
-      server_opts: [
-        {
-          title: "All",
-          value: "*",
-        },
-      ],
+      server_opts: [],
       searchPanel: [false],
       search: "",
       selected: [],
@@ -114,7 +109,7 @@ export default {
       this.filtered = [];
 
       this.items.forEach((element) => {
-        if (this.server === "*" || element.server == this.server) {
+        if (!this.server || element.server == this.server) {
           this.filtered.push(element);
         }
       });

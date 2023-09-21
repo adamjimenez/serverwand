@@ -5,7 +5,7 @@
 
         <Loading :value="loading" />
 
-        <v-card :loading="fetching" title="Servers">
+        <v-card :loading="fetching">
           <div v-if="items.length">
             <v-container fluid>
               <v-row>

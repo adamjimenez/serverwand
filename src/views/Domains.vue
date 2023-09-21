@@ -5,7 +5,7 @@
 
         <Loading :value="loading" />
 
-        <v-card flat :loading="fetching" title="Domains">
+        <v-card flat :loading="fetching">
           <v-data-table :headers="headers" :items="filtered">
             <template v-slot:item.domain="{ item }">
               <v-list-item :to="'/domains/' + item.raw.id + '/summary'" :title="item.raw.domain" class="px-0">

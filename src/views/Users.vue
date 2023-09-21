@@ -4,7 +4,7 @@
 
     <Loading :value="loading" />
 
-    <v-card :loading="fetching" title="Users">
+    <v-card :loading="fetching">
       <v-data-table :headers="headers" :items="filtered">
         <template v-slot:item.name="{ item }">
           <v-list-item :to="'/users/' + item.raw.id + '/summary'" :title="item.raw.name" class="px-0">
