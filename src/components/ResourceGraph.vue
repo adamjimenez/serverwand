@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 100%;" v-if="data.items.length">
+    <div style="width: 100%;" v-if="data.items?.length">
         <v-row class="mb-3">
             <v-col>
                 <v-select v-model="resource" :items="resourceOptions" @update:modelValue="load" hide-details></v-select>
