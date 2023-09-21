@@ -18,7 +18,7 @@
       <v-icon small>mdi:mdi-pencil</v-icon>
     </v-btn>
 
-    <v-dialog app v-model="dialog">
+    <v-dialog app v-model="dialog" max-width="600">
       <v-card :loading="fetching">
         <v-card-title> Edit {{ label }} </v-card-title>
 
@@ -26,10 +26,9 @@
           <v-select v-if="yesno" v-model="data.val" :items="yesnoItems" :label="label" autofocus
             :error="errors.length > 0" :error-messages="errors"></v-select>
 
-          <v-text-field v-else v-model="data.val" :label="label" autofocus
-            :type="!password || showPassword ? 'text' : 'password'"
-            :append-icon="!password ? '' : showPassword ? 'mdi:mdi-eye-off' : 'mdi:mdi-eye'"
-            @click:append="showPassword = !showPassword" :error-messages="errors"></v-text-field>
+          <TogglePassword v-else-if="password" v-model="data.val" bind="$attrs"></TogglePassword>
+
+          <v-text-field v-else v-model="data.val" :label="label" autofocus :error-messages="errors"></v-text-field>
 
           <v-btn color="primary" @click="save"> Save </v-btn>
         </v-card-text>
@@ -40,8 +39,12 @@
 
 <script>
 import api from "../services/api";
+import TogglePassword from "./TogglePassword.vue";
 
 export default {
+  components: {
+    TogglePassword,
+  },
   props: {
     name: null,
     val: null,

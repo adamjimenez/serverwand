@@ -81,7 +81,7 @@
 
     <div v-if="data.server.mailserver">
       <v-card class="mx-auto">
-        <v-list>
+        <v-list max-width="600">
 
           <v-list-item v-for="(item, i) in data.emails" :key="`item-${i}`" :title="item.name" :subtitle="item.value"
             @click="editItem(item)">
@@ -110,14 +110,14 @@
         </v-card-actions>
       </v-card>
 
-      <v-dialog v-model="drawer">
+      <v-dialog v-model="drawer" max-width="600">
         <v-card>
           <v-card-title> Email account </v-card-title>
 
           <v-card-text>
             <v-text-field v-model="email.user" label="Name" required :readonly="userReadonly"></v-text-field>
 
-            <v-text-field type="password" v-model="email.password" label="Password" required></v-text-field>
+            <TogglePassword v-model="email.password" label="Password" required></TogglePassword>
 
             <v-text-field v-model="email.destination" label="Forwarding" required></v-text-field>
 
@@ -137,11 +137,13 @@ import api from "../../services/api";
 import Loading from "../../components/Loading";
 import util from "../../services/util";
 import Confirm from "../../components/ConfirmDialog.vue";
+import TogglePassword from "../../components/TogglePassword.vue";
 
 export default {
   components: {
     Loading,
     Confirm,
+    TogglePassword,
   },
   data() {
     return {
