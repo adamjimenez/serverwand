@@ -40,20 +40,23 @@
                     <v-icon color="error" v-if="item.raw.connected == 0">
                       fa-solid fa-circle
                     </v-icon>
-                    <v-icon color="warning" v-else-if="item.raw.health?.length">fas fa-exclamation-triangle fa-beat</v-icon>
+                    <v-icon color="warning" v-else-if="item.raw.health?.length">fas fa-exclamation-triangle
+                      fa-beat</v-icon>
                     <v-icon color="success" v-else>
                       fa-solid fa-circle
                     </v-icon>
                   </template>
 
-                  <span v-if="item.raw.connected == 0">
-                    Unavailable
-                  </span>
-                  <span v-else-if="item.raw.health?.length">
-                    {{ item.raw.health?.length }} issue{{ item.raw.health?.length !== 1 ? 's' : '' }}
-                  </span>
-                  <span v-else>
-                    Connected
+                  <span v-if="!mobile">
+                    <span v-if="item.raw.connected == 0">
+                      Unavailable
+                    </span>
+                    <span v-else-if="item.raw.health?.length">
+                      {{ item.raw.health?.length }} issue{{ item.raw.health?.length !== 1 ? 's' : '' }}
+                    </span>
+                    <span v-else>
+                      Connected
+                    </span>
                   </span>
                 </v-list-item>
               </template>
