@@ -14,7 +14,7 @@
       </v-card-text>
     </v-card>
 
-    <v-card class="ma-3 pa-3">
+    <v-card class="ma-3 pa-3" :loading="fetching">
       <v-card-title>
         Notifications
       </v-card-title>
@@ -22,35 +22,15 @@
       <v-form ref="form">
 
         <v-container fluid>
-          <v-row>
+          <v-row v-for="(item, i) in data.health?.checks" :key="`item-${i}`">
             <v-col>
-              <v-switch v-model="data.notifications.disk_space.active" label="Disk space" color="primary" messages="Available disk space. Falling below this value triggers an alert."></v-switch>
+              <v-switch v-model="item.active" :label="item.label" color="primary" :messages="item.description"></v-switch>
             </v-col>
             <v-col>
-              <v-text-field v-model="data.notifications.disk_space.threshold" label="Free space threshold" min="0" max="100"
-                type="number" suffix="GB" :disabled="!data.notifications.disk_space.active" />
+              <v-text-field v-model="item.threshold" label="Threshold" min="0" max="100"
+                type="number" :suffix="item.suffix" :disabled="!item.active" />
             </v-col>
-          </v-row>
-
-          <v-row>
-            <v-col>
-              <v-switch v-model="data.notifications.mail_queue.active" label="Mail queue" color="primary" messages="Length of mail queue. Exceeding this value triggers an alert."></v-switch>
-            </v-col>
-            <v-col>
-              <v-text-field v-model="data.notifications.mail_queue.threshold" label="Mail queue threshold" min="0"
-                type="number" suffix="Emails" :disabled="!data.notifications.mail_queue.active" />
-            </v-col>
-          </v-row>
-
-          <v-row>
-            <v-col>
-              <v-switch v-model="data.notifications.db_connections.active" label="Database connection usage" color="primary" messages="Percentage of used database connections. Exceeding this value triggers an alert."></v-switch>
-            </v-col>
-            <v-col>
-              <v-text-field v-model="data.notifications.db_connections.threshold" label="Connection threshold" min="0"
-                max="100" type="number" suffix="%" :disabled="!data.notifications.db_connections.active" />
-            </v-col>
-          </v-row>
+          </v-row>         
         </v-container>
 
         <v-btn color="success my-5" @click="saveNotifications" :disabled="!changed">
@@ -84,7 +64,8 @@ export default {
           disk_space: {},
           mail_queue: {},
           db_connections: {},
-        }
+        },       
+        disks: [],
       },
       orig: {}
     };
@@ -105,10 +86,10 @@ export default {
       var self = this;
       this.error = "";
 
-      //this.fetching = true
+      this.fetching = true
 
       api
-        .get("servers/" + this.serverId + "?detailed=1", {
+        .get("servers/" + this.serverId + "/summary", {
           clearCacheEntry: clearCacheEntry,
         })
         .then(function (response) {
@@ -143,7 +124,7 @@ export default {
         .post(
           "servers/" + this.serverId + "/notifications",
           {
-            notifications: self.data.notifications
+            notifications: self.data.health.checks
           }
         )
         .then(function (response) {

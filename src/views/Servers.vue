@@ -7,15 +7,22 @@
 
         <v-card :loading="fetching" title="Servers">
           <div v-if="items.length">
-            <v-card flat>
-              <v-card-text>
-                <v-select v-model="provider" :items="provider_opts" label="Provider" hide-details>
-                  <template v-slot:item="{ props, item }">
-                    <v-list-item v-bind="props" :prepend-icon="item?.raw?.icon" :title="item?.raw?.title"></v-list-item>
-                  </template>
-                </v-select>
-              </v-card-text>
-            </v-card>
+            <v-container fluid>
+              <v-row>
+                <v-col>
+                  <v-select v-model="provider" :items="provider_opts" label="Provider" hide-details clearable>
+                    <template v-slot:item="{ props, item }">
+                      <v-list-item v-bind="props" :prepend-icon="item?.raw?.icon" :title="item?.raw?.title"></v-list-item>
+                    </template>
+                  </v-select>
+                </v-col>
+
+                <v-col>
+                  <v-select v-model="team" :items="teams" item-title="name" item-value="id" label="Team" hide-details
+                    clearable></v-select>
+                </v-col>
+              </v-row>
+            </v-container>
 
             <v-data-table :headers="headers" :items="filtered">
               <template v-slot:item.name="{ item }">
@@ -24,6 +31,30 @@
                   <template v-slot:prepend v-if="!mobile">
                     <ServerIcon :provider="item.raw.provider"></ServerIcon>
                   </template>
+                </v-list-item>
+              </template>
+
+              <template v-slot:item.status="{ item }">
+                <v-list-item>
+                  <template v-slot:prepend>
+                    <v-icon color="error" v-if="item.raw.connected == 0">
+                      fa-solid fa-circle
+                    </v-icon>
+                    <v-icon color="warning" v-else-if="item.raw.health?.length">fas fa-exclamation-triangle fa-beat</v-icon>
+                    <v-icon color="success" v-else>
+                      fa-solid fa-circle
+                    </v-icon>
+                  </template>
+
+                  <span v-if="item.raw.connected == 0">
+                    Unavailable
+                  </span>
+                  <span v-else-if="item.raw.health?.length">
+                    {{ item.raw.health?.length }} issue{{ item.raw.health?.length !== 1 ? 's' : '' }}
+                  </span>
+                  <span v-else>
+                    Connected
+                  </span>
                 </v-list-item>
               </template>
             </v-data-table>
@@ -58,15 +89,11 @@ export default {
       loading: false,
       fetching: false,
       error: null,
-      filtered: [],
       items: [],
-      provider: "*",
+      team: null,
+      teams: [],
+      provider: null,
       provider_opts: [
-        {
-          title: "All",
-          value: "*",
-          icon: "fas fa-asterisk",
-        },
         {
           title: "Linode",
           value: "linode",
@@ -79,13 +106,8 @@ export default {
         },
         {
           title: "Vultr",
-          value: "",
+          value: "vultr",
           icon: "fas fa-server",
-        },
-        {
-          title: "Other",
-          value: "",
-          icon: "fab fa-ubuntu",
         },
       ],
     };
@@ -96,10 +118,13 @@ export default {
       return mobile.value;
     },
     headers: function () {
-      var items = [{
+      let items = [{
         title: "Server ",
         key: "name",
-      },];
+      }, {
+        title: "Status ",
+        key: "status",
+      }];
 
       if (!this.mobile) {
         items.push(
@@ -118,23 +143,43 @@ export default {
       };
 
       return items;
+    },
+    filtered: function () {
+      var self = this;
+      let filtered = [];
+
+      this.items.forEach((element) => {
+        if (self.provider && element.provider == self.provider) {
+          return;
+        }
+
+        if (self.team) {
+          let found = false;
+
+          self.teams.forEach(function (team) {
+            if (team.id == self.team) {
+              team.servers.forEach(function (server) {
+                if (server.server == element.id) {
+                  found = true;
+                }
+              });
+            }
+          })
+
+          if (!found) {
+            return;
+          }
+        }
+
+        filtered.push(element);
+      });
+
+      return filtered;
     }
   },
   created() {
     document.title = "Servers";
     this.fetchData();
-  },
-  watch: {
-    provider: function () {
-      this.filtered = [];
-
-      this.items.forEach((element) => {
-        if (this.provider === "*" || element.provider == this.provider) {
-          this.filtered.push(element);
-          localStorage.provider = element.provider;
-        }
-      });
-    },
   },
   methods: {
     fetchData() {
@@ -147,10 +192,15 @@ export default {
         .then(response => {
           console.log(response);
           self.items = response.data.items;
+        })
+        .catch(error => console.log(error))
+        .finally(() => self.fetching = false);
 
-          response.data.items.forEach((element) => {
-            self.filtered.push(element);
-          });
+      api
+        .get("teams/")
+        .then(response => {
+          console.log(response);
+          self.teams = response.data.items;
         })
         .catch(error => console.log(error))
         .finally(() => self.fetching = false);

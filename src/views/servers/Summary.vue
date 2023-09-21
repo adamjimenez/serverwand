@@ -1,6 +1,8 @@
 <template>
   <div>
     <v-alert v-if="error" type="error" :text="error"></v-alert>
+   
+    <v-alert v-for="(item, i) in warnings" :key="`item-${i}`" type="warning" :text="item.label + ' ' + item.value + ' ' + item.suffix" class="mb-3"></v-alert>
 
     <v-card class="pa-3" :loading="fetching">
       <v-container class="ma-0" fluid>
@@ -285,5 +287,18 @@ export default {
       return util.prettyBytes(value);
     }
   },
+  computed: {
+    warnings: function () {
+      let warnings = [];
+
+      this.data.health?.checks.forEach(item => {
+        if (item.failed) {
+          warnings.push(item);
+        }
+      });
+
+      return warnings;
+    }
+  }
 };
 </script>
