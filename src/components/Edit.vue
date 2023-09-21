@@ -26,7 +26,7 @@
           <v-select v-if="yesno" v-model="data.val" :items="yesnoItems" :label="label" autofocus
             :error="errors.length > 0" :error-messages="errors"></v-select>
 
-          <TogglePassword v-else-if="password" v-model="data.val" bind="$attrs"></TogglePassword>
+          <PasswordField v-else-if="password" v-model="data.val" bind="$attrs"></PasswordField>
 
           <v-text-field v-else v-model="data.val" :label="label" autofocus :error-messages="errors"></v-text-field>
 
@@ -39,11 +39,11 @@
 
 <script>
 import api from "../services/api";
-import TogglePassword from "./TogglePassword.vue";
+import PasswordField from "./PasswordField.vue";
 
 export default {
   components: {
-    TogglePassword,
+    PasswordField,
   },
   props: {
     name: null,

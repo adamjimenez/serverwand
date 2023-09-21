@@ -117,7 +117,7 @@
           <v-card-text>
             <v-text-field v-model="email.user" label="Name" required :readonly="userReadonly"></v-text-field>
 
-            <TogglePassword v-model="email.password" label="Password" required></TogglePassword>
+            <PasswordField v-model="email.password" label="Password" required></PasswordField>
 
             <v-text-field v-model="email.destination" label="Forwarding" required></v-text-field>
 
@@ -137,13 +137,13 @@ import api from "../../services/api";
 import Loading from "../../components/Loading";
 import util from "../../services/util";
 import Confirm from "../../components/ConfirmDialog.vue";
-import TogglePassword from "../../components/TogglePassword.vue";
+import PasswordField from "../../components/PasswordField.vue";
 
 export default {
   components: {
     Loading,
     Confirm,
-    TogglePassword,
+    PasswordField,
   },
   data() {
     return {
