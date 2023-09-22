@@ -21,7 +21,7 @@
           </template>
 
           <template v-slot:append>
-            <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item)">
+            <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item)" v-if="item.comment != 'ServerWand'">
               <v-icon size="small">mdi:mdi-delete</v-icon>
             </v-btn>
           </template>
@@ -175,6 +175,10 @@ export default {
       this.drawer = true
     },
     editItem(item) {
+      if (item.comment == 'ServerWand') {
+        return;
+      }
+
       this.item = JSON.parse(JSON.stringify(item));
 
       if (this.item.from.substr(0, 8) === 'Anywhere') {
