@@ -55,6 +55,7 @@ export default {
                 d: 1600,
             },
             timer: null,
+            error: null,
         };
     },
 
@@ -66,7 +67,8 @@ export default {
                 .get("servers/" + this.serverId + "/graph?days_ago=" + this.daysAgo + '&resource=' + this.resource)
                 .then(response => {
                     self.data = response.data;
-                });            
+                })
+                .catch(error => this.error = error.message);
         },
         refresh() {            
             if (this.daysAgo === 0) {
