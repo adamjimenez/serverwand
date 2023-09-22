@@ -18,15 +18,15 @@
     <v-tabs>
       <v-tab :to="'/servers/' + serverId + '/summary'">Summary</v-tab>
       <v-tab :to="'/servers/' + serverId + '/Files'">Files</v-tab>
-      <v-tab :to="'/servers/' + serverId + '/services'">Services</v-tab>
-      <v-tab :to="'/servers/' + serverId + '/cronjobs'">Cronjobs</v-tab>
-      <v-tab :to="'/servers/' + serverId + '/database'">Database</v-tab>
-      <v-tab :to="'/servers/' + serverId + '/systemusers'">System users</v-tab>
-      <v-tab :to="'/servers/' + serverId + '/firewall'">Firewall</v-tab>
       <v-tab :to="'/servers/' + serverId + '/mail'">Mail</v-tab>
-      <v-tab :to="'/servers/' + serverId + '/apps'">Apps</v-tab>
       <v-tab :to="'/servers/' + serverId + '/logs'">Logs</v-tab>
       <v-tab :to="'/servers/' + serverId + '/backups'">Cloud backups</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/database'">Database</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/cronjobs'">Cronjobs</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/apps'">Apps</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/systemusers'">System users</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/firewall'">Firewall</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/services'">Services</v-tab>
       <v-tab :to="'/servers/' + serverId + '/settings'">Settings</v-tab>
     </v-tabs>
     <router-view></router-view>
