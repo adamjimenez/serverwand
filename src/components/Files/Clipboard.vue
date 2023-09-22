@@ -1,29 +1,27 @@
 <template>
-  <v-col class="flex-grow-0" style="min-width: 264px">
-    <v-row>
-      <v-col class="flex-grow-0" v-if="selected.length">
-        <v-btn @click="cut()" title="Cut" icon>
-          <v-icon>mdi:mdi-content-cut</v-icon>
-        </v-btn>
-      </v-col>
-      <v-col class="flex-grow-0" v-if="selected.length">
-        <v-btn @click="copy()" title="Copy" icon>
-          <v-icon>mdi:mdi-content-copy</v-icon>
-        </v-btn>
-      </v-col>
-      <v-col class="flex-grow-0" v-if="data.items.length && path != data.src">
-        <v-btn @click="paste()" title="Paste" icon>
-          <v-icon>mdi:mdi-content-paste</v-icon>
-        </v-btn>
-      </v-col>
-    </v-row>
-  </v-col>
+  <div>
+    <v-btn v-if="selected.length" @click="cut()" title="Cut" icon>
+      <v-icon>mdi:mdi-content-cut</v-icon>
+    </v-btn>
+    <v-btn v-if="selected.length" @click="copy()" title="Copy" icon>
+      <v-icon>mdi:mdi-content-copy</v-icon>
+    </v-btn>
+    <v-btn v-if="data.items.length && path != data.src" @click="paste()" title="Paste" icon>
+      <v-icon>mdi:mdi-content-paste</v-icon>
+    </v-btn>
+    <Confirm ref="confirm" />
+  </div>
 </template>
 
 <script>
 import api from "../../services/api";
+import Confirm from "../ConfirmDialog.vue";
 
 export default {
+  components: {
+    Confirm
+  },
+
   props: {
     serverId: null,
     path: null,
@@ -64,46 +62,47 @@ export default {
       this.selected.forEach(element => this.data.items.push(element.name));
     },
 
-    paste() {
+    paste: async function() {
       console.log(this.data);
 
       var cmd = this.data.cut ? "Move" : "Copy";
 
-      this.$confirm(cmd + " " + this.data.items.length + " items?").then(
-        (res) => {
-          if (res) {
-            var self = this;
-            this.fetching = true;
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          cmd + " " + this.data.items.length + " items?"
+        )
+      ) {
+        var self = this;
+        this.fetching = true;
 
-            api
-              .post("servers/" + this.serverId + "/files", {
-                cmd: cmd.toLowerCase(),
-                path: this.path,
-                src: this.data.src,
-                files: this.data.items,
-              })
-              .then(response => {
-                console.log(response);
+        api
+          .post("servers/" + this.serverId + "/files", {
+            cmd: cmd.toLowerCase(),
+            path: this.path,
+            src: this.data.src,
+            files: this.data.items,
+          })
+          .then(response => {
+            console.log(response);
 
-                if (cmd.toLowerCase() === "move") {
-                  self.data.items = [];
-                }
+            if (cmd.toLowerCase() === "move") {
+              self.data.items = [];
+            }
 
-                if (response.data.success) {
-                  self.$emit("complete");
-                } else {
-                  var error = response.data.error
-                    ? response.data.error
-                    : response.data;
-                    
-                  self.$emit('error', error);
-                }
-              })
-              .catch(error => console.log(error))
-              .finally(() => self.fetching = false);
-          }
-        }
-      );
+            if (response.data.success) {
+              self.$emit("complete");
+            } else {
+              var error = response.data.error
+                ? response.data.error
+                : response.data;
+
+              self.$emit('error', error);
+            }
+          })
+          .catch(error => console.log(error))
+          .finally(() => self.fetching = false);
+      }
     },
   },
 };

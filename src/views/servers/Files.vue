@@ -4,147 +4,48 @@
 
     <Loading :value="loading" />
 
-    <EditFile
-      ref="editFile"
-      :serverId="serverId"
-      action="files"
-      @complete="fetchData()"
-      @error="handleError"
-      @loading="handleLoading"
-    />
+    <EditFile ref="editFile" :serverId="serverId" action="files" @complete="fetchData()" @error="handleError"
+      @loading="handleLoading" />
 
     <v-card :loading="fetching">
       <v-container fluid>
         <v-row>
-          <v-col class="flex-grow-0">
-            <NewFile
-              :serverId="serverId"
-              :path="path"
-              @complete="fetchData()"
-              @error="handleError"
-            />
-          </v-col>
-          <v-col class="flex-grow-0">
-            <NewFolder
-              :serverId="serverId"
-              :path="path"
-              @complete="fetchData()"
-              @error="handleError"
-            />
-          </v-col>
-          <Upload
-            :serverId="serverId"
-            :path="path"
-            :dropZone="$refs.results"
-            @complete="fetchData()"
-            @error="handleError"
-            folder="folder"
-          />
-          <v-col class="flex-grow-0" v-if="selected.length === 1">
-            <Rename
-              :serverId="serverId"
-              :path="path"
-              :selected="selected"
-              @complete="fetchData()"
-              @error="handleError"
-            />
-          </v-col>
-          <v-col class="flex-grow-0" v-if="selected.length">
-            <DeleteFiles
-              :serverId="serverId"
-              :path="path"
-              :selected="selected"
-              @complete="fetchData()"
-              @error="handleError"
-            />
-          </v-col>
-          <v-col class="flex-grow-0">
-            <Chmod
-              :serverId="serverId"
-              :path="path"
-              :selected="selected"
-              :folderSelected="folderSelected"
-              @complete="fetchData()"
-              @error="handleError"
-            />
-          </v-col>
-          <v-col class="flex-grow-0">
-            <Chown
-              :serverId="serverId"
-              :path="path"
-              :selected="selected"
-              :folderSelected="folderSelected"
-              @complete="fetchData()"
-              @error="handleError"
-            />
-          </v-col>
-
-          <Extract 
-            :serverId="serverId" 
-            :path="path" 
-            :selected="selected" 
-            @complete="fetchData()"
-            @error="handleError"
-            @loading="handleLoading"
-            />
-
-          <v-col
-            class="flex-grow-0"
-            v-if="selected.length === 1 && selected[0].type === 'file'"
-          >
-            <Download :serverId="serverId" :path="path" :selected="selected" />
-          </v-col>
-
-          <Clipboard
-            :serverId="serverId"
-            :path="path"
-            :selected="selected"
-            @complete="fetchData()"
-            @error="handleError"
-          />
+          <NewFile v-if="selected.length === 0" :serverId="serverId" :path="path" @complete="fetchData()" @error="handleError" />
+          <NewFolder v-if="selected.length === 0" :serverId="serverId" :path="path" @complete="fetchData()" @error="handleError" />
+          <Upload v-if="selected.length === 0" :serverId="serverId" :path="path" :dropZone="$refs.results" @complete="fetchData()" @error="handleError"
+            folder="folder" />
+          <Rename v-if="selected.length === 1" :serverId="serverId" :path="path" :selected="selected"
+            @complete="fetchData()" @error="handleError" />
+          <DeleteFiles v-if="selected.length" :serverId="serverId" :path="path" :selected="selected"
+            @complete="fetchData()" @error="handleError" />
+          <Chmod :serverId="serverId" :path="path" :selected="selected" :folderSelected="folderSelected"
+            @complete="fetchData()" @error="handleError" />
+          <Chown :serverId="serverId" :path="path" :selected="selected" :folderSelected="folderSelected"
+            @complete="fetchData()" @error="handleError" />
+          <Extract :serverId="serverId" :path="path" :selected="selected" @complete="fetchData()" @error="handleError"
+            @loading="handleLoading" />
+          <Download v-if="selected.length === 1 && selected[0].type === 'file'" :serverId="serverId" :path="path"
+            :selected="selected" />
+          <Clipboard :serverId="serverId" :path="path" :selected="selected" @complete="fetchData()"
+            @error="handleError" />
         </v-row>
       </v-container>
 
       <v-container fluid>
         <v-row>
-          <v-col class="flex-grow-0">
             <v-btn icon @click="upLevel()" :disabled="path === '/'" title="Up one level">
               <v-icon small>mdi:mdi-arrow-up</v-icon>
             </v-btn>
-          </v-col>
-
-          <v-col>
-            <v-text-field
-              v-model="path"
-              class="ma-0 pa-0"
-              @change="fetchData"
-              @keydown.enter="fetchData"
-            ></v-text-field>
-          </v-col>
-
-          <v-col cols="2">
-            <v-text-field
-              placeholder="Search"
-              prepend-inner-icon="mdi:mdi-magnify"
-              v-model="search"
-              class="ma-0 pa-0"
-              @change="fetchData"
-              @keydown.enter="fetchData"
-            ></v-text-field>
-          </v-col>
+            <v-text-field v-model="path" class="mr-2" @change="fetchData" @keydown.enter="fetchData"></v-text-field>
+            <!--
+            <v-text-field placeholder="Search" prepend-inner-icon="mdi:mdi-magnify" v-model="search" class="ma-0 pa-0"
+              @change="fetchData" @keydown.enter="fetchData"></v-text-field>
+            -->
         </v-row>
       </v-container>
 
-      <v-data-table
-        v-model="selectedIds"
-        :headers="headers"
-        :items="items"
-        class="results"
-        ref="results"
-        show-select
-        mobile-breakpoint="0"
-        @click:row="function(event, item) { open(item.item.raw) }"
-      >
+      <v-data-table v-model="selectedIds" :headers="headers" :items="items" class="results" ref="results" show-select
+        mobile-breakpoint="0" @click:row="function (event, item) { open(item.item.raw) }" :loading="fetching">
 
         <template v-slot:item.size="{ item }">
           {{ prettyBytes(item.raw.size) }}
@@ -310,7 +211,7 @@ export default {
     };
 
     // load initial location hash
-    if(location.hash) {
+    if (location.hash) {
       this.path = location.hash.substr(1);
 
       var file = this.basename(this.path);
@@ -319,7 +220,7 @@ export default {
         this.fileToOpen = file;
       }
     }
-    
+
     this.fetchData();
   },
   methods: {
@@ -362,7 +263,7 @@ export default {
       } else {
 
         api
-          .post("servers/" + this.serverId + "/files", { 
+          .post("servers/" + this.serverId + "/files", {
             path: this.dir
           })
           .then(response => {

@@ -1,45 +1,27 @@
 <template>
   <div>
-    <v-alert
-      v-if="dragover"
-      type="info"
-      style="position: fixed; height: 80px; z-index: 10; bottom: 0; left: 50%"
-    >
+    <v-alert v-if="dragover" type="info" style="position: fixed; height: 80px; z-index: 10; bottom: 0; left: 50%">
       Drop files to upload them to:
       <p>
         <strong>{{ path }}</strong>
       </p>
     </v-alert>
 
-    <v-alert
-      v-if="progress > 0"
-      dark
-      style="position: fixed; width: 100%; z-index: 10; left: 0; bottom: 0; margin: 0 auto;"
-    >
-      <v-progress-linear 
-        v-model="progress"        
-        height="25"
-        >
+    <v-alert v-if="progress > 0" dark
+      style="position: fixed; width: 100%; z-index: 10; left: 0; bottom: 0; margin: 0 auto;">
+      <v-progress-linear v-model="progress" height="25">
         <template v-slot:default="{ value }">
           <strong>Uploading {{ fileName }}</strong>
         </template>
       </v-progress-linear>
     </v-alert>
 
-    <v-col class="flex-grow-0">
-      <v-row>
-        <v-col class="flex-grow-0">
-          <v-btn title="Upload file" ref="uploadFileButton" icon>
-            <v-icon>mdi:mdi-upload</v-icon>
-          </v-btn>
-        </v-col>
-        <v-col class="flex-grow-0" v-if="folder">
-          <v-btn title="Upload folder" ref="uploadFolderButton" icon>
-            <v-icon>mdi:mdi-folder-arrow-up</v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
-    </v-col>
+    <v-btn title="Upload file" ref="uploadFileButton" icon>
+      <v-icon>mdi:mdi-upload</v-icon>
+    </v-btn>
+    <v-btn v-if="folder" title="Upload folder" ref="uploadFolderButton" icon>
+      <v-icon>mdi:mdi-folder-arrow-up</v-icon>
+    </v-btn>
 
   </div>
 </template>
@@ -69,7 +51,7 @@ export default {
       this.initUpload();
     }
   },
-  
+
   mounted() {
     this.initUpload();
   },
@@ -112,7 +94,7 @@ export default {
         this.r.assignBrowse(this.$refs.uploadFolderButton.$el, true);
       }
 
-      this.r.on("fileAdded", function() {
+      this.r.on("fileAdded", function () {
         self.error = "";
         this.opts.query.path = self.path;
         this.upload();
@@ -155,14 +137,14 @@ export default {
         [2];
         console.log('dragenter');
 
-        e.preventDefault();        
+        e.preventDefault();
         enterTarget = e.target;
         self.dragover = true;
       });
       this.dropZone.$el.addEventListener("dragleave", (e) => {
         [2];
-        if (enterTarget == e.target){
-          console.log('dragleave'); 
+        if (enterTarget == e.target) {
+          console.log('dragleave');
           e.preventDefault();
           self.dragover = false;
         }
