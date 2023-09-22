@@ -4,7 +4,7 @@
       <v-icon>mdi:mdi-account</v-icon>
     </v-btn>
 
-    <v-dialog app v-model="dialog" width="unset">
+    <v-dialog app v-model="dialog" max-width="600">
       <v-card :loading="fetching" flat>
         <v-card-title> File ownership </v-card-title>
 
@@ -15,7 +15,8 @@
             label="Owner"
             :items="users"
             autofocus
-            hide-details          
+            hide-details
+            class="mb-5"
           ></v-autocomplete>
 
           <v-autocomplete
@@ -23,13 +24,15 @@
             label="Group"
             :items="groups"
             autofocus
-            hide-details          
+            hide-details
+            class="mb-5"
           ></v-autocomplete>
 
           <v-checkbox
             v-if="folderSelected"
             v-model="data.recursive"
             label="Replace child permissions"
+            class="mb-5"
           ></v-checkbox>
 
           <v-btn color="primary" @click="doChown()"> Save </v-btn>
