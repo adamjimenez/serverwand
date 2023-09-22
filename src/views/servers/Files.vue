@@ -36,7 +36,7 @@
             <v-btn icon @click="upLevel()" :disabled="path === '/'" title="Up one level">
               <v-icon small>mdi:mdi-arrow-up</v-icon>
             </v-btn>
-            <v-text-field v-model="path" class="mr-2" @change="fetchData" @keydown.enter="fetchData"></v-text-field>
+            <v-text-field v-model="path" class="mx-2" @change="fetchData" @keydown.enter="fetchData"></v-text-field>
             <!--
             <v-text-field placeholder="Search" prepend-inner-icon="mdi:mdi-magnify" v-model="search" class="ma-0 pa-0"
               @change="fetchData" @keydown.enter="fetchData"></v-text-field>
