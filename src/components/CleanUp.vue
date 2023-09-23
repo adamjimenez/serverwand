@@ -112,7 +112,10 @@ export default {
 
       api
         .post("servers/" + this.serverId + "/clean", { files: files })
-        .then(() => self.clean());
+        .then(function () {
+          self.$emit('complete');          
+          self.clean()
+        });      
     },
     prettyBytes(value) {
       return util.prettyBytes(value);
