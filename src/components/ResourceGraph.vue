@@ -87,5 +87,8 @@ export default {
     created() {
         this.refresh();
     },
+    beforeUnmount() {
+        clearTimeout(this.timer);
+    },
 };
 </script>

@@ -34,7 +34,7 @@
           </v-col></v-row>
       </v-layout>
 
-      <v-layout row v-if="!authRequired && data.server && data.dkim && data.dkim.not_set">
+      <v-layout row v-if="data.dkim?.not_set">
         <v-row>
           <v-col cols="12">
             <v-card tile flat>
@@ -392,6 +392,9 @@ export default {
     prettyBytes(value) {
       return util.prettyBytes(value);
     },
+  },
+  beforeUnmount() {
+      clearTimeout(this.timer);
   },
 };
 </script>

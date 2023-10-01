@@ -69,7 +69,6 @@ export default {
         domain: "",
         dns: false,
       },
-      timer: null,
       serverId: 0,
       progress: 0,
     };
@@ -88,7 +87,6 @@ export default {
       var self = this;
       this.error = "";
       this.domainId = this.$route.params.id;
-      clearTimeout(self.timer);
 
       this.fetching = true;
       this.progress = 0;

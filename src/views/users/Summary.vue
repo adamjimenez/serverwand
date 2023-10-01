@@ -84,7 +84,6 @@ export default {
         min: (v) => v.length >= 8 || "Min 8 characters",
         emailMatch: () => "The email and password you entered don't match",
       },
-      timer: null,
       authRequired: false,
     };
   },
@@ -102,7 +101,6 @@ export default {
       var self = this;
       this.error = "";
       this.userId = this.$route.params.id;
-      clearTimeout(self.timer);
       this.fetching = true;
 
       api

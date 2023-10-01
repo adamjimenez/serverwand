@@ -89,7 +89,6 @@ export default {
       record: {},
       recordType: ["A", "CNAME", "MX", "TXT", "SRV", "NS"],
       drawer: false,
-      timer: null,
       authRequired: false,
       headers: [
         {
@@ -132,7 +131,6 @@ export default {
       var self = this;
       this.error = "";
       this.domainId = this.$route.params.id;
-      clearTimeout(self.timer);
 
       this.fetching = true;
 

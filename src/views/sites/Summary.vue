@@ -265,5 +265,8 @@ export default {
       return util.prettyBytes(value);
     },
   },
+  beforeUnmount() {
+      clearTimeout(this.timer);
+  },
 };
 </script>

@@ -110,7 +110,6 @@ export default {
       var self = this;
       this.error = "";
       this.domainId = this.$route.params.id;
-      clearTimeout(self.timer);
       this.fetching = true;
 
       api

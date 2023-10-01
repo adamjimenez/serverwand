@@ -266,6 +266,9 @@ export default {
           self.fetching = false
         })
     }
-  }
+  },
+  beforeUnmount() {
+      clearTimeout(this.timer);
+  },
 }
 </script>
