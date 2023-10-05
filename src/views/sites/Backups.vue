@@ -5,19 +5,12 @@
     <Loading :value="loading" />
 
     <v-card :loading="fetching" ref="results">
+      <v-card-actions>
+        <v-btn title="Create backup" ref="uploadFolderButton" @click="createBackup()" icon="mdi:mdi-plus"></v-btn>
+        <Upload :serverId="serverId" :path="path" :dropZone="$refs.results" @complete="fetchData()"
+          @error="handleError" />
+      </v-card-actions>
       <v-card-text>
-        <v-container fluid>
-          <v-row>
-            <v-col class="flex-grow-0">
-              <v-btn title="Create backup" ref="uploadFolderButton" @click="createBackup()" icon>
-                <v-icon>mdi:mdi-plus</v-icon>
-              </v-btn>
-            </v-col>
-
-            <Upload :serverId="serverId" :path="path" :dropZone="$refs.results" @complete="fetchData()"
-              @error="handleError" />
-          </v-row>
-        </v-container>
 
         <v-list v-if="data.items.length > 0" max-width="600">
           <v-list-item v-for="(item, i) in data.items" :key="`item-${i}`" :title="item.name"
