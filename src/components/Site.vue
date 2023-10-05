@@ -36,7 +36,7 @@ export default {
         .post("sites/create", data)
         .then(response => {
             if(response.data.site_id) {
-              self.$router.push("/sites/"+response.data.site_id+"/summary");
+              self.$router.push("/sites/" + response.data.site_id + "/summary");
             } else if(response.data.error) {
               if(response.data.error === "auth") {
                 self.provider=response.data.provider;
