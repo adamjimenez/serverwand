@@ -8,19 +8,13 @@
     <v-card :loading="fetching">
       <v-card-title primary-title>
         <v-row>
-          <v-col>
-            <v-select :items="logs" label="Log" @update:modelValue="fetchLog" hide-details></v-select>
-          </v-col>
+            <v-select :items="logs" label="Log" @update:modelValue="fetchLog" hide-details class="ma-1"></v-select>
 
-          <v-col>
-            <v-text-field label="Filter" v-model="filter" hide-details></v-text-field>
-          </v-col>
+            <v-text-field label="Filter" v-model="filter" hide-details class="ma-1"></v-text-field>
 
-          <v-col>
-            <v-btn @click="fetchLog()" :disabled="!log" icon>
-              <i class="fas fa-redo-alt" :class="fetching ? 'fa-spin' : ''"></i>
+            <v-btn @click="fetchLog()" :disabled="!log" icon class="ma-3">
+              <v-icon :class="fetching ? 'fa-spin' : ''" size="small">fas fa-redo-alt</v-icon>
             </v-btn>
-          </v-col>
         </v-row>
       </v-card-title>
       <v-card-text>
@@ -158,11 +152,13 @@ export default {
   computed: {
     filteredLog: function () {
       const pathRegex = /(\/(var|etc)[^\s:\\']+( on line [0-9]+))/g;
+      const findRegex = RegExp(`\(${this.filter})\*`, 'gi');
 
       var lines = this.logContent.split("\n");
       return lines.filter((line) => line.toLowerCase().
         includes(this.filter.toLowerCase())).
         join("\n").
+        replace(findRegex, '<span class="match">$1</span>').
         replace(pathRegex, '<a href="' + location.pathname + '#$1">$1</a>').
         replace(/( on line )([0-9]+)/g, ':$2').
         replace(/(PHP Fatal error)/g, '<span class="error">$1</span>').
@@ -234,5 +230,10 @@ export default {
 .pre {
   font-family: monospace;
   white-space: pre-wrap;
+}
+
+.match {
+  background: yellow;
+  color: #000;
 }
 </style>
