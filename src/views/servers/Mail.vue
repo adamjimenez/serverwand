@@ -28,7 +28,7 @@
       >
 
         <template v-slot:item.size="{ item }">
-          <span>{{ prettyBytes(item.raw.size) }}</span>
+          <span>{{ prettyBytes(item.size) }}</span>
         </template>
 
       </v-data-table>
@@ -173,7 +173,7 @@ export default {
         .finally(() => self.fetching=false);
     },
     view(event, item) {
-      this.messageId = item.item.raw.id
+      this.messageId = item.item.id
       this.messageUrl =
         "https://serverwand.com/api/servers/" +
         this.serverId +

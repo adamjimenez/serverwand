@@ -7,10 +7,10 @@
     <v-card :loading="fetching">
       <v-data-table :headers="headers" :items="items">
         <template v-slot:item.name="{ item }">
-          <v-list-item :to="'/teams/' + item.raw.id + '/members'" :title="item.raw.name" class="px-0">
+          <v-list-item :to="'/teams/' + item.id + '/members'" :title="item.name" class="px-0">
             <v-list-item-subtitle>
-              {{ item.raw.members.length }} member{{ item.raw.members.length != 1 ? "s" : "" }},
-              {{ item.raw.servers.length }} server{{ item.raw.servers.length != 1 ? "s" : "" }}
+              {{ item.members.length }} member{{ item.members.length != 1 ? "s" : "" }},
+              {{ item.servers.length }} server{{ item.servers.length != 1 ? "s" : "" }}
             </v-list-item-subtitle>
             <template v-slot:prepend v-if="!mobile">
               <v-icon>fas fa-users</v-icon>

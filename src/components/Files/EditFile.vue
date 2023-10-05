@@ -22,7 +22,6 @@
             v-model:value="data.content"
             theme="vs-dark"
           />
-
         </v-card-text>
       </v-card>
     </v-dialog>

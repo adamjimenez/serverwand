@@ -45,19 +45,19 @@
       </v-container>
 
       <v-data-table v-model="selectedIds" :headers="headers" :items="items" class="results" ref="results" show-select
-        mobile-breakpoint="0" @click:row="function (event, item) { open(item.item.raw) }" :loading="fetching">
+        mobile-breakpoint="0" @click:row="function (event, item) { open(item.item) }" :loading="fetching">
 
         <template v-slot:item.size="{ item }">
-          {{ prettyBytes(item.raw.size) }}
+          {{ prettyBytes(item.size) }}
         </template>
 
         <template v-slot:item.modified="{ item }">
-          {{ formatDate(item.raw.modified) }}
+          {{ formatDate(item.modified) }}
         </template>
 
         <template v-slot:item.owner="{ item }">
-          {{ item.raw.owner }}
-          {{ item.raw.group }}
+          {{ item.owner }}
+          {{ item.group }}
         </template>
 
       </v-data-table>
@@ -239,7 +239,7 @@ export default {
           result => {
             let files = result.msg.split("\n");
 
-            files.forEach(file => {
+            files.forEach(file => {              
               // check if item already exists
               let found = false;
               self.items.forEach(item => {

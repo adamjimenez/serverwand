@@ -15,20 +15,20 @@
 
           <v-data-table :headers="headers" :items="filtered">
             <template v-slot:item.domain="{ item }">
-              <v-list-item :to="'/sites/' + item.raw.id + '/summary'" :title="item.raw.domain" :subtitle="servers[item.raw.server]" class="px-0">
+              <v-list-item :to="'/sites/' + item.id + '/summary'" :title="item.domain" :subtitle="servers[item.server]" class="px-0">
                 <template v-slot:prepend v-if="!mobile">
-                  <SiteIcon :app="item.raw.app"></SiteIcon>
+                  <SiteIcon :app="item.app"></SiteIcon>
                 </template>
               </v-list-item>
             </template>
             <template v-slot:item.usage="{ item }">
-              <div v-if="item.raw.usage > 0">
-                {{ prettyBytes(item.raw.usage * 1024) }}
+              <div v-if="item.usage > 0">
+                {{ prettyBytes(item.usage * 1024) }}
               </div>
             </template>
             <template v-slot:item.transfer="{ item }">
-              <div v-if="item.raw.transfer > 0">
-                {{ prettyBytes(item.raw.transfer * 1024) }}
+              <div v-if="item.transfer > 0">
+                {{ prettyBytes(item.transfer * 1024) }}
               </div>
             </template>
           </v-data-table>

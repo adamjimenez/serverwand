@@ -7,7 +7,7 @@
     <v-card :loading="fetching">
       <v-data-table :headers="headers" :items="filtered">
         <template v-slot:item.name="{ item }">
-          <v-list-item :to="'/users/' + item.raw.id + '/summary'" :title="item.raw.name" class="px-0">
+          <v-list-item :to="'/users/' + item.id + '/summary'" :title="item.name" class="px-0">
             <template v-slot:prepend v-if="!mobile">
               <v-icon>fas fa-user</v-icon>
             </template>

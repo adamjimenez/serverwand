@@ -3,8 +3,8 @@
     <v-btn @click="restore()" title="Restore" icon>
       <v-icon>mdi:mdi-restore</v-icon>
     </v-btn>
+    <Confirm ref="confirm" />
   </div>
-  <Confirm ref="confirm" />
 </template>
 
 <script>

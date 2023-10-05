@@ -26,10 +26,10 @@
 
             <v-data-table :headers="headers" :items="filtered">
               <template v-slot:item.name="{ item }">
-                <v-list-item :to="'/servers/' + item.raw.id + '/summary'" :title="item.raw.name"
-                  :subtitle="item.raw.hostname" class="px-0">
+                <v-list-item :to="'/servers/' + item.id + '/summary'" :title="item.name"
+                  :subtitle="item.hostname" class="px-0">
                   <template v-slot:prepend v-if="!mobile">
-                    <ServerIcon :provider="item.raw.provider"></ServerIcon>
+                    <ServerIcon :provider="item.provider"></ServerIcon>
                   </template>
                 </v-list-item>
               </template>
@@ -37,10 +37,10 @@
               <template v-slot:item.connected="{ item }">
                 <v-list-item>
                   <template v-slot:prepend>
-                    <v-icon color="error" v-if="item.raw.connected == 0">
+                    <v-icon color="error" v-if="item.connected == 0">
                       fa-solid fa-circle
                     </v-icon>
-                    <v-icon color="warning" v-else-if="item.raw.health?.length">fas fa-exclamation-triangle
+                    <v-icon color="warning" v-else-if="item.health?.length">fas fa-exclamation-triangle
                       fa-beat</v-icon>
                     <v-icon color="success" v-else>
                       fa-solid fa-circle
@@ -48,11 +48,11 @@
                   </template>
 
                   <span v-if="!mobile">
-                    <span v-if="item.raw.connected == 0">
+                    <span v-if="item.connected == 0">
                       Unavailable
                     </span>
-                    <span v-else-if="item.raw.health?.length">
-                      {{ item.raw.health?.length }} issue{{ item.raw.health?.length !== 1 ? 's' : '' }}
+                    <span v-else-if="item.health?.length">
+                      {{ item.health?.length }} issue{{ item.health?.length !== 1 ? 's' : '' }}
                     </span>
                     <span v-else>
                       Connected

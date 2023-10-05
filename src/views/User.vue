@@ -8,15 +8,9 @@
 
     <v-container v-if="!fetching" fluid>
       <v-row>
-
         <v-col>
-          <v-list-item :title="data.name">
-            <template v-slot:prepend>
-              <v-icon left>fas fa-user</v-icon>
-            </template>
-          </v-list-item>
+          <v-list-item :title="data.name" prepend-icon="fas fa-user"></v-list-item>
         </v-col>
-
       </v-row>
     </v-container>
 
@@ -47,14 +41,9 @@ export default {
   data() {
     return {
       userId: null,
-      post: null,
       error: null,
-      data: {
-        server: {},
-      },
-      details: "",
+      data: {},
       fetching: false,
-      aliasDrawer: false,
     };
   },
   created() {

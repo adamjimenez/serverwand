@@ -12,22 +12,12 @@
     <v-card :loading="fetching" class="pa-3">
       <v-container fluid>
         <v-row>
-          <v-col class="flex-grow-0">
-            <v-btn @click="configure" title="Configure S3" icon>
-              <v-icon>mdi:mdi-settings</v-icon>
-            </v-btn>
-          </v-col>
-          <v-col class="flex-grow-0" v-if="s3.access_key">
-            <Snapshot :serverId="serverId" @complete="handleComplete" @error="handleError" />
-          </v-col>
-          <v-col class="flex-grow-0">
+            <v-btn @click="configure" title="Configure S3" icon="mdi:mdi-settings"></v-btn>
+            <Snapshot :serverId="serverId" @complete="handleComplete" @error="handleError" v-if="s3.access_key" />
             <Restore :serverId="serverId" :path="path" :selected="selected" @complete="handleComplete"
               @error="handleError" />
-          </v-col>
-          <v-col>
             <v-switch v-model="s3.active" label="Nightly backups" class="my-0" @change="toggleBackups()" hide-details
               color="primary"></v-switch>
-          </v-col>
         </v-row>
 
         <div v-if="s3.access_key">
@@ -47,7 +37,7 @@
             <v-row>
               <v-col cols="12">
                 <v-data-table :headers="headers" :items="items" class="results" ref="results" mobile-breakpoint="0"
-                  @click:row="function (event, item) { open(item.item.raw) }" v-model="selected" show-select>
+                  @click:row="function (event, item) { open(item.item) }" v-model="selectedIds" show-select>
 
                   <template v-slot:item.modified="{ item }">
                     {{ formatDate(item.modified) }}
@@ -62,30 +52,30 @@
             <v-row>
               <v-col cols="12">
                 <v-data-table :headers="backupHeaders" :items="backups" mobile-breakpoint="0"
-                  @click:row="function (event, item) { browse(item.item.raw) }">
+                  @click:row="function (event, item) { browse(item.item) }">
 
                   <template v-slot:item.name="{ item }">
-                    <span @click="browse(item.raw)">{{ item.raw.name }}</span>
+                    <span @click="browse(item)">{{ item.name }}</span>
                   </template>
 
                   <template v-slot:item.timestamp="{ item }">
-                    {{ formatDate(item.raw.timestamp) }}
+                    {{ formatDate(item.timestamp) }}
                   </template>
 
                   <template v-slot:item.complete="{ item }">
-                    {{ item.raw.complete ? 'Complete' : 'Incomplete' }}
+                    {{ item.complete ? 'Complete' : 'Incomplete' }}
                   </template>
 
                   <template v-slot:item.automatic="{ item }">
-                    {{ item.raw.automatic ? 'Automatic' : 'Manual' }}
+                    {{ item.automatic ? 'Automatic' : 'Manual' }}
                   </template>
 
                   <template v-slot:item.duration="{ item }">
-                    {{ Math.round(item.raw.duration / 60) }}m
+                    {{ Math.round(item.duration / 60) }}m
                   </template>
 
                   <template v-slot:item.size="{ item }">
-                    {{ prettyBytes(item.raw.size) }}
+                    {{ prettyBytes(item.size) }}
                   </template>
 
                   <template v-slot:item.actions="{ item }">
@@ -103,7 +93,7 @@
 
     </v-card>
 
-    <v-navigation-drawer app v-model="s3Drawer" temporary right>
+    <v-navigation-drawer app v-model="s3Drawer" temporary location="right">
       <v-card>
         <v-card-title> S3 Settings </v-card-title>
 
@@ -164,7 +154,7 @@ export default {
         access_key: "",
         active: false,
       },
-      selected: [],
+      selectedIds: [],
       hosts: [
         {
           title: "AWS",
@@ -267,24 +257,32 @@ export default {
       ],
     };
   },
-  watch: {
-    items: {
-      handler: function (newItems) {
-        this.selected = [];
+  computed: {
+    dir: function () {
+      let path = this.path;
 
-        for (var i = 0; i < newItems.length; i++) {
-          if (newItems[i].selected) {
-            this.selected.push(newItems[i]);
-          }
+      if (!path.endsWith('/')) {
+        let pos = path.lastIndexOf('/');
+        if (pos !== -1) {
+          path = path.substr(0, pos);
         }
-      },
-      deep: true,
+      }
+
+      return path;
     },
-    path: {
-      handler: function (newValue) {
-        window.ssh_path = newValue;
-      },
-    },
+    selected: function () {
+      let selected = [];
+
+      var self = this;
+      this.selectedIds.forEach(function (id) {
+        var item = self.items.find(obj => obj.id === id);
+        if (item) {
+          selected.push(item)
+        }
+      });
+
+      return selected;
+    }
   },
   created() {
     this.serverId = this.$route.params.id;

@@ -22,7 +22,7 @@
           </v-card>
         </v-layout>
 
-        <v-container v-if="data.app">
+        <v-container v-if="data.app" fluid>
           <v-row>
             <v-btn @click="gitInfo = true" title="Git info" v-if="data.app.git_url" icon>
               <v-icon>fab fa-git</v-icon>

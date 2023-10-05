@@ -8,17 +8,17 @@
         <v-card flat :loading="fetching">
           <v-data-table :headers="headers" :items="filtered">
             <template v-slot:item.domain="{ item }">
-              <v-list-item :to="'/domains/' + item.raw.id + '/summary'" :title="item.raw.domain" class="px-0">
+              <v-list-item :to="'/domains/' + item.id + '/summary'" :title="item.domain" class="px-0">
                 <template v-slot:prepend v-if="!mobile">
                   <v-icon>fas fa-globe</v-icon>
                 </template>
               </v-list-item>
             </template>
             <template v-slot:item.registrar="{ item }">
-              {{ item.raw.registrar ? registrars[item.raw.registrar].label : "" }}
+              {{ item.registrar ? registrars[item.registrar].label : "" }}
             </template>
             <template v-slot:item.auto_renew="{ item }">
-              {{ item.raw.auto_renew ? "Yes" : "" }}
+              {{ item.auto_renew ? "Yes" : "" }}
             </template>
           </v-data-table>
         </v-card>

@@ -8,19 +8,9 @@
 
     <v-container v-if="!fetching" fluid>
       <v-row>
-
         <v-col>
-          <v-list-item>
-            <template v-slot:prepend>
-              <v-icon left>fas fa-users</v-icon>
-            </template>
-
-            <v-list-item-title>
-              {{ data.name }}
-            </v-list-item-title>
-          </v-list-item>
+          <v-list-item :title="data.name" prepend-icon="fas fa-users"></v-list-item>
         </v-col>
-
       </v-row>
     </v-container>
 
@@ -50,16 +40,7 @@ export default {
       id: null,
       error: null,
       data: {},
-      details: "",
       fetching: false,
-      rules: {
-        required: (value) => !!value || "Required.",
-        min: (v) => v.length >= 8 || "Min 8 characters",
-      },
-      member: {
-        email: "",
-      },
-      memberDrawer: false,
     };
   },
   created() {
