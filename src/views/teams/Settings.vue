@@ -19,9 +19,7 @@
     </v-card>
 
     <v-dialog v-model="drawer">
-      <v-card>
-        <v-card-title> Edit Name </v-card-title>
-
+      <v-card title="Edit Name">
         <v-card-text>
           <v-text-field v-model="data.name" label="Name" required></v-text-field>
 
@@ -67,7 +65,6 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
@@ -75,58 +72,51 @@ export default {
         .get("teams/" + this.id)
         .then(function (response) {
           console.log(response);
-          self.data = response.data.item;
-          document.title = "Settings" + " | " + self.data.name;
+          this.data = response.data.item;
+          document.title = "Settings" + " | " + this.data.name;
         })
         .catch(function (error) {
           console.log(error);
         })
         .finally(function () {
-          self.fetching = false;
+          this.fetching = false;
         });
     },
     editItem() {
       this.drawer = true;
     },
     deleteItem: async function () {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Delete " + this.data.name
-        )
-      ) {
-        var self = this;
-        this.dialog = true;
-        this.loading = true;
-
-        api
-          .post("teams/" + this.id, { delete: 1 })
-          .then(function (response) {
-            console.log(response);
-
-            if (response.data.error) {
-              self.error = response.data.error;
-            } else {
-              self.$router.push("/teams/");
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          .finally(function () {
-            self.dialog = false;
-            self.loading = false;
-          });
+      if (!await this.$refs.confirm.open("Delete " + this.data.name)) {
+        return;
       }
-      ;
-    },
-    validate() {
-      var self = this;
 
+      this.dialog = true;
       this.loading = true;
 
       api
-        .post("teams/" + self.id, this.data)
+        .post("teams/" + this.id, { delete: 1 })
+        .then(function (response) {
+          console.log(response);
+
+          if (response.data.error) {
+            this.error = response.data.error;
+          } else {
+            this.$router.push("/teams/");
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .finally(function () {
+          this.dialog = false;
+          this.loading = false;
+        });
+    },
+    validate() {
+      this.loading = true;
+
+      api
+        .post("teams/" + this.id, this.data)
         .then(function (response) {
           console.log(response);
           this.fetchData();
@@ -135,8 +125,8 @@ export default {
           console.log(error);
         })
         .finally(function () {
-          self.loading = false;
-          self.drawer = false;
+          this.loading = false;
+          this.drawer = false;
         });
     },
   },

@@ -139,37 +139,34 @@ export default {
       }
     },
     deleteItem: async function (user) {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Delete " + user.email
-        )
-      ) {
-        var self = this;
-        this.error = "";
-        this.dialog = true;
-        this.loading = true;
-
-        api
-          .post("teams/" + this.id + '/members', { delete: 1, user: user.user })
-          .then(function (response) {
-            console.log(response);
-
-            if (response.data.error) {
-              self.error = response.data.error;
-            } else {
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          .finally(function () {
-            self.dialog = false;
-            self.loading = false;
-          });
+      if (!await this.$refs.confirm.open("Delete " + user.email)) {
+        return;
       }
-    },
+
+      var self = this;
+      this.error = "";
+      this.dialog = true;
+      this.loading = true;
+
+      api
+        .post("teams/" + this.id + '/members', { delete: 1, user: user.user })
+        .then(function (response) {
+          console.log(response);
+
+          if (response.data.error) {
+            self.error = response.data.error;
+          } else {
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .finally(function () {
+          self.dialog = false;
+          self.loading = false;
+        });
+      }
   },
 };
 </script>

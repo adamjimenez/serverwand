@@ -36,6 +36,11 @@ export default {
     },
     methods: {
         open(title, message, options) {
+            if (!message) {
+                message = title;
+                title = 'Confirm';
+            }
+
             this.dialog = true;
             this.title = title;
             this.message = message;
