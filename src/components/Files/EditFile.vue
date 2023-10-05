@@ -7,11 +7,10 @@
     <v-dialog v-model="dialog">
       <v-card :loading="fetching" style="height: 95vh;">
 
-        <v-toolbar :title="data.file">
-          <v-spacer></v-spacer>
-          <v-btn @click="saveFile" v-if="save !== 'false'" fab icon> 
-            <v-icon>mdi:mdi-content-save</v-icon>
-          </v-btn>
+        <v-toolbar :title="data.id">
+          <template v-slot:append>
+            <v-btn @click="saveFile" v-if="save !== 'false'" fab icon="mdi:mdi-content-save"></v-btn>
+          </template>
         </v-toolbar>
 
         <v-card-text>

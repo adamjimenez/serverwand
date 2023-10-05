@@ -18,19 +18,17 @@
           </v-list-item-subtitle>
           <template v-slot:append>
             <v-list-item-action v-if="item.dns.A != data.server.ip">
-              <v-tooltip top>
-                <template v-slot:activator="{ on }">
-                  <v-btn icon @click="fixAliasDns(item.domain)">
-                    <v-icon small>fas fa-wrench</v-icon>
+              <v-tooltip :text="'Fix DNS mismatch ' + item.dns.A + ' => ' + data.server.ip">
+                <template v-slot:activator="{ props }">
+                  <v-btn v-bind="props" icon @click="fixAliasDns(item.domain)">
+                    <v-icon size="small">fas fa-wrench</v-icon>
                   </v-btn>
                 </template>
-
-                <span>Fix DNS mismatch ({{ item.dns.A }} => {{ data.server.ip }})</span>
               </v-tooltip>
             </v-list-item-action>
 
             <v-list-item-action>
-              <v-btn :disabled="fetching" :loading="fetching" @click="deleteAlias(item.domain)" icon="mdi:mdi-delete"
+              <v-btn :disabled="fetching" @click="deleteAlias(item.domain)" icon="mdi:mdi-delete"
                 size="small"></v-btn>
             </v-list-item-action>
           </template>
