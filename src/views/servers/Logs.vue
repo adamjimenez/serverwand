@@ -16,7 +16,7 @@
             <v-text-field label="Filter" v-model="filter" hide-details></v-text-field>
           </v-col>
 
-          <v-col cols="1">
+          <v-col>
             <v-btn @click="fetchLog()" :disabled="!log" icon>
               <i class="fas fa-redo-alt" :class="fetching ? 'fa-spin' : ''"></i>
             </v-btn>

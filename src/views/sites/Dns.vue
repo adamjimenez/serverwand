@@ -24,7 +24,7 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <v-icon small @click.stop="deleteItem(item)">
+        <v-icon size="small" @click.stop="deleteItem(item)">
           mdi:mdi-delete
         </v-icon>
       </template>

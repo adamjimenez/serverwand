@@ -1,7 +1,7 @@
 <template>
   <span>
     <v-btn icon @click="clean()">
-      <v-icon small>fas fa-broom</v-icon>
+      <v-icon size="small">fas fa-broom</v-icon>
     </v-btn>
 
     <v-dialog app scrollable v-model="showClean">

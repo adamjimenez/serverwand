@@ -34,7 +34,7 @@
       <v-container fluid>
         <v-row>
             <v-btn icon @click="upLevel()" :disabled="path === '/'" title="Up one level">
-              <v-icon small>mdi:mdi-arrow-up</v-icon>
+              <v-icon size="small">mdi:mdi-arrow-up</v-icon>
             </v-btn>
             <v-text-field v-model="path" class="mx-2" @change="fetchData" @keydown.enter="fetchData"></v-text-field>
             <!--

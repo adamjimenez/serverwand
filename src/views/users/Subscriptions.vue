@@ -22,7 +22,7 @@
             :loading="fetching"
             @click="deleteItem(item.id)"
           >
-            <v-icon small>delete</v-icon>
+            <v-icon size="small">delete</v-icon>
           </v-btn>
         </template>
 

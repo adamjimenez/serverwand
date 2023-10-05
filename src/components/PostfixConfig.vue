@@ -1,7 +1,7 @@
 <template>
     <span>
         <v-btn icon @click="edit()">
-            <v-icon small>fas fa-wrench</v-icon>
+            <v-icon size="small">fas fa-wrench</v-icon>
         </v-btn>
 
         <v-dialog v-model="drawer">

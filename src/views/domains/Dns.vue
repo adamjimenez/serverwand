@@ -33,7 +33,7 @@
                 </div>
               </td>
               <td class="text-start">
-                <v-icon small @click.stop="deleteItem(item)">
+                <v-icon size="small" @click.stop="deleteItem(item)">
                   delete
                 </v-icon>
               </td>

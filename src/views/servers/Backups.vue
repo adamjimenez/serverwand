@@ -25,7 +25,7 @@
             <v-row>
               <v-col class="flex-grow-0">
                 <v-btn icon @click="upLevel()" :disabled="path === '/'">
-                  <v-icon small>mdi:mdi-arrow-up</v-icon>
+                  <v-icon size="small">mdi:mdi-arrow-up</v-icon>
                 </v-btn>
               </v-col>
 
@@ -80,7 +80,7 @@
 
                   <template v-slot:item.actions="{ item }">
                     <v-btn icon :disabled="loading" :loading="loading" @click="deleteSnapshot(item.name)" @click.stop>
-                      <v-icon small>mdi:mdi-delete</v-icon>
+                      <v-icon size="small">mdi:mdi-delete</v-icon>
                     </v-btn>
                   </template>
 

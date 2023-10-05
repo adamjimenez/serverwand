@@ -104,7 +104,7 @@
                   :subtitle="data.updates + ' updates, ' + data.security_updates + ' security updates.' + (data.reboot_required ? ' Reboot required.' : '')">
                   <template v-slot:append>
                     <Terminal :serverId="serverId" @closed="fetchData(true)" cmd="sudo apt-get upgrade -y" icon>
-                      <v-icon small>fas fa-download</v-icon>
+                      <v-icon size="small">fas fa-download</v-icon>
                     </Terminal>
                   </template>
                 </v-list-item>
@@ -148,7 +148,7 @@
                   <template v-slot:append>
                     <Terminal v-if="data.upgrade_available" :title="'Upgrade to ' + data.upgrade_available"
                       cmd="sudo do-release-upgrade" icon>
-                      <v-icon small>fas fa-rocket</v-icon>
+                      <v-icon size="small">fas fa-rocket</v-icon>
                     </Terminal>
                     <UpdatesConfig :serverId="serverId" />
                   </template>
@@ -161,7 +161,7 @@
                     
                     <Terminal title="GoAccess Web Log Analyzer"
                       cmd="sudo awk '$8=$1$8' /var/log/apache2/other_vhosts_access.log /var/log/apache2/other_vhosts_access.log.1 | goaccess --log-format VCOMBINED -a -" icon>
-                      <v-icon small>fas fa-chart-line</v-icon>
+                      <v-icon size="small">fas fa-chart-line</v-icon>
                     </Terminal>
 
                     <ApacheConfig :serverId="serverId" />

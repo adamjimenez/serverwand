@@ -3,7 +3,7 @@
     <v-tooltip top>
       <template v-slot:activator="{ on }">
         <v-btn icon @click="edit()">
-          <v-icon small>fas fa-wrench</v-icon>
+          <v-icon size="small">fas fa-wrench</v-icon>
         </v-btn>
       </template>
       <span>Configure MariaDB</span>

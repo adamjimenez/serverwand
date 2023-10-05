@@ -15,7 +15,7 @@
     </span>
 
     <v-btn icon @click="edit(val)">
-      <v-icon small>mdi:mdi-pencil</v-icon>
+      <v-icon size="small">mdi:mdi-pencil</v-icon>
     </v-btn>
 
     <v-dialog app v-model="dialog" max-width="600">
