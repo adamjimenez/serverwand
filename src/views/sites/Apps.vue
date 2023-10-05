@@ -24,21 +24,14 @@
 
         <v-container v-if="data.app" fluid>
           <v-row>
-            <v-btn @click="gitInfo = true" title="Git info" v-if="data.app.git_url" icon>
-              <v-icon>fab fa-git</v-icon>
-            </v-btn>
-            <v-btn @click="clearLogs" title="Clear logs" v-if="data.app.isNode" icon>
-              <v-icon>block</v-icon>
-            </v-btn>
-            <v-btn @click="showCloneApp = true" title="Copy app" icon>
-              <v-icon>mdi:mdi-content-copy</v-icon>
-            </v-btn>
+            <v-btn @click="gitInfo = true" title="Git info" v-if="data.app.git_url" icon="fab fa-git"></v-btn>
+            <v-btn @click="clearLogs" title="Clear logs" v-if="data.app.isNode" icon="block"></v-btn>
+            <v-btn @click="showCloneApp = true" title="Copy app" icon="mdi:mdi-content-copy"></v-btn>
             <v-switch v-if="data.app.isNode" v-model="data.app.online" :label="data.app.status" @change="toggleStatus()"
               color="primary" hide-details></v-switch>
 
-            <v-btn v-if="data.app.name === 'wordpress'" @click="openWordpress" title="Open Wordpress" icon>
-              <v-icon>fab fa-wordpress</v-icon>
-            </v-btn>
+            <v-btn v-if="data.app.name === 'wordpress'" @click="openWordpress" title="Open Wordpress"
+              icon="fab fa-wordpress"></v-btn>
           </v-row>
         </v-container>
 
@@ -137,12 +130,10 @@
                   <v-checkbox class="mx-2" label="Select all" @click="selectAll" v-model="allSelected"></v-checkbox>
                 </v-row>
 
-                <div>
-                  <v-row>
-                    <v-checkbox class="mx-2" v-model="tableNames" v-for="table in tables" :key="table" :value="table"
-                      :label="table"></v-checkbox>
-                  </v-row>
-                </div>
+                <v-row>
+                  <v-checkbox class="mx-2" v-model="tableNames" v-for="table in tables" :key="table" :value="table"
+                    :label="table"></v-checkbox>
+                </v-row>
               </v-card-text>
             </v-card>
           </div>

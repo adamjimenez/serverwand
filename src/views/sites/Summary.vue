@@ -16,19 +16,9 @@
         <v-list lines="two">
           <DNS :server="data.server"></DNS>
 
-          <v-list-item>
-            <v-list-item-title> Disk Usage </v-list-item-title>
-            <v-list-item-subtitle>
-              {{ prettyBytes(data.disk_usage * 1024) }}
-            </v-list-item-subtitle>
-          </v-list-item>
+          <v-list-item title="Disk Usage" :subtitle="prettyBytes(data.disk_usage * 1024)"></v-list-item>
 
-          <v-list-item>
-            <v-list-item-title> Data Transfer </v-list-item-title>
-            <v-list-item-subtitle>
-              {{ prettyBytes(data.transfer * 1024) }}
-            </v-list-item-subtitle>
-          </v-list-item>
+          <v-list-item title="Data Transfer" :subtitle="prettyBytes(data.transfer * 1024)"></v-list-item>
 
           <v-list-item title="FTP Host" :subtitle="data.domain">
             <template v-slot:subtitle>
