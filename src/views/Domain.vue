@@ -24,11 +24,11 @@
       </v-row>
     </v-container>
 
-    <v-tabs>
+    <Tabs>
       <v-tab :to="'/domains/' + domainId + '/summary'">Summary</v-tab>
       <v-tab :to="'/domains/' + domainId + '/dns'">DNS</v-tab>
       <v-tab :to="'/domains/' + domainId + '/settings'">Settings</v-tab>
-    </v-tabs>
+    </Tabs>
     <router-view></router-view>
   </div>
 </template>
@@ -36,10 +36,12 @@
 <script>
 import api from "../services/api";
 import Loading from "../components/Loading";
+import Tabs from "../components/Tabs";
 
 export default {
   components: {
     Loading,
+    Tabs,
   },
   data() {
     return {

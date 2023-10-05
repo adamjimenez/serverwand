@@ -26,7 +26,7 @@
       </template>
     </v-list-item>
 
-    <v-tabs>
+    <Tabs>
       <v-tab :to="'/sites/' + domainId + '/summary'">Summary</v-tab>
       <v-tab :to="'/sites/' + domainId + '/apps'">Apps</v-tab>
       <v-tab :to="'/sites/' + domainId + '/aliases'">Aliases</v-tab>
@@ -36,7 +36,7 @@
       <v-tab :to="'/sites/' + domainId + '/variables'">Variables</v-tab>
       <v-tab :to="'/sites/' + domainId + '/dns'">DNS</v-tab>
       <v-tab :to="'/sites/' + domainId + '/settings'">Settings</v-tab>
-    </v-tabs>
+    </Tabs>
 
     <router-view></router-view>
 
@@ -47,11 +47,13 @@
 import api from '../services/api'
 import Loading from '../components/Loading'
 import SiteIcon from "../components/SiteIcon";
+import Tabs from "../components/Tabs";
 
 export default {
   components: {
     Loading,
     SiteIcon,
+    Tabs,
   },
   data() {
     return {

@@ -15,7 +15,7 @@
       </template>
     </v-list-item>
 
-    <v-tabs>
+    <Tabs>
       <v-tab :to="'/servers/' + serverId + '/summary'">Summary</v-tab>
       <v-tab :to="'/servers/' + serverId + '/Files'">Files</v-tab>
       <v-tab :to="'/servers/' + serverId + '/mail'">Mail</v-tab>
@@ -28,7 +28,7 @@
       <v-tab :to="'/servers/' + serverId + '/firewall'">Firewall</v-tab>
       <v-tab :to="'/servers/' + serverId + '/services'">Services</v-tab>
       <v-tab :to="'/servers/' + serverId + '/settings'">Settings</v-tab>
-    </v-tabs>
+    </Tabs>
     <router-view></router-view>
   </div>
 </template>
@@ -37,11 +37,13 @@
 import api from "../services/api";
 import ServerIcon from "../components/ServerIcon";
 import Terminal from "../components/Terminal";
+import Tabs from "../components/Tabs";
 
 export default {
   components: {
     ServerIcon,
-    Terminal
+    Terminal,
+    Tabs,
   },
   data() {
     return {

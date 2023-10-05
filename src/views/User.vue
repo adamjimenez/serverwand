@@ -20,7 +20,7 @@
       </v-row>
     </v-container>
 
-    <v-tabs>
+    <Tabs>
       <v-tab :to="'/users/' + userId + '/summary'">Summary</v-tab>
       <v-tab :to="'/users/' + userId + '/sites'">Sites</v-tab>
       <v-tab :to="'/users/' + userId + '/domains'">Domains</v-tab>
@@ -28,7 +28,7 @@
       <v-tab :to="'/users/' + userId + '/subscriptions'">Subscriptions</v-tab>
       <v-tab :to="'/users/' + userId + '/notes'">Notes</v-tab>
       <v-tab :to="'/users/' + userId + '/settings'">Settings</v-tab>
-    </v-tabs>
+    </Tabs>
     <router-view></router-view>
 
   </div>
@@ -37,10 +37,12 @@
 <script>
 import api from "../services/api";
 import Loading from "../components/Loading";
+import Tabs from "../components/Tabs";
 
 export default {
   components: {
     Loading,
+    Tabs,
   },
   data() {
     return {
