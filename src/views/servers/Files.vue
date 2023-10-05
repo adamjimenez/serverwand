@@ -45,7 +45,7 @@
       </v-container>
 
       <v-data-table v-model="selectedIds" :headers="headers" :items="items" class="results" ref="results" show-select
-        mobile-breakpoint="0" @click:row="function (event, item) { open(item.item) }" :loading="fetching">
+        mobile-breakpoint="0" @click:row="function (event, item) { open(item.item) }" :loading="fetching" :page="page">
 
         <template v-slot:item.size="{ item }">
           {{ prettyBytes(item.size) }}
@@ -145,6 +145,7 @@ export default {
         },
       ],
       fileToOpen: '',
+      page: 1,
     };
   },
   computed: {
@@ -231,6 +232,7 @@ export default {
       var self = this;
       this.error = "";
       this.fetching = true;
+      this.page = 1;
 
       if (this.search) {
         this.items = [];
