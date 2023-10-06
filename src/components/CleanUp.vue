@@ -11,8 +11,8 @@
           <v-data-table v-model="selectedIds" :headers="headers" :items="items" item-key="file" show-select
             items-per-page="-1">
             <template v-slot:item.size="{ item }">
-              <div v-if="item.raw.size > 0">
-                {{ prettyBytes(item.raw.size) }}
+              <div v-if="item.size > 0">
+                {{ prettyBytes(item.size) }}
               </div>
             </template>
             <template #bottom></template>
