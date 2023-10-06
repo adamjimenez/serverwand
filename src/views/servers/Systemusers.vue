@@ -24,16 +24,12 @@
                 fa-lock-open</v-icon>
               <v-icon v-else size="x-small" color="primary" title="Sudo with password">fas fa-lock</v-icon>
             </span>
-
-            <v-btn icon :disabled="loading" :loading="loading" @click.stop="openKeys(item)" title="Authorized keys">
-              <v-icon size="small">mdi:mdi-key</v-icon>
-            </v-btn>
+            
             <v-btn icon :disabled="loading" :loading="loading" @click.stop="deleteItem(item.name)">
               <v-icon size="small">mdi:mdi-delete</v-icon>
             </v-btn>
           </template>
         </v-list-item>
-
       </v-list>
 
       <v-container class="mt-5" fluid>
@@ -44,22 +40,71 @@
       </v-container>
     </v-card>
 
-    <v-dialog v-model="userDrawer">
+    <v-dialog v-model="userDrawer" max-width="600">
       <v-card title="System user">
+        <v-tabs v-model="tab">
+          <v-tab value="settings">Settings</v-tab>
+          <v-tab value="keys" :disabled="system_user.new">Keys</v-tab>
+        </v-tabs>
+
         <v-card-text>
-          <v-text-field v-model="system_user.name" label="User" required></v-text-field>
 
-          <v-text-field v-model="system_user.password" type="password" label="Password" required
-            autocomplete="new-password"></v-text-field>
+          <v-window v-model="tab">
+            <v-window-item value="settings">
 
-          <v-switch v-model="system_user.sudo" label="sudo" color="primary" hide-details></v-switch>
+              <v-text-field v-model="system_user.name" label="User" :readonly="!system_user.new" required></v-text-field>
 
-          <v-switch :disabled="!system_user.sudo" v-model="system_user.sudo_without_password"
-            label="sudo without password" color="primary" hide-details></v-switch>
+              <v-text-field v-model="system_user.password" type="password" label="Password" required
+                autocomplete="new-password"></v-text-field>
 
-          <v-btn :disabled="!system_user.name" :loading="loading" color="success" @click="saveUser" class="mt-5">
-            Save
-          </v-btn>
+              <v-switch v-model="system_user.sudo" label="sudo" color="primary" hide-details></v-switch>
+
+              <v-switch :disabled="!system_user.sudo" v-model="system_user.sudo_without_password"
+                label="sudo without password" color="primary" hide-details></v-switch>
+
+              <v-btn :disabled="!system_user.name" :loading="loading" color="success" @click="saveUser" class="mt-5">
+                Save
+              </v-btn>
+            </v-window-item>
+
+            <v-window-item value="keys">
+              <div>Public SSH key</div>
+
+              <v-list>
+                <v-list-item>
+                  <v-list-item-subtitle style="white-space: nowrap;">
+                    {{ user.key }}
+                  </v-list-item-subtitle>
+
+                  <template v-slot:append>
+                    <v-btn icon :disabled="fetching" :loading="fetching" v-if="user.key">
+                      <Copy :val="user.key" />
+                    </v-btn>
+                  </template>
+                </v-list-item>
+              </v-list>
+
+              <div>Authorized keys</div>
+
+              <v-list v-if="!fetching">
+                <v-list-item v-for="(item, i) in keys" :key="`item-${i}`" :title="item.name">
+                  <v-list-item-subtitle style="white-space: nowrap;">
+                    {{ item.key }}
+                  </v-list-item-subtitle>
+                  <template v-slot:append>
+                    <v-btn icon :disabled="fetching" :loading="fetching">
+                      <Copy :val="item.key" />
+                    </v-btn>
+                    <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteKey(item.line)">
+                      <v-icon size="small">mdi:mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                </v-list-item>
+              </v-list>
+
+              <v-btn @click="addKey" color="success" class="mt-3"> Upload Key </v-btn>
+            </v-window-item>
+          </v-window>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -75,63 +120,6 @@
             Save
           </v-btn>
         </v-card-text>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog v-model="showKeys">
-      <v-card :loading="fetching">
-        <v-card-title> Keys for {{ user.name }} </v-card-title>
-
-        <v-card-text>
-          <div>Public SSH key</div>
-
-          <v-list>
-            <v-list group>
-
-              <v-list-item>
-                <v-list-item-subtitle style="white-space: nowrap;">
-                  {{ user.key }}
-                </v-list-item-subtitle>
-
-                <template v-slot:append>
-                  <v-btn icon :disabled="fetching" :loading="fetching" v-if="user.key">
-                    <Copy :val="user.key" />
-                  </v-btn>
-                </template>
-              </v-list-item>
-            </v-list>
-          </v-list>
-
-          <div>Authorized keys</div>
-
-          <v-list v-if="!fetching">
-            <v-list group>
-
-              <v-list-item v-for="(item, i) in keys" :key="`item-${i}`" :title="item.name">
-                <v-list-item-subtitle style="white-space: nowrap;">
-                  {{ item.key }}
-                </v-list-item-subtitle>
-                <template v-slot:append>
-                  <v-btn icon :disabled="fetching" :loading="fetching">
-                    <Copy :val="item.key" />
-                  </v-btn>
-                  <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteKey(item.line)">
-                    <v-icon size="small">mdi:mdi-delete</v-icon>
-                  </v-btn>
-                </template>
-              </v-list-item>
-
-            </v-list>
-          </v-list>
-        </v-card-text>
-      </v-card>
-
-      <v-card>
-        <div>
-          <v-card-title primary-title>
-            <v-btn @click="addKey"> Upload Key </v-btn>
-          </v-card-title>
-        </div>
       </v-card>
     </v-dialog>
 
@@ -157,6 +145,7 @@ export default {
   },
   data() {
     return {
+      tab: null,
       error: "",
       data: {
         users: {},
@@ -175,7 +164,6 @@ export default {
       keyDrawer: false,
       serverId: 0,
       user: "",
-      showKeys: false,
       keys: [],
       key: "",
     };
@@ -213,15 +201,38 @@ export default {
         });
     },
     addItem() {
-      this.system_user.name = "";
-      this.system_user.password = "";
-      this.system_user.key = "";
-      this.system_user.sudo = false;
+      this.system_user = {
+        name: '',
+        password: '',
+        key: '',
+        sudo: false,
+        new: true,
+      };
+      
+      this.tab = 'settings';
       this.userDrawer = true;
     },
     editItem(user) {
-      this.system_user = user;
-      this.userDrawer = true;
+      var self = this;
+      this.user = user;
+      this.fetching = true;
+      this.tab = 'settings';
+
+      api
+        .get("servers/" + this.serverId + "/systemusers/" + this.user.name)
+        .then(function (response) {
+          console.log(response);
+          self.keys = response.data.keys;
+          self.fetching = false;
+        })
+        .catch(function (error) {
+          console.log(error);
+          self.fetching = false;
+        })
+        .finally(function () {
+          self.system_user = user;
+          self.userDrawer = true;
+        });
     },
     deleteItem: async function (user) {
       if (
@@ -281,24 +292,6 @@ export default {
           });
       }
     },
-    openKeys(user) {
-      var self = this;
-      this.user = user;
-      this.showKeys = true;
-      this.fetching = true;
-
-      api
-        .get("servers/" + this.serverId + "/systemusers/" + this.user.name)
-        .then(function (response) {
-          console.log(response);
-          self.keys = response.data.keys;
-          self.fetching = false;
-        })
-        .catch(function (error) {
-          console.log(error);
-          self.fetching = false;
-        });
-    },
     deleteKey: async function (line) {
       if (
         await this.$refs.confirm.open(
@@ -332,7 +325,6 @@ export default {
       }
     },
     addKey() {
-      this.showKeys = false;
       this.keyDrawer = true;
     },
     saveKey() {
