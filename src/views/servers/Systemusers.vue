@@ -53,9 +53,9 @@
             <v-window-item value="settings">
 
               <v-text-field v-model="system_user.name" label="User" :readonly="!system_user.new" required></v-text-field>
-
-              <v-text-field v-model="system_user.password" type="password" label="Password" required
-                autocomplete="new-password"></v-text-field>
+                
+              <PasswordField v-model="system_user.password" label="Password" required
+                autocomplete="new-password"></PasswordField>
 
               <v-switch v-model="system_user.sudo" label="sudo" color="primary" hide-details></v-switch>
 
@@ -116,7 +116,7 @@
         <v-card-text>
           <v-text-field v-model="key" label="Public key"></v-text-field>
 
-          <v-btn :disabled="!key" :loading="loading" color="success" @click="saveKey">
+          <v-btn :disabled="!key" :loading="fetching" color="success" @click="saveKey">
             Save
           </v-btn>
         </v-card-text>
@@ -134,6 +134,7 @@ import Copy from "../../components/Copy";
 import TogglePasswordAuthentication from "../../components/TogglePasswordAuthentication";
 import ClearSSHUser from "../../components/ClearSSHUser";
 import Confirm from "../../components/ConfirmDialog.vue";
+import PasswordField from "../../components/PasswordField.vue";
 
 export default {
   components: {
@@ -141,7 +142,8 @@ export default {
     Copy,
     TogglePasswordAuthentication,
     ClearSSHUser,
-    Confirm,
+    Confirm,    
+    PasswordField,
   },
   data() {
     return {
@@ -315,7 +317,8 @@ export default {
               self.fetching = false;
               self.error = response.data.error;
             } else {
-              self.openKeys(self.user);
+              self.editItem(self.user);
+              self.tab = 'keys';
             }
           })
           .catch(function (error) {
@@ -343,8 +346,9 @@ export default {
             self.fetching = false;
             self.error = response.data.error;
           } else {
-            self.keyDrawer = true;
-            self.openKeys(self.user);
+            self.keyDrawer = false;
+            self.editItem(self.user);
+            self.tab = 'keys';
           }
         })
         .catch(function (error) {
