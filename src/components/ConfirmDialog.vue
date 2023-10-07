@@ -29,7 +29,7 @@ export default {
             options: {
                 color: "grey lighten-3",
                 width: 400,
-                zIndex: 1008,
+                zIndex: 10008,
                 noconfirm: false
             }
         };
