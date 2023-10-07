@@ -66,18 +66,16 @@
     </v-card>
 
     <v-dialog v-model="dialog" persistent width="300">
-      <v-card color="primary" dark>
+      <v-card color="primary">
         <v-card-text>
-
-          <v-layout class="pt-5">
+          <v-layout class="py-5">
             <i class="fas fa-magic fa-2x faa-horizontal animated"></i>
             <h2 style="margin-left: 10px;">Spellcasting...</h2>
           </v-layout>
 
-          <v-progress-linear :indeterminate="progress == 0" v-model="progress" color="white"
-            class="mb-0"></v-progress-linear>
-          <div v-html="details"></div>
+          <v-progress-linear :indeterminate="progress == 0" v-model="progress" color="white"></v-progress-linear>
 
+          <div v-html="details"></div>
         </v-card-text>
       </v-card>
     </v-dialog>
