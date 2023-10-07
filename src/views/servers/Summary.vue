@@ -69,6 +69,9 @@
                       </div>
 
                       <CleanUp v-if="i === 0" :serverId="serverId" @complete="fetchData(true)"></CleanUp>
+                      <AttachVolume v-if="i === 0" :serverId="serverId" @complete="fetchData(true)"></AttachVolume>
+                      <DetachVolume v-if="i > 0" :serverId="serverId"  :volume="disk.name" @complete="fetchData(true)"></DetachVolume>
+                      <ResizeVolume v-if="i > 0" :serverId="serverId"  :volume="disk.name" @complete="fetchData(true)"></ResizeVolume>
                     </div>
                   </v-card-text>
                 </v-card>
@@ -211,6 +214,9 @@ import UpdatesConfig from "../../components/UpdatesConfig";
 import TimeZone from "../../components/TimeZone";
 import Terminal from "../../components/Terminal";
 import ResourceGraph from "../../components/ResourceGraph";
+import AttachVolume from "../../components/AttachVolume";
+import DetachVolume from "../../components/DetachVolume";
+import ResizeVolume from "../../components/ResizeVolume";
 
 export default {
   components: {
@@ -225,6 +231,9 @@ export default {
     TimeZone,
     Terminal,
     ResourceGraph,
+    AttachVolume,
+    DetachVolume,
+    ResizeVolume,
   },
   data() {
     return {
