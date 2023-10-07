@@ -1,6 +1,6 @@
 <template>
   <span>
-    <v-btn icon @click="clean()">
+    <v-btn icon @click="clean()" title="Disk Clean Up">
       <v-icon size="small">fas fa-broom</v-icon>
     </v-btn>
 
