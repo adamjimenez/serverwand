@@ -5,18 +5,6 @@
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
-      <v-layout row v-if="authRequired">
-        <v-row>
-          <v-col>
-            <v-card tile flat>
-              <v-card-text>
-                <strong>DNS auth required: </strong>
-                <v-btn @click="authPrompt()">Fix</v-btn>
-              </v-card-text>
-            </v-card>
-          </v-col></v-row>
-      </v-layout>
-
       <v-layout row v-if="!authRequired &&
         data.server &&
         data.dns &&
@@ -128,7 +116,7 @@
 
     </div>
     <Confirm ref="confirm" />
-
+    <OAuth ref="oauth" />
   </div>
 </template>
 
@@ -138,12 +126,14 @@ import Loading from "../../components/Loading";
 import util from "../../services/util";
 import Confirm from "../../components/ConfirmDialog.vue";
 import PasswordField from "../../components/PasswordField.vue";
+import OAuth from "../../components/OAuth.vue";
 
 export default {
   components: {
     Loading,
     Confirm,
     PasswordField,
+    OAuth,
   },
   data() {
     return {
@@ -314,17 +304,20 @@ export default {
 
       api
         .post("sites/" + self.domainId + "/fixmx", {})
-        .then(function (response) {
+        .then(async function (response) {
           console.log(response);
 
           self.loading = false;
 
+          switch (await self.$refs.oauth.check(response.data)) {
+              case true:
+                  return self.fixDomainDns();
+              case false:
+                  return;
+          }
+
           if (!response.data.success) {
-            if (response.data.error == "auth") {
-              self.authRequired = true;
-            } else {
-              self.error = response.data.error;
-            }
+            self.error = response.data.error;
           } else {
             self.fetchData();
           }
@@ -340,17 +333,20 @@ export default {
 
       api
         .post("sites/" + self.domainId + "/fixdkim", {})
-        .then(function (response) {
+        .then(async function (response) {
           console.log(response);
 
           self.loading = false;
 
+          switch (await self.$refs.oauth.check(response.data)) {
+              case true:
+                  return self.fixDomainDns();
+              case false:
+                  return;
+          }
+
           if (!response.data.success) {
-            if (response.data.error == "auth") {
-              self.authRequired = true;
-            } else {
-              self.error = response.data.error;
-            }
+            self.error = response.data.error;
           } else {
             self.fetchData();
           }
@@ -366,17 +362,20 @@ export default {
 
       api
         .post("sites/" + self.domainId + "/fixspf", {})
-        .then(function (response) {
+        .then(async function (response) {
           console.log(response);
 
           self.loading = false;
 
+          switch (await self.$refs.oauth.check(response.data)) {
+              case true:
+                  return self.fixDomainDns();
+              case false:
+                  return;
+          }
+
           if (!response.data.success) {
-            if (response.data.error == "auth") {
-              self.authRequired = true;
-            } else {
-              self.error = response.data.error;
-            }
+            self.error = response.data.error;
           } else {
             self.fetchData();
           }
@@ -384,10 +383,6 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
-    },
-    authPrompt() {
-      this.authRequired = false;
-      window.open("https://serverwand.com/account/services/" + this.data.server.dns);
     },
     prettyBytes(value) {
       return util.prettyBytes(value);
