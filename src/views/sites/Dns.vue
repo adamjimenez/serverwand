@@ -4,19 +4,9 @@
 
     <Loading :value="loading" />
 
-    <v-dialog v-model="authRequired" max-width="240">
-      <v-card tile flat>
-        <v-card-text>
-          <strong>DNS auth required</strong>
-          <v-btn @click="authPrompt()">Fix</v-btn>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-
     <v-data-table :headers="headers" :items="data.records" class="results" mobile-breakpoint="0" @click:row="editItem">
-
       <template v-slot:item.type="{ item }">
-        <span>{{ item.raw.type }}</span>
+        <span>{{ item.type }}</span>
       </template>
 
       <template v-slot:item.priority="{ item }">
@@ -28,7 +18,6 @@
           mdi:mdi-delete
         </v-icon>
       </template>
-
     </v-data-table>
 
     <v-card>
@@ -57,6 +46,7 @@
     </v-dialog>
 
     <Confirm ref="confirm" />
+    <OAuth ref="oauth" />
   </div>
 </template>
 
@@ -64,11 +54,13 @@
 import api from "../../services/api";
 import Loading from "../../components/Loading";
 import Confirm from "../../components/ConfirmDialog.vue";
+import OAuth from "../../components/OAuth.vue";
 
 export default {
   components: {
     Loading,
-    Confirm
+    Confirm,
+    OAuth,
   },
   data() {
     return {
@@ -89,32 +81,25 @@ export default {
       record: {},
       recordType: ["A", "CNAME", "MX", "TXT", "SRV", "NS"],
       drawer: false,
-      authRequired: false,
-      headers: [
-        {
-          title: "Type ",
-          key: "type",
-        },
-        {
-          title: "Name ",
-          key: "name",
-        },
-        {
-          title: "Target ",
-          key: "target",
-        },
-        {
-          title: "Priority ",
-          key: "priority",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
-        },
-        {
-          title: "",
-          key: "actions",
-          sortable: false,
-        },
-      ],
+      headers: [{
+        title: "Type ",
+        key: "type",
+      }, {
+        title: "Name ",
+        key: "name",
+      }, {
+        title: "Target ",
+        key: "target",
+      }, {
+        title: "Priority ",
+        key: "priority",
+        class: 'd-none d-sm-table-cell',
+        cellClass: 'd-none d-sm-table-cell',
+      }, {
+        title: "",
+        key: "actions",
+        sortable: false,
+      }],
     };
   },
   created() {
@@ -136,20 +121,22 @@ export default {
 
       api
         .get("sites/" + this.domainId + "/records")
-        .then(function (response) {
+        .then(async function (response) {
           console.log(response);
+
+          switch (await self.$refs.oauth.check(response.data)) {
+            case true:
+              return self.fetchData();
+            case false:
+              return;
+          }
 
           self.data = response.data;
 
           //self.data = response.data.item
           document.title = "DNS" + " | " + self.data.domain;
 
-          if (response.data.error == "auth") {
-            self.authRequired = true;
-            setTimeout(self.fetchData, 5000);
-          } else {
-            self.error = response.data.error;
-          }
+          self.error = response.data.error;
         })
         .catch(function (error) {
           console.log(error);
@@ -162,7 +149,7 @@ export default {
       this.record = {};
       this.drawer = true;
     },
-    saveItem(noAuthPrompt) {
+    saveItem() {
       var self = this;
 
       if (this.record.type) {
@@ -178,16 +165,18 @@ export default {
 
         api
           .post(url, this.record)
-          .then(function (response) {
+          .then(async function (response) {
             console.log(response);
 
+            switch (await self.$refs.oauth.check(response.data)) {
+              case true:
+                return self.saveItem();
+              case false:
+                return;
+            }
+
             if (!response.data.success) {
-              if (response.data.error == "auth" && !noAuthPrompt) {
-                self.authRequired = true;
-                setTimeout(self.fetchData, 5000);
-              } else {
-                self.error = response.data.error;
-              }
+              self.error = response.data.error;
             } else {
               self.drawer = false;
               self.fetchData();
@@ -203,14 +192,14 @@ export default {
       }
     },
     editItem(event, data) {
-      this.record = JSON.parse(JSON.stringify(data.item.raw));
+      this.record = JSON.parse(JSON.stringify(data.item));
       this.drawer = true;
     },
     deleteItem: async function (item) {
       if (!await this.$refs.confirm.open("Delete record")) {
         return;
       }
-      
+
       this.fetching = true;
       this.error = "";
 
@@ -232,12 +221,6 @@ export default {
           console.log(error);
           self.fetching = false;
         });
-    },
-    authPrompt() {
-      this.authRequired = false;
-      window.open(
-        "https://serverwand.com/account/services/" + this.data.server.dns
-      );
     },
   },
 };
