@@ -1,5 +1,5 @@
 <template>
-    <v-text-field v-bind="$attrs" autofocus :type="showPassword ? 'text' : 'password'"
+    <v-text-field v-bind="$attrs" :type="showPassword ? 'text' : 'password'"
         :append-icon="showPassword ? 'mdi:mdi-eye-off' : 'mdi:mdi-eye'"
         @click:append="showPassword = !showPassword"></v-text-field>
 </template>
