@@ -159,106 +159,100 @@ export default {
         active: false,
       },
       selectedIds: [],
-      hosts: [
-        {
-          title: "AWS",
-          value: "",
-        },
-        {
-          title: "Linode (Atlanta, GA)",
-          value: "https://us-southeast-1.linodeobjects.com",
-        },
-        {
-          title: "Linode (Frankfurt, DE)",
-          value: "https://eu-central-1.linodeobjects.com",
-        },
-        {
-          title: "Linode (Newark, NJ)",
-          value: "https://us-east-1.linodeobjects.com",
-        },
-        {
-          title: "Linode (Singapore, SG)",
-          value: "https://ap-south-1.linodeobjects.com",
-        },
-        {
-          title: "Digital Ocean (NYC3)",
-          value: "https://nyc3.digitaloceanspaces.com",
-        },
-        {
-          title: "Digital Ocean (SFO3)",
-          value: "https://sfo3.digitaloceanspaces.com",
-        },
-        {
-          title: "Digital Ocean (AMS3)",
-          value: "https://ams3.digitaloceanspaces.com",
-        },
-        {
-          title: "Digital Ocean (SGP1)",
-          value: "https://sgp1.digitaloceanspaces.com",
-        },
-        {
-          title: "Digital Ocean (FRA1)",
-          value: "https://fra1.digitaloceanspaces.com",
-        },
-        {
-          title: "Vultr",
-          value: "https://ewr1.vultrobjects.com",
-        },
-      ],
+      hosts: [{
+        title: "AWS",
+        value: "",
+      },
+      {
+        title: "Linode (Atlanta, GA)",
+        value: "https://us-southeast-1.linodeobjects.com",
+      },
+      {
+        title: "Linode (Frankfurt, DE)",
+        value: "https://eu-central-1.linodeobjects.com",
+      },
+      {
+        title: "Linode (Newark, NJ)",
+        value: "https://us-east-1.linodeobjects.com",
+      },
+      {
+        title: "Linode (Singapore, SG)",
+        value: "https://ap-south-1.linodeobjects.com",
+      },
+      {
+        title: "Digital Ocean (NYC3)",
+        value: "https://nyc3.digitaloceanspaces.com",
+      },
+      {
+        title: "Digital Ocean (SFO3)",
+        value: "https://sfo3.digitaloceanspaces.com",
+      },
+      {
+        title: "Digital Ocean (AMS3)",
+        value: "https://ams3.digitaloceanspaces.com",
+      },
+      {
+        title: "Digital Ocean (SGP1)",
+        value: "https://sgp1.digitaloceanspaces.com",
+      },
+      {
+        title: "Digital Ocean (FRA1)",
+        value: "https://fra1.digitaloceanspaces.com",
+      },
+      {
+        title: "Vultr",
+        value: "https://ewr1.vultrobjects.com",
+      }],
 
-      headers: [
-        {
-          title: "Name ",
-          key: "name",
-        },
-        {
-          title: "Size ",
-          key: "size",
-        },
-        {
-          title: "Last modified ",
-          key: "modified",
-        },
-      ],
+      headers: [{
+        title: "Name ",
+        key: "name",
+      },
+      {
+        title: "Size ",
+        key: "size",
+      },
+      {
+        title: "Last modified ",
+        key: "modified",
+      }],
 
-      backupHeaders: [
-        {
-          title: "Name",
-          key: "name",
-        },
-        {
-          title: "Date",
-          key: "date",
-        },
-        {
-          title: "Status",
-          key: "complete",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
-        },
-        {
-          title: "Type",
-          key: "automatic",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
-        },
-        {
-          title: "Duration",
-          key: "duration",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
-        },
-        {
-          title: "Size",
-          key: "size",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
-        },
-        {
-          title: " ",
-          key: "action",
-        },
-      ],
+      backupHeaders: [{
+        title: "Name",
+        key: "name",
+      },
+      {
+        title: "Date",
+        key: "date",
+      },
+      {
+        title: "Status",
+        key: "complete",
+        class: 'd-none d-sm-table-cell',
+        cellClass: 'd-none d-sm-table-cell',
+      },
+      {
+        title: "Type",
+        key: "automatic",
+        class: 'd-none d-sm-table-cell',
+        cellClass: 'd-none d-sm-table-cell',
+      },
+      {
+        title: "Duration",
+        key: "duration",
+        class: 'd-none d-sm-table-cell',
+        cellClass: 'd-none d-sm-table-cell',
+      },
+      {
+        title: "Size",
+        key: "size",
+        class: 'd-none d-sm-table-cell',
+        cellClass: 'd-none d-sm-table-cell',
+      },
+      {
+        title: " ",
+        key: "action",
+      }],
     };
   },
   computed: {
