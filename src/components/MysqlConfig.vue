@@ -16,12 +16,7 @@
         <v-card-text>
           <v-textarea v-model="config" label="Config" auto-grow></v-textarea>
 
-          <v-btn
-            :disabled="fetching"
-            :loading="fetching"
-            color="success"
-            @click="save"
-          >
+          <v-btn :disabled="fetching" :loading="fetching" color="success" @click="save">
             Save
           </v-btn>
         </v-card-text>
@@ -70,9 +65,9 @@ export default {
           config: self.config,
         })
         .then(() => {
-            self.fetching=false;
-            self.drawer=false;
-          });
+          self.fetching = false;
+          self.drawer = false;
+        });
     },
   },
 };

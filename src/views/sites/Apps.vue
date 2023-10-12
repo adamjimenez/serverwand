@@ -331,37 +331,33 @@ export default {
         return;
       }
 
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Install " + app
-        )
-      ) {
-
-        var self = this;
-        this.error = "";
-        this.fetching = true;
-        this.loading = true;
-
-        api
-          .post("sites/" + this.$route.params.id + "/apps", { app: app })
-          .then(function (response) {
-            console.log(response);
-
-            if (response.data.error) {
-              self.error = response.data.error;
-            } else {
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          .finally(function () {
-            self.fetching = false;
-            self.loading = false;
-          });
+      if (!await this.$refs.confirm.open("Install " + app)) {
+        return;
       }
+
+      var self = this;
+      this.error = "";
+      this.fetching = true;
+      this.loading = true;
+
+      api
+        .post("sites/" + this.$route.params.id + "/apps", { app: app })
+        .then(function (response) {
+          console.log(response);
+
+          if (response.data.error) {
+            self.error = response.data.error;
+          } else {
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .finally(function () {
+          self.fetching = false;
+          self.loading = false;
+        });
 
     },
     clearLogs() {

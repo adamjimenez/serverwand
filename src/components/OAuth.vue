@@ -76,13 +76,5 @@ export default {
             checkIfPopupWindowClosed();
         }
     },
-    watch: {
-        "window.closed": function (newVal) {
-            console.log(newVal);
-            if (newVal === false) {
-                //this.agree();
-            }
-        }
-    }
 };
 </script>

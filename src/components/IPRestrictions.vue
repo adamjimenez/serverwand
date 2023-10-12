@@ -119,33 +119,30 @@ export default {
             this.drawer = true;
         },
         deleteItem: async function (line) {
-            if (
-                await this.$refs.confirm.open(
-                    "Confirm",
-                    "Are you sure you want to delete this item?"
-                )
-            ) {
-                var self = this;
-                this.fetching = true;
-                this.error = "";
-
-                api
-                    .post(this.path, { line: line })
-                    .then(function (response) {
-                        console.log(response);
-
-                        if (!response.data.success) {
-                            self.error = response.data.error;
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    })
-                    .finally(() => {
-                        this.fetching = false;
-                        self.$emit("save");
-                    });
+            if (!await this.$refs.confirm.open("Are you sure you want to delete this item?")) {
+                return;
             }
+
+            var self = this;
+            this.fetching = true;
+            this.error = "";
+
+            api
+                .post(this.path, { line: line })
+                .then(function (response) {
+                    console.log(response);
+
+                    if (!response.data.success) {
+                        self.error = response.data.error;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+                .finally(() => {
+                    this.fetching = false;
+                    self.$emit("save");
+                });
         },
         saveItem() {
             var self = this;

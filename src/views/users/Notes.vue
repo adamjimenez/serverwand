@@ -33,12 +33,7 @@
         <v-card-text>
           <v-textarea v-model="data.note" label="Note"></v-textarea>
 
-          <v-btn
-            :disabled="!data.note"
-            :loading="loading"
-            color="success"
-            @click="saveItem"
-          >
+          <v-btn :disabled="!data.note" :loading="loading" color="success" @click="saveItem">
             Save
           </v-btn>
         </v-card-text>
@@ -97,10 +92,10 @@ export default {
       api
         .get("users/" + this.id + "/notes")
         .then(response => {
-            console.log(response);
-            self.notes=response.data.notes;
-            document.title = 'Notes';
-          })
+          console.log(response);
+          self.notes = response.data.notes;
+          document.title = 'Notes';
+        })
         .catch(error => console.log(error))
         .finally(() => self.fetching = false);
     },
@@ -119,52 +114,48 @@ export default {
         api
           .post("users/" + this.id + "/notes", this.data)
           .then(response => {
-              console.log(response);
+            console.log(response);
 
-              if(!response.data.success) {
-                self.error=response.data.error;
-              } else {
-                self.data.note="";
-                self.drawer=false;
-                self.fetchData();
-              }
-            })
+            if (!response.data.success) {
+              self.error = response.data.error;
+            } else {
+              self.data.note = "";
+              self.drawer = false;
+              self.fetchData();
+            }
+          })
           .catch(error => {
-              console.log(error);
-              self.dialog=false;
-            })
+            console.log(error);
+            self.dialog = false;
+          })
           .finally(() => self.dialog = false);
       }
     },
-    deleteItem: async function(item) {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Delete note"
-        )
-      ) {
+    deleteItem: async function (item) {
+      if (!await this.$refs.confirm.open("Delete note")) {
+        return;
+      }
 
-        var self = this;
-        this.error = "";
-        this.dialog = true;
-        this.loading = true;
+      var self = this;
+      this.error = "";
+      this.dialog = true;
+      this.loading = true;
 
-        api
-          .post("users/" + this.id + "/notes", { delete: 1, note: item.id })
-          .then(response => {
-              console.log(response);
+      api
+        .post("users/" + this.id + "/notes", { delete: 1, note: item.id })
+        .then(response => {
+          console.log(response);
 
-              if(response.data.error)
-                self.error=response.data.error;
-              else
-                self.fetchData();
-            })
-          .catch(error => console.log(error))
-          .finally(() => {
-              self.dialog=false;
-              self.loading=false;
-            });
-      };
+          if (response.data.error)
+            self.error = response.data.error;
+          else
+            self.fetchData();
+        })
+        .catch(error => console.log(error))
+        .finally(() => {
+          self.dialog = false;
+          self.loading = false;
+        });
     },
   },
 };

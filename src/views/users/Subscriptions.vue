@@ -3,25 +3,14 @@
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
-      <v-data-table 
-        :headers="headers" 
-        :items="subscriptions" 
-        class="results"      
-        mobile-breakpoint="0"  
-        @click:row="editItem"
-      >
+      <v-data-table :headers="headers" :items="subscriptions" class="results" mobile-breakpoint="0" @click:row="editItem">
 
         <template v-slot:item.created="{ item }">
           {{ formatDate(item.created) }}
         </template>
 
         <template v-slot:item.actions="{ item }">
-          <v-btn
-            icon
-            :disabled="fetching"
-            :loading="fetching"
-            @click="deleteItem(item.id)"
-          >
+          <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item.id)">
             <v-icon size="small">delete</v-icon>
           </v-btn>
         </template>
@@ -42,24 +31,11 @@
         <v-card-title> Subscription </v-card-title>
 
         <v-card-text>
-          <v-text-field
-            v-model="data.domain"
-            label="Domain"
-            required
-          ></v-text-field>
+          <v-text-field v-model="data.domain" label="Domain" required></v-text-field>
 
-          <v-select
-            v-model="data.product"
-            :items="products"
-            label="Product"
-          ></v-select>
+          <v-select v-model="data.product" :items="products" label="Product"></v-select>
 
-          <v-btn
-            :disabled="!data.domain || !data.product"
-            :loading="loading"
-            color="success"
-            @click="saveItem"
-          >
+          <v-btn :disabled="!data.domain || !data.product" :loading="loading" color="success" @click="saveItem">
             Save
           </v-btn>
         </v-card-text>
@@ -210,38 +186,34 @@ export default {
           });
       }
     },
-    deleteItem: async function(item) {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Delete " + item.id
-        )
-      ) {
+    deleteItem: async function (item) {
+      if (!await this.$refs.confirm.open("Delete " + item.id)) {
+        return;
+      }
 
-        var self = this;
-        this.error = "";
-        this.dialog = true;
-        this.loading = true;
+      var self = this;
+      this.error = "";
+      this.dialog = true;
+      this.loading = true;
 
-        api
-          .post("users/" + this.id + "/subscriptions/" + item.id, { delete: 1 })
-          .then(function (response) {
-            console.log(response);
+      api
+        .post("users/" + this.id + "/subscriptions/" + item.id, { delete: 1 })
+        .then(function (response) {
+          console.log(response);
 
-            if (response.data.error) {
-              self.error = response.data.error;
-            } else {
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          .finally(function () {
-            self.dialog = false;
-            self.loading = false;
-          });
-      };
+          if (response.data.error) {
+            self.error = response.data.error;
+          } else {
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .finally(function () {
+          self.dialog = false;
+          self.loading = false;
+        });
     },
     formatDate(value) {
       return util.formatDate(value);

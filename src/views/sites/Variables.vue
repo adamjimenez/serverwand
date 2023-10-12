@@ -117,33 +117,30 @@ export default {
       this.drawer = true;
     },
     deleteItem: async function (line) {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Delete Variable?"
-        )
-      ) {
-        var self = this;
-        this.fetching = true;
-        this.error = "";
+      if (!await this.$refs.confirm.open("Delete Variable?")) {
+        return;
+      }
+      
+      var self = this;
+      this.fetching = true;
+      this.error = "";
 
-        api
-          .post("sites/" + this.siteId + "/variables", { line: line })
-          .then(function (response) {
-            console.log(response);
+      api
+        .post("sites/" + this.siteId + "/variables", { line: line })
+        .then(function (response) {
+          console.log(response);
 
-            if (!response.data.success) {
-              self.fetching = false;
-              self.error = response.data.error;
-            } else {
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
+          if (!response.data.success) {
             self.fetching = false;
-            console.log(error);
-          });
-      };
+            self.error = response.data.error;
+          } else {
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          self.fetching = false;
+          console.log(error);
+        });
     },
     saveItem() {
       var self = this;

@@ -21,7 +21,8 @@
           </template>
 
           <template v-slot:append>
-            <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item)" v-if="item.comment != 'ServerWand'">
+            <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item)"
+              v-if="item.comment != 'ServerWand'">
               <v-icon size="small">mdi:mdi-delete</v-icon>
             </v-btn>
           </template>
@@ -190,23 +191,19 @@ export default {
     deleteItem: async function (item) {
       var label = item.port + '/' + item.protocol + ' ' + item.action + ' from ' + item.from;
 
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Delete " + label
-        )
-      ) {
-        this.fetching = true
-        this.error = ''
-        var response = await api.post('servers/' + this.serverId + '/firewall', { id: item.id });
-        console.log(response)
+      if (!await this.$refs.confirm.open("Delete " + label)) {
+        return;
+      }
+      this.fetching = true
+      this.error = ''
+      var response = await api.post('servers/' + this.serverId + '/firewall', { id: item.id });
+      console.log(response)
 
-        this.fetching = false;
-        if (!response.data.success) {
-          this.error = response.data.error;
-        } else {
-          self.fetchData();
-        }
+      this.fetching = false;
+      if (!response.data.success) {
+        this.error = response.data.error;
+      } else {
+        self.fetchData();
       }
     },
     saveItem: async function () {

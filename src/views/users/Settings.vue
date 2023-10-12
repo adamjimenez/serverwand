@@ -69,36 +69,32 @@ export default {
     editItem() {
       this.$router.push("/users/" + this.$route.params.id + "/edit");
     },
-    deleteItem: async function() {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Delete " + this.data.name
-        )
-      ) {
-        var self = this;
-        this.dialog = true;
-        this.loading = true;
-
-        api
-          .post("users/" + this.id, { delete: 1 })
-          .then(response => {
-            console.log(response);
-
-            if (response.data.error) {
-              self.error = response.data.error;
-            } else {
-              self.$router.push("/users/");
-            }
-          })
-          .catch(error => console.log(error))
-          .finally(() => {
-            self.dialog = false;
-            self.loading = false;
-          });
+    deleteItem: async function () {
+      if (!await this.$refs.confirm.open("Delete " + this.data.name)) {
+        return;
       }
+
+      var self = this;
+      this.dialog = true;
+      this.loading = true;
+
+      api
+        .post("users/" + this.id, { delete: 1 })
+        .then(response => {
+          console.log(response);
+
+          if (response.data.error) {
+            self.error = response.data.error;
+          } else {
+            self.$router.push("/users/");
+          }
+        })
+        .catch(error => console.log(error))
+        .finally(() => {
+          self.dialog = false;
+          self.loading = false;
+        });
     },
-    
   },
 };
 </script>

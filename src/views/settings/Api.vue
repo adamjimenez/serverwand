@@ -142,29 +142,24 @@ export default {
       var self = this;
       this.error = "";
 
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Are you sure you want to delete this item?"
-        )
-      ) {
-
-        api
-          .post("apikeys", { delete: 1, api_key: id })
-          .then(function (response) {
-            console.log(response);
-
-            if (response.data.error) {
-              self.error = response.data.error;
-            } else {
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-
+      if (!await this.$refs.confirm.open("Are you sure you want to delete this item?")) {
+        return;
       }
+
+      api
+        .post("apikeys", { delete: 1, api_key: id })
+        .then(function (response) {
+          console.log(response);
+
+          if (response.data.error) {
+            self.error = response.data.error;
+          } else {
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
   },
 };

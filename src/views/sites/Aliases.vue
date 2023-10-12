@@ -28,8 +28,7 @@
             </v-list-item-action>
 
             <v-list-item-action>
-              <v-btn :disabled="fetching" @click="deleteAlias(item.domain)" icon="mdi:mdi-delete"
-                size="small"></v-btn>
+              <v-btn :disabled="fetching" @click="deleteAlias(item.domain)" icon="mdi:mdi-delete" size="small"></v-btn>
             </v-list-item-action>
           </template>
         </v-list-item>
@@ -201,31 +200,27 @@ export default {
       }
     },
     deleteAlias: async function (alias) {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Delete " + alias
-        )
-      ) {
-        var self = this
-        this.fetching = true
-        this.error = ''
-
-        api.post('sites/' + this.siteId + '/aliases', { delete: 1, alias: alias })
-          .then(function (response) {
-            console.log(response)
-
-            if (!response.data.success) {
-              self.error = response.data.error;
-            } else {
-              self.fetchData()
-            }
-          })
-          .catch(function (error) {
-            console.log(error)
-            self.fetching = false
-          })
+      if (!await this.$refs.confirm.open("Delete " + alias)) {
+        return;
       }
+      var self = this
+      this.fetching = true
+      this.error = ''
+
+      api.post('sites/' + this.siteId + '/aliases', { delete: 1, alias: alias })
+        .then(function (response) {
+          console.log(response)
+
+          if (!response.data.success) {
+            self.error = response.data.error;
+          } else {
+            self.fetchData()
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+          self.fetching = false
+        })
     },
 
     fixAliasDns(alias, noAuthPrompt) {
@@ -266,7 +261,7 @@ export default {
     }
   },
   beforeUnmount() {
-      clearTimeout(this.timer);
+    clearTimeout(this.timer);
   },
 }
 </script>

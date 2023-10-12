@@ -31,43 +31,43 @@ export default {
     authRequired: false,
   }),
   methods: {
-    create (data) {
+    create(data) {
       var self = this;
       self.loading = true;
 
       api
         .post("domains/create", data)
         .then(response => {
-            if(response.data.domain_id) {
-              self.$router.push(
-                "/domains/"+response.data.domain_id+"/summary"
-              );
-            } else if(response.data.error) {
-              if(response.data.error==="auth") {
-                self.provider=response.data.provider;
-                self.authRequired=true;
+          if (response.data.domain_id) {
+            self.$router.push(
+              "/domains/" + response.data.domain_id + "/summary"
+            );
+          } else if (response.data.error) {
+            if (response.data.error === "auth") {
+              self.provider = response.data.provider;
+              self.authRequired = true;
 
-                var interval=setInterval(() => {
-                    if(self.newWindow&&self.newWindow.closed) {
-                      clearInterval(interval);
-                      self.create(data);
-                      return;
-                    }
-                  }, 500);
-              } else {
-                self.error=response.data.error;
-              }
+              var interval = setInterval(() => {
+                if (self.newWindow && self.newWindow.closed) {
+                  clearInterval(interval);
+                  self.create(data);
+                  return;
+                }
+              }, 500);
+            } else {
+              self.error = response.data.error;
             }
-          })
+          }
+        })
         .catch(error => {
-            console.log(error);
-          })
+          console.log(error);
+        })
         .finally(() => {
-            self.loading=false;
-          });
+          self.loading = false;
+        });
     },
 
-    authPrompt () {
+    authPrompt() {
       this.authRequired = false;
       this.newWindow = window.open(
         "https://serverwand.com/account/services/" + this.provider

@@ -70,7 +70,6 @@ export default {
     },
     validate() {
       var self = this;
-
       this.details = "";
       this.loading = true;
 

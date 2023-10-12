@@ -135,48 +135,40 @@ export default {
       window.open("https://" + this.data.server.ip + "/backups/" + item.name);
     },
     deleteItem: async function (item) {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Delete " + item.name
-        )
-      ) {
-
-        var self = this;
-        self.fetching = true;
-
-        api
-          .post("sites/" + this.domainId + "/backups", { ids: [item.name] })
-          .then(function () {
-            self.fetchData();
-          })
-          .catch(function (error) {
-            console.log(error);
-            self.fetching = false;
-          });
+      if (!await this.$refs.confirm.open("Delete " + item.name)) {
+        return;
       }
+
+      var self = this;
+      self.fetching = true;
+
+      api
+        .post("sites/" + this.domainId + "/backups", { ids: [item.name] })
+        .then(function () {
+          self.fetchData();
+        })
+        .catch(function (error) {
+          console.log(error);
+          self.fetching = false;
+        });
     },
     restore: async function (item) {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Restore " + item.name
-        )
-      ) {
+      if (!await this.$refs.confirm.open("Restore " + item.name)) {
+        return;
+      }
 
-        var self = this;
-        self.fetching = true;
+      var self = this;
+      self.fetching = true;
 
-        api
-          .post("sites/" + this.domainId + "/backups", { restore: item.name })
-          .then(function () {
-            self.fetchData();
-          })
-          .catch(function (error) {
-            console.log(error);
-            self.fetching = false;
-          });
-      };
+      api
+        .post("sites/" + this.domainId + "/backups", { restore: item.name })
+        .then(function () {
+          self.fetchData();
+        })
+        .catch(function (error) {
+          console.log(error);
+          self.fetching = false;
+        });
     },
     handleError(error) {
       this.error = error;

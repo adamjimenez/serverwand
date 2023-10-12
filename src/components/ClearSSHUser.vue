@@ -26,31 +26,28 @@ export default {
   },
 
   methods: {
-    clearSSHUser: async function() {      
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Clear the default SSH user used for terminal access?"
-        )
-      ) {
-        var self = this;
-        self.fetching = true;
-        api
-          .post("servers/" + this.serverId + "/savesshuser", {
-            ssh_username: "",
-          })
-          .then(response => {
-            console.log(response);
-
-            if (!response.data.success) {
-              self.error = response.data.error;
-            } else {
-              self.$emit('complete');
-            }
-          })
-          .catch(error => console.log(error))
-          .finally(() => self.fetching = false);
+    clearSSHUser: async function () {
+      if (!await this.$refs.confirm.open("Clear the default SSH user used for terminal access?")) {
+        return;
       }
+      
+      var self = this;
+      self.fetching = true;
+      api
+        .post("servers/" + this.serverId + "/savesshuser", {
+          ssh_username: "",
+        })
+        .then(response => {
+          console.log(response);
+
+          if (!response.data.success) {
+            self.error = response.data.error;
+          } else {
+            self.$emit('complete');
+          }
+        })
+        .catch(error => console.log(error))
+        .finally(() => self.fetching = false);
     },
   },
 };

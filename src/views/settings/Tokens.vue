@@ -139,31 +139,27 @@ export default {
       this.drawer = true;
     },
     deleteItem: async function (id) {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Are you sure you want to delete this item?"
-        )
-      ) {
+      if (!await this.$refs.confirm.open("Are you sure you want to delete this item?")) {
+        return;
+      }
 
-        var self = this;
-        this.error = "";
+      var self = this;
+      this.error = "";
 
-        api
-          .post("providers/tokens/" + id, { delete: 1 })
-          .then(function (response) {
-            console.log(response);
+      api
+        .post("providers/tokens/" + id, { delete: 1 })
+        .then(function (response) {
+          console.log(response);
 
-            if (response.data.error) {
-              self.error = response.data.error;
-            } else {
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      };
+          if (response.data.error) {
+            self.error = response.data.error;
+          } else {
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
     submitToken() {
       var self = this;

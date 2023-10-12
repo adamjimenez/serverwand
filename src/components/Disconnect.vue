@@ -29,28 +29,25 @@ export default {
 
   methods: {
     deleteServer: async function () {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Disconnect from server " + this.server.name + "?"
-        )
-      ) {
-        var self = this;
-        this.fetching = true;
-
-        api
-          .get("servers/" + this.$route.params.id + "/delete")
-          .then(response => {
-            console.log(response);
-
-            if (response.data.success) {
-              // subscribe to status changes
-              self.$router.push("/servers/");
-            }
-          })
-          .catch((error) => console.log(error))
-          .finally(() => self.fetching = false);
+      if (!await this.$refs.confirm.open("Disconnect from server " + this.server.name + "?")) {
+        return;
       }
+      
+      var self = this;
+      this.fetching = true;
+
+      api
+        .get("servers/" + this.$route.params.id + "/delete")
+        .then(response => {
+          console.log(response);
+
+          if (response.data.success) {
+            // subscribe to status changes
+            self.$router.push("/servers/");
+          }
+        })
+        .catch((error) => console.log(error))
+        .finally(() => self.fetching = false);
     }
   },
 }

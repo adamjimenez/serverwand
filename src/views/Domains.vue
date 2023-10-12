@@ -58,19 +58,16 @@ export default {
       return mobile.value;
     },
     headers: function () {
-      var items =  [
-        {
-          title: "Domain ",
-          key: "domain",
-        }];
+      var items = [{
+        title: "Domain ",
+        key: "domain",
+      }];
 
       if (!this.mobile) {
-        items.push(
-        {
+        items.push({
           title: "Registrar ",
           key: "registrar",
-        },
-        {
+        }, {
           title: "Auto renew ",
           key: "auto_renew",
         });

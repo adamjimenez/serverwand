@@ -3,25 +3,15 @@
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
-      <v-data-table 
-        :headers="headers" 
-        :items="invoices" 
-        class="results"     
-        mobile-breakpoint="0"   
-        @click:row="function(event, item) { view(item.item.raw) }"
-      >
+      <v-data-table :headers="headers" :items="invoices" class="results" mobile-breakpoint="0"
+        @click:row="function (event, item) { view(item.item.raw) }">
 
         <template v-slot:item.created="{ item }">
           {{ formatDate(item.raw.created) }}
         </template>
 
         <template v-slot:item.actions="{ item }">
-          <v-btn
-            icon
-            :disabled="fetching"
-            :loading="fetching"
-            @click.stop="deleteItem(item.raw,id)"
-          >
+          <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item.raw, id)">
             <v-icon size="small">mdi:mdi-delete</v-icon>
           </v-btn>
         </template>
@@ -46,27 +36,15 @@
             <v-container fluid>
               <v-row v-for="(item, index) in data.items" v-bind:key="index">
                 <v-col cols="12" md="3">
-                  <v-text-field
-                    v-model="item.domain"
-                    label="Domain"
-                    required
-                  ></v-text-field>
+                  <v-text-field v-model="item.domain" label="Domain" required></v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="3">
-                  <v-text-field
-                    v-model="item.description"
-                    label="Description"
-                    required
-                  ></v-text-field>
+                  <v-text-field v-model="item.description" label="Description" required></v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="3">
-                  <v-text-field
-                    v-model="item.amount"
-                    label="Amount"
-                    required
-                  ></v-text-field>
+                  <v-text-field v-model="item.amount" label="Amount" required></v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="3">
@@ -74,10 +52,7 @@
                     <v-icon>fas fa-minus</v-icon>
                   </v-btn>
 
-                  <v-btn
-                    @click="addRow()"
-                    v-if="index + 1 === data.items.length"
-                  >
+                  <v-btn @click="addRow()" v-if="index + 1 === data.items.length">
                     <v-icon>fas fa-plus</v-icon>
                   </v-btn>
                 </v-col>
@@ -256,38 +231,34 @@ export default {
           });
       }
     },
-    deleteItem: async function(item) {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Delete " + item.id
-        )
-      ) {
+    deleteItem: async function (item) {
+      if (!await this.$refs.confirm.open("Delete " + item.id)) {
+        return;
+      }
 
-        var self = this;
-        this.error = "";
-        this.dialog = true;
-        this.loading = true;
+      var self = this;
+      this.error = "";
+      this.dialog = true;
+      this.loading = true;
 
-        api
-          .post("users/" + this.id + "/invoices", { delete: 1, invoice: item.id })
-          .then(function (response) {
-            console.log(response);
+      api
+        .post("users/" + this.id + "/invoices", { delete: 1, invoice: item.id })
+        .then(function (response) {
+          console.log(response);
 
-            if (response.data.error) {
-              self.error = response.data.error;
-            } else {
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          .finally(function () {
-            self.dialog = false;
-            self.loading = false;
-          });
-      };
+          if (response.data.error) {
+            self.error = response.data.error;
+          } else {
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .finally(function () {
+          self.dialog = false;
+          self.loading = false;
+        });
     },
     addRow() {
       this.data.items.push({});

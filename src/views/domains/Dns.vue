@@ -222,34 +222,31 @@ export default {
       this.drawer = true;
     },
     deleteItem: async function (item) {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          'Delete record?'
-        )
-      ) {
-        this.fetching = true;
-        this.error = "";
-
-        var self = this;
-        api
-          .post("domains/" + this.domainId + "/records/" + item.id, {
-            delete: 1,
-          })
-          .then(function (response) {
-            console.log(response);
-
-            if (!response.data.success) {
-              self.error = response.data.error;
-            } else {
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-            self.fetching = false;
-          });
+      if (!await this.$refs.confirm.open('Delete record?')) {
+        return;
       }
+      
+      this.fetching = true;
+      this.error = "";
+
+      var self = this;
+      api
+        .post("domains/" + this.domainId + "/records/" + item.id, {
+          delete: 1,
+        })
+        .then(function (response) {
+          console.log(response);
+
+          if (!response.data.success) {
+            self.error = response.data.error;
+          } else {
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+          self.fetching = false;
+        });
     },
     authPrompt() {
       this.authRequired = false;

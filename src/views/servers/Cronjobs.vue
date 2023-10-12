@@ -212,33 +212,30 @@ export default {
       this.drawer = true;
     },
     deleteItem: async function (line) {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Are you sure you want to delete this item?"
-        )
-      ) {
-        var self = this;
-        this.fetching = true;
-        this.error = "";
-
-        api
-          .post("servers/" + this.serverId + "/cronjobs", { line: line })
-          .then(function (response) {
-            console.log(response);
-
-            if (!response.data.success) {
-              self.fetching = false;
-              self.error = response.data.error;
-            } else {
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
-            self.fetching = false;
-            console.log(error);
-          });
+      if (!await this.$refs.confirm.open("Are you sure you want to delete this item?")) {
+        return;
       }
+
+      var self = this;
+      this.fetching = true;
+      this.error = "";
+
+      api
+        .post("servers/" + this.serverId + "/cronjobs", { line: line })
+        .then(function (response) {
+          console.log(response);
+
+          if (!response.data.success) {
+            self.fetching = false;
+            self.error = response.data.error;
+          } else {
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          self.fetching = false;
+          console.log(error);
+        });
     },
     saveCronjob() {
       var self = this;

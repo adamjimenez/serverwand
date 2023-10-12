@@ -24,7 +24,7 @@
                 fa-lock-open</v-icon>
               <v-icon v-else size="x-small" color="primary" title="Sudo with password">fas fa-lock</v-icon>
             </span>
-            
+
             <v-btn icon :disabled="loading" :loading="loading" @click.stop="deleteItem(item.name)">
               <v-icon size="small">mdi:mdi-delete</v-icon>
             </v-btn>
@@ -53,9 +53,9 @@
             <v-window-item value="settings">
 
               <v-text-field v-model="system_user.name" label="User" :readonly="!system_user.new" required></v-text-field>
-                
-              <PasswordField v-model="system_user.password" label="Password" required
-                autocomplete="new-password"></PasswordField>
+
+              <PasswordField v-model="system_user.password" label="Password" required autocomplete="new-password">
+              </PasswordField>
 
               <v-switch v-model="system_user.sudo" label="sudo" color="primary" hide-details></v-switch>
 
@@ -142,7 +142,7 @@ export default {
     Copy,
     TogglePasswordAuthentication,
     ClearSSHUser,
-    Confirm,    
+    Confirm,
     PasswordField,
   },
   data() {
@@ -210,7 +210,7 @@ export default {
         sudo: false,
         new: true,
       };
-      
+
       this.tab = 'settings';
       this.userDrawer = true;
     },
@@ -237,33 +237,30 @@ export default {
         });
     },
     deleteItem: async function (user) {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Delete " + user + "?"
-        )
-      ) {
-        var self = this;
-        this.fetching = true;
-        this.error = "";
-
-        api
-          .post("servers/" + this.serverId + "/systemusers", { user: user })
-          .then(function (response) {
-            console.log(response);
-
-            if (!response.data.success) {
-              self.error = response.data.error;
-              self.fetching = false;
-            } else {
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-            self.fetching = false;
-          });
+      if (!await this.$refs.confirm.open("Delete " + user + "?")) {
+        return;
       }
+
+      var self = this;
+      this.fetching = true;
+      this.error = "";
+
+      api
+        .post("servers/" + this.serverId + "/systemusers", { user: user })
+        .then(function (response) {
+          console.log(response);
+
+          if (!response.data.success) {
+            self.error = response.data.error;
+            self.fetching = false;
+          } else {
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+          self.fetching = false;
+        });
 
       return false;
     },
@@ -295,37 +292,34 @@ export default {
       }
     },
     deleteKey: async function (line) {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Delete key?"
-        )
-      ) {
-        var self = this;
-        this.fetching = true;
-        this.error = "";
-
-        api
-          .post(
-            "servers/" + this.serverId + "/systemusers/" + this.user.name,
-            { line: line }
-          )
-          .then(function (response) {
-            console.log(response);
-
-            if (!response.data.success) {
-              self.fetching = false;
-              self.error = response.data.error;
-            } else {
-              self.editItem(self.user);
-              self.tab = 'keys';
-            }
-          })
-          .catch(function (error) {
-            self.fetching = false;
-            console.log(error);
-          });
+      if (!await this.$refs.confirm.open("Delete key?")) {
+        return;
       }
+
+      var self = this;
+      this.fetching = true;
+      this.error = "";
+
+      api
+        .post(
+          "servers/" + this.serverId + "/systemusers/" + this.user.name,
+          { line: line }
+        )
+        .then(function (response) {
+          console.log(response);
+
+          if (!response.data.success) {
+            self.fetching = false;
+            self.error = response.data.error;
+          } else {
+            self.editItem(self.user);
+            self.tab = 'keys';
+          }
+        })
+        .catch(function (error) {
+          self.fetching = false;
+          console.log(error);
+        });
     },
     addKey() {
       this.keyDrawer = true;

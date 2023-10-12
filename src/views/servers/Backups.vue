@@ -12,12 +12,12 @@
     <v-card :loading="fetching" class="pa-3">
       <v-container fluid>
         <v-row>
-            <v-btn @click="configure" title="Configure S3" icon="mdi:mdi-settings"></v-btn>
-            <Snapshot :serverId="serverId" @complete="handleComplete" @error="handleError" v-if="s3.access_key" />
-            <Restore :serverId="serverId" :path="path" :selected="selected" @complete="handleComplete"
-              @error="handleError" />
-            <v-switch v-model="s3.active" label="Nightly backups" class="my-0" @change="toggleBackups()" hide-details
-              color="primary"></v-switch>
+          <v-btn @click="configure" title="Configure S3" icon="mdi:mdi-settings"></v-btn>
+          <Snapshot :serverId="serverId" @complete="handleComplete" @error="handleError" v-if="s3.access_key" />
+          <Restore :serverId="serverId" :path="path" :selected="selected" @complete="handleComplete"
+            @error="handleError" />
+          <v-switch v-model="s3.active" label="Nightly backups" class="my-0" @change="toggleBackups()" hide-details
+            color="primary"></v-switch>
         </v-row>
 
         <div v-if="s3.access_key">
@@ -30,7 +30,8 @@
               </v-col>
 
               <v-col>
-                <v-text-field v-model="path" class="ma-0 pa-0" @change="list" @keydown.enter="list" hide-details></v-text-field>
+                <v-text-field v-model="path" class="ma-0 pa-0" @change="list" @keydown.enter="list"
+                  hide-details></v-text-field>
               </v-col>
             </v-row>
 
@@ -119,6 +120,7 @@
         </v-card-text>
       </v-card>
     </v-navigation-drawer>
+    <Confirm ref="confirm" />
   </div>
 </template>
 
@@ -129,6 +131,7 @@ import Restore from "../../components/CloudBackups/Restore";
 import Snapshot from "../../components/CloudBackups/Snapshot";
 import EditFile from "../../components/Files/EditFile";
 import util from "../../services/util";
+import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
@@ -136,6 +139,7 @@ export default {
     Restore,
     Snapshot,
     EditFile,
+    Confirm
   },
   data() {
     return {
@@ -410,34 +414,34 @@ export default {
           self.fetching = false;
         });
     },
-    deleteSnapshot(name) {
-      this.$confirm("Delete " + name + "?").then((res) => {
-        if (res) {
-          var self = this;
-          this.fetching = true;
-          this.error = "";
+    async deleteSnapshot(name) {
+      if (!await this.$refs.confirm.open("Delete " + name + "?")) {
+        return;
+      }
 
-          api
-            .post("servers/" + this.serverId + "/backups", {
-              cmd: "deleteSnapshot",
-              name: name,
-            })
-            .then(function (response) {
-              console.log(response);
+      var self = this;
+      this.fetching = true;
+      this.error = "";
 
-              if (!response.data.success) {
-                self.error = response.data.error;
-                self.fetching = false;
-              } else {
-                self.fetchData();
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-              self.fetching = false;
-            });
-        }
-      });
+      api
+        .post("servers/" + this.serverId + "/backups", {
+          cmd: "deleteSnapshot",
+          name: name,
+        })
+        .then(function (response) {
+          console.log(response);
+
+          if (!response.data.success) {
+            self.error = response.data.error;
+            self.fetching = false;
+          } else {
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+          self.fetching = false;
+        });
 
       return false;
     },

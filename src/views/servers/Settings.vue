@@ -117,7 +117,6 @@ export default {
     },
     saveNotifications() {
       let self = this;
-
       this.fetching = true;
 
       api

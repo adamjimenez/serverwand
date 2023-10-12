@@ -8,7 +8,8 @@
                 <v-select v-model="daysAgo" :items="data.items" @update:modelValue="load" hide-details></v-select>
             </v-col>
         </v-row>
-        <svg width="100%" :viewBox="'0 0 1000 ' + (graphHeight[resource] ? graphHeight[resource] : '300')" v-html="data.graph"></svg>
+        <svg width="100%" :viewBox="'0 0 1000 ' + (graphHeight[resource] ? graphHeight[resource] : '300')"
+            v-html="data.graph"></svg>
     </div>
 </template>
   
@@ -22,28 +23,22 @@ export default {
     data() {
         return {
             resource: 'u',
-            resourceOptions: [
-                {
-                    title: 'CPU',
-                    value: 'u',
-                },
-                {
-                    title: 'Memory',
-                    value: 'r',
-                },
-                {
-                    title: 'I/O',
-                    value: 'b',
-                },
-                {
-                    title: 'Disk',
-                    value: 'd',
-                },
-                {
-                    title: 'Swap',
-                    value: 'S',
-                },
-            ],
+            resourceOptions: [{
+                title: 'CPU',
+                value: 'u',
+            }, {
+                title: 'Memory',
+                value: 'r',
+            }, {
+                title: 'I/O',
+                value: 'b',
+            }, {
+                title: 'Disk',
+                value: 'd',
+            }, {
+                title: 'Swap',
+                value: 'S',
+            }],
             daysAgo: 0,
             data: {
                 items: [{
@@ -70,7 +65,7 @@ export default {
                 })
                 .catch(error => this.error = error.message);
         },
-        refresh() {            
+        refresh() {
             if (this.daysAgo === 0) {
                 console.log('refresh graph');
                 this.load();
@@ -81,7 +76,7 @@ export default {
             clearTimeout(this.timer);
             this.timer = setTimeout(function () {
                 self.refresh();
-            }, 1*60*1000);
+            }, 1 * 60 * 1000);
         }
     },
     created() {

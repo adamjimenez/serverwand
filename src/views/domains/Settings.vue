@@ -74,35 +74,32 @@ export default {
       this.$router.push("/domains/" + this.$route.params.id + "/edit");
     },
     deleteItem: async function () {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Delete " + this.data.domain
-        )
-      ) {
-        var self = this;
-        this.dialog = true;
-        this.loading = true;
-
-        api
-          .post("domains/" + this.id, { delete: 1 })
-          .then(function (response) {
-            console.log(response);
-
-            if (response.data.error) {
-              self.error = response.data.error;
-            } else {
-              self.$router.push("/domains/");
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          .finally(function () {
-            self.dialog = false;
-            self.loading = false;
-          });
+      if (!await this.$refs.confirm.open("Delete " + this.data.domain)) {
+        return;
       }
+      
+      var self = this;
+      this.dialog = true;
+      this.loading = true;
+
+      api
+        .post("domains/" + this.id, { delete: 1 })
+        .then(function (response) {
+          console.log(response);
+
+          if (response.data.error) {
+            self.error = response.data.error;
+          } else {
+            self.$router.push("/domains/");
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .finally(function () {
+          self.dialog = false;
+          self.loading = false;
+        });
     },
   },
 };

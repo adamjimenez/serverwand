@@ -173,38 +173,34 @@ export default {
           });
       }
     },
-    deleteItem: async function(item) {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Delete " + item.domain
-        )
-      ) {
+    deleteItem: async function (item) {
+      if (!await this.$refs.confirm.open("Delete " + item.domain)) {
+        return;
+      }
 
-        var self = this;
-        this.error = "";
-        this.dialog = true;
-        this.loading = true;
+      var self = this;
+      this.error = "";
+      this.dialog = true;
+      this.loading = true;
 
-        api
-          .post("users/" + this.id + "/sites", { delete: 1, domain: item.id })
-          .then(function (response) {
-            console.log(response);
+      api
+        .post("users/" + this.id + "/sites", { delete: 1, domain: item.id })
+        .then(function (response) {
+          console.log(response);
 
-            if (response.data.error) {
-              self.error = response.data.error;
-            } else {
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          .finally(function () {
-            self.dialog = false;
-            self.loading = false;
-          });
-      };
+          if (response.data.error) {
+            self.error = response.data.error;
+          } else {
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .finally(function () {
+          self.dialog = false;
+          self.loading = false;
+        });
     },
   },
 };

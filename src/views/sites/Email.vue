@@ -264,38 +264,35 @@ export default {
       }
     },
     deleteItem: async function (user) {
-      if (
-        await this.$refs.confirm.open(
-          "Confirm",
-          "Delete " + user
-        )
-      ) {
-        var self = this;
-        this.loading = true;
-        this.error = "";
-
-        api
-          .post("sites/" + this.domainId + "/email", {
-            delete: 1,
-            user: user,
-          })
-          .then(function (response) {
-            console.log(response);
-
-            if (!response.data.success) {
-              self.error = response.data.error;
-              self.loading = false;
-            } else {
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          .finally(function () {
-            self.loading = false;
-          });
+      if (!await this.$refs.confirm.open("Delete " + user)) {
+        return;
       }
+      
+      var self = this;
+      this.loading = true;
+      this.error = "";
+
+      api
+        .post("sites/" + this.domainId + "/email", {
+          delete: 1,
+          user: user,
+        })
+        .then(function (response) {
+          console.log(response);
+
+          if (!response.data.success) {
+            self.error = response.data.error;
+            self.loading = false;
+          } else {
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .finally(function () {
+          self.loading = false;
+        });
     },
     fixDomainDns() {
       var self = this;
@@ -310,10 +307,10 @@ export default {
           self.loading = false;
 
           switch (await self.$refs.oauth.check(response.data)) {
-              case true:
-                  return self.fixDomainDns();
-              case false:
-                  return;
+            case true:
+              return self.fixDomainDns();
+            case false:
+              return;
           }
 
           if (!response.data.success) {
@@ -339,10 +336,10 @@ export default {
           self.loading = false;
 
           switch (await self.$refs.oauth.check(response.data)) {
-              case true:
-                  return self.fixDomainDns();
-              case false:
-                  return;
+            case true:
+              return self.fixDomainDns();
+            case false:
+              return;
           }
 
           if (!response.data.success) {
@@ -368,10 +365,10 @@ export default {
           self.loading = false;
 
           switch (await self.$refs.oauth.check(response.data)) {
-              case true:
-                  return self.fixDomainDns();
-              case false:
-                  return;
+            case true:
+              return self.fixDomainDns();
+            case false:
+              return;
           }
 
           if (!response.data.success) {
@@ -389,7 +386,7 @@ export default {
     },
   },
   beforeUnmount() {
-      clearTimeout(this.timer);
+    clearTimeout(this.timer);
   },
 };
 </script>
