@@ -5,6 +5,11 @@
     <Loading :value="fetching" />
 
     <v-card class="mx-auto">
+
+      <v-card-actions>
+        <v-btn @click="addItem()" icon="mdi:mdi-plus"></v-btn>
+      </v-card-actions>
+
       <v-list group max-width="600">
         <template v-for="(item, i) in items" :key="`item-${i}`">
           <v-list-item :value="item" :title="item.label">
@@ -18,16 +23,8 @@
       </v-list>
     </v-card>
 
-    <v-card>
-      <v-card-title primary-title>
-        <v-btn @click="addItem()"> Add Integration </v-btn>
-      </v-card-title>
-    </v-card>
-
     <v-dialog v-model="drawer">
-      <v-card>
-        <v-card-title> API token </v-card-title>
-
+      <v-card title="API token ">
         <v-card-text>
           <v-select v-model="provider_token.provider" :items="providers" label="Provider"></v-select>
 

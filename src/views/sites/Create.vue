@@ -4,9 +4,7 @@
 
     <Loading :value="loading" />
 
-    <v-card v-if="!serverId">
-      <v-card-title>Site details</v-card-title>
-
+    <v-card v-if="!serverId" title="Site details">
       <v-card-text>
         <v-form v-if="!loading" ref="form" v-model="valid" lazy-validation>
           <v-text-field

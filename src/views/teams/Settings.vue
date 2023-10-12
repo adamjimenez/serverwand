@@ -67,19 +67,20 @@ export default {
     fetchData() {
       this.error = "";
       this.fetching = true;
+      var self = this;
 
       api
         .get("teams/" + this.id)
         .then(function (response) {
           console.log(response);
-          this.data = response.data.item;
-          document.title = "Settings" + " | " + this.data.name;
+          self.data = response.data.item;
+          document.title = "Settings" + " | " + self.data.name;
         })
         .catch(function (error) {
           console.log(error);
         })
         .finally(function () {
-          this.fetching = false;
+          self.fetching = false;
         });
     },
     editItem() {

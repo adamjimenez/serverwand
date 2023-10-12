@@ -5,11 +5,13 @@
     <Loading :value="loading" />
 
     <v-card :loading="fetching">
-      <v-list max-width="600">
-        <v-list-item>
-          <v-switch v-model="active" label="Active" @change="toggle()" hide-details color="primary"></v-switch>
-        </v-list-item>
 
+      <v-card-actions>
+        <v-btn @click="addItem()" icon="mdi:mdi-plus"></v-btn>
+        <v-switch v-model="active" label="Active" @change="toggle()" hide-details color="primary"></v-switch>
+      </v-card-actions>
+
+      <v-list max-width="600">
         <v-list-item v-for="(item, i) in items" :key="`item-${i}`" :value="item" @click="editItem(item)">
           <template v-slot:default>
             <v-list-item-title>
@@ -28,16 +30,6 @@
           </template>
         </v-list-item>
       </v-list>
-    </v-card>
-
-    <v-card>
-      <div>
-        <v-card-title primary-title>
-          <v-btn @click="addItem()">
-            Add rule
-          </v-btn>
-        </v-card-title>
-      </div>
     </v-card>
 
     <v-dialog v-model="drawer">

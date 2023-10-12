@@ -4,40 +4,35 @@
 
     <Loading :value="loading" />
 
-    <v-card class="pa-3" :loading="fetching">
+    <v-card :loading="fetching">
+      <v-card-actions>
+        <v-btn @click="addItem" class="mr-3" icon="mdi:mdi-plus"></v-btn>
+        <TogglePasswordAuthentication :serverId="serverId" :passwordAuthentication="data.password_authentication" />
+        <ClearSSHUser :serverId="serverId" :server="data" />
+      </v-card-actions>
 
       <v-list max-width="600">
-        <v-list-item>
-          <TogglePasswordAuthentication :serverId="serverId" :passwordAuthentication="data.password_authentication" />
-        </v-list-item>
-
         <v-list-item v-for="(item, i) in data.users" :key="`item-${i}`" :title="item.name" :subtitle="item.label"
           @click="editItem(item)">
           <template v-slot:append>
             <span class="d-block" style="width: 32px;">
-              <v-icon v-if="item.sudo" size="x-small" title="Sudo privileges" color="primary">fas fa-crown</v-icon>
-              <v-icon v-else size="x-small" title="Non-sudo user" color="primary">fas fa-user</v-icon>
+              <v-icon v-if="item.sudo" size="x-small" title="Sudo privileges" color="primary"
+                icon="fas fa-crown"></v-icon>
+              <v-icon v-else size="x-small" title="Non-sudo user" color="primary" icon="fas fa-user"></v-icon>
             </span>
 
             <span class="d-block" style="width: 32px;">
-              <v-icon v-if="item.sudo_without_password" size="x-small" title="Sudo without password" color="primary">fas
-                fa-lock-open</v-icon>
-              <v-icon v-else size="x-small" color="primary" title="Sudo with password">fas fa-lock</v-icon>
+              <v-icon v-if="item.sudo_without_password" size="x-small" title="Sudo without password" color="primary" icon="fas
+                fa-lock-open"></v-icon>
+              <v-icon v-else size="x-small" color="primary" title="Sudo with password" icon="fas fa-lock"></v-icon>
             </span>
 
             <v-btn icon :disabled="loading" :loading="loading" @click.stop="deleteItem(item.name)">
-              <v-icon size="small">mdi:mdi-delete</v-icon>
+              <v-icon size="small" icon="mdi:mdi-delete"></v-icon>
             </v-btn>
           </template>
         </v-list-item>
       </v-list>
-
-      <v-container class="mt-5" fluid>
-        <v-row>
-          <v-btn @click="addItem" class="mr-3"> Add system user </v-btn>
-          <ClearSSHUser :serverId="serverId" :server="data" />
-        </v-row>
-      </v-container>
     </v-card>
 
     <v-dialog v-model="userDrawer" max-width="600">

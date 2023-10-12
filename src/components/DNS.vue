@@ -4,22 +4,32 @@
             <strong>Checking DNS..</strong>
         </v-list-item>
 
-        <v-list-item v-else-if="!authRequired && data.dns?.A != server.ip" title="DNS mismatch" :subtitle="(data.dns?.A ? data.dns?.A : 'blank') + ' != ' + server.ip">
-            <v-btn v-if="data.dns?.not_set" @click="fixDomainDns(data.domain)">Fix</v-btn>
+        <v-list-item v-else-if="data.dns?.A != server.ip" title="DNS mismatch"
+            :subtitle="(data.dns?.A ? data.dns?.A : 'blank') + ' != ' + server.ip">
+
+            <template v-slot:append>
+                <v-btn v-if="data.dns?.not_set" @click="fixDomainDns(data.domain)" title="Fix" icon="fas fa-hammer" size="small"></v-btn>
+            </template>
         </v-list-item>
+        <OAuth ref="oauth" />
     </div>
 </template>
   
 <script>
 import api from "../services/api";
+import OAuth from "./OAuth.vue";
+
 export default {
+    components: {
+        OAuth,
+    },
+
     props: {
         server: null,
     },
 
     data() {
         return {
-            authRequired: false,
             data: {},
             fetching: false
         };
@@ -61,42 +71,16 @@ export default {
 
             api
                 .post("sites/" + self.siteId + "/fixdns", {})
-                .then(function (response) {
+                .then(async function (response) {
                     console.log(response);
-
                     self.loading = false;
 
-                    if (!response.data.success) {
-                        if (response.data.error == "auth") {
-                            self.authRequired = true;
-                        } else {
-                            self.error = response.data.error;
-                        }
-                    } else {
-                        self.fetchData(true);
+                    switch (await self.$refs.oauth.check(response.data)) {
+                        case true:
+                            return self.fixDomainDns();
+                        case false:
+                            return;
                     }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        },
-        authPrompt() {
-            this.authRequired = false;
-            window.open(
-                "https://serverwand.com/account/services/" + this.data.server.dns
-            );
-        },
-        toggleAuth() {
-            var self = this;
-            this.fetching = true;
-            this.error = "";
-
-            api
-                .post("sites/" + this.siteId + "/auth", {
-                    status: this.data.auth.active,
-                })
-                .then(function (response) {
-                    console.log(response);
 
                     if (!response.data.success) {
                         self.error = response.data.error;
@@ -106,9 +90,6 @@ export default {
                 })
                 .catch(function (error) {
                     console.log(error);
-                })
-                .finally(function () {
-                    self.fetching = false;
                 });
         },
     },

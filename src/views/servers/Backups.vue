@@ -9,7 +9,7 @@
     <EditFile ref="editFile" :serverId="serverId" :path="path" :selected="selected" action="backups" save="false"
       @complete="list()" @error="handleError" />
 
-    <v-card :loading="fetching" class="pa-3">
+    <v-card :loading="fetching">
       <v-container fluid>
         <v-row>
           <v-btn @click="configure" title="Configure S3" icon="mdi:mdi-settings"></v-btn>
@@ -25,7 +25,7 @@
             <v-row>
               <v-col class="flex-grow-0">
                 <v-btn icon @click="upLevel()" :disabled="path === '/'">
-                  <v-icon size="small">mdi:mdi-arrow-up</v-icon>
+                  <v-icon size="small" icon="mdi:mdi-arrow-up"></v-icon>
                 </v-btn>
               </v-col>
 

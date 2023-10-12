@@ -1,12 +1,14 @@
 <template>
   <div>
-    <v-alert v-if="error" type="error">
-      {{ error }}
-    </v-alert>
+    <v-alert v-if="error" type="error" :text="error"></v-alert>
 
     <Loading :value="fetching" />
 
     <v-card class="mx-auto">
+      <v-card-actions>
+        <v-btn @click="addItem()" icon="mdi:mdi-plus"></v-btn>
+      </v-card-actions>
+
       <v-list group max-width="600">
         <template v-for="(item, i) in items" :key="`item-${i}`">
           <v-list-item :value="item" :title="item.label" :subtitle="item.api_key">
@@ -18,12 +20,6 @@
           </v-list-item>
         </template>
       </v-list>
-    </v-card>
-
-    <v-card>
-      <v-card-title primary-title>
-        <v-btn @click="addItem()"> Add API key </v-btn>
-      </v-card-title>
     </v-card>
 
     <v-dialog v-model="drawer">

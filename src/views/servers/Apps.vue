@@ -5,12 +5,7 @@
     <Loading :value="loading" />
 
     <v-card :loading="fetching">
-      <v-data-table
-        v-if="items.length"
-        :headers="headers"
-        :items="items"
-        class="results"
-      >
+      <v-data-table v-if="items.length" :headers="headers" :items="items" class="results">
         <template v-slot:body="prop">
           <tbody>
             <tr v-for="item in prop.items" :key="item.id">
@@ -20,11 +15,7 @@
                 </v-list-item>
               </td>
               <td class="text-start">
-                <v-switch
-                  v-model="item.online"
-                  label="Online"
-                  @change="toggle(item)"
-                ></v-switch>
+                <v-switch v-model="item.online" label="Online" @change="toggle(item)"></v-switch>
               </td>
               <td class="text-start" @click="view(item)">
                 {{ item.pid }}
@@ -91,32 +82,25 @@ export default {
       dialog: false,
       serverId: 0,
       selected: false,
-      headers: [
-        {
-          title: "",
-          key: "",
-        },
-        {
-          title: "",
-          key: "",
-        },
-        {
-          title: "PID",
-          key: "id",
-        },
-        {
-          title: "Name",
-          key: "name",
-        },
-        {
-          title: "Status",
-          key: "status",
-        },
-        {
-          title: "Ports",
-          key: "port",
-        },
-      ],
+      headers: [{
+        title: "",
+        key: "",
+      }, {
+        title: "",
+        key: "",
+      }, {
+        title: "PID",
+        key: "id",
+      }, {
+        title: "Name",
+        key: "name",
+      }, {
+        title: "Status",
+        key: "status",
+      }, {
+        title: "Ports",
+        key: "port",
+      }],
       error_log: "",
       output_log: "",
     };
@@ -155,7 +139,7 @@ export default {
             self.error = response.data.error;
             return false;
           }
-          
+
           self.data = response.data.item;
           self.items = response.data.apps;
 

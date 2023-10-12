@@ -8,25 +8,26 @@
 
         <v-text-field v-model="data.email" :rules="usernameRules" label="Email" disabled required></v-text-field>
 
-      <v-expansion-panels>
-        <v-expansion-panel v-model="passwordPanel" expand title="Change password">
-          <v-expansion-panel-text>
-            <v-card tile flat>
-              <v-card-text>
-                <v-text-field type="password" v-model="data.password" :rules="passwordRules" label="Password"
-                  required></v-text-field>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn color="primary" @click="validate">Submit</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-      </v-expansion-panels>
+        <v-expansion-panels>
+          <v-expansion-panel v-model="passwordPanel" expand title="Change password">
+            <v-expansion-panel-text>
+              <v-card tile flat>
+                <v-card-text>
+                  <v-text-field type="password" v-model="data.password" :rules="passwordRules" label="Password"
+                    required></v-text-field>
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn color="primary" @click="validate">Submit</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
 
-      <v-checkbox v-model="data.emails" label="Receive email updates" @change="toggleEmails()"></v-checkbox>
+        <v-checkbox v-model="data.emails" label="Receive email updates" @change="toggleEmails()"></v-checkbox>
 
-      <v-checkbox v-model="useMasterPassword" label="Use a master password" @change="toggleMasterPassword()"></v-checkbox>
+        <v-checkbox v-model="useMasterPassword" label="Use a master password"
+          @change="toggleMasterPassword()"></v-checkbox>
       </v-card-text>
 
       <v-card-actions>
@@ -35,11 +36,7 @@
     </v-card>
 
     <v-dialog v-model="masterPasswordDialog" persistent max-width="600">
-      <v-card>
-        <v-card-title>
-          <span class="headline">Master password</span>
-        </v-card-title>
-
+      <v-card title="Master password">
         <v-card-text>
           <p>A Master Password is used to protect your server keys</p>
 

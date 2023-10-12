@@ -5,12 +5,16 @@
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
-      <v-list group>
+      <v-card-actions>
+        <v-btn @click="addItem()" icon="mdi:mdi-plus"></v-btn>
+      </v-card-actions>
+
+      <v-list>
 
         <v-list-item v-for="(item, i) in data.cronjobs" :key="`item-${i}`" :title="item.command" @click="editItem(item)">
 
           <template v-slot:prepend>
-            <v-icon v-if="item.active === false">mdi:mdi-cancel</v-icon>
+            <v-icon v-if="item.active === false" icon="mdi:mdi-cancel"></v-icon>
           </template>
 
           <v-list-item-subtitle>
@@ -24,18 +28,12 @@
 
           <template v-slot:append>
             <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item.line)">
-              <v-icon size="small">mdi:mdi-delete</v-icon>
+              <v-icon size="small" icon="mdi:mdi-delete"></v-icon>
             </v-btn>
           </template>
         </v-list-item>
 
       </v-list>
-    </v-card>
-
-    <v-card>
-      <v-card-title primary-title>
-        <v-btn @click="addItem()"> Add cron job </v-btn>
-      </v-card-title>
     </v-card>
 
     <v-dialog v-model="drawer" eager>

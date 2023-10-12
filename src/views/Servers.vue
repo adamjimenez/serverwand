@@ -26,8 +26,8 @@
 
             <v-data-table :headers="headers" :items="filtered">
               <template v-slot:item.name="{ item }">
-                <v-list-item :to="'/servers/' + item.id + '/summary'" :title="item.name"
-                  :subtitle="item.hostname" class="px-0">
+                <v-list-item :to="'/servers/' + item.id + '/summary'" :title="item.name" :subtitle="item.hostname"
+                  class="px-0">
                   <template v-slot:prepend v-if="!mobile">
                     <ServerIcon :provider="item.provider"></ServerIcon>
                   </template>
@@ -96,23 +96,19 @@ export default {
       team: null,
       teams: [],
       provider: null,
-      provider_opts: [
-        {
-          title: "Linode",
-          value: "linode",
-          icon: "fab fa-linode",
-        },
-        {
-          title: "Digital Ocean",
-          value: "digitalocean",
-          icon: "fab fa-digital-ocean",
-        },
-        {
-          title: "Vultr",
-          value: "vultr",
-          icon: "fas fa-server",
-        },
-      ],
+      provider_opts: [{
+        title: "Linode",
+        value: "linode",
+        icon: "fab fa-linode",
+      }, {
+        title: "Digital Ocean",
+        value: "digitalocean",
+        icon: "fab fa-digital-ocean",
+      }, {
+        title: "Vultr",
+        value: "vultr",
+        icon: "fas fa-server",
+      }],
     };
   },
   computed: {

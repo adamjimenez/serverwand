@@ -38,12 +38,10 @@ export default {
       loading: false,
       error: null,
       items: [],
-      headers: [
-        {
-          title: "Name",
-          key: "name",
-        },
-      ],
+      headers: [{
+        title: "Name",
+        key: "name",
+      }],
     };
   },
   created() {

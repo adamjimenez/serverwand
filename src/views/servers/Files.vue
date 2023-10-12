@@ -10,10 +10,12 @@
     <v-card :loading="fetching">
       <v-container fluid>
         <v-row>
-          <NewFile v-if="selected.length === 0" :serverId="serverId" :path="path" @complete="fetchData()" @error="handleError" />
-          <NewFolder v-if="selected.length === 0" :serverId="serverId" :path="path" @complete="fetchData()" @error="handleError" />
-          <Upload v-if="selected.length === 0" :serverId="serverId" :path="path" :dropZone="$refs.results" @complete="fetchData()" @error="handleError"
-            folder="folder" />
+          <NewFile v-if="selected.length === 0" :serverId="serverId" :path="path" @complete="fetchData()"
+            @error="handleError" />
+          <NewFolder v-if="selected.length === 0" :serverId="serverId" :path="path" @complete="fetchData()"
+            @error="handleError" />
+          <Upload v-if="selected.length === 0" :serverId="serverId" :path="path" :dropZone="$refs.results"
+            @complete="fetchData()" @error="handleError" folder="folder" />
           <Rename v-if="selected.length === 1" :serverId="serverId" :path="path" :selected="selected"
             @complete="fetchData()" @error="handleError" />
           <DeleteFiles v-if="selected.length" :serverId="serverId" :path="path" :selected="selected"
@@ -33,11 +35,11 @@
 
       <v-container fluid>
         <v-row>
-            <v-btn icon @click="upLevel()" :disabled="path === '/'" title="Up one level">
-              <v-icon size="small">mdi:mdi-arrow-up</v-icon>
-            </v-btn>
-            <v-text-field v-model="path" class="mx-2" @change="fetchData" @keydown.enter="fetchData"></v-text-field>
-            <!--
+          <v-btn icon @click="upLevel()" :disabled="path === '/'" title="Up one level">
+            <v-icon size="small">mdi:mdi-arrow-up</v-icon>
+          </v-btn>
+          <v-text-field v-model="path" class="mx-2" @change="fetchData" @keydown.enter="fetchData"></v-text-field>
+          <!--
             <v-text-field placeholder="Search" prepend-inner-icon="mdi:mdi-magnify" v-model="search" class="ma-0 pa-0"
               @change="fetchData" @keydown.enter="fetchData"></v-text-field>
             -->
@@ -110,40 +112,33 @@ export default {
       serverId: 0,
       selectedIds: [],
       folderSelected: false,
-      headers: [
-        {
-          title: "",
-          key: "",
-        },
-        {
-          title: "Name ",
-          key: "name",
-        },
-        {
-          title: "Size ",
-          key: "size",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
-        },
-        {
-          title: "Last modified ",
-          key: "modified",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
-        },
-        {
-          title: "Permissions ",
-          key: "perms",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
-        },
-        {
-          title: "Owner ",
-          key: "owner",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
-        },
-      ],
+      headers: [{
+        title: "",
+        key: "",
+      }, {
+        title: "Name ",
+        key: "name",
+      }, {
+        title: "Size ",
+        key: "size",
+        class: 'd-none d-sm-table-cell',
+        cellClass: 'd-none d-sm-table-cell',
+      }, {
+        title: "Last modified ",
+        key: "modified",
+        class: 'd-none d-sm-table-cell',
+        cellClass: 'd-none d-sm-table-cell',
+      }, {
+        title: "Permissions ",
+        key: "perms",
+        class: 'd-none d-sm-table-cell',
+        cellClass: 'd-none d-sm-table-cell',
+      }, {
+        title: "Owner ",
+        key: "owner",
+        class: 'd-none d-sm-table-cell',
+        cellClass: 'd-none d-sm-table-cell',
+      }],
       fileToOpen: '',
       page: 1,
     };
@@ -241,7 +236,7 @@ export default {
           result => {
             let files = result.msg.split("\n");
 
-            files.forEach(file => {              
+            files.forEach(file => {
               // check if item already exists
               let found = false;
               self.items.forEach(item => {

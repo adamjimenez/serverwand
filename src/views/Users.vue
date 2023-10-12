@@ -36,12 +36,10 @@ export default {
       items: [],
       servers: {},
       server: "*",
-      headers: [
-        {
-          title: "Name ",
-          key: "name",
-        },
-      ],
+      headers: [{
+        title: "Name ",
+        key: "name",
+      }],
     };
   },
   created() {

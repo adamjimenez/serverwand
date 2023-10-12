@@ -233,43 +233,35 @@ export default {
     cloneDialog: false,
     syncDialog: false,
     target: 0,
-    apps: [
-      {
-        name: "git",
-        label: "Git repository",
-        icon: "fab fa-git",
-      },
-      {
-        name: "wordpress",
-        label: "Wordpress",
-        icon: "fab fa-wordpress",
-      },
-      {
-        name: "joomla",
-        label: "Joomla",
-        icon: "fab fa-joomla",
-      },
-      {
-        name: "drupal",
-        label: "Drupal",
-        icon: "fab fa-drupal",
-      },
-      {
-        name: "magento",
-        label: "Magento",
-        icon: "fab fa-magento",
-      },
-      {
-        name: "Roundcube",
-        label: "Roundcube webmail",
-        icon: "fas fa-envelope",
-      },
-      {
-        name: "shiftlib",
-        label: "ShiftLib CMS",
-        icon: "fas fa-user-edit",
-      },
-    ],
+    apps: [{
+      name: "git",
+      label: "Git repository",
+      icon: "fab fa-git",
+    }, {
+      name: "wordpress",
+      label: "Wordpress",
+      icon: "fab fa-wordpress",
+    }, {
+      name: "joomla",
+      label: "Joomla",
+      icon: "fab fa-joomla",
+    }, {
+      name: "drupal",
+      label: "Drupal",
+      icon: "fab fa-drupal",
+    }, {
+      name: "magento",
+      label: "Magento",
+      icon: "fab fa-magento",
+    }, {
+      name: "Roundcube",
+      label: "Roundcube webmail",
+      icon: "fas fa-envelope",
+    }, {
+      name: "shiftlib",
+      label: "ShiftLib CMS",
+      icon: "fas fa-user-edit",
+    }],
     server_opts: [],
     selected: [],
     allSelected: false,

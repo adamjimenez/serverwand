@@ -19,9 +19,7 @@
                     </v-list-item>
                 </v-list>
 
-                <v-btn @click="addItem()">
-                    Add IP
-                </v-btn>
+                <v-btn @click="addItem()" icon="mdi:mdi-plus"></v-btn>
             </div>
 
             <v-dialog app v-model="drawer" temporary right>

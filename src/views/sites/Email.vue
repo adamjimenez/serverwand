@@ -4,56 +4,27 @@
 
     <Loading :value="loading" />
 
-    <v-card class="pa-3" :loading="fetching">
-      <v-layout row v-if="!authRequired &&
-        data.server &&
-        data.dns &&
-        data.dns.MX != data.server.hostname
-        ">
-        <v-row>
-          <v-col cols="12">
-            <v-card tile flat>
-              <v-card-text>
-                <strong>MX mismatch: {{ data.dns.MX }} !=
-                  {{ data.server.hostname }}</strong>
-                <v-btn v-if="data.dns.not_set" @click="fixDomainDns(data.domain)">Fix</v-btn>
-              </v-card-text>
-            </v-card>
-          </v-col></v-row>
-      </v-layout>
+    <v-card :loading="fetching">
+      <v-card-actions>
+        <v-btn @click="addEmail()" icon="mdi:mdi-plus"></v-btn>
 
-      <v-layout row v-if="data.dkim?.not_set">
-        <v-row>
-          <v-col cols="12">
-            <v-card tile flat>
-              <v-card-text>
-                <strong>Missing DKIM</strong>
-                <v-btn v-if="data.dkim.not_set" @click="fixDkim(data.domain)">Fix</v-btn>
-              </v-card-text>
-            </v-card>
-          </v-col></v-row>
-      </v-layout>
+        <div v-if="!authRequired &&
+          data.server &&
+          data.dns &&
+          data.dns.MX != data.server.hostname
+          ">
+          <v-btn v-if="data.dns.not_set" @click="fixDomainDns(data.domain)">Fix MX mismatch: {{ data.dns.MX }} !=
+            {{ data.server.hostname }}</v-btn>
+        </div>
 
-      <v-layout row v-if="!authRequired &&
-        data.server &&
-        data.spf &&
-        data.spf.not_set &&
-        !data.spf.SPF
-        ">
-        <v-row>
-          <v-col cols="12">
-            <v-card tile flat>
-              <v-card-text>
-                <strong>Missing SPF</strong>
-                <v-btn v-if="data.spf.not_set" @click="fixSpf(data.domain)">Fix</v-btn>
-              </v-card-text>
-            </v-card>
-          </v-col></v-row>
-      </v-layout>
+        <v-btn v-if="data.dkim?.not_set" @click="fixDkim(data.domain)">Fix Missing DKIM</v-btn>
+        
+        <v-btn v-if="data.spf?.not_set" @click="fixSpf(data.domain)">Fix Missing SPF</v-btn>
 
-      <v-card-title primary-title v-if="data.server.mailserver">
-        <v-switch v-model="data.email" label="Email" @change="toggleEmail()" hide-details color="primary"></v-switch>
-      </v-card-title>
+        <v-switch v-if="data.server.mailserver" v-model="data.email" label="Email" @change="toggleEmail()" hide-details
+          color="primary"></v-switch>
+
+      </v-card-actions>
     </v-card>
 
     <!--
@@ -87,15 +58,12 @@
 
             <template v-slot:append>
               <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item.user)" @click.stop>
-                <v-icon size="small">mdi:mdi-delete</v-icon>
+                <v-icon size="small" icon="mdi:mdi-delete"></v-icon>
               </v-btn>
             </template>
           </v-list-item>
 
         </v-list>
-        <v-card-actions>
-          <v-btn @click="addEmail()"> Add email </v-btn>
-        </v-card-actions>
       </v-card>
 
       <v-dialog v-model="drawer" max-width="600">
@@ -267,7 +235,7 @@ export default {
       if (!await this.$refs.confirm.open("Delete " + user)) {
         return;
       }
-      
+
       var self = this;
       this.loading = true;
       this.error = "";

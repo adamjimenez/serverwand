@@ -16,16 +16,8 @@
         </v-row>
       </v-container>
 
-      <v-data-table
-        v-if="items.length"
-        v-model="selected"
-        :headers="headers"
-        :items="items"
-        show-select
-        class="results"
-        mobile-breakpoint="0"
-        @click:row="view"
-      >
+      <v-data-table v-if="items.length" v-model="selected" :headers="headers" :items="items" show-select class="results"
+        mobile-breakpoint="0" @click:row="view">
 
         <template v-slot:item.size="{ item }">
           <span>{{ prettyBytes(item.size) }}</span>
@@ -49,12 +41,7 @@
         <v-card-title> Message: {{ messageId }} </v-card-title>
 
         <v-card-text>
-          <iframe
-            width="100%"
-            height="315"
-            :src="messageUrl"
-            frameborder="0"
-          ></iframe>
+          <iframe width="100%" height="315" :src="messageUrl" frameborder="0"></iframe>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -84,40 +71,33 @@ export default {
       emailDrawer: false,
       serverId: 0,
       selected: [],
-      headers: [
-        {
-          title: "",
-          key: "",
-        },
-        {
-          title: "ID",
-          key: "id",
-        },
-        {
-          title: "Size",
-          key: "size",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
-        },
-        {
-          title: "From",
-          key: "sender",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
-        },
-        {
-          title: "To",
-          key: "recipient",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
-        },
-        {
-          title: "Date",
-          key: "date",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
-        },
-      ],
+      headers: [{
+        title: "",
+        key: "",
+      }, {
+        title: "ID",
+        key: "id",
+      }, {
+        title: "Size",
+        key: "size",
+        class: 'd-none d-sm-table-cell',
+        cellClass: 'd-none d-sm-table-cell',
+      }, {
+        title: "From",
+        key: "sender",
+        class: 'd-none d-sm-table-cell',
+        cellClass: 'd-none d-sm-table-cell',
+      }, {
+        title: "To",
+        key: "recipient",
+        class: 'd-none d-sm-table-cell',
+        cellClass: 'd-none d-sm-table-cell',
+      }, {
+        title: "Date",
+        key: "date",
+        class: 'd-none d-sm-table-cell',
+        cellClass: 'd-none d-sm-table-cell',
+      }],
     };
   },
   created() {
@@ -133,26 +113,26 @@ export default {
       api
         .get("servers/" + this.serverId + "/messages")
         .then(response => {
-            console.log(response);
-            self.data=response.data.item;
-            self.items=response.data.messages;
+          console.log(response);
+          self.data = response.data.item;
+          self.items = response.data.messages;
 
-            self.items=[];
-            response.data.messages.forEach((element) => {
-              self.items.push({
-                id: element.id,
-                size: element.size,
-                sender: element.sender,
-                recipient: element.recipient,
-                date: element.date,
-                //selected: false,
-              });
+          self.items = [];
+          response.data.messages.forEach((element) => {
+            self.items.push({
+              id: element.id,
+              size: element.size,
+              sender: element.sender,
+              recipient: element.recipient,
+              date: element.date,
+              //selected: false,
             });
+          });
 
-            document.title="Mail"+" | "+self.data.name;
-          })
+          document.title = "Mail" + " | " + self.data.name;
+        })
         .catch(error => console.log(error))
-        .finally(() => self.fetching=false);
+        .finally(() => self.fetching = false);
     },
     deleteMail() {
       var self = this;
@@ -162,7 +142,7 @@ export default {
       this.selected.forEach((element) => {
         ids.push(element);
       });
-      
+
       // process deletions
       self.fetching = true;
 
@@ -170,7 +150,7 @@ export default {
         .post("servers/" + this.serverId + "/messages", { ids: ids })
         .then(() => self.fetchData())
         .catch((error) => console.log(error))
-        .finally(() => self.fetching=false);
+        .finally(() => self.fetching = false);
     },
     view(event, item) {
       this.messageId = item.item.id

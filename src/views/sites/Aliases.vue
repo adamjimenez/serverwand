@@ -4,7 +4,11 @@
 
     <Loading :value="loading" />
 
-    <v-card class="pa-3" :loading="fetching">
+    <v-card :loading="fetching">
+      <v-card-actions>
+        <v-btn @click="addAlias()" icon="mdi:mdi-plus"></v-btn>
+      </v-card-actions>
+
       <v-list max-width="600">
 
         <v-list-item v-for="(item, i) in data.aliases" :key="`item-${i}`" :title="item.domain" :subtitle="item.value">
@@ -34,16 +38,6 @@
         </v-list-item>
 
       </v-list>
-    </v-card>
-
-    <v-card>
-      <div>
-        <v-card-title primary-title>
-          <v-btn @click="addAlias()">
-            Add domain alias
-          </v-btn>
-        </v-card-title>
-      </div>
     </v-card>
 
     <v-dialog v-model="drawer">

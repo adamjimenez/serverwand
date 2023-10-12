@@ -5,6 +5,10 @@
     <Loading :value="fetching" />
 
     <v-card class="mx-auto">
+      <v-card-actions>
+        <v-btn @click="addItem()" icon="mdi:mdi-plus"> </v-btn>
+      </v-card-actions>
+
       <v-list group max-width="600">
         <template v-for="(item, i) in items" :key="`item-${i}`">
           <v-list-item :title="item.name" @click="editItem(item)">
@@ -16,12 +20,6 @@
           </v-list-item>
         </template>
       </v-list>
-    </v-card>
-
-    <v-card>
-      <v-card-title primary-title>
-        <v-btn @click="addItem()"> Add Product </v-btn>
-      </v-card-title>
     </v-card>
 
     <v-dialog v-model="drawer">
