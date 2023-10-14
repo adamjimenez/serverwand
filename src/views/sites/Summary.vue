@@ -2,15 +2,9 @@
   <div>
     <v-alert v-if="error" type="error" :text="error"></v-alert>
 
-    <v-alert v-if="authRequired" class="ma-0">
-      <strong>DNS auth required: </strong>
-      <v-btn @click="authPrompt()">Fix</v-btn>
-    </v-alert>
-
     <Loading :value="loading" />
 
-    <v-card class="pa-3">
-
+    <v-card>
       <v-card max-width="400">
 
         <v-list lines="two">
@@ -86,7 +80,6 @@
             :path="'sites/' + this.siteId + '/iprestrictions'" @save="fetchData(true)" />
         </v-list>
       </v-card>
-
     </v-card>
   </div>
 </template>
@@ -99,6 +92,7 @@ import Copy from "../../components/Copy";
 import Edit from "../../components/Edit";
 import IPRestrictions from "../../components/IPRestrictions";
 import DNS from "../../components/DNS";
+import OAuth from "../../components/OAuth.vue";
 
 export default {
   components: {
@@ -107,6 +101,7 @@ export default {
     Edit,
     IPRestrictions,
     DNS,
+    OAuth,
   },
   data() {
     return {
@@ -140,7 +135,6 @@ export default {
       },
       copyText: "Copy",
       timer: null,
-      authRequired: false,
     };
   },
   created() {
@@ -201,17 +195,20 @@ export default {
 
       api
         .post("sites/" + self.siteId + "/fixdns", {})
-        .then(function (response) {
+        .then(async function (response) {
           console.log(response);
 
           self.loading = false;
 
+          switch (await self.$refs.oauth.check(response.data)) {
+            case true:
+              return self.fixDomainDns();
+            case false:
+              return;
+          }
+
           if (!response.data.success) {
-            if (response.data.error == "auth") {
-              self.authRequired = true;
-            } else {
-              self.error = response.data.error;
-            }
+            self.error = response.data.error;
           } else {
             self.fetchData(true);
           }
@@ -219,12 +216,6 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
-    },
-    authPrompt() {
-      this.authRequired = false;
-      window.open(
-        "https://serverwand.com/account/services/" + this.data.server.dns
-      );
     },
     toggleAuth() {
       var self = this;
@@ -256,7 +247,7 @@ export default {
     },
   },
   beforeUnmount() {
-      clearTimeout(this.timer);
+    clearTimeout(this.timer);
   },
 };
 </script>

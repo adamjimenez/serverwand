@@ -4,17 +4,13 @@
 
     <v-card class="pa-3" :loading="fetching">
       <v-list>
-        <v-list group>
-
-          <v-list-item v-for="(item, i) in user_domains" :key="`item-${i}`" :title="item.domain">
-            <template v-slot:append>
-              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
-                <v-icon size="small">mdi:mdi-delete</v-icon>
-              </v-btn>
-            </template>
-          </v-list-item>
-
-        </v-list>
+        <v-list-item v-for="(item, i) in user_domains" :key="`item-${i}`" :title="item.domain">
+          <template v-slot:append>
+            <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
+              <v-icon size="small">mdi:mdi-delete</v-icon>
+            </v-btn>
+          </template>
+        </v-list-item>
       </v-list>
     </v-card>
 
@@ -27,9 +23,7 @@
     </v-card>
 
     <v-dialog v-model="drawer">
-      <v-card>
-        <v-card-title> Domain </v-card-title>
-
+      <v-card title="Domain">
         <v-card-text>
           <v-select v-model="data.domain" :items="domains" label="Domain">
             <template slot="item" slot-scope="data">

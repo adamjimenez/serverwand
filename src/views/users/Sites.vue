@@ -4,17 +4,13 @@
 
     <v-card class="pa-3" :loading="fetching">
       <v-list>
-        <v-list group>
-
-          <v-list-item v-for="(item, i) in user_sites" :key="`item-${i}`" :title="item.domain">
-            <template v-slot:append>
-              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
-                <v-icon size="small">mdi:mdi-delete</v-icon>
-              </v-btn>
-            </template>
-          </v-list-item>
-
-        </v-list>
+        <v-list-item v-for="(item, i) in user_sites" :key="`item-${i}`" :title="item.domain">
+          <template v-slot:append>
+            <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
+              <v-icon size="small">mdi:mdi-delete</v-icon>
+            </v-btn>
+          </template>
+        </v-list-item>
       </v-list>
     </v-card>
 

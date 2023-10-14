@@ -128,7 +128,6 @@ export default {
         return;
       }
 
-      var self = this
       this.error = ''
       this.fetching = true
       this.loading = true
@@ -138,14 +137,14 @@ export default {
           console.log(response)
 
           if (response.data.error)
-            self.error = response.data.error
+            this.error = response.data.error
           else
-            self.$router.push('/sites/')
+            this.$router.push('/sites/')
         })
         .catch(error => console.log(error))
         .finally(() => {
-          self.fetching = false
-          self.loading = false
+          this.fetching = false
+          this.loading = false
         })
     }
   }

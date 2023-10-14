@@ -8,7 +8,6 @@
 
     <v-container v-if="!fetching" fluid>
       <v-row>
-
         <v-col>
           <v-list-item :title="data.domain">
             <template v-slot:prepend>

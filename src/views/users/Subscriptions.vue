@@ -19,17 +19,13 @@
     </v-card>
 
     <v-card>
-      <div>
-        <v-card-title primary-title>
-          <v-btn @click="addItem()"> Add subscription </v-btn>
-        </v-card-title>
-      </div>
+      <v-card-title primary-title>
+        <v-btn @click="addItem()"> Add subscription </v-btn>
+      </v-card-title>
     </v-card>
 
     <v-dialog v-model="drawer">
-      <v-card>
-        <v-card-title> Subscription </v-card-title>
-
+      <v-card title="Subscription">
         <v-card-text>
           <v-text-field v-model="data.domain" label="Domain" required></v-text-field>
 
@@ -75,22 +71,18 @@ export default {
       },
       drawer: false,
       products: [],
-      headers: [
-        {
-          title: "Domain",
-          key: "domain",
-        },
-        {
-          title: "Name",
-          key: "name",
-        },
-        {
-          title: "Created",
-          key: "created",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
-        },
-      ],
+      headers: [{
+        title: "Domain",
+        key: "domain",
+      }, {
+        title: "Name",
+        key: "name",
+      }, {
+        title: "Created",
+        key: "created",
+        class: 'd-none d-sm-table-cell',
+        cellClass: 'd-none d-sm-table-cell',
+      }],
     };
   },
   created() {

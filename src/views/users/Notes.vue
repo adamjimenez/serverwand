@@ -4,17 +4,13 @@
 
     <v-card class="pa-3" :loading="fetching">
       <v-list>
-        <v-list group>
-
-          <v-list-item v-for="(item, i) in notes" :key="`item-${i}`" :title="item.note" :subtitle="item.created">
-            <template v-slot:append>
-              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
-                <v-icon size="small">mdi:mdi-delete</v-icon>
-              </v-btn>
-            </template>
-          </v-list-item>
-
-        </v-list>
+        <v-list-item v-for="(item, i) in notes" :key="`item-${i}`" :title="item.note" :subtitle="item.created">
+          <template v-slot:append>
+            <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
+              <v-icon size="small">mdi:mdi-delete</v-icon>
+            </v-btn>
+          </template>
+        </v-list-item>
       </v-list>
     </v-card>
 

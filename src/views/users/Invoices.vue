@@ -20,17 +20,13 @@
     </v-card>
 
     <v-card>
-      <div>
-        <v-card-title primary-title>
-          <v-btn @click="addItem()"> Add invoice </v-btn>
-        </v-card-title>
-      </div>
+      <v-card-title primary-title>
+        <v-btn @click="addItem()"> Add invoice </v-btn>
+      </v-card-title>
     </v-card>
 
     <v-dialog app v-model="dialog" temporary right>
-      <v-card>
-        <v-card-title> Invoice </v-card-title>
-
+      <v-card title="Invoice">
         <v-card-text>
           <v-form>
             <v-container fluid>
@@ -145,30 +141,24 @@ export default {
       domain: {
         name: "",
       },
-      headers: [
-        {
-          title: "Invoice ",
-          key: "id",
-        },
-        {
-          title: "Date ",
-          key: "created",
-        },
-        {
-          title: "Total ",
-          key: "total",
-        },
-        {
-          title: "Status ",
-          key: "payment_status",
-          class: 'd-none d-sm-table-cell',
-          cellClass: 'd-none d-sm-table-cell',
-        },
-        {
-          title: " ",
-          key: "actions",
-        },
-      ],
+      headers: [{
+        title: "Invoice ",
+        key: "id",
+      }, {
+        title: "Date ",
+        key: "created",
+      }, {
+        title: "Total ",
+        key: "total",
+      }, {
+        title: "Status ",
+        key: "payment_status",
+        class: 'd-none d-sm-table-cell',
+        cellClass: 'd-none d-sm-table-cell',
+      }, {
+        title: " ",
+        key: "actions",
+      }],
     };
   },
   created() {
