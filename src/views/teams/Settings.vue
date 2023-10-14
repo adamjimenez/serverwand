@@ -2,19 +2,15 @@
   <div>
     <Loading :value="loading" />
 
-    <v-card class="pa-3" :loading="fetching">
-      <v-card>
-        <v-card-title primary-title>
-          <v-btn @click="editItem"> Edit Name </v-btn>
-        </v-card-title>
-      </v-card>
+    <v-card :loading="fetching">
+      <v-card max-width="600">
+        <v-card-text>
+          <v-btn @click="editItem" block class="mb-4"> Edit Name </v-btn>
 
-      <v-card>
-        <v-card-title primary-title>
-          <v-btn :disabled="dialog" :loading="dialog" @click="deleteItem" color="error">
+          <v-btn :disabled="dialog" :loading="dialog" @click="deleteItem" color="error" block>
             Delete
           </v-btn>
-        </v-card-title>
+        </v-card-text>
       </v-card>
     </v-card>
 

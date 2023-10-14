@@ -4,9 +4,7 @@
 
     <Loading :value="loading" />
 
-    <v-card :loading="fetching" class="pb-5">
-      <v-card-title>Server details</v-card-title>
-
+    <v-card :loading="fetching" class="pb-5" title="Server details">
       <v-card-subtitle v-if="!serverId">
         Choose a VPS provider below or connect to a server freshly installed with Ubuntu
       </v-card-subtitle>

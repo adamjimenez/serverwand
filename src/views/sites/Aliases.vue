@@ -10,7 +10,6 @@
       </v-card-actions>
 
       <v-list max-width="600">
-
         <v-list-item v-for="(item, i) in data.aliases" :key="`item-${i}`" :title="item.domain" :subtitle="item.value">
           <v-list-item-subtitle>
             <span v-if="item.redirect">

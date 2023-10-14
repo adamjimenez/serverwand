@@ -8,17 +8,15 @@
       <v-card-actions>
         <v-btn @click="addItem()" icon="mdi:mdi-plus"></v-btn>
       </v-card-actions>
-      <v-card-text>
-        <v-list max-width="600">
-          <v-list-item v-for="(item, i) in data.members" :key="`item-${i}`" :title="item.email">
-            <template v-slot:append>
-              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
-                <v-icon size="small">mdi:mdi-delete</v-icon>
-              </v-btn>
-            </template>
-          </v-list-item>
-        </v-list>
-      </v-card-text>
+      <v-list max-width="600">
+        <v-list-item v-for="(item, i) in data.members" :key="`item-${i}`" :title="item.email">
+          <template v-slot:append>
+            <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
+              <v-icon size="small">mdi:mdi-delete</v-icon>
+            </v-btn>
+          </template>
+        </v-list-item>
+      </v-list>
     </v-card>
 
     <v-dialog v-model="drawer">
@@ -92,7 +90,7 @@ export default {
         .then(function (response) {
           console.log(response);
           self.data = response.data.item;
-          document.title = "Members" + " | " + self.data.name;
+          document.title = "Members | " + self.data.name;
         })
         .catch(function (error) {
           console.log(error);
@@ -166,7 +164,7 @@ export default {
           self.dialog = false;
           self.loading = false;
         });
-      }
+    }
   },
 };
 </script>

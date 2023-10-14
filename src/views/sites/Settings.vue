@@ -8,33 +8,29 @@
       @closed="fetchData(true)" />
 
     <v-card>
-      <v-list>
-        <v-list-item>
-          <v-list-item-title>
-            OpenBasedir
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            <Edit :val="data.openbasedir" label="OpenBasedir" name="openbasedir"
-              :path="'sites/' + this.siteId + '/openbasedir'" />
-          </v-list-item-subtitle>
-        </v-list-item>
-      </v-list>
-    </v-card>
+      <v-card max-width="600">
+        <v-list>
+          <v-list-item>
+            <v-list-item-title>
+              OpenBasedir
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              <Edit :val="data.openbasedir" label="OpenBasedir" name="openbasedir"
+                :path="'sites/' + this.siteId + '/openbasedir'" />
+            </v-list-item-subtitle>
+          </v-list-item>
+        </v-list>
 
-    <v-card>
-      <v-card-title primary-title>
-        <v-btn :disabled="fetching" :loading="loading == 'empty'" @click="empty" color="error">
-          Empty Site
-        </v-btn>
-      </v-card-title>
-    </v-card>
+        <v-card-text>
+          <v-btn :disabled="fetching" :loading="loading == 'empty'" @click="empty" color="error" block class="mb-4">
+            Empty Site
+          </v-btn>
 
-    <v-card>
-      <v-card-title primary-title>
-        <v-btn :disabled="fetching" :loading="loading == 'delete'" @click="deleteDomain" color="error">
-          Delete Site
-        </v-btn>
-      </v-card-title>
+          <v-btn :disabled="fetching" :loading="loading == 'delete'" @click="deleteDomain" color="error" block>
+            Delete Site
+          </v-btn>
+        </v-card-text>
+      </v-card>
     </v-card>
     <Confirm ref="confirm" />
   </div>

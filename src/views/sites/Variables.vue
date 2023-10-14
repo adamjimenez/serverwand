@@ -8,17 +8,15 @@
       <v-card-actions>
         <v-btn @click="addItem()" icon="mdi:mdi-plus"></v-btn>
       </v-card-actions>
-      <v-card-text>
-        <v-list max-width="600">
-          <v-list-item v-for="(item, i) in data.variables" :key="`item-${i}`" :title="item.name" :subtitle="item.value"
-            @click="editItem(item)">
-            <template v-slot:append>
-              <v-btn :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item.line)" icon="mdi:mdi-delete"
-                size="small"></v-btn>
-            </template>
-          </v-list-item>
-        </v-list>
-      </v-card-text>
+      <v-list max-width="600">
+        <v-list-item v-for="(item, i) in data.variables" :key="`item-${i}`" :title="item.name" :subtitle="item.value"
+          @click="editItem(item)">
+          <template v-slot:append>
+            <v-btn :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item.line)" icon="mdi:mdi-delete"
+              size="small"></v-btn>
+          </template>
+        </v-list-item>
+      </v-list>
     </v-card>
 
     <v-dialog v-model="drawer">
@@ -120,7 +118,7 @@ export default {
       if (!await this.$refs.confirm.open("Delete Variable?")) {
         return;
       }
-      
+
       var self = this;
       this.fetching = true;
       this.error = "";
