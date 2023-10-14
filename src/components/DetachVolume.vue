@@ -48,39 +48,37 @@ export default {
     },
 
     methods: {
-
         async run() {
             if (!await this.$refs.confirm.open("Detach " + this.volume, 'Warning: this action can result in data-loss if the filesystem is in use.<br>\n<br>\nNote: The Volume will incur charges until deleted.')) {
                 return;
             }
 
             this.dialog = true;
-            var self = this;
             this.error = null;
             this.fetching = true;
 
             api
                 .post("servers/" + this.serverId + "/volumes", { detach: true, volume: this.volume })
                 .then(async response => {
-                    self.dialog = false;
+                    this.dialog = false;
 
                     switch (await this.$refs.oauth.check(response.data)) {
                         case true:
-                            return self.run();
+                            return this.run();
                         case false:
                             return;
                     }
 
                     if (response.data.error) {
-                        self.dialog = true;
+                        this.dialog = true;
                         this.error = response.data.error;
                         return;
                     }
 
-                    self.$emit('complete');
+                    this.$emit('complete');
                 })
                 .finally(() => {
-                    self.fetching = false;
+                    this.fetching = false;
                 });
         },
     },

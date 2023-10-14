@@ -8,17 +8,11 @@
       <v-card-actions>
         <v-btn @click="addEmail()" icon="mdi:mdi-plus"></v-btn>
 
-        <div v-if="!authRequired &&
-          data.server &&
-          data.dns &&
-          data.dns.MX != data.server.hostname
-          ">
-          <v-btn v-if="data.dns.not_set" @click="fixDomainDns(data.domain)">Fix MX mismatch: {{ data.dns.MX }} !=
-            {{ data.server.hostname }}</v-btn>
-        </div>
+        <v-btn v-if="data.dns?.not_set" @click="fixDomainDns(data.domain)"
+          :title="data.dns.MX + ' != ' + data.server.hostname">Fix MX mismatch</v-btn>
 
         <v-btn v-if="data.dkim?.not_set" @click="fixDkim(data.domain)">Fix Missing DKIM</v-btn>
-        
+
         <v-btn v-if="data.spf?.not_set" @click="fixSpf(data.domain)">Fix Missing SPF</v-btn>
 
         <v-switch v-if="data.server.mailserver" v-model="data.email" label="Email" @change="toggleEmail()" hide-details
@@ -52,9 +46,9 @@
                 {{ item.destination }}
               </span>
             </v-list-item-title>
-            <v-list-item-subtitle>{{
-              prettyBytes(item.disk_usage)
-            }}</v-list-item-subtitle>
+            <v-list-item-subtitle>
+              {{ prettyBytes(item.disk_usage) }}
+            </v-list-item-subtitle>
 
             <template v-slot:append>
               <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item.user)" @click.stop>
@@ -67,9 +61,7 @@
       </v-card>
 
       <v-dialog v-model="drawer" max-width="600">
-        <v-card>
-          <v-card-title> Email account </v-card-title>
-
+        <v-card title="Email account">
           <v-card-text>
             <v-text-field v-model="email.user" label="Name" required :readonly="userReadonly"></v-text-field>
 
@@ -206,30 +198,32 @@ export default {
     saveEmail() {
       var self = this;
 
-      if (this.email.user) {
-        this.loading = true;
-        this.error = "";
-
-        api
-          .post("sites/" + this.domainId + "/email", this.email)
-          .then(function (response) {
-            console.log(response);
-
-            if (!response.data.success) {
-              self.error = response.data.error;
-              self.loading = false;
-            } else {
-              self.drawer = false;
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          .finally(function () {
-            self.loading = false;
-          });
+      if (!this.email.user) {
+        return;
       }
+
+      this.loading = true;
+      this.error = "";
+
+      api
+        .post("sites/" + this.domainId + "/email", this.email)
+        .then(function (response) {
+          console.log(response);
+
+          if (!response.data.success) {
+            self.error = response.data.error;
+            self.loading = false;
+          } else {
+            self.drawer = false;
+            self.fetchData();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .finally(function () {
+          self.loading = false;
+        });
     },
     deleteItem: async function (user) {
       if (!await this.$refs.confirm.open("Delete " + user)) {

@@ -12,29 +12,23 @@
     <Loading :value="loading" />
 
     <v-card :loading="fetching">
+      <v-card-actions v-if="data.origin">
+        <v-btn @click="openSync(data.origin)"> Push </v-btn>
+        <v-btn @click="openSync(siteId)"> Pull </v-btn>
+      </v-card-actions>
+
+      <v-card-actions v-if="data.app">
+        <v-btn @click="gitInfo = true" title="Git info" v-if="data.app.git_url" icon="fab fa-git"></v-btn>
+        <v-btn @click="clearLogs" title="Clear logs" v-if="data.app.isNode" icon="block"></v-btn>
+        <v-btn @click="showCloneApp = true" title="Copy app" icon="mdi:mdi-content-copy"></v-btn>
+        <v-switch v-if="data.app.isNode" v-model="data.app.online" :label="data.app.status" @change="toggleStatus()"
+          color="primary" hide-details></v-switch>
+
+        <v-btn v-if="data.app.name === 'wordpress'" @click="openWordpress" title="Open Wordpress"
+          icon="fab fa-wordpress"></v-btn>
+      </v-card-actions>
+
       <v-card-text>
-        <v-layout v-if="data.origin" row>
-          <v-card>
-            <v-card-text>
-              <v-btn @click="openSync(data.origin)"> Push </v-btn>
-              <v-btn @click="openSync(siteId)"> Pull </v-btn>
-            </v-card-text>
-          </v-card>
-        </v-layout>
-
-        <v-container v-if="data.app" fluid>
-          <v-row>
-            <v-btn @click="gitInfo = true" title="Git info" v-if="data.app.git_url" icon="fab fa-git"></v-btn>
-            <v-btn @click="clearLogs" title="Clear logs" v-if="data.app.isNode" icon="block"></v-btn>
-            <v-btn @click="showCloneApp = true" title="Copy app" icon="mdi:mdi-content-copy"></v-btn>
-            <v-switch v-if="data.app.isNode" v-model="data.app.online" :label="data.app.status" @change="toggleStatus()"
-              color="primary" hide-details></v-switch>
-
-            <v-btn v-if="data.app.name === 'wordpress'" @click="openWordpress" title="Open Wordpress"
-              icon="fab fa-wordpress"></v-btn>
-          </v-row>
-        </v-container>
-
         <div v-if="data.app">
           <div v-if="data.app.name">
             <v-card :title="data.app.name" :subtitle="data.app.version">
@@ -50,23 +44,17 @@
             </v-card>
           </div>
 
-          <v-card class="pa-3" v-else>
-            <v-card-text> Unrecognised application</v-card-text>
-          </v-card>
+          <p v-else> Unrecognised application</p>
         </div>
 
         <v-card class="mx-auto" v-else>
           <v-list>
-            <v-list group>
-              <v-list-item v-for="(item, i) in apps" :key="`item-${i}`" :title="item.label" :value="item"
-                @click="install(item.name)">
-                <template v-slot:prepend>
-                  <v-icon>
-                    <i :class="item.icon"></i>
-                  </v-icon>
-                </template>
-              </v-list-item>
-            </v-list>
+            <v-list-item v-for="(item, i) in apps" :key="`item-${i}`" :title="item.label" :value="item"
+              @click="install(item.name)">
+              <template v-slot:prepend>
+                <v-icon :icon="item.icon"></v-icon>
+              </template>
+            </v-list-item>
           </v-list>
         </v-card>
       </v-card-text>

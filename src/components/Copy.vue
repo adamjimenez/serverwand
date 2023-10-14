@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     copy(text) {
-      var el = document.createElement("textarea");
+      const el = document.createElement("textarea");
       this.$refs["container"].appendChild(el);
       el.setAttribute("id", "clipboard");
       el.value = text;
@@ -42,8 +42,7 @@ export default {
       this.copyText = "Copied";
     },
     resetCopyText() {
-      var self = this;
-      setTimeout(() => self.copyText = "Copy", 500);
+      setTimeout(() => this.copyText = "Copy", 500);
     },
   },
 };

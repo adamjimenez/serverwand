@@ -48,55 +48,53 @@ export default {
     },
 
     methods: {
-
         open() {
-            var self = this;
             this.dialog = true;
             this.fetching = true;
 
             api
                 .get("servers/" + this.serverId + "/volumes", { clearCacheEntry: true })
                 .then(async response => {
-                    self.fetching = false;
+                    this.fetching = false;
 
                     switch (await this.$refs.oauth.check(response.data)) {
                         case true:
-                            return self.open();
+                            return this.open();
                         case false:
+                            this.dialog = false;
                             return;
                     }
 
-                    self.items = response.data.available;
+                    this.items = response.data.available;
                 });
         },
 
         run() {
-            var self = this;
             this.error = null;
             this.fetching = true;
 
             api
                 .post("servers/" + this.serverId + "/volumes", { attach: true, volume: this.volume })
                 .then(async response => {
-                    self.dialog = false;
+                    this.dialog = false;
 
                     switch (await this.$refs.oauth.check(response.data)) {
                         case true:
-                            return self.run();
+                            return this.run();
                         case false:
                             return;
                     }
 
                     if (response.data.error) {
-                        self.dialog = true;
+                        this.dialog = true;
                         this.error = response.data.error;
                         return;
                     }
 
-                    self.$emit('complete');
+                    this.$emit('complete');
                 })
                 .finally(() => {
-                    self.fetching = false;
+                    this.fetching = false;
                 });
         },
     },
