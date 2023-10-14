@@ -13,7 +13,7 @@
 
       <v-card-text>
 
-        <v-list :items="items" @click:select="getOptions"></v-list>
+        <v-list v-if="!serverId" :items="items" @click:select="getOptions"></v-list>
 
         <v-form v-if="data.provider || serverId" ref="form" v-model="valid" class="mt-5">
 

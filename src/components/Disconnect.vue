@@ -17,7 +17,6 @@ export default {
   },
 
   props: {
-    serverId: null,
     server: null,
   },
 
@@ -33,7 +32,6 @@ export default {
         return;
       }
       
-      var self = this;
       this.fetching = true;
 
       api
@@ -43,11 +41,11 @@ export default {
 
           if (response.data.success) {
             // subscribe to status changes
-            self.$router.push("/servers/");
+            this.$router.push("/servers/");
           }
         })
         .catch((error) => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
     }
   },
 }

@@ -4,7 +4,7 @@
 
     <Loading :value="fetching" />
 
-    <v-card class="pa-3">
+    <v-card>
       <v-card-text>
         <v-row>
           <v-btn @click="editServer"> Edit </v-btn>
@@ -14,30 +14,24 @@
       </v-card-text>
     </v-card>
 
-    <v-card class="ma-3 pa-3" :loading="fetching">
-      <v-card-title>
-        Notifications
-      </v-card-title>
-
+    <v-card :loading="fetching" title="Notifications">
       <v-form ref="form">
-
         <v-container fluid>
           <v-row v-for="(item, i) in data.health?.checks" :key="`item-${i}`">
             <v-col>
               <v-switch v-model="item.active" :label="item.label" color="primary" :messages="item.description"></v-switch>
             </v-col>
             <v-col>
-              <v-text-field v-model="item.threshold" label="Threshold" min="0" max="100"
-                type="number" :suffix="item.suffix" :disabled="!item.active" />
+              <v-text-field v-model="item.threshold" label="Threshold" min="0" max="100" type="number"
+                :suffix="item.suffix" :disabled="!item.active" />
             </v-col>
-          </v-row>         
+          </v-row>
         </v-container>
 
-        <v-btn color="success my-5" @click="saveNotifications" :disabled="!changed">
-          Save
-        </v-btn>
+        <v-card-actions>
+          <v-btn color="success my-5" @click="saveNotifications" :disabled="!changed">Save</v-btn>
+        </v-card-actions>
       </v-form>
-
     </v-card>
   </div>
 </template>
@@ -64,7 +58,7 @@ export default {
           disk_space: {},
           mail_queue: {},
           db_connections: {},
-        },       
+        },
         disks: [],
       },
       orig: {}
@@ -121,11 +115,9 @@ export default {
 
       api
         .post(
-          "servers/" + this.serverId + "/notifications",
-          {
-            notifications: self.data.health.checks
-          }
-        )
+          "servers/" + this.serverId + "/notifications", {
+          notifications: self.data.health.checks
+        })
         .then(function (response) {
           if (response.data.error) {
             self.error = response.data.error

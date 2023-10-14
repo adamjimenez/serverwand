@@ -4,7 +4,7 @@
 
     <Loading :value="loading" />
 
-    <v-card class="pa-3" :loading="fetching">
+    <v-card :loading="fetching">
       <v-card-actions>
         <v-btn @click="addItem()" icon="mdi:mdi-plus"></v-btn>
       </v-card-actions>
