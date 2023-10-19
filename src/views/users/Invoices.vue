@@ -3,11 +3,15 @@
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
+      <v-card-actions>
+        <v-btn @click="addItem()" icon="mdi:mdi-plus"></v-btn>
+      </v-card-actions>
+
       <v-data-table :headers="headers" :items="invoices" class="results" mobile-breakpoint="0"
-        @click:row="function (event, item) { view(item.item.raw) }">
+        @click:row="function (event, item) { view(item.item) }">
 
         <template v-slot:item.created="{ item }">
-          {{ formatDate(item.raw.created) }}
+          {{ formatDate(item.created) }}
         </template>
 
         <template v-slot:item.actions="{ item }">
@@ -17,12 +21,6 @@
         </template>
 
       </v-data-table>
-    </v-card>
-
-    <v-card>
-      <v-card-title primary-title>
-        <v-btn @click="addItem()"> Add invoice </v-btn>
-      </v-card-title>
     </v-card>
 
     <v-dialog app v-model="dialog" temporary right>

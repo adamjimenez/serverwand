@@ -79,7 +79,6 @@ export default {
     fetchData(clearCacheEntry) {
       var self = this;
       this.error = "";
-
       this.fetching = true
 
       api

@@ -66,6 +66,7 @@ export default {
                         case true:
                             return this.run();
                         case false:
+                            this.dialog = true;
                             return;
                     }
 

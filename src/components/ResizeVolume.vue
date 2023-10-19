@@ -59,29 +59,29 @@ export default {
     methods: {
 
         open() {
-            var self = this;
             this.dialog = true;
             this.fetching = true;
 
             api
                 .get("servers/" + this.serverId + "/volumes", { clearCacheEntry: true })
                 .then(async response => {
-                    self.fetching = false;
+                    this.fetching = false;
 
                     switch (await this.$refs.oauth.check(response.data)) {
                         case true:
-                            return self.open();
+                            return this.open();
                         case false:
+                            this.dialog = false;
                             return;
                     }
 
-                    self.items = response.data.volumes;
+                    this.items = response.data.volumes;
                     console.log(response.data.volumes);
 
-                    response.data?.volumes.forEach(function (volume) {
-                        if ('/mnt/' + volume.name === self.volume) {
-                            self.size = volume.size;
-                            self.min = volume.size;
+                    response.data?.volumes.forEach(volume => {
+                        if ('/mnt/' + volume.name === this.volume) {
+                            this.size = volume.size;
+                            this.min = volume.size;
                         }
                     });
                 });

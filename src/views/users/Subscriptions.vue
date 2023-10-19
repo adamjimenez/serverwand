@@ -3,6 +3,10 @@
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
+      <v-card-actions>
+        <v-btn @click="addItem()" icon="mdi:mdi-plus"></v-btn>
+      </v-card-actions>
+
       <v-data-table :headers="headers" :items="subscriptions" class="results" mobile-breakpoint="0" @click:row="editItem">
 
         <template v-slot:item.created="{ item }">
@@ -16,12 +20,6 @@
         </template>
 
       </v-data-table>
-    </v-card>
-
-    <v-card>
-      <v-card-title primary-title>
-        <v-btn @click="addItem()"> Add subscription </v-btn>
-      </v-card-title>
     </v-card>
 
     <v-dialog v-model="drawer">

@@ -10,7 +10,6 @@
       </v-card-actions>
 
       <v-list>
-
         <v-list-item v-for="(item, i) in data.cronjobs" :key="`item-${i}`" :title="item.command" @click="editItem(item)">
 
           <template v-slot:prepend>
@@ -109,7 +108,7 @@ export default {
       },
       cronjobs: [],
       rules: {
-        required: (value) => !!value || "Required.",
+        required: (value) => !!value || "Required",
         alpha: (v) =>
           /^[a-zA-Z-]+$/g.test(v) || "Must contain a-z characters only",
         minute: (v) => /^[0-9,/*]+$/g.test(v) || "0-59 or *",
@@ -185,7 +184,7 @@ export default {
           }
 
           self.data = response.data.item;
-          document.title = "Cronjobs" + " | " + self.data.name;
+          document.title = "Cronjobs | " + self.data.name;
         })
         .catch(function (error) {
           console.log(error);
@@ -201,7 +200,9 @@ export default {
         });
     },
     addItem() {
-      this.cronjob = {};
+      this.cronjob = {
+        active: false,
+      };
       this.$refs.cronjobForm.resetValidation();
       this.drawer = true;
     },

@@ -3,6 +3,10 @@
     <Loading :value="loading" />
 
     <v-card class="pa-3" :loading="fetching">
+      <v-card-actions>
+        <v-btn @click="addItem()" icon="mdi:mdi-plus"></v-btn>
+      </v-card-actions>
+
       <v-list>
         <v-list-item v-for="(item, i) in notes" :key="`item-${i}`" :title="item.note" :subtitle="item.created">
           <template v-slot:append>
@@ -14,21 +18,10 @@
       </v-list>
     </v-card>
 
-    <v-card>
-      <div>
-        <v-card-title primary-title>
-          <v-btn @click="addItem()"> Add note </v-btn>
-        </v-card-title>
-      </div>
-    </v-card>
-
     <v-dialog v-model="drawer">
-      <v-card>
-        <v-card-title> Note </v-card-title>
-
+      <v-card title="Note">
         <v-card-text>
           <v-textarea v-model="data.note" label="Note"></v-textarea>
-
           <v-btn :disabled="!data.note" :loading="loading" color="success" @click="saveItem">
             Save
           </v-btn>
