@@ -62,16 +62,13 @@ export default {
         val: null,
       },
       showPassword: false,
-      yesnoItems: [
-        {
-          title: "Yes",
-          value: 1,
-        },
-        {
-          title: "No",
-          value: 0,
-        },
-      ],
+      yesnoItems: [{
+        title: "Yes",
+        value: 1,
+      }, {
+        title: "No",
+        value: 0,
+      }],
       errors: [],
     };
   },

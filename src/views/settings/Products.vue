@@ -61,34 +61,26 @@ export default {
       data: {
         name: "",
       },
-      product_types: [
-        {
-          title: "Domain renewal",
-          value: "domain renewal",
-        },
-        {
-          title: "Hosting",
-          value: "hosting",
-        },
-        {
-          title: "Custom",
-          value: "custom",
-        },
-      ],
-      periods: [
-        {
-          title: "One off",
-          value: "one-off",
-        },
-        {
-          title: "Monthly",
-          value: "monthly",
-        },
-        {
-          title: "Yearly",
-          value: "yearly",
-        },
-      ],
+      product_types: [{
+        title: "Domain renewal",
+        value: "domain renewal",
+      }, {
+        title: "Hosting",
+        value: "hosting",
+      }, {
+        title: "Custom",
+        value: "custom",
+      }],
+      periods: [{
+        title: "One off",
+        value: "one-off",
+      }, {
+        title: "Monthly",
+        value: "monthly",
+      }, {
+        title: "Yearly",
+        value: "yearly",
+      }],
       items: [],
       dialog: false,
       details: "",

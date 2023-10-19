@@ -66,10 +66,11 @@
     <v-dialog v-model="dialog" persistent width="300">
       <v-card color="primary">
         <v-card-text>
-          <v-layout class="py-5">
-            <i class="fas fa-magic fa-2x faa-horizontal animated"></i>
-            <h2 style="margin-left: 10px;">Spellcasting...</h2>
-          </v-layout>
+          <v-alert title="Spellcasting..." color="primary">
+            <template v-slot:prepend>
+              <v-icon icon="fas fa-magic fa-2x faa-horizontal animated"></v-icon>
+            </template>
+          </v-alert>
 
           <v-progress-linear :indeterminate="progress == 0" v-model="progress" color="white"></v-progress-linear>
 
@@ -155,9 +156,9 @@ export default {
     unclaimed: [],
     items: [
       { title: 'Linode', value: 'linode', props: { prependIcon: 'fab fa-linode' } },
-      { title: 'DigitalOcean', value: 'digitalocean', props: { prependIcon: 'fab fa-digital-ocean' }},
-      { title: 'Vultr', value: 'vultr', props: { prependIcon: 'fas fa-server' }},
-      { title: 'Ubuntu server', value: 'custom', props: { prependIcon: 'fab fa-ubuntu' }}
+      { title: 'DigitalOcean', value: 'digitalocean', props: { prependIcon: 'fab fa-digital-ocean' } },
+      { title: 'Vultr', value: 'vultr', props: { prependIcon: 'fas fa-server' } },
+      { title: 'Ubuntu server', value: 'custom', props: { prependIcon: 'fab fa-ubuntu' } }
     ],
     isOpen: false,
     provider: 'Choose'

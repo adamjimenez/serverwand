@@ -1,18 +1,13 @@
 <template>
     <span>
-        <v-dialog v-model="dialog" :persistent="fetching" content content-class="centered-dialog">
+        <v-dialog v-model="dialog" :persistent="fetching" width="600">
             <v-alert v-if="error" type="error" :text="error"></v-alert>
 
-            <v-container fill-height>
-                <v-card color="primary">
-                    <v-card-text>
-                        <v-layout row v-if="fetching">
-                            <i class="fas fa-magic fa-2x faa-horizontal animated"></i>
-                            <h2 class="ml-2">Detaching</h2>
-                        </v-layout>
-                    </v-card-text>
-                </v-card>
-            </v-container>
+            <v-alert title="Detaching" color="primary" v-if="fetching">
+                <template v-slot:prepend>
+                    <v-icon icon="fas fa-magic fa-2x faa-horizontal animated"></v-icon>
+                </template>
+            </v-alert>
         </v-dialog>
 
         <v-btn icon @click="run()" title="Detach Volume">

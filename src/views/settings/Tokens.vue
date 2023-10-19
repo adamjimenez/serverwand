@@ -65,24 +65,19 @@ export default {
       data: {
         label: "",
       },
-      providers: [
-        {
-          title: "Linode",
-          value: "linode",
-        },
-        {
-          title: "Digital Ocean",
-          value: "digitalocean",
-        },
-        {
-          title: "NameSilo",
-          value: "namesilo",
-        },
-        {
-          title: "Nominet",
-          value: "nominet",
-        },
-      ],
+      providers: [{
+        title: "Linode",
+        value: "linode",
+      }, {
+        title: "Digital Ocean",
+        value: "digitalocean",
+      }, {
+        title: "NameSilo",
+        value: "namesilo",
+      }, {
+        title: "Nominet",
+        value: "nominet",
+      }],
       items: [],
       dialog: false,
       details: "",

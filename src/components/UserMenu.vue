@@ -2,11 +2,9 @@
     <v-menu offset-y left>
       <template v-slot:activator="{ props }">
         <v-btn
-          icon
+          icon="mdi:mdi-account-circle"
           v-bind="props"
-        >
-            <i class="material-icons">account_circle</i>
-        </v-btn>
+        ></v-btn>
       </template>
       <v-list>
           <v-list-item

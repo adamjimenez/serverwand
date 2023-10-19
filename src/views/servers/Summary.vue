@@ -1,8 +1,9 @@
 <template>
   <div>
     <v-alert v-if="error" type="error" :text="error"></v-alert>
-   
-    <v-alert v-for="(item, i) in warnings" :key="`item-${i}`" type="warning" :text="item.label + ' ' + item.value + ' ' + item.suffix" class="mb-3"></v-alert>
+
+    <v-alert v-for="(item, i) in warnings" :key="`item-${i}`" type="warning"
+      :text="item.label + ' ' + item.value + ' ' + item.suffix" class="mb-3"></v-alert>
 
     <v-card class="pa-3" :loading="fetching">
       <v-container class="ma-0" fluid>
@@ -13,7 +14,7 @@
                 <v-card-text class="pa-1">
                   <div class="d-flex justify-space-between mb-3">
                     <span class="text-h5">
-                      <i class="fas fa-microchip"></i>
+                      <v-icon icon="fas fa-microchip" size="small"></v-icon>
                     </span>
                     <div class="text-subtitle-1">CPU</div>
                   </div>
@@ -33,7 +34,7 @@
                 <v-card-text class="pa-1">
                   <div class="d-flex justify-space-between mb-3">
                     <span class="text-h5">
-                      <i class="fas fa-memory"></i>
+                      <v-icon icon="fas fa-memory" size="small"></v-icon>
                     </span>
                     <div class="text-subtitle-1">Memory Usage</div>
                   </div>
@@ -54,7 +55,7 @@
                   <v-card-text class="pa-1">
                     <div class="d-flex justify-space-between mb-3">
                       <span class="text-h5">
-                        <i class="fas fa-hdd"></i>
+                        <v-icon icon="fas fa-hdd" size="small"></v-icon>
                       </span>
                       <div class="text-subtitle-1">{{ disk.name }}</div>
                     </div>
@@ -70,8 +71,10 @@
 
                       <CleanUp v-if="i === 0" :serverId="serverId" @complete="fetchData(true)"></CleanUp>
                       <AttachVolume v-if="i === 0" :serverId="serverId" @complete="fetchData(true)"></AttachVolume>
-                      <DetachVolume v-if="i > 0" :serverId="serverId"  :volume="disk.name" @complete="fetchData(true)"></DetachVolume>
-                      <ResizeVolume v-if="i > 0" :serverId="serverId"  :volume="disk.name" @complete="fetchData(true)"></ResizeVolume>
+                      <DetachVolume v-if="i > 0" :serverId="serverId" :volume="disk.name" @complete="fetchData(true)">
+                      </DetachVolume>
+                      <ResizeVolume v-if="i > 0" :serverId="serverId" :volume="disk.name" @complete="fetchData(true)">
+                      </ResizeVolume>
                     </div>
                   </v-card-text>
                 </v-card>
@@ -83,7 +86,7 @@
                 <v-card-text class="pa-1">
                   <div class="d-flex justify-space-between mb-3">
                     <span class="text-h5">
-                      <i class="fas fa-clock"></i>
+                      <v-icon icon="fas fa-clock" size="small"></v-icon>
                     </span>
                     <div class="text-subtitle-1">Uptime</div>
                   </div>
@@ -161,9 +164,10 @@
 
                 <v-list-item title="Apache" :subtitle="data.apache">
                   <template v-slot:append>
-                    
+
                     <Terminal title="GoAccess Web Log Analyzer"
-                      cmd="sudo awk '$8=$1$8' /var/log/apache2/other_vhosts_access.log /var/log/apache2/other_vhosts_access.log.1 | goaccess --log-format VCOMBINED -a -" icon>
+                      cmd="sudo awk '$8=$1$8' /var/log/apache2/other_vhosts_access.log /var/log/apache2/other_vhosts_access.log.1 | goaccess --log-format VCOMBINED -a -"
+                      icon>
                       <v-icon size="small">fas fa-chart-line</v-icon>
                     </Terminal>
 

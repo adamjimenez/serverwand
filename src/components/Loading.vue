@@ -1,15 +1,10 @@
 <template>
-  <v-dialog v-model="show" persistent content content-class="centered-dialog">
-    <v-container fill-height>
-      <v-card color="primary">
-        <v-card-text>
-          <v-layout row>
-            <i class="fas fa-magic fa-2x faa-horizontal animated"></i>
-            <h2 class="ml-2">{{ message }}</h2>
-          </v-layout>
-        </v-card-text>
-      </v-card>
-    </v-container>
+  <v-dialog v-model="show" persistent width="600">
+    <v-alert :title="message" color="primary">
+      <template v-slot:prepend>
+        <v-icon icon="fas fa-magic fa-2x faa-horizontal animated"></v-icon>
+      </template>
+    </v-alert>
   </v-dialog>
 </template>
 

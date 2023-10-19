@@ -18,8 +18,8 @@
           :loading="dialog"
           color="error"
           @click="loginGoogle"
+          icon="fa fa-google"
         >
-          <i class="fa fa-google"></i>
           Google
         </v-btn>
       </div>
