@@ -35,7 +35,7 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="drawer" eager>
+    <v-dialog v-model="drawer" eager max-width="600">
       <v-card>
         <v-form ref="cronjobForm">
           <v-card-title> Cronjob </v-card-title>
