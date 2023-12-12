@@ -1,18 +1,14 @@
 <template>
   <div>
-
     <v-alert v-if="msg" dark style="position: fixed; width: 100%; z-index: 10; left: 0; bottom: 0; margin: 0 auto;"
       type="info">
       {{ msg }}
     </v-alert>
 
-    <v-col class="flex-grow-0"
+    <v-btn @click="extract()" :disabled="!selected" title="Extract" icon
       v-if="selected?.length === 1 && ['zip', 'gz', 'tar'].indexOf(fileExtension(selected[0])) !== -1">
-      <v-btn @click="extract()" :disabled="!selected" title="Extract" icon>
-        <v-icon>mdi:mdi-folder-zip-outline</v-icon>
-      </v-btn>
-    </v-col>
-
+      <v-icon>mdi:mdi-folder-zip-outline</v-icon>
+    </v-btn>
   </div>
 </template>
 
