@@ -17,7 +17,7 @@
             <template v-slot:item.domain="{ item }">
               <v-list-item :to="'/sites/' + item.id + '/summary'" :title="item.domain" :subtitle="servers[item.server]"
                 class="px-0">
-                <template v-slot:prepend v-if="!mobile">
+                <template v-slot:prepend v-if="display.smAndUp">
                   <SiteIcon :app="item.app"></SiteIcon>
                 </template>
               </v-list-item>
@@ -44,7 +44,6 @@ import api from "../services/api";
 import util from "../services/util";
 import Loading from "../components/Loading";
 import SiteIcon from "../components/SiteIcon";
-import { useDisplay } from 'vuetify';
 
 export default {
   components: {
@@ -67,9 +66,8 @@ export default {
     };
   },
   computed: {
-    mobile: function () {
-      const { mobile } = useDisplay();
-      return mobile.value;
+    display: function () {
+      return this.$vuetify.display;
     },
     headers: function () {
       var items = [{
@@ -77,21 +75,32 @@ export default {
         key: "domain",
       }];
 
-      if (!this.mobile) {
+      if (this.display.smAndUp) {
         items.push({
           title: "IP",
           key: "ip",
-        }, {
+        });
+      }
+
+      if (this.display.mdAndUp) {
+        items.push({
           title: "MX",
           key: "mx",
         }, {
+          title: "MX",
+          key: "mx",
+        });
+      }
+
+      if (this.display.lgAndUp) {
+        items.push({
           title: "Size",
           key: "usage",
         }, {
           title: "Transfer",
           key: "transfer",
         });
-      };
+      }
 
       return items;
     }
