@@ -9,7 +9,6 @@
         <v-row>
           <v-btn @click="editServer"> Edit </v-btn>
           <Reboot :serverId="serverId" class="mx-3" />
-          <ClearMailQueue serverId="serverId" :server="data" class="mx-3" @complete="handleComplete" />
           <Disconnect :serverId="serverId" :server="data" />
         </v-row>
       </v-card-text>
@@ -42,14 +41,12 @@ import api from "../../services/api";
 import Loading from "../../components/Loading";
 import Reboot from "../../components/Reboot";
 import Disconnect from "../../components/Disconnect";
-import ClearMailQueue from "../../components/ClearMailQueue";
 
 export default {
   components: {
     Loading,
     Reboot,
     Disconnect,
-    ClearMailQueue,
   },
   data() {
     return {
@@ -135,9 +132,6 @@ export default {
           self.fetching = false;
         });
     },
-    handleComplete: function (result) {
-      this.error = result;
-    }
   },
 };
 </script>

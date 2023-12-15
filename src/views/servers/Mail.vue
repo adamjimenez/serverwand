@@ -6,16 +6,6 @@
 
     <v-card :loading="fetching">
 
-      <v-container fluid>
-        <v-row>
-          <v-card>
-            <v-card-text>
-              Mail queue: {{ data.queue }}
-            </v-card-text>
-          </v-card>
-        </v-row>
-      </v-container>
-
       <v-data-table v-if="items.length" v-model="selected" :headers="headers" :items="items" show-select class="results"
         mobile-breakpoint="0" @click:row="view">
 
@@ -29,11 +19,10 @@
     </v-card>
 
     <v-card>
-      <div>
-        <v-card-title primary-title>
-          <v-btn @click="deleteMail()" :disabled="selected.length === 0" :loading="fetching"> Delete </v-btn>
-        </v-card-title>
-      </div>
+      <v-card-actions>
+        <v-btn @click="deleteMail()" :disabled="selected.length === 0" :loading="fetching"> Delete </v-btn>
+        <ClearMailQueue serverId="serverId" :server="data" class="mx-3" @complete="handleComplete" />
+      </v-card-actions>
     </v-card>
 
     <v-dialog app v-model="emailDrawer">
@@ -52,10 +41,12 @@
 import api from "../../services/api";
 import util from "../../services/util";
 import Loading from "../../components/Loading";
+import ClearMailQueue from "../../components/ClearMailQueue";
 
 export default {
   components: {
     Loading,
+    ClearMailQueue,
   },
   data() {
     return {
@@ -164,6 +155,10 @@ export default {
     prettyBytes(value) {
       return util.prettyBytes(value);
     },
+    handleComplete: function (result) {
+      this.error = result;
+      this.fetchData();
+    }
   },
 };
 </script>
