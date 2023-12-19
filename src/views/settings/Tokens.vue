@@ -5,7 +5,6 @@
     <Loading :value="fetching" />
 
     <v-card class="mx-auto">
-
       <v-card-actions>
         <v-btn @click="addItem()" icon="mdi:mdi-plus"></v-btn>
       </v-card-actions>
@@ -14,7 +13,7 @@
         <template v-for="(item, i) in items" :key="`item-${i}`">
           <v-list-item :value="item" :title="item.label">
             <template v-slot:append>
-              <v-btn :disabled="dialog" :loading="dialog" @click.stop="deleteItem(item.id)">
+              <v-btn :disabled="dialog" :loading="loading === item.id" @click.stop="deleteItem(item.id)">
                 <v-icon size="small">mdi:mdi-delete</v-icon>
               </v-btn>
             </template>
@@ -82,6 +81,7 @@ export default {
       dialog: false,
       details: "",
       fetching: true,
+      loading: null,
       /*
         rules: {
           required: value => !!value || 'Required.',
@@ -137,6 +137,7 @@ export default {
 
       var self = this;
       this.error = "";
+      this.loading = id;
 
       api
         .post("providers/tokens/" + id, { delete: 1 })
@@ -151,6 +152,9 @@ export default {
         })
         .catch(function (error) {
           console.log(error);
+        })
+        .finally(function () {
+          self.loading = null;
         });
     },
     submitToken() {

@@ -13,7 +13,7 @@
         <template v-for="(item, i) in items" :key="`item-${i}`">
           <v-list-item :value="item" :title="item.label" :subtitle="item.api_key">
             <template v-slot:append>
-              <v-btn :disabled="dialog" :loading="dialog" @click.stop="deleteItem(item.id)">
+              <v-btn :disabled="dialog" :loading="loading === item.id" @click.stop="deleteItem(item.id)">
                 <v-icon size="small">mdi:mdi-delete</v-icon>
               </v-btn>
             </template>
@@ -69,6 +69,7 @@ export default {
       dialog: false,
       details: "",
       fetching: true,
+      loading: null,
       rules: {
         required: (value) => !!value || "Required.",
         min: (v) => v.length >= 8 || "Min 8 characters",
@@ -135,12 +136,13 @@ export default {
         });
     },
     deleteItem: async function (id) {
-      var self = this;
-      this.error = "";
-
       if (!await this.$refs.confirm.open("Are you sure you want to delete this item?")) {
         return;
       }
+
+      var self = this;
+      this.error = "";
+      this.loading = id;
 
       api
         .post("apikeys", { delete: 1, api_key: id })
@@ -155,6 +157,9 @@ export default {
         })
         .catch(function (error) {
           console.log(error);
+        })
+        .finally(function () {
+          self.loading = null;
         });
     },
   },
