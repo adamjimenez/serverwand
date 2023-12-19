@@ -2,14 +2,12 @@
   <div>
     <v-alert v-if="error" type="error" :text="error"></v-alert>
 
-    <Loading :value="loading" />
-
     <v-card class="pa-3" :loading="fetching">
       <v-list group max-width="600">
         <template v-for="(item, i) in items" :key="`item-${i}`">
           <v-list-item :value="item">
             <v-switch v-model="item.active" :label="item.name" @change="toggle(item)" color="primary"
-              hide-details></v-switch>
+              hide-details :loading="loading === item.name"></v-switch>
           </v-list-item>
         </template>
       </v-list>
@@ -19,18 +17,14 @@
 
 <script>
 import api from "../../services/api";
-import Loading from "../../components/Loading";
 
 export default {
-  components: {
-    Loading,
-  },
   data() {
     return {
       error: "",
       items: {},
       fetching: false,
-      loading: false,
+      loading: null,
       serverId: 0,
     }
   },
@@ -53,7 +47,6 @@ export default {
 
           if (response.data.error) {
             self.error = response.data.error;
-
             return false;
           }
 
@@ -66,7 +59,7 @@ export default {
     },
     toggle(item) {
       var self = this;
-      this.loading = true;
+      this.loading = item.name;
       this.error = "";
       var action = item.active ? "start" : "stop";
 
@@ -84,7 +77,7 @@ export default {
             self.fetchData();
         })
         .catch(error => console.log(error))
-        .finally(() => self.loading = false)
+        .finally(() => self.loading = null)
     },
   },
 };

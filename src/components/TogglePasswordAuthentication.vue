@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-switch v-model="data.passwordAuthentication" label="Password Authentication" @change="togglePasswordAuthentication" hide-details color="primary">
+    <v-switch v-model="data.passwordAuthentication" label="Password Authentication" @change="togglePasswordAuthentication" hide-details color="primary" :loading="loading">
       <template v-slot:append>
         <v-tooltip location="top" text="We recommend password authentication is
             disabled in favour of key authentication.">
@@ -34,7 +34,7 @@ export default {
 
   data() {
     return {
-      fetching: false,
+      loading: null,
       data: {
         passwordAuthentication: false,
       },
@@ -49,7 +49,6 @@ export default {
     togglePasswordAuthentication() {
       var self = this;
       this.error = "";
-      this.fetching = true;
       this.loading = true;
 
       api
@@ -70,8 +69,7 @@ export default {
           console.log(error);
         })
         .finally(() => {
-          self.fetching = false;
-          self.loading = false;
+          self.loading = null;
         });
     },
   },

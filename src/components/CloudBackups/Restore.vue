@@ -1,6 +1,6 @@
 <template>
   <div v-if="selected.length">
-    <v-btn @click="restore()" title="Restore" icon>
+    <v-btn @click="restore()" title="Restore" icon :loading="fetching">
       <v-icon>mdi:mdi-restore</v-icon>
     </v-btn>
     <Confirm ref="confirm" />
