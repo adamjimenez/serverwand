@@ -20,12 +20,12 @@
                 <v-btn @click="addItem()" icon="mdi:mdi-plus"></v-btn>
             </div>
 
-            <v-dialog app v-model="drawer" temporary right>
+            <v-dialog app v-model="drawer" temporary right max-width="600">
                 <v-card title="IP">
                     <v-form v-model="valid">
                         <v-card-text>
                             <v-text-field v-model="item.label" label="Label" required
-                                :rules="[rules.required]"></v-text-field>
+                                :rules="[rules.required]" placeholder="Home"></v-text-field>
                             <IP label="IP" :remoteAddr="remoteAddr" v-model="item.ip" />
 
                             <v-btn :disabled="!valid" :loading="fetching" color="success" @click="saveItem">
