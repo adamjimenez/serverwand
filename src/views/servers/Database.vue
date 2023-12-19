@@ -51,7 +51,7 @@
         <v-row>
           <v-col>
             <IPRestrictions :active="data.ip_restrictions.active" :items="data.ip_restrictions.ips"
-              :path="'servers/' + this.serverId + '/database/iprestrictions'" @save="fetchData(true)" />
+              :path="'servers/' + serverId + '/database/iprestrictions'" @save="fetchData(true)" :remoteAddr="data.remote_addr" />
           </v-col>
         </v-row>
       </v-container>

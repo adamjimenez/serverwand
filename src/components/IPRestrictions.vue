@@ -1,9 +1,7 @@
 <template>
     <v-card>
         <v-card-text>
-            <v-alert v-if="error" type="error">
-                {{ error }}
-            </v-alert>
+            <v-alert v-if="error" type="error" :text="error"></v-alert>
 
             <v-switch v-model="data.active" label="IP restrictions" @change="toggle" color="primary"
                 hide-details></v-switch>
@@ -12,7 +10,7 @@
                 <v-list max-width="300">
                     <v-list-item v-for="(item, i) in items" :key="`item-${i}`" :title="item.ip" :subtitle="item.label">
                         <template v-slot:append>
-                            <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item.line)">
+                            <v-btn icon :disabled="fetching" :loading="loading === item.line" @click.stop="deleteItem(item.line)">
                                 <v-icon size="small">mdi:mdi-delete</v-icon>
                             </v-btn>
                         </template>
@@ -28,9 +26,7 @@
                         <v-card-text>
                             <v-text-field v-model="item.label" label="Label" required
                                 :rules="[rules.required]"></v-text-field>
-
-                            <v-text-field v-model="item.ip" label="IP address" required
-                                :rules="[rules.required, rules.ip]"></v-text-field>
+                            <IP label="IP" :remoteAddr="remoteAddr" v-model="item.ip" />
 
                             <v-btn :disabled="!valid" :loading="fetching" color="success" @click="saveItem">
                                 Save
@@ -48,16 +44,19 @@
 <script>
 import api from "../services/api";
 import Confirm from "./ConfirmDialog.vue";
+import IP from "./IP.vue";
 
 export default {
     components: {
-        Confirm
+        Confirm,
+        IP,
     },
     props: {
         serverId: null,
         active: null,
         items: null,
         path: null,
+        remoteAddr: null,
     },
     data() {
         return {
@@ -65,6 +64,7 @@ export default {
                 active: null,
             },
             item: {},
+            loading: null,
             fetching: false,
             drawer: false,
             rules: {
@@ -122,7 +122,7 @@ export default {
             }
 
             var self = this;
-            this.fetching = true;
+            this.loading = line;
             this.error = "";
 
             api
@@ -138,7 +138,7 @@ export default {
                     console.log(error);
                 })
                 .finally(() => {
-                    this.fetching = false;
+                    this.loading = null;
                     self.$emit("save");
                 });
         },

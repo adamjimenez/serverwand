@@ -32,13 +32,9 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="drawer">
+    <v-dialog v-model="drawer" max-width="600">
       <v-card>
-        <v-form v-model="valid">
-          <v-card-title>
-            Firewall rule
-          </v-card-title>
-
+        <v-form v-model="valid" title="Firewall rule">
           <v-card-text>
             <v-text-field v-model="item.port" label="Port range" placeholder="80, 443, 5000:5010" required
               :rules="[rules.required, rules.port]">
@@ -48,7 +44,7 @@
 
             <v-select v-model="item.action" :items="action" label="Action" required></v-select>
 
-            <v-text-field v-model="item.from" label="From" :rules="[rules.ip]" placeholder="192.168.0.1"></v-text-field>
+            <IP v-model="item.from" label="From" :remoteAddr="data.remote_addr" />
 
             <v-text-field v-model="item.comment" label="Comment"></v-text-field>
 
@@ -68,11 +64,13 @@
 import api from '../../services/api'
 import Loading from '../../components/Loading'
 import Confirm from "../../components/ConfirmDialog.vue";
+import IP from "../../components/IP.vue";
 
 export default {
   components: {
     Loading,
-    Confirm
+    Confirm,
+    IP,
   },
   data() {
     return {
