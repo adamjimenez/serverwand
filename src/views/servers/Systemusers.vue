@@ -92,7 +92,7 @@
                 </v-list-item>
               </v-list>
 
-              <v-btn @click="addKey" color="success" class="mt-3">Upload Key</v-btn>
+              <v-btn @click="addKey" icon="mdi:mdi-plus"></v-btn>
             </v-window-item>
           </v-window>
         </v-card-text>
