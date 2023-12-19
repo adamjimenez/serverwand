@@ -12,7 +12,15 @@
         <v-list>
           <v-list-item>
             <v-list-item-title>
-              OpenBasedir
+              open_basedir
+
+              <v-tooltip location="top" text="PHP directive which controls which paths can be accessed.">
+                <template v-slot:activator="{ props }">
+                  <v-icon color="primary" v-bind="props">
+                    mdi:mdi-information
+                  </v-icon>
+                </template>
+              </v-tooltip>
             </v-list-item-title>
             <v-list-item-subtitle>
               <Edit :val="data.openbasedir" label="OpenBasedir" name="openbasedir"
