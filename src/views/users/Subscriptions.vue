@@ -14,7 +14,7 @@
         </template>
 
         <template v-slot:item.actions="{ item }">
-          <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item.id)">
+          <v-btn icon :disabled="fetching" :loading="loading === item.id" @click="deleteItem(item.id)">
             <v-icon size="small">delete</v-icon>
           </v-btn>
         </template>
@@ -53,7 +53,7 @@ export default {
   data() {
     return {
       fetching: false,
-      loading: false,
+      loading: null,
       id: null,
       error: null,
       data: {},
@@ -184,7 +184,7 @@ export default {
       var self = this;
       this.error = "";
       this.dialog = true;
-      this.loading = true;
+      this.loading = item.id;
 
       api
         .post("users/" + this.id + "/subscriptions/" + item.id, { delete: 1 })
@@ -202,7 +202,7 @@ export default {
         })
         .finally(function () {
           self.dialog = false;
-          self.loading = false;
+          self.loading = null;
         });
     },
     formatDate(value) {

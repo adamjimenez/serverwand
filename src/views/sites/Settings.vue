@@ -52,7 +52,7 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      loading: null,
       siteId: null,
       post: null,
       error: null,
@@ -102,8 +102,7 @@ export default {
 
       var self = this
       this.error = ''
-      this.fetching = true
-      this.loading = true
+      this.loading = 'empty'
 
       api.get('sites/' + this.$route.params.id + '/empty')
         .then(response => {
@@ -115,8 +114,7 @@ export default {
         })
         .catch(error => console.log(error))
         .finally(() => {
-          self.fetching = false
-          self.loading = false
+          self.loading = null
         })
     },
     deleteDomain: async function () {
@@ -125,8 +123,7 @@ export default {
       }
 
       this.error = ''
-      this.fetching = true
-      this.loading = true
+      this.loading = 'delete'
 
       api.get('sites/' + this.$route.params.id + '/delete')
         .then(response => {
@@ -139,8 +136,7 @@ export default {
         })
         .catch(error => console.log(error))
         .finally(() => {
-          this.fetching = false
-          this.loading = false
+          this.loading = null
         })
     }
   }

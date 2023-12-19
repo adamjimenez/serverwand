@@ -90,7 +90,7 @@
                     <v-btn icon :disabled="fetching" :loading="fetching">
                       <Copy :val="item.key" />
                     </v-btn>
-                    <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteKey(item.line)">
+                    <v-btn icon :disabled="fetching" :loading="loading === item.line" @click.stop="deleteKey(item.line)">
                       <v-icon size="small">mdi:mdi-delete</v-icon>
                     </v-btn>
                   </template>
@@ -155,7 +155,7 @@ export default {
         sudo_without_password: false,
       },
       details: "",
-      loading: false,
+      loading: null,
       fetching: false,
       userDrawer: false,
       keyDrawer: false,
@@ -237,7 +237,7 @@ export default {
       }
 
       var self = this;
-      this.fetching = true;
+      this.loading = user;
       this.error = "";
 
       api
@@ -247,14 +247,15 @@ export default {
 
           if (!response.data.success) {
             self.error = response.data.error;
-            self.fetching = false;
           } else {
             self.fetchData();
           }
         })
         .catch(function (error) {
           console.log(error);
-          self.fetching = false;
+        })
+        .finally(function () {
+          self.loading = null;
         });
 
       return false;

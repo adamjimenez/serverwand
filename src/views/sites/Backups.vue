@@ -16,10 +16,10 @@
           <v-list-item v-for="(item, i) in data.items" :key="`item-${i}`" :title="item.name"
             :subtitle="item.date + ' - ' + prettyBytes(item.size)" @click="restore(item)">
             <template v-slot:append>
-              <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="download(item)">
+              <v-btn icon :disabled="fetching" @click.stop="download(item)">
                 <v-icon size="small">mdi:mdi-download</v-icon>
               </v-btn>
-              <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item)">
+              <v-btn icon :disabled="fetching" :loading="loading === item.name" @click.stop="deleteItem(item)">
                 <v-icon size="small">mdi:mdi-delete</v-icon>
               </v-btn>
             </template>
@@ -56,8 +56,8 @@ export default {
       },
       loading: false,
       details: "",
-      loading: false,
       fetching: false,
+      loading: null,
       alias: {
         domain: "",
         dns: false,
@@ -140,7 +140,8 @@ export default {
       }
 
       var self = this;
-      self.fetching = true;
+      this.fetching = true;
+      this.loading = item.name;
 
       api
         .post("sites/" + this.domainId + "/backups", { ids: [item.name] })
@@ -150,6 +151,9 @@ export default {
         .catch(function (error) {
           console.log(error);
           self.fetching = false;
+        })
+        .finally(function () {
+          self.loading = null;
         });
     },
     restore: async function (item) {

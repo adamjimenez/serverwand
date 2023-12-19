@@ -26,7 +26,7 @@
           </v-list-item-subtitle>
 
           <template v-slot:append>
-            <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item.line)">
+            <v-btn icon :disabled="fetching" :loading="loading === item.line" @click.stop="deleteItem(item.line)">
               <v-icon size="small" icon="mdi:mdi-delete"></v-icon>
             </v-btn>
           </template>
@@ -119,7 +119,7 @@ export default {
       },
       details: "",
       fetching: false,
-      loading: false,
+      loading: null,
       drawer: false,
       serverId: 0,
       logs: [
@@ -216,7 +216,7 @@ export default {
       }
 
       var self = this;
-      this.fetching = true;
+      this.loading = line;
       this.error = "";
 
       api
@@ -225,15 +225,16 @@ export default {
           console.log(response);
 
           if (!response.data.success) {
-            self.fetching = false;
             self.error = response.data.error;
           } else {
             self.fetchData();
           }
         })
         .catch(function (error) {
-          self.fetching = false;
           console.log(error);
+        })
+        .finally(function () {
+          self.loading = null;
         });
     },
     saveCronjob() {

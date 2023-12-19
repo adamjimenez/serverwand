@@ -12,7 +12,7 @@
         <v-list-item v-for="(item, i) in data.variables" :key="`item-${i}`" :title="item.name" :subtitle="item.value"
           @click="editItem(item)">
           <template v-slot:append>
-            <v-btn :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item.line)" icon="mdi:mdi-delete"
+            <v-btn :disabled="fetching" :loading="loading === item.line" @click.stop="deleteItem(item.line)" icon="mdi:mdi-delete"
               size="small"></v-btn>
           </template>
         </v-list-item>
@@ -56,7 +56,7 @@ export default {
     return {
       error: "",
       fetching: false,
-      loading: false,
+      loading: null,
       drawer: false,
       data: {
         users: {},
@@ -120,7 +120,7 @@ export default {
       }
 
       var self = this;
-      this.fetching = true;
+      this.loading = line;
       this.error = "";
 
       api
@@ -136,8 +136,10 @@ export default {
           }
         })
         .catch(function (error) {
-          self.fetching = false;
           console.log(error);
+        })
+        .finally(function () {
+          self.loading = null;
         });
     },
     saveItem() {

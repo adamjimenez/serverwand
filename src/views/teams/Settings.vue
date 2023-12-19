@@ -7,7 +7,7 @@
         <v-card-text>
           <v-btn @click="editItem" block class="mb-4"> Edit Name </v-btn>
 
-          <v-btn :disabled="dialog" :loading="dialog" @click="deleteItem" color="error" block>
+          <v-btn :disabled="dialog" :loading="loading === 'delete'" @click="deleteItem" color="error" block>
             Delete
           </v-btn>
         </v-card-text>
@@ -19,7 +19,7 @@
         <v-card-text>
           <v-text-field v-model="data.name" label="Name" required></v-text-field>
 
-          <v-btn :disabled="fetching" :loading="fetching" color="success" @click="validate">
+          <v-btn :disabled="fetching" :loading="loading === 'save'" color="success" @click="validate">
             Save
           </v-btn>
         </v-card-text>
@@ -43,7 +43,7 @@ export default {
     return {
       drawer: false,
       fetching: false,
-      loading: false,
+      loading: null,
       error: "",
       data: {
         users: {},
@@ -88,7 +88,7 @@ export default {
       }
 
       this.dialog = true;
-      this.loading = true;
+      this.loading = 'delete';
 
       api
         .post("teams/" + this.id, { delete: 1 })
@@ -106,11 +106,11 @@ export default {
         })
         .finally(function () {
           this.dialog = false;
-          this.loading = false;
+          this.loading = null;
         });
     },
     validate() {
-      this.loading = true;
+      this.loading = 'save';
 
       api
         .post("teams/" + this.id, this.data)
@@ -122,7 +122,7 @@ export default {
           console.log(error);
         })
         .finally(function () {
-          this.loading = false;
+          this.loading = null;
           this.drawer = false;
         });
     },

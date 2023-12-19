@@ -17,7 +17,6 @@
 
         <v-switch v-if="data.server.mailserver" v-model="data.email" label="Email" @change="toggleEmail()" hide-details
           color="primary"></v-switch>
-
       </v-card-actions>
     </v-card>
 
@@ -51,7 +50,7 @@
             </v-list-item-subtitle>
 
             <template v-slot:append>
-              <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item.user)" @click.stop>
+              <v-btn icon :disabled="fetching" :loading="loading === item.user" @click="deleteItem(item.user)" @click.stop>
                 <v-icon size="small" icon="mdi:mdi-delete"></v-icon>
               </v-btn>
             </template>
@@ -108,7 +107,7 @@ export default {
       },
       email: {},
       fetching: false,
-      loading: false,
+      loading: null,
       rules: {
         required: (value) => !!value || "Required.",
         min: (v) => v.length >= 8 || "Min 8 characters",
@@ -231,8 +230,8 @@ export default {
       }
 
       var self = this;
-      this.loading = true;
       this.error = "";
+      this.loading = user;
 
       api
         .post("sites/" + this.domainId + "/email", {
@@ -254,6 +253,7 @@ export default {
         })
         .finally(function () {
           self.loading = false;
+          self.loading = null;
         });
     },
     fixDomainDns() {

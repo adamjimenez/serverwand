@@ -7,7 +7,7 @@
         <v-card-text>
           <v-btn @click="editItem" block class="mb-4"> Edit </v-btn>
 
-          <v-btn :disabled="dialog" :loading="dialog" @click="deleteItem" color="error" block>
+          <v-btn :disabled="dialog" :loading="loading === 'delete'" @click="deleteItem" color="error" block>
             Delete
           </v-btn>
         </v-card-text>
@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       fetching: false,
-      loading: false,
+      loading: null,
       error: "",
       data: {
         users: {},
@@ -72,7 +72,7 @@ export default {
 
       var self = this;
       this.dialog = true;
-      this.loading = true;
+      this.loading = 'delete';
 
       api
         .post("users/" + this.id, { delete: 1 })
@@ -88,7 +88,7 @@ export default {
         .catch(error => console.log(error))
         .finally(() => {
           self.dialog = false;
-          self.loading = false;
+          self.loading = null;
         });
     },
   },

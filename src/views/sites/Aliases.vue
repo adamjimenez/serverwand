@@ -31,7 +31,7 @@
             </v-list-item-action>
 
             <v-list-item-action>
-              <v-btn :disabled="fetching" @click="deleteAlias(item.domain)" icon="mdi:mdi-delete" size="small"></v-btn>
+              <v-btn :disabled="fetching" :loading="loading === item.name" @click.stop="deleteAlias(item.domain)" icon="mdi:mdi-delete" size="small"></v-btn>
             </v-list-item-action>
           </template>
         </v-list-item>
@@ -77,8 +77,8 @@ export default {
         app: {}
       },
       details: '',
-      loading: false,
       fetching: false,
+      loading: null,
       passwordPanel: [false],
       passwordFormValid: true,
       rules: {
@@ -199,6 +199,7 @@ export default {
       var self = this
       this.fetching = true
       this.error = ''
+      this.loading = alias;
 
       api.post('sites/' + this.siteId + '/aliases', { delete: 1, alias: alias })
         .then(function (response) {
@@ -214,6 +215,9 @@ export default {
           console.log(error)
           self.fetching = false
         })
+        .finally(function () {
+          self.loading = null;
+        });
     },
 
     fixAliasDns(alias, noAuthPrompt) {

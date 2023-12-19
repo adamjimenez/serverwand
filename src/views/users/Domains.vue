@@ -10,7 +10,7 @@
       <v-list>
         <v-list-item v-for="(item, i) in user_domains" :key="`item-${i}`" :title="item.domain">
           <template v-slot:append>
-            <v-btn icon :disabled="fetching" :loading="fetching" @click="deleteItem(item)" @click.stop>
+            <v-btn icon :disabled="fetching" :loading="loading === item.domain" @click="deleteItem(item)" @click.stop>
               <v-icon size="small">mdi:mdi-delete</v-icon>
             </v-btn>
           </template>
@@ -53,7 +53,7 @@ export default {
   data() {
     return {
       fetching: false,
-      loading: false,
+      loading: null,
       id: null,
       error: null,
       data: {},
@@ -165,7 +165,7 @@ export default {
       var self = this;
       this.error = "";
       this.dialog = true;
-      this.loading = true;
+      this.loading = item.domain;
 
       api
         .post("users/" + this.id + "/domains", { delete: 1, domain: item.id })
@@ -183,7 +183,7 @@ export default {
         })
         .finally(function () {
           self.dialog = false;
-          self.loading = false;
+          self.loading = null;
         });
     },
   },

@@ -80,7 +80,7 @@
                   </template>
 
                   <template v-slot:item.actions="{ item }">
-                    <v-btn icon :disabled="loading" :loading="loading" @click="deleteSnapshot(item.name)" @click.stop>
+                    <v-btn icon :disabled="loading" :loading="loading === item.name" @click="deleteSnapshot(item.name)" @click.stop>
                       <v-icon size="small">mdi:mdi-delete</v-icon>
                     </v-btn>
                   </template>
@@ -150,7 +150,7 @@ export default {
       items: [],
       data: {},
       details: "",
-      loading: false,
+      loading: null,
       fetching: false,
       serverId: 0,
       s3Drawer: false,
@@ -414,7 +414,7 @@ export default {
       }
 
       var self = this;
-      this.fetching = true;
+      this.loading = name;
       this.error = "";
 
       api
@@ -434,7 +434,9 @@ export default {
         })
         .catch(function (error) {
           console.log(error);
-          self.fetching = false;
+        })
+        .finally(function () {
+          self.loading = null;
         });
 
       return false;
