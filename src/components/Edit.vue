@@ -23,6 +23,8 @@
         <v-card-title> Edit {{ label }} </v-card-title>
 
         <v-card-text>
+          <v-alert v-if="error" type="error" :text="error"></v-alert>
+
           <v-select v-if="yesno" v-model="data.val" :items="yesnoItems" :label="label" autofocus
             :error="errors.length > 0" :error-messages="errors"></v-select>
 
@@ -56,6 +58,7 @@ export default {
   },
   data() {
     return {
+      error: '',
       fetching: false,
       dialog: false,
       data: {
@@ -86,7 +89,7 @@ export default {
     },
     save() {
       this.fetching = true;
-      this.errors = [];
+      this.error = '';
 
       var data = {};
       data[this.name] = this.data.val;
@@ -101,7 +104,7 @@ export default {
             self.dialog = false;
             self.$emit("save");
           } else {
-            self.errors.push(response.data.error);
+            self.error = response.data.error;
           }
         })
         .catch(error => console.log(error))
