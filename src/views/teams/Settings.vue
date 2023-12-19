@@ -14,7 +14,7 @@
       </v-card>
     </v-card>
 
-    <v-dialog v-model="drawer">
+    <v-dialog v-model="drawer" max-width="600">
       <v-card title="Edit Name">
         <v-card-text>
           <v-text-field v-model="data.name" label="Name" required></v-text-field>

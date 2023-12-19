@@ -4,45 +4,28 @@
 
     <Loading :value="loading" />
 
-    <v-card class="pa-3" :loading="fetching">
-      <v-data-table :headers="headers" :items="data.records" class="results">
-        <template v-slot:body="prop">
-          <tbody>
-            <tr v-for="item in prop.items" :key="item.id" @click="editItem(item)">
-              <td class="text-start">
-                {{ item.type }}
-              </td>
-              <td class="text-start">
-                {{ item.name }}
-              </td>
-              <td class="text-start">
-                {{ item.target }}
-              </td>
-              <td class="text-start">
-                <div v-if="item.type === 'MX'">
-                  {{ item.priority }}
-                </div>
-              </td>
-              <td class="text-start">
-                <v-btn size="small" @click.stop="deleteItem(item)" :loading="item.id" icon="mdi:mdi-delete"></v-btn>
-              </td>
-            </tr>
-          </tbody>
-        </template>
-      </v-data-table>
-    </v-card>
+    <v-data-table :headers="headers" :items="data.records" class="results">
+      <template v-slot:item.type="{ item }">
+        <span>{{ item.type }}</span>
+      </template>
+
+      <template v-slot:item.priority="{ item }">
+        <span v-if="item.type === 'MX'">{{ item.priority }}</span>
+      </template>
+
+      <template v-slot:item.actions="{ item }">
+        <v-btn size="small" @click.stop="deleteItem(item)" :loading="loading === item.id" icon="mdi:mdi-delete"></v-btn>
+      </template>
+    </v-data-table>
 
     <v-card>
-      <div>
-        <v-card-title primary-title>
-          <v-btn @click="addItem()"> Add a DNS Record </v-btn>
-        </v-card-title>
-      </div>
+      <v-card-actions>
+        <v-btn @click="addItem()"> Add DNS Record </v-btn>
+      </v-card-actions>
     </v-card>
 
-    <v-navigation-drawer v-model="drawer" temporary right app>
-      <v-card>
-        <v-card-title> DNS Record </v-card-title>
+    <v-dialog v-model="drawer">
+      <v-card title="DNS Record">
 
         <v-card-text>
           <v-select :items="recordType" label="Type" v-model="record.type"></v-select>
@@ -58,7 +41,8 @@
           </v-btn>
         </v-card-text>
       </v-card>
-    </v-navigation-drawer>
+    </v-dialog>
+    
     <Confirm ref="confirm" />
     <OAuth ref="oauth" />
   </div>
@@ -96,22 +80,22 @@ export default {
       recordType: ["A", "CNAME", "MX", "TXT", "SRV", "NS"],
       drawer: false,
       headers: [{
-          title: "Type ",
-          key: "type",
-        }, {
-          title: "Name ",
-          key: "name",
-        }, {
-          title: "Target ",
-          key: "target",
-        }, {
-          title: "Priority ",
-          key: "priority",
-        }, {
-          title: "",
-          key: "actions",
-          sortable: false,
-        }],
+        title: "Type ",
+        key: "type",
+      }, {
+        title: "Name ",
+        key: "name",
+      }, {
+        title: "Target ",
+        key: "target",
+      }, {
+        title: "Priority ",
+        key: "priority",
+      }, {
+        title: "",
+        key: "actions",
+        sortable: false,
+      }],
     };
   },
   created() {
@@ -213,7 +197,7 @@ export default {
       if (!await this.$refs.confirm.open('Delete record?')) {
         return;
       }
-      
+
       this.loading = item.id;
       this.error = "";
       var self = this;

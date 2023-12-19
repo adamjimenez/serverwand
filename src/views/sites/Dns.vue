@@ -14,7 +14,7 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <v-btn size="small" @click.stop="deleteItem(item)" :loading="item.id" icon="mdi:mdi-delete"></v-btn>
+        <v-btn size="small" @click.stop="deleteItem(item)" :loading="loading === item.id" icon="mdi:mdi-delete"></v-btn>
       </template>
     </v-data-table>
 

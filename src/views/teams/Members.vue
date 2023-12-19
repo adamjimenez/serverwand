@@ -19,7 +19,7 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="drawer">
+    <v-dialog v-model="drawer" max-width="600">
       <v-card title="Member">
         <v-card-text>
           <v-text-field v-model="member.email" label="Email" required></v-text-field>
