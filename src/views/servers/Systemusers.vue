@@ -8,28 +8,25 @@
       <v-card-actions>
         <v-btn @click="addItem" class="mr-3" icon="mdi:mdi-plus"></v-btn>
         <TogglePasswordAuthentication :serverId="serverId" :passwordAuthentication="data.password_authentication" />
-        <ClearSSHUser :serverId="serverId" :server="data" />
       </v-card-actions>
 
       <v-list max-width="600">
         <v-list-item v-for="(item, i) in data.users" :key="`item-${i}`" :title="item.name" :subtitle="item.label"
           @click="editItem(item)">
           <template v-slot:append>
-            <span class="d-block" style="width: 32px;">
+
+            <v-icon v-if="item.name === data.ssh_username" size="x-small" title="Default SSH user" color="primary"
+                icon="fas fa-check" class="mx-1" @click.stop="clearSSHUser"></v-icon>
+
               <v-icon v-if="item.sudo" size="x-small" title="Sudo privileges" color="primary"
-                icon="fas fa-crown"></v-icon>
-              <v-icon v-else size="x-small" title="Non-sudo user" color="primary" icon="fas fa-user"></v-icon>
-            </span>
+                icon="fas fa-crown" class="mx-1"></v-icon>
+              <v-icon v-else size="x-small" title="Non-sudo user" color="primary" icon="fas fa-user" class="mx-1"></v-icon>
 
-            <span class="d-block" style="width: 32px;">
               <v-icon v-if="item.sudo_without_password" size="x-small" title="Sudo without password" color="primary" icon="fas
-                fa-lock-open"></v-icon>
-              <v-icon v-else size="x-small" color="primary" title="Sudo with password" icon="fas fa-lock"></v-icon>
-            </span>
+                fa-lock-open" class="mx-1"></v-icon>
+              <v-icon v-else size="x-small" color="primary" title="Sudo with password" icon="fas fa-lock" class="mx-1"></v-icon>
 
-            <v-btn icon :disabled="loading" :loading="loading" @click.stop="deleteItem(item.name)">
-              <v-icon size="small" icon="mdi:mdi-delete"></v-icon>
-            </v-btn>
+            <v-btn :disabled="loading" :loading="loading === item.name" @click.stop="deleteItem(item.name)" size="small" icon="mdi:mdi-delete"></v-btn>
           </template>
         </v-list-item>
       </v-list>
@@ -90,14 +87,12 @@
                     <v-btn icon :disabled="fetching" :loading="fetching">
                       <Copy :val="item.key" />
                     </v-btn>
-                    <v-btn icon :disabled="fetching" :loading="loading === item.line" @click.stop="deleteKey(item.line)">
-                      <v-icon size="small">mdi:mdi-delete</v-icon>
-                    </v-btn>
+                    <v-btn icon="mdi:mdi-delete" size="small" :disabled="fetching" :loading="loading === item.line" @click.stop="deleteKey(item.line)"></v-btn>
                   </template>
                 </v-list-item>
               </v-list>
 
-              <v-btn @click="addKey" color="success" class="mt-3"> Upload Key </v-btn>
+              <v-btn @click="addKey" color="success" class="mt-3">Upload Key</v-btn>
             </v-window-item>
           </v-window>
         </v-card-text>
@@ -105,9 +100,7 @@
     </v-dialog>
 
     <v-dialog v-model="keyDrawer">
-      <v-card>
-        <v-card-title> Upload key for {{ user.name }} </v-card-title>
-
+      <v-card :title="'Upload key for ' + user.name">
         <v-card-text>
           <v-text-field v-model="key" label="Public key"></v-text-field>
 
@@ -127,7 +120,6 @@ import api from "../../services/api";
 import Loading from "../../components/Loading";
 import Copy from "../../components/Copy";
 import TogglePasswordAuthentication from "../../components/TogglePasswordAuthentication";
-import ClearSSHUser from "../../components/ClearSSHUser";
 import Confirm from "../../components/ConfirmDialog.vue";
 import PasswordField from "../../components/PasswordField.vue";
 
@@ -136,7 +128,6 @@ export default {
     Loading,
     Copy,
     TogglePasswordAuthentication,
-    ClearSSHUser,
     Confirm,
     PasswordField,
   },
@@ -293,7 +284,7 @@ export default {
       }
 
       var self = this;
-      this.fetching = true;
+      this.loading = line;
       this.error = "";
 
       api
@@ -315,6 +306,9 @@ export default {
         .catch(function (error) {
           self.fetching = false;
           console.log(error);
+        })
+        .finally(function () {
+          self.loading = null;
         });
     },
     addKey() {
@@ -345,6 +339,29 @@ export default {
           self.fetching = false;
           console.log(error);
         });
+    },
+    clearSSHUser: async function () {
+      if (!await this.$refs.confirm.open("Clear the default SSH user used for terminal access?")) {
+        return;
+      }
+      
+      var self = this;
+      self.fetching = true;
+      api
+        .post("servers/" + this.serverId + "/savesshuser", {
+          ssh_username: "",
+        })
+        .then(response => {
+          console.log(response);
+
+          if (!response.data.success) {
+            self.error = response.data.error;
+          } else {
+            self.$emit('complete');
+          }
+        })
+        .catch(error => console.log(error))
+        .finally(() => self.fetching = false);
     },
   },
 };

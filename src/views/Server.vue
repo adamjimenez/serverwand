@@ -9,9 +9,7 @@
         <ServerIcon :provider="data.provider"></ServerIcon>
       </template>
       <template v-slot:append>
-        <Terminal :data="data" color="success" icon size="small">
-          <v-icon icon="fas fa-terminal"></v-icon>
-        </Terminal>
+        <Terminal :data="data" color="success" icon="fas fa-terminal" size="small"></Terminal>
       </template>
     </v-list-item>
 
