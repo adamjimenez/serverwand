@@ -24,9 +24,7 @@
                 </div>
               </td>
               <td class="text-start">
-                <v-icon size="small" @click.stop="deleteItem(item)">
-                  delete
-                </v-icon>
+                <v-btn size="small" @click.stop="deleteItem(item)" :loading="item.id" icon="mdi:mdi-delete"></v-btn>
               </td>
             </tr>
           </tbody>
@@ -87,7 +85,7 @@ export default {
         records: [],
       },
       details: "",
-      loading: false,
+      loading: null,
       fetching: false,
       rules: {
         required: (value) => !!value || "Required.",
@@ -130,7 +128,6 @@ export default {
       var self = this;
       this.error = "";
       this.domainId = this.$route.params.id;
-
       this.fetching = true;
 
       api
@@ -217,10 +214,10 @@ export default {
         return;
       }
       
-      this.fetching = true;
+      this.loading = item.id;
       this.error = "";
-
       var self = this;
+
       api
         .post("domains/" + this.domainId + "/records/" + item.id, {
           delete: 1,
@@ -236,7 +233,9 @@ export default {
         })
         .catch(function (error) {
           console.log(error);
-          self.fetching = false;
+        })
+        .finally(function () {
+          self.loading = null;
         });
     },
   },
