@@ -22,7 +22,7 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="drawer">
+    <v-dialog v-model="drawer" max-width="600">
       <v-card title="API token ">
         <v-card-text>
           <v-select v-model="provider_token.provider" :items="providers" label="Provider"></v-select>
