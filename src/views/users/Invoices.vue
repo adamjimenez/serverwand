@@ -23,7 +23,7 @@
       </v-data-table>
     </v-card>
 
-    <v-dialog app v-model="dialog" temporary right>
+    <v-dialog v-model="dialog" max-width="800">
       <v-card title="Invoice">
         <v-card-text>
           <v-form>
@@ -33,7 +33,7 @@
                   <v-text-field v-model="item.domain" label="Domain" required></v-text-field>
                 </v-col>
 
-                <v-col cols="12" md="3">
+                <v-col cols="12" md="4">
                   <v-text-field v-model="item.description" label="Description" required></v-text-field>
                 </v-col>
 
@@ -41,14 +41,10 @@
                   <v-text-field v-model="item.amount" label="Amount" required></v-text-field>
                 </v-col>
 
-                <v-col cols="12" md="3">
-                  <v-btn @click="removeRow(index)" v-if="index > 0">
-                    <v-icon>fas fa-minus</v-icon>
-                  </v-btn>
+                <v-col cols="12" md="2">
+                  <v-btn @click="removeRow(index)" v-if="index > 0" icon="fas fa-minus"></v-btn>
 
-                  <v-btn @click="addRow()" v-if="index + 1 === data.items.length">
-                    <v-icon>fas fa-plus</v-icon>
-                  </v-btn>
+                  <v-btn @click="addRow()" v-if="index + 1 === data.items.length" icon="fas fa-plus"></v-btn>
                 </v-col>
               </v-row>
             </v-container>
@@ -63,7 +59,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog app v-model="dialogInvoice" temporary right>
+    <v-dialog v-model="dialogInvoice" max-width="800">
       <v-card>
         <v-card-title> Invoice {{ invoice_id }} </v-card-title>
 

@@ -18,7 +18,7 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="drawer">
+    <v-dialog v-model="drawer" max-width="600">
       <v-card title="Note">
         <v-card-text>
           <v-textarea v-model="data.note" label="Note"></v-textarea>

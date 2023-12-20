@@ -18,7 +18,7 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="drawer">
+    <v-dialog v-model="drawer" max-width="600">
       <v-card title="Domain">
         <v-card-text>
           <v-select v-model="data.domain" :items="domains" label="Domain">
