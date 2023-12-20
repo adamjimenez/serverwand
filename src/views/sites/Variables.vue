@@ -19,7 +19,7 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="drawer">
+    <v-dialog v-model="drawer" max-width="600">
       <v-card title="Variable">
         <v-form v-model="valid">
           <v-card-text>

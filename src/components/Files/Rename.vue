@@ -4,7 +4,7 @@
       <v-icon>mdi:mdi-rename-box</v-icon>
     </v-btn>
 
-    <v-dialog app v-model="dialog">
+    <v-dialog app v-model="dialog" max-width="600">
       <v-card :loading="fetching" title="Rename">
 
         <v-card-text>

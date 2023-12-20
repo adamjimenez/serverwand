@@ -6,7 +6,7 @@
       </v-card-title>
     </v-card>
 
-    <v-dialog app scrollable v-model="showDialog">
+    <v-dialog app scrollable v-model="showDialog" max-width="600">
       <v-card :loading="fetching">
         <v-alert v-if="this.error" type="error">
           {{ this.error }}

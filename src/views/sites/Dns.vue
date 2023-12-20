@@ -24,7 +24,7 @@
       </v-card-actions>
     </v-card>
 
-    <v-dialog v-model="drawer">
+    <v-dialog v-model="drawer" max-width="600">
       <v-card title="DNS Record">
         <v-card-text>
           <v-select :items="recordType" label="Type" v-model="record.type"></v-select>
