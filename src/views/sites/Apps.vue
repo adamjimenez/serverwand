@@ -75,7 +75,7 @@
       </v-card>
     </v-navigation-drawer>
 
-    <v-dialog v-model="showCloneApp">
+    <v-dialog v-model="showCloneApp" max-width="600">
       <v-card title="Clone App">
         <v-alert v-if="error" type="error" :text="error"></v-alert>
 
@@ -89,12 +89,12 @@
           <v-checkbox v-model="substitutions" label="Realtime domain substitution in HTML"
             :disabled="dnsProviders[data.server] == ''"></v-checkbox>
 
-          <v-btn color="primary" @click="cloneApp"> Save </v-btn>
+          <v-btn color="primary" @click="cloneApp" :disabled="!data.server || data.stagingDomain === ''"> Save </v-btn>
         </v-card-text>
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="syncDialog">
+    <v-dialog v-model="syncDialog" max-width="600">
       <v-card>
         <v-card-title v-if="target === siteId">
           Copy from live to staging
@@ -134,7 +134,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="gitInfo">
+    <v-dialog v-model="gitInfo" max-width="600">
       <v-card :loading="fetching" title="Git info">
         <v-card-text>
           <v-container fluid>
@@ -174,7 +174,8 @@
               <v-col cols="1">
                 <Copy :val="data.app.webhook_url" />
               </v-col>
-            </v-row></v-container>
+            </v-row>
+          </v-container>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -292,7 +293,7 @@ export default {
           api.get("servers/").then(function (response) {
             response.data.items.forEach((element) => {
               self.server_opts.push({
-                text: element.name,
+                title: element.name,
                 value: element.id,
               });
             });
