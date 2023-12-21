@@ -7,7 +7,7 @@
     <v-card v-if="!serverId" title="Team details">
       <v-card-text>
         <v-form v-if="!loading" v-model="valid" lazy-validation>
-          <v-text-field v-model="data.name" :rules="nameRules" label="Name" required></v-text-field>
+          <v-text-field v-model="data.name" :rules="nameRules" label="Name" required autofocus></v-text-field>
 
           <v-btn :disabled="!valid" :loading="loading" color="success" @click="validate">
             Save

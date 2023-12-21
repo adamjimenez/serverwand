@@ -22,7 +22,7 @@
     <v-dialog v-model="drawer" max-width="600">
       <v-card title="Member">
         <v-card-text>
-          <v-text-field v-model="member.email" label="Email" required></v-text-field>
+          <v-text-field v-model="member.email" label="Email" required autofocus></v-text-field>
 
           <v-btn :disabled="!member.email" :loading="dialog" color="success" @click="saveItem">
             Save

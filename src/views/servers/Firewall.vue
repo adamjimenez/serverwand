@@ -37,7 +37,7 @@
         <v-form v-model="valid" title="Firewall rule">
           <v-card-text>
             <v-text-field v-model="item.port" label="Port range" placeholder="80, 443, 5000:5010" required
-              :rules="[rules.required, rules.port]">
+              :rules="[rules.required, rules.port]" autofocus>
             </v-text-field>
 
             <v-select v-model="item.protocol" :items="protocol" label="Protocol"></v-select>

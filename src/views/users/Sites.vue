@@ -19,9 +19,7 @@
     </v-card>
 
     <v-dialog v-model="drawer" max-width="600">
-      <v-card>
-        <v-card-title> Site </v-card-title>
-
+      <v-card title="Site">
         <v-card-text>
           <v-select v-model="data.domain" :items="sites" label="Site">
             <template slot="item" slot-scope="data">

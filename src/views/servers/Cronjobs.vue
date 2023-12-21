@@ -45,9 +45,9 @@
 
             <v-text-field v-model="cronjob.line" label="Line" v-show="false"></v-text-field>
 
-            <v-text-field v-model="cronjob.command" label="Command" required :rules="[rules.required]"></v-text-field>
+            <v-text-field v-model="cronjob.command" label="Command" required :rules="[rules.required]" autofocus></v-text-field>
 
-            <v-autocomplete v-model="cronjob.user" label="User" :items="users" autofocus></v-autocomplete>
+            <v-autocomplete v-model="cronjob.user" label="User" :items="users"></v-autocomplete>
 
             <v-text-field v-model="cronjob.minute" label="Minute" required
               :rules="[rules.required, rules.minute]"></v-text-field>

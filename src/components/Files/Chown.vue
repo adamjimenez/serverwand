@@ -23,7 +23,6 @@
             v-model="data.group"
             label="Group"
             :items="groups"
-            autofocus
             hide-details
             class="mb-5"
           ></v-autocomplete>

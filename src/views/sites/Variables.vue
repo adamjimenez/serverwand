@@ -24,7 +24,7 @@
             <v-text-field v-model="item.line" label="Line" v-show="false"></v-text-field>
 
             <v-text-field v-model="item.name" label="Name" required
-              :rules="[rules.required, rules.alphanumeric]"></v-text-field>
+              :rules="[rules.required, rules.alphanumeric]" autofocus></v-text-field>
 
             <v-text-field v-model="item.value" label="Value" required
               :rules="[rules.required, rules.alphanumeric]"></v-text-field>

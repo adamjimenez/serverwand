@@ -44,7 +44,7 @@
           <v-window v-model="tab">
             <v-window-item value="settings">
 
-              <v-text-field v-model="system_user.name" label="User" :readonly="!system_user.new" required></v-text-field>
+              <v-text-field v-model="system_user.name" label="User" :readonly="!system_user.new" required autofocus></v-text-field>
 
               <PasswordField v-model="system_user.password" label="Password" required autocomplete="new-password">
               </PasswordField>

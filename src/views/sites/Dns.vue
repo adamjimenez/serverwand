@@ -4,6 +4,12 @@
 
     <Loading :value="loading" />
 
+    <v-card>
+      <v-card-actions>
+        <v-btn @click="addItem()" icon="mdi:mdi-plus"></v-btn>
+      </v-card-actions>
+    </v-card>
+
     <v-data-table :headers="headers" :items="data.records" class="results" mobile-breakpoint="0" @click:row="editItem">
       <template v-slot:item.type="{ item }">
         <span>{{ item.type }}</span>
@@ -17,12 +23,6 @@
         <v-btn size="small" @click.stop="deleteItem(item)" :loading="loading === item.id" icon="mdi:mdi-delete"></v-btn>
       </template>
     </v-data-table>
-
-    <v-card>
-      <v-card-actions>
-        <v-btn @click="addItem()"> Add DNS Record </v-btn>
-      </v-card-actions>
-    </v-card>
 
     <v-dialog v-model="drawer" max-width="600">
       <v-card title="DNS Record">

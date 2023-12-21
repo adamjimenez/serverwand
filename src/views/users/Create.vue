@@ -10,7 +10,7 @@
 
       <v-card-text>
         <v-form v-if="!loading" v-model="valid" lazy-validation>
-          <v-text-field v-model="data.company" label="Company" required></v-text-field>
+          <v-text-field v-model="data.company" label="Company" required autofocus></v-text-field>
 
           <v-text-field v-model="data.name" :rules="requiredRules" label="Name" required></v-text-field>
 

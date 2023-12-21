@@ -17,7 +17,7 @@
     <v-dialog v-model="drawer" max-width="600">
       <v-card title="Edit Name">
         <v-card-text>
-          <v-text-field v-model="data.name" label="Name" required></v-text-field>
+          <v-text-field v-model="data.name" label="Name" required autofocus></v-text-field>
 
           <v-btn :disabled="fetching" :loading="loading === 'save'" color="success" @click="validate">
             Save

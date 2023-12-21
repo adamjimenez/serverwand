@@ -22,7 +22,7 @@
     <v-dialog v-model="drawer" max-width="600">
       <v-card title="Server">
         <v-card-text>
-          <v-select v-model="data.server" :items="servers" label="Server"></v-select>
+          <v-select v-model="data.server" :items="servers" label="Server" autofocus></v-select>
 
           <v-btn :disabled="!data.server" :loading="dialog" color="success" @click="saveItem">
             Save

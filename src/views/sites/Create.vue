@@ -13,6 +13,7 @@
             :rules="domainRules"
             label="Domain"
             required
+            autofocus
           ></v-text-field>
 
           <v-select

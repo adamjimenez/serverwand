@@ -42,7 +42,7 @@
     <v-dialog v-model="drawer" max-width="600">
       <v-card title="Domain alias">
         <v-card-text>
-          <v-text-field v-model="alias.alias" label="Alias" required></v-text-field>
+          <v-text-field v-model="alias.alias" label="Alias" required autofocus></v-text-field>
 
           <v-checkbox v-model="alias.dns" label="Configure DNS" :disabled="data.server.dns == ''"></v-checkbox>
 

@@ -21,7 +21,7 @@
     <v-dialog v-model="drawer" max-width="600">
       <v-card title="Note">
         <v-card-text>
-          <v-textarea v-model="data.note" label="Note"></v-textarea>
+          <v-textarea v-model="data.note" label="Note" autofocus></v-textarea>
           <v-btn :disabled="!data.note" :loading="loading" color="success" @click="saveItem">
             Save
           </v-btn>
