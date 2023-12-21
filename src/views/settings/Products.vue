@@ -13,9 +13,7 @@
         <template v-for="(item, i) in items" :key="`item-${i}`">
           <v-list-item :title="item.name" @click="editItem(item)">
             <template v-slot:append>
-              <v-btn :disabled="dialog" :loading="loading === item.id" @click.stop="deleteItem(item.id)">
-                <v-icon size="small">mdi:mdi-delete</v-icon>
-              </v-btn>
+              <v-btn :disabled="dialog" :loading="loading === item.id" @click.stop="deleteItem(item.id)" size="small" icon="mdi:mdi-delete"></v-btn>
             </template>
           </v-list-item>
         </template>
@@ -25,7 +23,7 @@
     <v-dialog v-model="drawer" max-width="600">
       <v-card title="Product">
         <v-card-text>
-          <v-text-field v-model="data.name" label="Name" required></v-text-field>
+          <v-text-field v-model="data.name" label="Name" required autofocus></v-text-field>
 
           <v-select v-model="data.product_type" :items="product_types" label="Type"></v-select>
 

@@ -13,9 +13,7 @@
         <template v-for="(item, i) in items" :key="`item-${i}`">
           <v-list-item :value="item" :title="item.label">
             <template v-slot:append>
-              <v-btn :disabled="dialog" :loading="loading === item.id" @click.stop="deleteItem(item.id)">
-                <v-icon size="small">mdi:mdi-delete</v-icon>
-              </v-btn>
+              <v-btn :disabled="dialog" :loading="loading === item.id" @click.stop="deleteItem(item.id)" size="small" icon="mdi:mdi-delete"></v-btn>
             </template>
           </v-list-item>
         </template>
@@ -92,7 +90,7 @@ export default {
         name: "",
       },
       provider_token: {
-        provider: '',
+        provider: null,
         label: '',
         token: '',
       },

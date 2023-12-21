@@ -13,9 +13,7 @@
         <template v-for="(item, i) in items" :key="`item-${i}`">
           <v-list-item :value="item" :title="item.label" :subtitle="item.api_key">
             <template v-slot:append>
-              <v-btn :disabled="dialog" :loading="loading === item.id" @click.stop="deleteItem(item.id)">
-                <v-icon size="small">mdi:mdi-delete</v-icon>
-              </v-btn>
+              <v-btn :disabled="dialog" :loading="loading === item.id" @click.stop="deleteItem(item.id)" size="small" icon="mdi:mdi-delete"></v-btn>
             </template>
           </v-list-item>
         </template>
@@ -25,8 +23,7 @@
     <v-dialog v-model="drawer" max-width="600">
       <v-card title="API Key">
         <v-card-text>
-          <v-text-field v-model="data.label" label="Label"></v-text-field>
-
+          <v-text-field v-model="data.label" label="Label" autofocus></v-text-field>
           <v-btn :disabled="data.label.length === 0" :loading="dialog" color="success" @click="saveItem">
             Save
           </v-btn>
@@ -63,7 +60,7 @@ export default {
     return {
       error: null,
       data: {
-        label: "",
+        label: '',
       },
       items: [],
       dialog: false,
@@ -108,7 +105,7 @@ export default {
         });
     },
     addItem() {
-      this.data.label = "";
+      this.data.label = '';
       this.drawer = true;
     },
     saveItem() {
