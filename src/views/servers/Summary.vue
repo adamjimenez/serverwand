@@ -69,6 +69,7 @@
                         {{ prettyBytes(disk.space * 1024) }}
                       </div>
 
+                      <Logs v-if="i === 0" :serverId="serverId"></Logs>
                       <CleanUp v-if="i === 0" :serverId="serverId" @complete="fetchData(true)"></CleanUp>
                       <AttachVolume v-if="i === 0" :serverId="serverId" @complete="fetchData(true)"></AttachVolume>
                       <DetachVolume v-if="i > 0" :serverId="serverId" :volume="disk.name" @complete="fetchData(true)">
@@ -221,6 +222,7 @@ import ResourceGraph from "../../components/ResourceGraph";
 import AttachVolume from "../../components/AttachVolume";
 import DetachVolume from "../../components/DetachVolume";
 import ResizeVolume from "../../components/ResizeVolume";
+import Logs from "../../components/Logs";
 
 export default {
   components: {
@@ -238,6 +240,7 @@ export default {
     AttachVolume,
     DetachVolume,
     ResizeVolume,
+    Logs,
   },
   data() {
     return {

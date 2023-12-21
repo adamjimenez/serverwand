@@ -19,7 +19,6 @@
       <v-tab :to="'/servers/' + serverId + '/summary'">Summary</v-tab>
       <v-tab :to="'/servers/' + serverId + '/Files'">Files</v-tab>
       <v-tab :to="'/servers/' + serverId + '/mail'">Mail</v-tab>
-      <v-tab :to="'/servers/' + serverId + '/logs'">Logs</v-tab>
       <v-tab :to="'/servers/' + serverId + '/backups'">Cloud backups</v-tab>
       <v-tab :to="'/servers/' + serverId + '/database'">Database</v-tab>
       <v-tab :to="'/servers/' + serverId + '/cronjobs'">Cronjobs</v-tab>

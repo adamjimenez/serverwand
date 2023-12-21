@@ -106,9 +106,6 @@ const routes = [
         }, {
           path: '/servers/:id(.*)*/apps',
           component: () => import('./views/servers/Apps.vue')
-        }, {
-          path: '/servers/:id(.*)*/logs',
-          component: () => import('./views/servers/Logs.vue')
         }]
       }, {
         path: '/sites',

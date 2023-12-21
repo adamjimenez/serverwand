@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <span>
     <v-alert v-if="error" type="error" :text="error"></v-alert>
 
     <v-dialog v-model="dialog">
@@ -22,7 +22,7 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-  </div>
+  </span>
 </template>
 
 <script>
