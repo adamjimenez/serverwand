@@ -4,22 +4,6 @@
 
     <Loading :value="loading" />
 
-    <v-card :loading="fetching">
-      <v-card-actions>
-        <v-btn @click="addEmail()" icon="mdi:mdi-plus"></v-btn>
-
-        <v-btn v-if="data.dns?.not_set" @click="fixDomainDns(data.domain)"
-          :title="data.dns.MX + ' != ' + data.server.hostname">Fix MX mismatch</v-btn>
-
-        <v-btn v-if="data.dkim?.not_set" @click="fixDkim(data.domain)">Fix Missing DKIM</v-btn>
-
-        <v-btn v-if="data.spf?.not_set" @click="fixSpf(data.domain)">Fix Missing SPF</v-btn>
-
-        <v-switch v-if="data.server.mailserver" v-model="data.email" label="Email" @change="toggleEmail()" hide-details
-          color="primary"></v-switch>
-      </v-card-actions>
-    </v-card>
-
     <!--
       <v-card
           class="mx-auto"
@@ -32,6 +16,23 @@
 -->
 
     <div v-if="data.server.mailserver">
+
+      <v-card :loading="fetching">
+        <v-card-actions>
+          <v-btn @click="addEmail()" icon="mdi:mdi-plus"></v-btn>
+
+          <v-btn v-if="data.dns?.not_set" @click="fixDomainDns(data.domain)"
+            :title="data.dns.MX + ' != ' + data.server.hostname">Fix MX mismatch</v-btn>
+
+          <v-btn v-if="data.dkim?.not_set" @click="fixDkim(data.domain)">Fix Missing DKIM</v-btn>
+
+          <v-btn v-if="data.spf?.not_set" @click="fixSpf(data.domain)">Fix Missing SPF</v-btn>
+
+          <v-switch v-if="data.server.mailserver" v-model="data.email" label="Email" @change="toggleEmail()" hide-details
+            color="primary"></v-switch>
+        </v-card-actions>
+      </v-card>
+
       <v-card class="mx-auto">
         <v-list max-width="600">
 
@@ -50,7 +51,8 @@
             </v-list-item-subtitle>
 
             <template v-slot:append>
-              <v-btn icon :disabled="fetching" :loading="loading === item.user" @click="deleteItem(item.user)" @click.stop>
+              <v-btn icon :disabled="fetching" :loading="loading === item.user" @click="deleteItem(item.user)"
+                @click.stop>
                 <v-icon size="small" icon="mdi:mdi-delete"></v-icon>
               </v-btn>
             </template>
@@ -62,18 +64,22 @@
       <v-dialog v-model="drawer" max-width="600">
         <v-card title="Email account">
           <v-card-text>
-            <v-text-field v-model="email.user" label="Name" required :readonly="userReadonly"></v-text-field>
-
+            <v-text-field v-model="email.user" label="Name" required :readonly="userReadonly" autofocus></v-text-field>
             <PasswordField v-model="email.password" label="Password" required></PasswordField>
-
             <v-text-field v-model="email.destination" label="Forwarding" required></v-text-field>
-
             <v-btn :disabled="!email.user" :loading="fetching" color="success" @click="saveEmail()" text="Save"></v-btn>
           </v-card-text>
         </v-card>
       </v-dialog>
 
     </div>
+
+    <v-card v-else>
+      <v-card-text>
+        Mailserver is not configured
+      </v-card-text>
+    </v-card>
+
     <Confirm ref="confirm" />
     <OAuth ref="oauth" />
   </div>
