@@ -4,7 +4,7 @@
             <v-icon size="small">mdi:mdi-plus</v-icon>
         </v-btn>
 
-        <v-dialog app scrollable v-model="dialog">
+        <v-dialog app scrollable v-model="dialog" max-width="600">
             <v-alert v-if="error" type="error" :text="error"></v-alert>
 
             <v-card :loading="fetching" title="Attach Volume">

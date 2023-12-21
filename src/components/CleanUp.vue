@@ -4,7 +4,7 @@
       <v-icon size="small">fas fa-broom</v-icon>
     </v-btn>
 
-    <v-dialog app scrollable v-model="showClean">
+    <v-dialog scrollable v-model="showClean" max-width="600">
       <v-card :loading="fetching" title="Clean files" :subtitle="prettyBytes(sumSize(selected)) + ' to be removed'">
 
         <v-card-text>
@@ -24,13 +24,6 @@
         <v-card-actions>
           <v-btn @click="doClean()" :disabled="selected.length === 0">
             Remove
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn @click="
-            $emit('closed');
-          showClean = false;
-          ">
-            Close
           </v-btn>
         </v-card-actions>
       </v-card>
