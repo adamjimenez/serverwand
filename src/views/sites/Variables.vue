@@ -2,8 +2,6 @@
   <div>
     <v-alert v-if="error" type="error" :text="error"></v-alert>
 
-    <Loading :value="loading" />
-
     <v-card :loading="fetching">
       <v-card-actions>
         <v-btn @click="addItem()" icon="mdi:mdi-plus"></v-btn>
@@ -21,7 +19,7 @@
 
     <v-dialog v-model="drawer" max-width="600">
       <v-card title="Variable">
-        <v-form v-model="valid">
+        <v-form v-model="valid" ref="form">
           <v-card-text>
             <v-text-field v-model="item.line" label="Line" v-show="false"></v-text-field>
 
@@ -31,7 +29,7 @@
             <v-text-field v-model="item.value" label="Value" required
               :rules="[rules.required, rules.alphanumeric]"></v-text-field>
 
-            <v-btn :disabled="!valid" :loading="fetching" color="success" @click="saveItem">
+            <v-btn :disabled="!valid" :loading="loading === 'save'" color="success" @click="saveItem">
               Save
             </v-btn>
           </v-card-text>
@@ -44,12 +42,10 @@
 
 <script>
 import api from "../../services/api";
-import Loading from "../../components/Loading";
 import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
-    Loading,
     Confirm,
   },
   data() {
@@ -69,7 +65,7 @@ export default {
       rules: {
         required: (value) => !!value || "Required.",
         alphanumeric: (v) =>
-          /^[a-zA-Z0-9-_]+$/g.test(v) || "Must contain a-z characters only",
+          /^[a-zA-Z0-9-_!]+$/g.test(v) || "Must contain alphanumeric characters only",
       },
       valid: false,
     };
@@ -147,14 +143,13 @@ export default {
       this.error = "";
 
       if (this.$refs.form.validate()) {
-        this.fetching = true;
+        this.loading = 'save';
 
         api
           .post("sites/" + this.siteId + "/variables", this.item)
           .then(function (response) {
             console.log(response);
             if (response.data.error) {
-              self.fetching = false;
               self.error = response.data.error;
             } else {
               self.drawer = false;
@@ -162,7 +157,7 @@ export default {
             }
           })
           .catch(function (error) {
-            self.fetching = false;
+            self.loading = null;
             console.log(error);
           });
       }
