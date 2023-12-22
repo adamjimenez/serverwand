@@ -5,99 +5,55 @@
     </v-btn>
 
     <v-dialog app v-model="dialog" width="600">
-      <v-card :loading="fetching" flat>
-        <v-card-title> File permissions </v-card-title>
-
+      <v-card :loading="fetching" flat title="File permissions">
         <v-card-text>
           <v-container fluid>
             <div>Owner</div>
             <v-row>
               <v-col>
-                <v-checkbox
-                  v-model="ownerR"
-                  label="Read"
-                  @change="calcMode()"
-                ></v-checkbox>
+                <v-checkbox v-model="ownerR" label="Read" @change="calcMode()"></v-checkbox>
               </v-col>
               <v-col>
-                <v-checkbox
-                  v-model="ownerW"
-                  label="Write"
-                  @change="calcMode()"
-                ></v-checkbox>
+                <v-checkbox v-model="ownerW" label="Write" @change="calcMode()"></v-checkbox>
               </v-col>
               <v-col>
-                <v-checkbox
-                  v-model="ownerE"
-                  label="Execute"
-                  @change="calcMode()"
-                ></v-checkbox>
+                <v-checkbox v-model="ownerE" label="Execute" @change="calcMode()"></v-checkbox>
               </v-col>
             </v-row>
             <div class="mt-5">Group</div>
             <v-row>
               <v-col>
-                <v-checkbox
-                  v-model="groupR"
-                  label="Read"
-                  @change="calcMode()"
-                ></v-checkbox>
+                <v-checkbox v-model="groupR" label="Read" @change="calcMode()"></v-checkbox>
               </v-col>
               <v-col>
-                <v-checkbox
-                  v-model="groupW"
-                  label="Write"
-                  @change="calcMode()"
-                ></v-checkbox>
+                <v-checkbox v-model="groupW" label="Write" @change="calcMode()"></v-checkbox>
               </v-col>
               <v-col>
-                <v-checkbox
-                  v-model="groupE"
-                  label="Execute"
-                  @change="calcMode()"
-                ></v-checkbox>
+                <v-checkbox v-model="groupE" label="Execute" @change="calcMode()"></v-checkbox>
               </v-col>
             </v-row>
             <div class="mt-5">Public</div>
             <v-row>
               <v-col>
-                <v-checkbox
-                  v-model="publicR"
-                  label="Read"
-                  @change="calcMode()"
-                ></v-checkbox>
+                <v-checkbox v-model="publicR" label="Read" @change="calcMode()"></v-checkbox>
               </v-col>
               <v-col>
-                <v-checkbox
-                  v-model="publicW"
-                  label="Write"
-                  @change="calcMode()"
-                ></v-checkbox>
+                <v-checkbox v-model="publicW" label="Write" @change="calcMode()"></v-checkbox>
               </v-col>
               <v-col>
-                <v-checkbox
-                  v-model="publicE"
-                  label="Execute"
-                  @change="calcMode()"
-                ></v-checkbox>
+                <v-checkbox v-model="publicE" label="Execute" @change="calcMode()"></v-checkbox>
               </v-col>
             </v-row>
           </v-container>
 
-          <v-text-field
-            v-model="data.mode"
-            label="mode"
-            autofocus
-            @keyup="modeToCheckboxes()"
-          ></v-text-field>
+          <v-form v-model="valid">
+            <v-text-field v-model="data.mode" label="mode" autofocus @keyup="modeToCheckboxes()"
+              :rules="[rules.required, rules.perms]"></v-text-field>
 
-          <v-checkbox
-            v-if="folderSelected"
-            v-model="data.recursive"
-            label="Replace child permissions"
-          ></v-checkbox>
+            <v-checkbox v-if="folderSelected" v-model="data.recursive" label="Replace child permissions"></v-checkbox>
 
-          <v-btn color="primary" @click="doChmod()"> Save </v-btn>
+            <v-btn color="primary" @click="doChmod()" :disabled="!valid">Save</v-btn>
+          </v-form>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -141,6 +97,17 @@ export default {
       publicR: false,
       publicW: false,
       publicE: false,
+
+      rules: {
+        required: (value) => !!value || "Required.",
+        perms: (v) =>
+          !v ||
+          /^([0-7][0-7][0-7])$/.test(
+            v
+          ) ||
+          "Invalid Permissions",
+      },
+      valid: null,
     };
   },
 
