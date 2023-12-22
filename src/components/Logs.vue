@@ -1,6 +1,6 @@
 <template>
     <span>
-        <v-btn icon @click="logContent = ''; showLogs = true" title="Server Logs">
+        <v-btn icon @click="logContent = ''; showLogs = true; fetchLog();" title="Server Logs">
             <v-icon size="small">fas fa-file-alt</v-icon>
         </v-btn>
 
@@ -11,7 +11,7 @@
             <v-card :loading="fetching">
                 <v-card-title primary-title>
                     <v-row>
-                        <v-select :items="logs" label="Log" @update:modelValue="fetchLog" hide-details
+                        <v-select :items="logs" label="Log" v-model="log" @update:modelValue="fetchLog" hide-details
                             class="ma-1"></v-select>
 
                         <v-text-field label="Filter" v-model="filter" hide-details class="ma-1"></v-text-field>
@@ -47,20 +47,26 @@ export default {
             fetching: true,
             serverId: 0,
             logs: [{
-                value: "journal",
-                title: "Journal",
+                value: "apache_access",
+                title: "Apache Access",
+            }, {
+                value: "apache_error",
+                title: "Apache Error",
+            }, {
+                value: "other_vhosts",
+                title: "Apache Other Vhosts",
             }, {
                 value: "auth",
                 title: "Auth",
             }, {
-                value: "apache_access",
-                title: "Apache Access",
+                value: "fail2ban",
+                title: "Fail2ban",
             }, {
-                value: "other_vhosts",
-                title: "Other Vhosts",
+                value: "journal",
+                title: "Journal",
             }, {
-                value: "apache_error",
-                title: "Apache Error",
+                value: "letsencrypt",
+                title: "Let's Encrypt",
             }, {
                 value: "mail",
                 title: "Mail",
@@ -68,16 +74,10 @@ export default {
                 value: "mysql",
                 title: "MySQL",
             }, {
-                value: "fail2ban",
-                title: "Fail2ban",
-            }, {
-                value: "letsencrypt",
-                title: "Let's Encrypt",
-            }, {
                 value: "serverstatus",
                 title: "Server Status",
             }],
-            log: "",
+            log: "apache_error",
             logContent: "",
             filter: '',
         };
