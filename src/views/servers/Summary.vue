@@ -132,7 +132,7 @@
                   </v-list-item-subtitle>
                 </v-list-item>
 
-                <v-list-item title="IPv6 address">
+                <v-list-item title="IPv6 address" v-if="data.ipv6">
                   <v-list-item-subtitle>
                     <Copy :val="data.ipv6" text />
                   </v-list-item-subtitle>
