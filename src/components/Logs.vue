@@ -1,6 +1,6 @@
 <template>
     <span>
-        <v-btn icon @click="showLogs = true" title="Server Logs">
+        <v-btn icon @click="logContent = ''; showLogs = true" title="Server Logs">
             <v-icon size="small">fas fa-file-alt</v-icon>
         </v-btn>
 
@@ -42,34 +42,7 @@ export default {
         return {
             showLogs: false,
             error: "",
-            data: {
-                users: {},
-            },
-            system_user: {
-                user: "",
-                password: "",
-            },
-            cronjob: {
-                name: "",
-                user: "",
-                command: "",
-                minute: "",
-                hour: "",
-                dom: "",
-                mon: "",
-                dow: "",
-            },
-            cronjobs: [],
-            rules: {
-                required: (value) => !!value || "Required.",
-                alpha: (v) =>
-                    /^[a-zA-Z]+$/g.test(v) || "Must contain a-z characters only",
-                minute: (v) => v == "*" || (v >= 0 && v < 60) || "0-59 or *",
-                hour: (v) => v == "*" || (v >= 0 && v < 24) || "0-23 or *",
-                dom: (v) => v == "*" || (v >= 1 && v <= 31) || "1-31 or *",
-                mon: (v) => v == "*" || (v >= 1 && v < 12) || "1-12 or *",
-                dow: (v) => v == "*" || (v >= 1 && v < 7) || "1-7 or *",
-            },
+            data: {},
             details: "",
             fetching: true,
             serverId: 0,
