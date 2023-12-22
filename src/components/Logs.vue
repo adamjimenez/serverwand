@@ -158,10 +158,8 @@ export default {
                     self.fetching = false;
                 });
         },
-        fetchLog(log) {
+        fetchLog: async function(log) {
             var self = this;
-
-            this.fetching = true;
 
             if (log) {
                 self.log = log;
@@ -169,13 +167,22 @@ export default {
                 return;
             }
 
+            this.fetching = true;
+
+            await this.$nextTick();
+
+            let scrollEl = document.querySelector('.v-dialog .v-card-text')
+            let scrollTop = scrollEl.scrollTop;
+
             this.logContent = "loading..";
 
             api
                 .post("servers/" + this.serverId + "/fetchlog", { log: self.log })
-                .then(function (response) {
+                .then(async function (response) {
                     console.log(response);
                     self.logContent = response.data.content;
+                    await self.$nextTick();
+                    scrollEl.scrollTop = scrollTop;
                 })
                 .finally(function () {
                     self.fetching = false;
