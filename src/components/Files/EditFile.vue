@@ -116,7 +116,6 @@ export default {
           console.log(response);
 
           if (response.data.success) {
-            self.dialog = false;
             self.$emit("complete");
           } else {
             self.$emit("error", response.data.error);
