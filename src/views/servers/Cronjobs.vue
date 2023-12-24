@@ -41,7 +41,7 @@
           <v-card-title> Cronjob </v-card-title>
 
           <v-card-text>
-            <v-switch v-model="cronjob.active" label="Active" color="primary"></v-switch>
+            <v-switch v-model="cronjob.active" label="Active" color="primary" hide-details></v-switch>
 
             <v-text-field v-model="cronjob.line" label="Line" v-show="false"></v-text-field>
 

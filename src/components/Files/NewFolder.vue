@@ -1,13 +1,10 @@
 <template>
   <div>
-    <v-btn @click="open()" title="New folder" icon> <v-icon>mdi:mdi-folder-outline</v-icon> </v-btn>
-    <v-dialog app v-model="dialog">
-      <v-card :loading="fetching">
-        <v-card-title> New folder </v-card-title>
-
+    <v-btn @click="open()" title="New folder" icon="mdi:mdi-folder-outline"></v-btn>
+    <v-dialog app v-model="dialog" max-width="600">
+      <v-card :loading="fetching" title="New folder">
         <v-card-text>
           <v-text-field v-model="data.value" label="name" autofocus></v-text-field>
-
           <v-btn color="primary" @click="save" :disabled="data.value === ''">
             Save
           </v-btn>
@@ -53,7 +50,6 @@ export default {
       this.dialog = true
     },
     save() {
-      var self = this
       this.error = ""
       this.fetching = true
       this.loading = true
@@ -68,20 +64,20 @@ export default {
           console.log(response)
 
           if (response.data.success) {
-            self.dialog = false;
-            self.$emit("complete");
+            this.dialog = false;
+            this.$emit("complete");
           } else {
             var error = response.data.error
               ? response.data.error
               : response.data;
 
-            self.$emit("error", error);
+              this.$emit("error", error);
           }
         })
         .catch(error => console.log(error))
         .finally(() => {
-          self.fetching = false
-          self.loading = false
+          this.fetching = false
+          this.loading = false
         })
     },
   },

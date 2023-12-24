@@ -56,12 +56,10 @@ export default {
 
     methods: {
         load() {
-            var self = this;
-
             api
                 .get("servers/" + this.serverId + "/graph?days_ago=" + this.daysAgo + '&resource=' + this.resource)
                 .then(response => {
-                    self.data = response.data;
+                    this.data = response.data;
                 })
                 .catch(error => this.error = error.message);
         },

@@ -7,21 +7,14 @@
     </v-card>
 
     <v-dialog app scrollable v-model="showDialog" max-width="600">
-      <v-card :loading="fetching">
-        <v-alert v-if="this.error" type="error">
-          {{ this.error }}
-        </v-alert>
-
-        <v-card-title> SSL </v-card-title>
+      <v-card :loading="fetching" title="SSL">
+        <v-alert v-if="this.error" type="error" :text="error"></v-alert>
 
         <v-card-text>
           <v-btn-toggle v-model="data.provider" mandatory>
             <v-btn value="none"> None </v-btn>
-
             <v-btn value="letsencrypt"> Let's Encrypt </v-btn>
-
             <v-btn value="custom"> Custom </v-btn>
-
             <v-btn value="selfsigned"> Self-Signed Certificate </v-btn>
           </v-btn-toggle>
 
@@ -90,7 +83,6 @@ export default {
     },
 
     save() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
@@ -98,15 +90,15 @@ export default {
         .post("sites/" + this.siteId + "/ssl", this.data)
         .catch(error => console.log(error))
         .then(response => {
-          self.fetching=false;
+          this.fetching=false;
 
           if(typeof response==="undefined") {
-            self.error="An error occurred";
+            this.error="An error occurred";
           } else if(!response.data.success) {
-            self.error=response.data.error;
+            this.error=response.data.error;
           } else {
-            self.$emit("closed");
-            self.showDialog=false;
+            this.$emit("closed");
+            this.showDialog=false;
           }
         });
     },

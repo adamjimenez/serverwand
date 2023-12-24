@@ -40,7 +40,6 @@ export default {
           console.log(response);
 
           if (response.data.success) {
-            // subscribe to status changes
             this.$router.push("/servers/");
           }
         })

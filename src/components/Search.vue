@@ -32,7 +32,6 @@ export default {
 
   methods: {
     fetchData() {
-      var self = this;
       this.error = this.post = null;
       this.loading = true;
 
@@ -52,19 +51,19 @@ export default {
                 break;
             }
 
-            self.items.push({
+            this.items.push({
               title: element.name,
               subtitle: element.hostname,
               value: "/servers/" + element.id + "/summary",
               avatar: avatar,
             });
 
-            self.servers[element.id] = element.name;
+            this.servers[element.id] = element.name;
           });
         })
         .catch(error => console.log(error))
         .finally(() => {
-          self.loading = false;
+          this.loading = false;
         });
 
       api
@@ -102,16 +101,16 @@ export default {
                 break;
             }
 
-            self.items.push({
+            this.items.push({
               title: element.domain,
-              subtitle: self.servers[element.server],
+              subtitle: this.servers[element.server],
               value: "/sites/" + element.id + "/summary",
               avatar: avatar,
             });
           });
         })
         .catch(error => console.log(error))
-        .finally(() => self.loading = false);
+        .finally(() => this.loading = false);
     },
     afterselection() {
       this.$nextTick(() => {

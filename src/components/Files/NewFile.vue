@@ -3,7 +3,7 @@
     <v-btn @click="open()" title="New file" icon>
       <v-icon>mdi:mdi-file-outline</v-icon>
     </v-btn>
-    <v-dialog app v-model="dialog">
+    <v-dialog app v-model="dialog" max-width="600">
       <v-card :loading="fetching">
         <v-card-title> New file </v-card-title>
 
