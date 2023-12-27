@@ -11,69 +11,122 @@
 
     <Loading :value="loading" />
 
-    <v-card :loading="fetching">
-      <v-card-actions v-if="data.origin">
-        <v-btn @click="openSync(data.origin)"> Push </v-btn>
-        <v-btn @click="openSync(siteId)"> Pull </v-btn>
-      </v-card-actions>
+    <v-card :loading="fetching" :subtitle="data.app.version">
+      <template v-slot:title>
+        {{ data.app.name }}
+      </template>
 
-      <v-card-actions v-if="data.app">
-        <v-btn @click="gitInfo = true" title="Git info" v-if="data.app.git_url" icon="fab fa-git"></v-btn>
-        <v-btn @click="clearLogs" title="Clear logs" v-if="data.app.isNode" icon="block"></v-btn>
-        <v-btn @click="showCloneApp = true" title="Copy app" icon="mdi:mdi-content-copy"></v-btn>
-        <v-switch v-if="data.app.isNode" v-model="data.app.online" :label="data.app.status" @change="toggleStatus()"
-          color="primary" hide-details></v-switch>
+      <template v-slot:append>
+        <span v-if="data.origin">
+          <v-btn @click="openSync(data.origin)"> Push </v-btn>
+          <v-btn @click="openSync(siteId)"> Pull </v-btn>
+        </span>
 
-        <v-btn v-if="data.app.name === 'wordpress'" @click="openWordpress" title="Open Wordpress"
-          icon="fab fa-wordpress"></v-btn>
-      </v-card-actions>
+        <span v-if="data.app">
+          <v-btn @click="clearLogs" title="Clear logs" v-if="data.app.isNode" icon="block"></v-btn>
+          <v-btn @click="showCloneApp = true" title="Copy app" icon="mdi:mdi-content-copy"></v-btn>
+          <v-switch v-if="data.app.isNode" v-model="data.app.online" :label="data.app.status" @change="toggleStatus()"
+            color="primary" hide-details></v-switch>
+          <v-btn v-if="data.app.name === 'wordpress'" @click="openWordpress" title="Open Wordpress"
+            icon="fab fa-wordpress"></v-btn>
+        </span>
+
+        <v-btn @click="install(data.app.name)" prepend-icon="fas fa-download"
+          v-if="data.app.latest && data.app.latest !== data.app.version">
+          Install {{ data.app.latest }}</v-btn>
+
+        <span v-if="data.app.git_url">
+          <v-btn @click="gitPull"> Pull </v-btn>
+          <v-btn @click="gitInfo = true"> Info </v-btn>
+        </span>
+      </template>
 
       <v-card-text>
         <div v-if="data.app">
-          <div v-if="data.app.name">
-            <v-card :title="data.app.name" :subtitle="data.app.version">
-              <v-card-actions v-if="data.app.latest && data.app.latest !== data.app.version">
-                <v-btn @click="install(data.app.name)" prepend-icon="fas fa-download">
-                  Install {{ data.app.latest }}</v-btn>
-              </v-card-actions>
 
-              <v-card-text v-if="data.app.isNode">
-                <v-textarea label="Ouput log" readonly :value="data.app.output_log"></v-textarea>
-                <v-textarea label="Error log" readonly :value="data.app.error_log"></v-textarea>
-              </v-card-text>
-            </v-card>
+          <div v-if="data.app.name">
+            <div v-if="data.app.isNode">
+              <v-textarea label="Ouput log" readonly :value="data.app.output_log"></v-textarea>
+              <v-textarea label="Error log" readonly :value="data.app.error_log"></v-textarea>
+            </div>
+
+            <div v-else-if="data.app.git_url">
+              <v-list lines="one">
+                <v-list-item v-for="item in data.app?.commits" :title="item.subject" :key="item"
+                  :subtitle="item.date + ' by ' + item.author"></v-list-item>
+              </v-list>
+            </div>
           </div>
 
           <p v-else> Unrecognised application</p>
         </div>
 
-        <v-card class="mx-auto" v-else>
-          <v-list>
-            <v-list-item v-for="(item, i) in apps" :key="`item-${i}`" :title="item.label" :value="item"
-              @click="install(item.name)">
-              <template v-slot:prepend>
-                <v-icon :icon="item.icon"></v-icon>
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-card>
+        <v-list v-else>
+          <v-list-item v-for="(item, i) in apps" :key="`item-${i}`" :title="item.label" :value="item"
+            @click="install(item.name)">
+            <template v-slot:prepend>
+              <v-icon :icon="item.icon"></v-icon>
+            </template>
+          </v-list-item>
+        </v-list>
+
       </v-card-text>
     </v-card>
 
-    <v-navigation-drawer v-model="drawer" temporary right app>
+    <v-dialog v-model="gitInfo" max-width="600">
+      <v-card title="Git info">
+        <v-card-text>
+          <v-container fluid>
+            <v-row>
+              <v-col>
+                <v-text-field v-model="data.app.git_url" label="Git URL" readonly></v-text-field>
+              </v-col>
+
+              <v-col cols="1">
+                <Copy :val="data.app.git_url" />
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <v-text-field v-model="data.app.ssh_key" label="SSH key"
+                  hint="Save to GitHub or Bitbucket in order to push to this repository" readonly></v-text-field>
+              </v-col>
+
+              <v-col cols="1">
+                <Copy :val="data.app.ssh_key" />
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <v-text-field v-model="data.app.webhook_url" label="Git Pull Webhook"
+                  hint="Use this webhook to initiiate a Git Pull" readonly></v-text-field>
+              </v-col>
+
+              <v-col cols="1">
+                <Copy :val="data.app.webhook_url" />
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="gitDialog" max-width="600">
       <v-card title="Git">
         <v-card-text>
           <v-text-field v-model="data.git_url" label="Git URL" hint="e.g. https://github.com/<user>/<repo>.git"
             required></v-text-field>
 
-          <v-checkbox v-model="data.public_dir" label="Clone in public dir"></v-checkbox>
+          <v-checkbox v-model="data.public_dir" label="Clone into public dir"></v-checkbox>
 
           <v-btn :disabled="!data.git_url || fetching" :loading="fetching" color="success" @click="submitGit()">
             Save
           </v-btn>
         </v-card-text>
       </v-card>
-    </v-navigation-drawer>
+    </v-dialog>
 
     <v-dialog v-model="showCloneApp" max-width="600">
       <v-card title="Clone App">
@@ -134,52 +187,6 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="gitInfo" max-width="600">
-      <v-card :loading="fetching" title="Git info">
-        <v-card-text>
-          <v-container fluid>
-            <v-row>
-              <v-col>
-                <v-btn @click="gitPull"> Pull </v-btn>
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col>
-                <v-text-field v-model="data.app.git_url" label="Git URL" readonly></v-text-field>
-              </v-col>
-
-              <v-col cols="1">
-                <Copy :val="data.app.git_url" />
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col>
-                <v-text-field v-model="data.app.ssh_key" label="SSH key"
-                  hint="Save to GitHub or Bitbucket in order to push to this repository" readonly></v-text-field>
-              </v-col>
-
-              <v-col cols="1">
-                <Copy :val="data.app.ssh_key" />
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col>
-                <v-text-field v-model="data.app.webhook_url" label="Git Pull Webhook"
-                  hint="Use this webhook to initiiate a Git Pull" readonly></v-text-field>
-              </v-col>
-
-              <v-col cols="1">
-                <Copy :val="data.app.webhook_url" />
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-
     <Site ref="Site" @error="handleError" />
     <Confirm ref="confirm" />
   </div>
@@ -218,7 +225,8 @@ export default {
     domainRules: [(v) => !!v || "Domain is required"],
     loading: false,
     fetching: false,
-    drawer: false,
+    gitDialog: false,
+    gitInfo: false,
     cloneDialog: false,
     syncDialog: false,
     target: 0,
@@ -256,7 +264,6 @@ export default {
     allSelected: false,
     authRequired: false,
     newWindow: false,
-    gitInfo: false,
     showCloneApp: false,
   }),
   created() {
@@ -308,7 +315,7 @@ export default {
     },
     install: async function (app) {
       if (app === "git") {
-        this.drawer = true;
+        this.gitDialog = true;
         return;
       }
 
@@ -356,7 +363,7 @@ export default {
             self.error = response.data.error;
             self.fetching = false;
           } else {
-            self.drawer = false;
+            self.gitDialog = false;
             self.fetchData();
           }
         })
@@ -385,7 +392,7 @@ export default {
               self.error = response.data.error;
               self.fetching = false;
             } else {
-              self.drawer = false;
+              self.gitDialog = false;
               self.fetchData();
             }
           })
