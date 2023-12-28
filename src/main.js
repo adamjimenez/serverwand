@@ -139,8 +139,8 @@ const routes = [
           path: '/sites/:id(.*)*/email',
           component: () => import('./views/sites/Email.vue')
         }, {
-          path: '/sites/:id(.*)*/apps',
-          component: () => import('./views/sites/Apps.vue')
+          path: '/sites/:id(.*)*/app',
+          component: () => import('./views/sites/App.vue')
         }, {
           path: '/sites/:id(.*)*/dns',
           component: () => import('./views/sites/Dns.vue')

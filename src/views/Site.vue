@@ -28,13 +28,13 @@
 
     <Tabs>
       <v-tab :to="'/sites/' + domainId + '/summary'">Summary</v-tab>
-      <v-tab :to="'/sites/' + domainId + '/apps'">Apps</v-tab>
+      <v-tab :to="'/sites/' + domainId + '/app'">App</v-tab>
       <v-tab :to="'/sites/' + domainId + '/aliases'">Aliases</v-tab>
-      <v-tab :to="'/sites/' + domainId + '/email'">Email</v-tab>
-      <v-tab :to="'/sites/' + domainId + '/backups'">Backups</v-tab>
       <v-tab :to="'/sites/' + domainId + '/database'">Database</v-tab>
       <v-tab :to="'/sites/' + domainId + '/variables'">Variables</v-tab>
+      <v-tab :to="'/sites/' + domainId + '/email'">Email</v-tab>
       <v-tab :to="'/sites/' + domainId + '/dns'">DNS</v-tab>
+      <v-tab :to="'/sites/' + domainId + '/backups'">Backups</v-tab>
       <v-tab :to="'/sites/' + domainId + '/settings'">Settings</v-tab>
     </Tabs>
 
