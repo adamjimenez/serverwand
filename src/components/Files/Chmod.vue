@@ -1,8 +1,6 @@
 <template>
   <div v-if="selected.length">
-    <v-btn @click="chmod()" :disabled="!selected" title="Change Permissions" icon>
-      <v-icon>mdi:mdi-file-key-outline</v-icon>
-    </v-btn>
+    <v-btn @click="chmod()" :disabled="!selected" title="Change permissions" icon="mdi:mdi-file-key-outline"></v-btn>
 
     <v-dialog app v-model="dialog" width="600">
       <v-card :loading="fetching" flat title="File permissions">
