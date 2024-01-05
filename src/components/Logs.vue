@@ -149,7 +149,6 @@ export default {
                     }
 
                     self.data = response.data.item;
-                    document.title = "Logs" + " | " + self.data.name;
                 })
                 .catch(function (error) {
                     console.log(error);
