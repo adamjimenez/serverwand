@@ -19,6 +19,10 @@
         <span v-if="item.type === 'MX'">{{ item.priority }}</span>
       </template>
 
+      <template v-slot:item.target="{ item }">
+        <p style="max-width: 200px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{ item.target }}</p>
+      </template>
+
       <template v-slot:item.actions="{ item }">
         <v-btn size="small" @click.stop="deleteItem(item)" :loading="loading === item.id" icon="mdi:mdi-delete"></v-btn>
       </template>
@@ -80,19 +84,17 @@ export default {
       recordType: ["A", "CNAME", "MX", "TXT", "SRV", "NS"],
       drawer: false,
       headers: [{
-        title: "Type ",
+        title: "Type",
         key: "type",
       }, {
-        title: "Name ",
+        title: "Name",
         key: "name",
       }, {
-        title: "Target ",
+        title: "Target",
         key: "target",
       }, {
-        title: "Priority ",
+        title: "Priority",
         key: "priority",
-        class: 'd-none d-sm-table-cell',
-        cellClass: 'd-none d-sm-table-cell',
       }, {
         title: "",
         key: "actions",
