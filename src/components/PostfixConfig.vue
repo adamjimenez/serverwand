@@ -4,7 +4,7 @@
             <v-icon size="small">fas fa-wrench</v-icon>
         </v-btn>
 
-        <v-dialog v-model="drawer">
+        <v-dialog v-model="drawer" max-width="600">
             <v-card title="Edit Postfix config">
                 <v-card-text>
                     <v-text-field v-for="(item, i) in config" :key="`item-${i}`" :label="item.name" v-model="item.value"

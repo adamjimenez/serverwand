@@ -9,7 +9,7 @@
       <span>Configure MariaDB</span>
     </v-tooltip>
 
-    <v-dialog v-model="drawer">
+    <v-dialog v-model="drawer" max-width="600">
       <v-card>
         <v-card-title> Edit MariaDB config </v-card-title>
 
