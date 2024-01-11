@@ -280,7 +280,7 @@ export default {
       var self = this;
       this.error = "";
       this.fetching = true;
-      this.siteId = this.$route.params.id;
+      this.siteId = this.$route.params.id[0];
 
       api
         .get("sites/" + this.siteId + "/apps")
