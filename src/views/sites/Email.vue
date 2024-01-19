@@ -21,12 +21,14 @@
         <v-card-actions>
           <v-btn @click="addEmail()" icon="mdi:mdi-plus"></v-btn>
 
-          <v-btn v-if="data.dns?.not_set" @click="fixDomainDns(data.domain)"
+          <v-btn v-if="data.dns?.not_set" @click="fixDNS('mx')"
             :title="data.dns.MX + ' != ' + data.server.hostname">Fix MX mismatch</v-btn>
 
-          <v-btn v-if="data.dkim?.not_set" @click="fixDkim(data.domain)">Fix Missing DKIM</v-btn>
+          <v-btn v-if="data.dkim?.not_set" @click="fixDNS('dkim')">Fix Missing DKIM</v-btn>
 
-          <v-btn v-if="data.spf?.not_set" @click="fixSpf(data.domain)">Fix Missing SPF</v-btn>
+          <v-btn v-if="data.spf?.not_set" @click="fixDNS('spf')">Fix Missing SPF</v-btn>
+
+          <v-btn v-if="data.dmarc?.not_set" @click="fixDNS('dmarc')">Fix Missing DMARC</v-btn>
 
           <v-switch v-if="data.server.mailserver" v-model="data.email" label="Email" @change="toggleEmail()" hide-details
             color="primary"></v-switch>
@@ -262,13 +264,13 @@ export default {
           self.loading = null;
         });
     },
-    fixDomainDns() {
+    fixDNS(fix) {
       var self = this;
       this.error = "";
       this.loading = true;
 
       api
-        .post("sites/" + self.domainId + "/fixmx", {})
+        .post("sites/" + self.domainId + "/fix" + fix, {})
         .then(async function (response) {
           console.log(response);
 
@@ -276,65 +278,7 @@ export default {
 
           switch (await self.$refs.oauth.check(response.data)) {
             case true:
-              return self.fixDomainDns();
-            case false:
-              return;
-          }
-
-          if (!response.data.success) {
-            self.error = response.data.error;
-          } else {
-            self.fetchData();
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
-    fixDkim() {
-      var self = this;
-      this.error = "";
-      this.loading = true;
-
-      api
-        .post("sites/" + self.domainId + "/fixdkim", {})
-        .then(async function (response) {
-          console.log(response);
-
-          self.loading = false;
-
-          switch (await self.$refs.oauth.check(response.data)) {
-            case true:
-              return self.fixDomainDns();
-            case false:
-              return;
-          }
-
-          if (!response.data.success) {
-            self.error = response.data.error;
-          } else {
-            self.fetchData();
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
-    fixSpf() {
-      var self = this;
-      this.error = "";
-      this.loading = true;
-
-      api
-        .post("sites/" + self.domainId + "/fixspf", {})
-        .then(async function (response) {
-          console.log(response);
-
-          self.loading = false;
-
-          switch (await self.$refs.oauth.check(response.data)) {
-            case true:
-              return self.fixDomainDns();
+              return self.fixDNS(fix);
             case false:
               return;
           }
