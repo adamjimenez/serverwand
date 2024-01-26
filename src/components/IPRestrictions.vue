@@ -26,7 +26,7 @@
                         <v-card-text>
                             <v-text-field v-model="item.label" label="Label" required
                                 :rules="[rules.required]" placeholder="Home"></v-text-field>
-                            <IP label="IP" :remoteAddr="remoteAddr" v-model="item.ip" />
+                            <IP v-model="item.ip" />
 
                             <v-btn :disabled="!valid" :loading="fetching" color="success" @click="saveItem">
                                 Save

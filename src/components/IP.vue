@@ -1,5 +1,5 @@
 <template>
-    <v-text-field v-bind="$attrs" label="IP address" required :rules="[rules.required, rules.ip]" :modelValue="modelValue" placeholder="192.168.0.1">
+    <v-text-field v-bind="$attrs" label="IP address" required :rules="[rules.required, rules.ip]" placeholder="192.168.0.1" ref="textfield" v-model="value">
         <template v-slot:append-inner>
             <v-icon v-if="remoteAddr" @click="setValue" title="Use local IP" icon="mdi:mdi-map-marker" />
         </template>
@@ -14,9 +14,9 @@ export default {
             type: [String],
         },
     },
-    emits: ["update:modelValue"],
     data() {
         return {
+            value: '',
             rules: {
                 required: (value) => !!value || "Required.",
                 ip: (v) =>
@@ -30,8 +30,12 @@ export default {
     },
     methods: {
         setValue: function () {
+            this.value = this.remoteAddr;
             this.$emit('update:modelValue', this.remoteAddr);
         }
+    },
+    mounted: function () {
+        this.value = this.modelValue;
     }
 }
 </script>
