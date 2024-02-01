@@ -75,7 +75,7 @@
           </div>
 
           <IPRestrictions :active="data.ip_restrictions.active" :items="data.ip_restrictions.ips"
-            :path="'sites/' + this.siteId + '/iprestrictions'" @save="fetchData(true)" />
+            :path="'sites/' + this.siteId + '/iprestrictions'" @save="fetchData(true)" :remoteAddr="data.remote_addr" />
         </v-list>
       </v-card>
     </v-card>
