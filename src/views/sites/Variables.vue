@@ -71,8 +71,6 @@ export default {
     };
   },
   created() {
-    // fetch the data when the view is created and the data is
-    // already being observed
     this.siteId = this.$route.params.id;
     this.fetchData();
   },
