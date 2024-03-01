@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
+      let self = this;
       this.error = "";
       this.fetching = true;
 
@@ -115,7 +115,7 @@ export default {
         return;
       }
 
-      var self = this;
+      let self = this;
       this.loading = line;
       this.error = "";
 
@@ -138,28 +138,21 @@ export default {
           self.loading = null;
         });
     },
-    saveItem() {
-      var self = this;
+    saveItem: async function() {
       this.error = "";
 
       if (this.$refs.form.validate()) {
         this.loading = 'save';
+        const result = await api.post("sites/" + this.siteId + "/variables", this.item);
 
-        api
-          .post("sites/" + this.siteId + "/variables", this.item)
-          .then(function (response) {
-            console.log(response);
-            if (response.data.error) {
-              self.error = response.data.error;
-            } else {
-              self.drawer = false;
-              self.fetchData();
-            }
-          })
-          .catch(function (error) {
-            self.loading = null;
-            console.log(error);
-          });
+        if (result.data.error) {
+          this.error = result.data.error;
+        } else {
+          this.drawer = false;
+          this.fetchData();
+        }
+        
+        this.loading = null;
       }
     },
   },
