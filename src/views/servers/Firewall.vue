@@ -193,7 +193,7 @@ export default {
       if (!response.data.success) {
         this.error = response.data.error;
       } else {
-        self.fetchData();
+        this.fetchData();
       }
     },
     saveItem: async function () {
