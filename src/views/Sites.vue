@@ -147,7 +147,7 @@ export default {
             this.filtered.push(element);
           });
 
-          api.get("servers/").then(function (response) {
+          api.get("servers/").then((response) => {
             response.data.items.forEach((element) => {
               this.server_opts.push({
                 title: element.name,
