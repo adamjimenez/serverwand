@@ -48,7 +48,6 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
@@ -56,11 +55,11 @@ export default {
         .get("users/" + this.id)
         .then(response => {
           console.log(response);
-          self.data = response.data.item;
-          document.title = "Settings" + " | " + self.data.name;
+          this.data = response.data.item;
+          document.title = "Settings" + " | " + this.data.name;
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
     },
     editItem() {
       this.$router.push("/users/" + this.$route.params.id + "/edit");
@@ -70,7 +69,6 @@ export default {
         return;
       }
 
-      var self = this;
       this.dialog = true;
       this.loading = 'delete';
 
@@ -80,15 +78,15 @@ export default {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.$router.push("/users/");
+            this.$router.push("/users/");
           }
         })
         .catch(error => console.log(error))
         .finally(() => {
-          self.dialog = false;
-          self.loading = null;
+          this.dialog = false;
+          this.loading = null;
         });
     },
   },

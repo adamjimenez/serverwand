@@ -126,34 +126,32 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
       api
         .get("servers/" + this.serverId + "/apps")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
             return false;
           }
 
-          self.data = response.data.item;
-          self.items = response.data.apps;
+          this.data = response.data.item;
+          this.items = response.data.apps;
 
-          document.title = "Apps | " + self.data.name;
+          document.title = "Apps | " + this.data.name;
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     toggle(item) {
-      var self = this;
       this.loading = true;
       this.error = "";
       var action = item.active ? "start" : "stop";
@@ -163,27 +161,26 @@ export default {
           name: item.name,
           action: action,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (!response.data.success) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = false;
+        .finally(() => {
+          this.loading = false;
         });
     },
     deleteApps() {
-      var self = this;
-      self.fetching = true;
+      this.fetching = true;
 
-      var ids = [];
+      let ids = [];
       this.items.forEach((element) => {
         if (element.selected) {
           ids.push(element);
@@ -192,14 +189,14 @@ export default {
 
       api
         .post("servers/" + this.serverId + "/apps", { ids: ids })
-        .then(function () {
-          self.fetchData();
+        .then(() => {
+          this.fetchData();
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     view(item) {

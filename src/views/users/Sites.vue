@@ -86,22 +86,21 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
       api
         .get("users/" + this.id + "/sites")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
-          self.user_sites = response.data.sites;
+          this.user_sites = response.data.sites;
           document.title = 'Sites'
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
 
       api
@@ -110,16 +109,16 @@ export default {
           console.log(response);
 
           response.data.items.forEach((element) => {
-            self.sites.push({
+            this.sites.push({
               title: element.domain,
               value: element.id,
               server: element.server,
             });
           });
 
-          api.get("servers/").then(function (response) {
+          api.get("servers/").then((response) => {
             response.data.items.forEach((element) => {
-              self.servers[element.id] = element.name;
+              this.servers[element.id] = element.name;
             });
           });
         })
@@ -127,7 +126,7 @@ export default {
           console.log(error);
         })
         .finally(function () {
-          self.loading = false;
+          this.loading = false;
         });
     },
     addItem() {
@@ -135,8 +134,6 @@ export default {
       this.drawer = true;
     },
     saveItem() {
-      var self = this;
-
       if (this.data.domain) {
         this.details = "";
         this.dialog = true;
@@ -144,22 +141,22 @@ export default {
 
         api
           .post("users/" + this.id + "/sites", this.data)
-          .then(function (response) {
+          .then((response) => {
             console.log(response);
 
             if (!response.data.success) {
-              self.error = response.data.error;
+              this.error = response.data.error;
             } else {
-              self.drawer = false;
-              self.fetchData();
+              this.drawer = false;
+              this.fetchData();
             }
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error);
-            self.dialog = false;
+            this.dialog = false;
           })
-          .finally(function () {
-            self.dialog = false;
+          .finally(() => {
+            this.dialog = false;
           });
       }
     },
@@ -168,28 +165,27 @@ export default {
         return;
       }
 
-      var self = this;
       this.error = "";
       this.dialog = true;
       this.loading = item.id;
 
       api
         .post("users/" + this.id + "/sites", { delete: 1, domain: item.id })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.dialog = false;
-          self.loading = null;
+        .finally(() => {
+          this.dialog = false;
+          this.loading = null;
         });
     },
   },

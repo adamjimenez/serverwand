@@ -43,52 +43,50 @@ export default {
 
     methods: {
         fetchData(clearCacheEntry) {
-            var self = this;
             this.error = "";
             this.siteId = this.$route.params.id;
-            clearTimeout(self.timer);
+            clearTimeout(this.timer);
             this.fetching = true;
 
             api
                 .get("sites/" + this.siteId + "/dns", {
                     clearCacheEntry: clearCacheEntry,
                 })
-                .then(function (response) {
+                .then((response) => {
                     console.log(response);
-                    self.data = response.data;
+                    this.data = response.data;
                 })
-                .catch(function (error) {
+                .catch((error) => {
                     console.log(error);
                 })
-                .finally(function () {
-                    self.fetching = false;
+                .finally(() => {
+                    this.fetching = false;
                 });
         },
         fixDomainDns() {
-            var self = this;
             this.error = "";
             this.loading = true;
 
             api
-                .post("sites/" + self.siteId + "/fixdns", {})
-                .then(async function (response) {
+                .post("sites/" + this.siteId + "/fixdns", {})
+                .then(async (response) => {
                     console.log(response);
-                    self.loading = false;
+                    this.loading = false;
 
-                    switch (await self.$refs.oauth.check(response.data)) {
+                    switch (await this.$refs.oauth.check(response.data)) {
                         case true:
-                            return self.fixDomainDns();
+                            return this.fixDomainDns();
                         case false:
                             return;
                     }
 
                     if (!response.data.success) {
-                        self.error = response.data.error;
+                        this.error = response.data.error;
                     } else {
-                        self.fetchData(true);
+                        this.fetchData(true);
                     }
                 })
-                .catch(function (error) {
+                .catch((error) => {
                     console.log(error);
                 });
         },

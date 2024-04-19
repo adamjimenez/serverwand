@@ -57,9 +57,8 @@ export default {
     selected: function () {
       let selected = [];
 
-      var self = this;
-      this.selectedIds.forEach(function (id) {
-        selected.push(self.items.find(obj => obj.id === id))
+      this.selectedIds.forEach((id) => {
+        selected.push(this.items.find(obj => obj.id === id))
       });
 
       return selected;
@@ -78,36 +77,34 @@ export default {
     },
 
     clean() {
-      var self = this;
       this.showClean = true;
       this.fetching = true;
 
       api
         .get("servers/" + this.serverId + "/clean", { clearCacheEntry: true })
         .then(response => {
-          self.items = response.data.files;
-          self.cleanSize = response.data.size;
-          self.fetching = false;
+          this.items = response.data.files;
+          this.cleanSize = response.data.size;
+          this.fetching = false;
 
-          self.selectedIds = [];
-          self.items.forEach(function (item) {
-            self.selectedIds.push(item.id);
+          this.selectedIds = [];
+          this.items.forEach((item) => {
+            this.selectedIds.push(item.id);
           });
         });
     },
 
     doClean() {
-      var self = this;
       this.fetching = true;
 
-      var files = [];
+      let files = [];
       this.selected.forEach(item => files.push(item.id));
 
       api
         .post("servers/" + this.serverId + "/clean", { files: files })
-        .then(function () {
-          self.$emit('complete');          
-          self.clean()
+        .then(() => {
+          this.$emit('complete');          
+          this.clean()
         });      
     },
     prettyBytes(value) {

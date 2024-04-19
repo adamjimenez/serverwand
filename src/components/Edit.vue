@@ -94,21 +94,20 @@ export default {
       var data = {};
       data[this.name] = this.data.val;
 
-      var self = this;
       api
         .post(this.path, data)
         .then(response => {
           console.log(response);
 
           if (response.data.success) {
-            self.dialog = false;
-            self.$emit("save");
+            this.dialog = false;
+            this.$emit("save");
           } else {
-            self.error = response.data.error;
+            this.error = response.data.error;
           }
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
     },
   },
 };

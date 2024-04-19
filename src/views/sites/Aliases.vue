@@ -106,33 +106,32 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this
       this.error = ''
       this.siteId = this.$route.params.id
-      clearTimeout(self.timer)
+      clearTimeout(this.timer)
 
       this.fetching = true
 
       api.get('sites/' + this.siteId + '/aliases')
-        .then(function (response) {
+        .then((response) => {
           console.log(response)
 
-          self.data = response.data.item
-          document.title = 'Aliases' + ' | ' + self.data.domain
+          this.data = response.data.item
+          document.title = 'Aliases' + ' | ' + this.data.domain
 
-          self.data.aliases.forEach(element => {
+          this.data.aliases.forEach(element => {
             if (element.dns.updating) {
               console.log('checking dns')
-              self.timer = setTimeout(self.fetchData, 60000)
+              this.timer = setTimeout(this.fetchData, 60000)
               return
             }
           })
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error)
         })
-        .finally(function () {
-          self.fetching = false
+        .finally(() => {
+          this.fetching = false
         })
     },
     addAlias() {
@@ -143,8 +142,6 @@ export default {
       this.saveAlias();
     },
     saveAlias(noAuthPrompt) {
-      var self = this
-
       if (this.alias.alias) {
         this.details = ''
         this.fetching = true
@@ -158,37 +155,37 @@ export default {
         console.log(this.alias)
 
         api.post('sites/' + this.siteId + '/aliases', this.alias)
-          .then(function (response) {
+          .then((response) => {
             console.log(response)
 
             if (!response.data.success) {
               if (response.data.error == 'auth' && !noAuthPrompt) {
-                child.location = 'https://serverwand.com/account/services/' + self.data.server.dns
+                child.location = 'https://serverwand.com/account/services/' + this.data.server.dns
 
-                var interval = setInterval(function () {
+                var interval = setInterval(() => {
                   if (child.closed) {
                     clearInterval(interval)
-                    self.saveAlias(true)
+                    this.saveAlias(true)
                     return
                   }
                 }, 500)
               } else {
-                self.error = response.data.error
+                this.error = response.data.error
               }
             } else {
               if (child) {
                 child.close()
               }
-              self.drawer = false
-              self.fetchData()
+              this.drawer = false
+              this.fetchData()
             }
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error)
-            self.fetching = false
+            this.fetching = false
           })
-          .finally(function () {
-            self.fetching = false
+          .finally(() => {
+            this.fetching = false
           })
       }
     },
@@ -196,64 +193,62 @@ export default {
       if (!await this.$refs.confirm.open("Delete " + alias)) {
         return;
       }
-      var self = this
+      
       this.fetching = true
       this.error = ''
       this.loading = alias;
 
       api.post('sites/' + this.siteId + '/aliases', { delete: 1, alias: alias })
-        .then(function (response) {
+        .then((response) => {
           console.log(response)
 
           if (!response.data.success) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData()
+            this.fetchData()
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error)
-          self.fetching = false
+          this.fetching = false
         })
-        .finally(function () {
-          self.loading = null;
+        .finally(() => {
+          this.loading = null;
         });
     },
 
     fixAliasDns(alias, noAuthPrompt) {
-      var self = this
-
       this.details = ''
       this.fetching = true
       this.error = ''
 
-      api.post('sites/' + self.siteId + '/fixaliasdns', { alias: alias })
-        .then(function (response) {
+      api.post('sites/' + this.siteId + '/fixaliasdns', { alias: alias })
+        .then((response) => {
           console.log(response)
 
           if (!response.data.success) {
             if (response.data.error == 'auth' && !noAuthPrompt) {
-              var child = window.open('https://serverwand.com/account/services/' + self.data.server.dns)
-              var interval = setInterval(function () {
+              let child = window.open('https://serverwand.com/account/services/' + this.data.server.dns)
+              let interval = setInterval(() => {
                 if (child.closed) {
                   clearInterval(interval)
-                  self.fixAliasDns(alias, true)
+                  this.fixAliasDns(alias, true)
                   return
                 }
               }, 500)
             } else {
-              self.error = response.data.error
+              this.error = response.data.error
             }
           } else {
-            self.fetchData()
+            this.fetchData()
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error)
-          self.fetching = false
+          this.fetching = false
         })
-        .finally(function () {
-          self.fetching = false
+        .finally(() => {
+          this.fetching = false
         })
     }
   },

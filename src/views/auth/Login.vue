@@ -98,8 +98,6 @@ export default {
       location.href = "https://serverwand.com/login?provider=google";
     },
     validate() {
-      var self = this;
-
       if (this.$refs.form.validate()) {
         this.dialog = true;
         this.error = "";
@@ -111,16 +109,16 @@ export default {
           })
           .then(response => {
               console.log(response);
-              if(response.data.success)
-                self.$router.push("/");
+              if (response.data.success)
+                this.$router.push("/");
               else
-                self.error=response.data.error;
+                this.error=response.data.error;
             })
           .catch(error => console.log(error))
           .finally(() => {
-              self.dialog=false;
-              self.loading=false;
-            });
+            this.dialog=false;
+            this.loading=false;
+          });
       }
     },
   },

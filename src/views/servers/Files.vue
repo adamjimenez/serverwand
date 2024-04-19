@@ -159,9 +159,8 @@ export default {
     selected: function () {
       let selected = [];
 
-      var self = this;
-      this.selectedIds.forEach(function (id) {
-        var item = self.items.find(obj => obj.id === id);
+      this.selectedIds.forEach((id) => {
+        let item = this.items.find(obj => obj.id === id);
         if (item) {
           selected.push(item)
         }
@@ -194,15 +193,13 @@ export default {
   created() {
     this.serverId = this.$route.params.id;
 
-    var self = this;
-
     // change folder when url hash is manually edited
-    window.onhashchange = function () {
-      if (self.userHashChange) {
-        self.path = location.hash.substr(1);
-        self.fetchData();
+    window.onhashchange = () => {
+      if (this.userHashChange) {
+        this.path = location.hash.substr(1);
+        this.fetchData();
       } else {
-        self.userHashChange = true
+        this.userHashChange = true
       }
     };
 
@@ -224,7 +221,6 @@ export default {
       return path.split(/[\\/]/).pop();
     },
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
       this.page = 1;
@@ -239,22 +235,22 @@ export default {
             files.forEach(file => {
               // check if item already exists
               let found = false;
-              self.items.forEach(item => {
+              this.items.forEach(item => {
                 if (item.id === file)
                   found = true;
               });
 
               if (!found) {
-                self.items.push({
+                this.items.push({
                   id: file,
-                  name: self.basename(file),
+                  name: this.basename(file),
                   type: 'file',
                 });
               }
             });
           },
-          error => self.error = error,
-          () => self.fetching = false
+          error => this.error = error,
+          () => this.fetching = false
         );
 
       } else {
@@ -267,15 +263,15 @@ export default {
             console.log(response);
 
             if (response.data.error) {
-              self.error = response.data.error;
+              this.error = response.data.error;
               return;
             }
 
-            self.server = response.data.item;
+            this.server = response.data.item;
 
-            self.items = [];
+            this.items = [];
             response.data.files.forEach(element => {
-              self.items.push({
+              this.items.push({
                 id: element.id,
                 name: element.name,
                 size: element.size,
@@ -289,30 +285,30 @@ export default {
               });
             });
 
-            document.title = "Files | " + self.server.name;
+            document.title = "Files | " + this.server.name;
           })
           .catch(error => {
             console.log(error);
           })
           .finally(() => {
-            self.fetching = false;
-            self.selectedIds = [];
+            this.fetching = false;
+            this.selectedIds = [];
 
             // open file if we have one
-            if (self.fileToOpen) {
-              var file = self.fileToOpen;
-              var line = 1;
+            if (this.fileToOpen) {
+              let file = this.fileToOpen;
+              let line = 1;
               if (file.indexOf(':') !== -1) {
-                var arr = file.split(':');
+                let arr = file.split(':');
                 file = arr[0];
                 line = arr[1];
               }
 
-              self.items.forEach(async item => {
+              this.items.forEach(async item => {
                 if (item.name === file) {
-                  self.fileToOpen = '';
-                  await self.$refs.editFile.open(item);
-                  self.$refs.editFile.goToLine(line);
+                  this.fileToOpen = '';
+                  await this.$refs.editFile.open(item);
+                  this.$refs.editFile.goToLine(line);
                 }
               });
             }
@@ -331,7 +327,7 @@ export default {
     },
     upLevel() {
       this.search = '';
-      var index = this.path.substr(0, this.path.length - 1).lastIndexOf("/");
+      let index = this.path.substr(0, this.path.length - 1).lastIndexOf("/");
       if (index !== -1) {
         this.path = this.path.substr(0, index + 1);
 

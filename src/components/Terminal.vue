@@ -9,7 +9,9 @@
                 <v-card-title> Open Secure Shell </v-card-title>
 
                 <v-card-text>
-                    <v-alert color="error" v-if="error" class="mb-3"><div v-html="error"></div></v-alert>
+                    <v-alert color="error" v-if="error" class="mb-3">
+                        <div v-html="error"></div>
+                    </v-alert>
 
                     <div v-if="users.length">
                         <v-select v-model="ssh_username" :items="users" label="User"></v-select>
@@ -28,7 +30,7 @@
         </v-dialog>
     </div>
 </template>
-  
+
 <script>
 import api from "../services/api";
 
@@ -58,7 +60,6 @@ export default {
     },
     methods: {
         fetchData() {
-            var self = this;
             this.error = "";
             this.fetching = true
             this.serverId = this.$route.params.id;
@@ -73,22 +74,21 @@ export default {
                     console.log(response);
 
                     if (response.data.error) {
-                        self.error = response.data.error;
+                        this.error = response.data.error;
                     }
 
                     if (response.data.item) {
-                        self.data = response.data.item;
-                        window.server = self.data;
+                        this.data = response.data.item;
+                        window.server = this.data;
                     }
                 })
                 .catch(error => console.log(error))
-                .finally(() => self.fetching = false);
+                .finally(() => this.fetching = false);
         },
         fetchUsers() {
-            var self = this;
             this.error = "";
             this.fetching = true;
-            self.chooseUser = true;
+            this.chooseUser = true;
 
             api
                 .get("servers/" + this.serverId + "/systemusers")
@@ -96,70 +96,66 @@ export default {
                     console.log(response);
 
                     if (response.data.error) {
-                        self.error = response.data.error;
+                        this.error = response.data.error;
                         return false;
                     }
 
                     response.data.item.users.forEach((element) => {
-                        self.users.push({
+                        this.users.push({
                             title: element.name,
                             value: element.name,
                         });
                     });
                 })
                 .catch(error => console.log(error))
-                .finally(() => self.fetching = false);
+                .finally(() => this.fetching = false);
         },
         saveKey(key) {
-            var self = this;
-
             // save key
             api
                 .post(
-                    "servers/" + self.serverId + "/systemusers/" + self.ssh_username,
+                    "servers/" + this.serverId + "/systemusers/" + this.ssh_username,
                     { key: key }
                 )
                 .then(response => {
                     console.log(response);
 
                     if (!response.data.success) {
-                        self.fetching = false;
-                        self.error = response.data.error;
+                        this.fetching = false;
+                        this.error = response.data.error;
                     } else {
-                        self.saveSSHUser();
+                        this.saveSSHUser();
                     }
                 })
                 .catch(error => {
-                    self.fetching = false;
+                    this.fetching = false;
                     console.log(error);
                 });
         },
         saveSSHUser() {
-            var self = this;
-            self.fetching = true;
+            this.fetching = true;
             api
                 .post("servers/" + this.serverId + "/savesshuser", {
-                    ssh_username: self.ssh_username,
+                    ssh_username: this.ssh_username,
                 })
                 .then(response => {
                     console.log(response);
 
                     if (!response.data.success) {
-                        self.error = response.data.error;
+                        this.error = response.data.error;
                     } else {
-                        self.data.ssh_username = self.ssh_username;
-                        self.chooseUser = false;
-                        self.terminal();
+                        this.data.ssh_username = this.ssh_username;
+                        this.chooseUser = false;
+                        this.terminal();
                     }
                 })
                 .catch(error => console.log(error))
                 .finally(() => {
-                    self.fetching = false;
+                    this.fetching = false;
                 });
         },
         saveKeyAndContinue() {
-            var self = this;
-            self.fetching = true;
+            this.fetching = true;
 
             // get ssh key
             api
@@ -168,15 +164,15 @@ export default {
                     console.log(response);
 
                     if (response.data.error) {
-                        self.error = response.data.error;
+                        this.error = response.data.error;
                     } else {
                         console.log(response.data.public_key);
-                        self.saveKey(response.data.public_key);
+                        this.saveKey(response.data.public_key);
                     }
                 })
                 .catch(error => console.log(error))
                 .finally(() => {
-                    self.fetching = false;
+                    this.fetching = false;
                 });
         },
         terminal() {

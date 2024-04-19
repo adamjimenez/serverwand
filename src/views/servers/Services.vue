@@ -36,7 +36,6 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
@@ -46,19 +45,18 @@ export default {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
             return false;
           }
 
-          self.items = response.data.services;
-          self.data = response.data.item;
-          document.title = "Services | " + self.data.name;
+          this.items = response.data.services;
+          this.data = response.data.item;
+          document.title = "Services | " + this.data.name;
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false)
+        .finally(() => this.fetching = false)
     },
     toggle(item) {
-      var self = this;
       this.loading = item.name;
       this.error = "";
       var action = item.active ? "start" : "stop";
@@ -72,12 +70,12 @@ export default {
           console.log(response);
 
           if (!response.data.success)
-            self.error = response.data.error;
+            this.error = response.data.error;
           else
-            self.fetchData();
+            this.fetchData();
         })
         .catch(error => console.log(error))
-        .finally(() => self.loading = null)
+        .finally(() => this.loading = null)
     },
   },
 };

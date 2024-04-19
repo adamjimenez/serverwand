@@ -32,7 +32,6 @@ export default {
         return;
       }
       
-      var self = this;
       this.fetching = true;
 
       api
@@ -45,7 +44,7 @@ export default {
           }
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
     }
   },
 };

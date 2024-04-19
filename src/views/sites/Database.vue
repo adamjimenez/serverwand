@@ -100,48 +100,46 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
       this.domainId = this.$route.params.id;
 
       api
         .get("sites/" + this.domainId + "/database")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
-          self.data = response.data.item;
-          document.title = "Database" + " | " + self.data.domain;
+          this.data = response.data.item;
+          document.title = "Database" + " | " + this.data.domain;
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     addDatabase() {
-      var self = this;
       this.error = "";
       this.loading = true;
 
       api
         .post("sites/" + this.domainId + "/database", { save: 1 })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
-          self.loading = false;
+        .finally(() => {
+          this.fetching = false;
+          this.loading = false;
         });
     },
   },

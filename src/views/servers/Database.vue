@@ -79,28 +79,27 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
       api
         .get("servers/" + this.serverId + "/database")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
             return false;
           }
 
-          self.data = response.data.item;
-          document.title = "Database" + " | " + self.data.name;
+          this.data = response.data.item;
+          document.title = "Database" + " | " + this.data.name;
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
   },

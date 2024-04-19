@@ -169,34 +169,33 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
       api
         .get("servers/" + this.serverId + "/cronjobs")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
             return false;
           }
 
-          self.data = response.data.item;
-          document.title = "Cronjobs | " + self.data.name;
+          this.data = response.data.item;
+          document.title = "Cronjobs | " + this.data.name;
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
 
       api
         .get("servers/" + this.serverId + "/usersAndGroups")
         .then(response => {
-          self.users = response.data.users;
+          this.users = response.data.users;
         });
     },
     addItem() {
@@ -215,30 +214,28 @@ export default {
         return;
       }
 
-      var self = this;
       this.loading = line;
       this.error = "";
 
       api
         .post("servers/" + this.serverId + "/cronjobs", { line: line })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (!response.data.success) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = null;
+        .finally(() => {
+          this.loading = null;
         });
     },
     saveCronjob() {
-      var self = this;
       this.error = "";
 
       if (this.$refs.cronjobForm.validate()) {
@@ -246,18 +243,18 @@ export default {
 
         api
           .post("servers/" + this.serverId + "/cronjobs", this.cronjob)
-          .then(function (response) {
+          .then((response) => {
             console.log(response);
             if (response.data.error) {
-              self.fetching = false;
-              self.error = response.data.error;
+              this.fetching = false;
+              this.error = response.data.error;
             } else {
-              self.drawer = false;
-              self.fetchData();
+              this.drawer = false;
+              this.fetchData();
             }
           })
-          .catch(function (error) {
-            self.fetching = false;
+          .catch((error) => {
+            this.fetching = false;
             console.log(error);
           });
       }

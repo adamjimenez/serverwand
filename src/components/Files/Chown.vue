@@ -10,29 +10,13 @@
 
         <v-card-text>
 
-          <v-autocomplete
-            v-model="data.owner"
-            label="Owner"
-            :items="users"
-            autofocus
-            hide-details
-            class="mb-5"
-          ></v-autocomplete>
+          <v-autocomplete v-model="data.owner" label="Owner" :items="users" autofocus hide-details
+            class="mb-5"></v-autocomplete>
 
-          <v-autocomplete
-            v-model="data.group"
-            label="Group"
-            :items="groups"
-            hide-details
-            class="mb-5"
-          ></v-autocomplete>
+          <v-autocomplete v-model="data.group" label="Group" :items="groups" hide-details class="mb-5"></v-autocomplete>
 
-          <v-checkbox
-            v-if="folderSelected"
-            v-model="data.recursive"
-            label="Replace child permissions"
-            class="mb-5"
-          ></v-checkbox>
+          <v-checkbox v-if="folderSelected" v-model="data.recursive" label="Replace child permissions"
+            class="mb-5"></v-checkbox>
 
           <v-btn color="primary" @click="doChown()"> Save </v-btn>
         </v-card-text>
@@ -78,13 +62,11 @@ export default {
     chown() {
       this.dialog = true;
 
-      var self = this;
-
       api
         .get("servers/" + this.serverId + "/usersAndGroups")
-        .then(response => {          
-            self.groups = response.data.groups;
-            self.users = response.data.users;
+        .then(response => {
+          this.groups = response.data.groups;
+          this.users = response.data.users;
         });
 
       if (this.selected.length === 1) {
@@ -96,10 +78,9 @@ export default {
       }
     },
     doChown() {
-      var self = this;
       this.fetching = true;
 
-      var files = [];
+      let files = [];
       this.selected.forEach(element => files.push(element.id));
 
       api
@@ -114,21 +95,21 @@ export default {
           console.log(response);
 
           if (response.data.success) {
-            self.dialog = false;
-            self.$emit("complete");
+            this.dialog = false;
+            this.$emit("complete");
           } else {
-            var error = response.data.error
+            let error = response.data.error
               ? response.data.error
               : response.data;
 
-            self.$emit("error", error);
+            this.$emit("error", error);
           }
         })
         .catch(error => {
           console.log(error);
         })
         .finally(() => {
-          self.fetching = false;
+          this.fetching = false;
         });
     },
   },

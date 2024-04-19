@@ -88,7 +88,6 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this
       this.error = ''
       this.fetching = true
       this.siteId = this.$route.params.id
@@ -97,18 +96,17 @@ export default {
         .then(response => {
           console.log(response)
 
-          self.data = response.data.item
-          document.title = 'Settings' + ' | ' + self.data?.domain
+          this.data = response.data.item
+          document.title = 'Settings' + ' | ' + this.data?.domain
         })
         .catch((error) => console.log(error))
-        .finally(() => self.fetching = false)
+        .finally(() => this.fetching = false)
     },
     empty: async function () {
       if (!await this.$refs.confirm.open('Empty ' + this.data.domain)) {
         return;
       }
 
-      var self = this
       this.error = ''
       this.loading = 'empty'
 
@@ -117,12 +115,12 @@ export default {
           console.log(response)
 
           if (response.data.error) {
-            self.error = response.data.error
+            this.error = response.data.error
           }
         })
         .catch(error => console.log(error))
         .finally(() => {
-          self.loading = null
+          this.loading = null
         })
     },
     deleteDomain: async function () {

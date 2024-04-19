@@ -46,46 +46,44 @@ export default {
 
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.loading = true;
 
       api
         .get("teams/" + this.id)
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
-          if (self.id) {
-            self.data.name = response.data.item.name;
+          if (this.id) {
+            this.data.name = response.data.item.name;
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = false;
+        .finally(() => {
+          this.loading = false;
         });
     },
     validate() {
-      var self = this;
       this.details = "";
       this.loading = true;
 
       api
-        .post("teams/" + self.id, this.data)
-        .then(function (response) {
+        .post("teams/" + this.id, this.data)
+        .then((response) => {
           console.log(response);
           if (response.data.id) {
-            self.$router.push("/teams/" + response.data.id + "/members");
+            this.$router.push("/teams/" + response.data.id + "/members");
           } else if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = false;
+        .finally(() => {
+          this.loading = false;
         });
     },
   },

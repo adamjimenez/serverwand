@@ -71,8 +71,6 @@ export default {
 
   methods: {
     validate() {
-      var self = this;
-
       if (this.$refs.form.validate()) {
         this.loading = true;
 
@@ -80,14 +78,13 @@ export default {
           .post("auth/forgot", this.data)
           .then(response => {
               console.log(response);
-              if(response.data.success)
-                self.$router.push("/auth/login");
-
+              if (response.data.success)
+                this.$router.push("/auth/login");
               else
-                self.error=response.data.error;
+                this.error=response.data.error;
             })
           .catch((error) => console.log(error))
-          .finally(() => self.loading = false);
+          .finally(() => this.loading = false);
       }
     },
   },

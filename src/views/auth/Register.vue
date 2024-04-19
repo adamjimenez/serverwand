@@ -64,8 +64,6 @@ export default {
 
   methods: {
     validate() {
-      var self = this;
-
       if (this.$refs.form.validate()) {
         this.dialog = true;
 
@@ -77,17 +75,17 @@ export default {
           .then(response => {
             console.log(response);
             if (response.data.success) {
-              self.$router.push("/auth/login");
+              this.$router.push("/auth/login");
             } else {
-              self.error = response.data.error;
+              this.error = response.data.error;
             }
           })
           .catch(error => {
             console.log(error);
           })
           .finally(() => {
-            self.dialog = false;
-            self.loading = false;
+            this.dialog = false;
+            this.loading = false;
           });
       }
     },

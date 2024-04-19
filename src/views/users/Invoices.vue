@@ -167,22 +167,21 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
       api
         .get("users/" + this.id + "/invoices")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
-          self.invoices = response.data.invoices;
+          this.invoices = response.data.invoices;
           document.title = 'Invoices'
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     addItem() {
@@ -190,8 +189,6 @@ export default {
       this.dialog = true;
     },
     saveItem() {
-      var self = this;
-
       if (this.data.items.length) {
         this.details = "";
         this.dialog = true;
@@ -199,18 +196,18 @@ export default {
 
         api
           .post("users/" + this.id + "/invoices", this.data)
-          .then(function (response) {
+          .then((response) => {
             console.log(response);
 
             if (!response.data.success) {
-              self.error = response.data.error;
+              this.error = response.data.error;
             } else {
-              self.data.invoice = "";
-              self.dialog = false;
-              self.fetchData();
+              this.data.invoice = "";
+              this.dialog = false;
+              this.fetchData();
             }
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error);
           });
       }
@@ -220,28 +217,27 @@ export default {
         return;
       }
 
-      var self = this;
       this.error = "";
       this.dialog = true;
       this.loading = item.id;
 
       api
         .post("users/" + this.id + "/invoices", { delete: 1, invoice: item.id })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.dialog = false;
-          self.loading = null;
+        .finally(() => {
+          this.dialog = false;
+          this.loading = null;
         });
     },
     addRow() {
@@ -252,20 +248,19 @@ export default {
     },
     view(item) {
       this.invoice_id = item.id;
+      this.fetching = true;
 
-      var self = this;
-      self.fetching = true;
       api
         .get("users/" + this.id + "/invoices/" + this.invoice_id)
-        .then(function (response) {
-          self.invoice = response.data.invoice;
-          self.dialogInvoice = true;
+        .then((response) => {
+          this.invoice = response.data.invoice;
+          this.dialogInvoice = true;
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     formatDate(value) {

@@ -95,41 +95,40 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
       api
         .get("users/" + this.id + "/subscriptions")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
-          self.subscriptions = response.data.subscriptions;
+          this.subscriptions = response.data.subscriptions;
           document.title = 'Subscriptions'
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
 
       api
         .get("settings/products")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           response.data.products.forEach((element) => {
-            self.products.push({
+            this.products.push({
               title: element.name,
               value: element.id,
             });
           });
         })
-        .catch(function (error) {
-          self.error = error;
+        .catch((error) => {
+          this.error = error;
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     addItem() {
@@ -141,14 +140,12 @@ export default {
       this.drawer = true;
     },
     saveItem() {
-      var self = this;
-
       if (this.data.product) {
         this.details = "";
         this.dialog = true;
         this.error = "";
 
-        var url = "users/" + this.id + "/subscriptions";
+        let url = "users/" + this.id + "/subscriptions";
 
         if (this.data.id) {
           url += "/" + this.data.id;
@@ -156,23 +153,23 @@ export default {
 
         api
           .post(url, this.data)
-          .then(function (response) {
+          .then((response) => {
             console.log(response);
 
             if (!response.data.success) {
-              self.error = response.data.error;
+              this.error = response.data.error;
             } else {
-              self.data.subscription = "";
-              self.drawer = false;
-              self.fetchData();
+              this.data.subscription = "";
+              this.drawer = false;
+              this.fetchData();
             }
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error);
-            self.dialog = false;
+            this.dialog = false;
           })
-          .finally(function () {
-            self.dialog = false;
+          .finally(() => {
+            this.dialog = false;
           });
       }
     },
@@ -181,28 +178,27 @@ export default {
         return;
       }
 
-      var self = this;
       this.error = "";
       this.dialog = true;
       this.loading = item.id;
 
       api
         .post("users/" + this.id + "/subscriptions/" + item.id, { delete: 1 })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.dialog = false;
-          self.loading = null;
+        .finally(() => {
+          this.dialog = false;
+          this.loading = null;
         });
     },
     formatDate(value) {

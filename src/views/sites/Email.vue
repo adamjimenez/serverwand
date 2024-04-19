@@ -15,11 +15,11 @@
       </v-card>
 -->
 
-    <div v-if="data.server.mailserver">
+    <div>
 
       <v-card :loading="fetching">
         <v-card-actions>
-          <v-btn @click="addEmail()" icon="mdi:mdi-plus"></v-btn>
+          <v-btn @click="addEmail()" icon="mdi:mdi-plus" v-if="data.server.mailserver"></v-btn>
 
           <v-btn v-if="data.dns?.not_set" @click="fixDNS('mx')"
             :title="data.dns.MX + ' != ' + data.server.hostname">Fix MX mismatch</v-btn>
@@ -75,12 +75,6 @@
       </v-dialog>
 
     </div>
-
-    <v-card v-else>
-      <v-card-text>
-        Mailserver is not configured
-      </v-card-text>
-    </v-card>
 
     <Confirm ref="confirm" />
     <OAuth ref="oauth" />
@@ -139,34 +133,32 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.domainId = this.$route.params.id;
-      clearTimeout(self.timer);
+      clearTimeout(this.timer);
       this.fetching = true;
 
       api
         .get("sites/" + this.domainId + "/email?v=" + Date.now())
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
-          self.data = response.data.item;
-          document.title = "Email" + " | " + self.data.domain;
+          this.data = response.data.item;
+          document.title = "Email" + " | " + this.data.domain;
 
-          if (self.data.dns.updating) {
+          if (this.data.dns.updating) {
             console.log("checking dns");
-            self.timer = setTimeout(self.fetchData, 60000);
+            this.timer = setTimeout(this.fetchData, 60000);
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     toggleEmail() {
-      var self = this;
       this.error = "";
       this.loading = true;
 
@@ -175,21 +167,21 @@ export default {
           update: 1,
           status: this.data.email,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else if (response.data.success) {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
-          self.loading = false;
+        .finally(() => {
+          this.fetching = false;
+          this.loading = false;
         });
     },
     addEmail() {
@@ -200,11 +192,9 @@ export default {
     editItem(item) {
       this.drawer = true;
       this.userReadonly = true;
-      this.email = item;
+      this.email = {...item};
     },
     saveEmail() {
-      var self = this;
-
       if (!this.email.user) {
         return;
       }
@@ -214,22 +204,22 @@ export default {
 
       api
         .post("sites/" + this.domainId + "/email", this.email)
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (!response.data.success) {
-            self.error = response.data.error;
-            self.loading = false;
+            this.error = response.data.error;
+            this.loading = false;
           } else {
-            self.drawer = false;
-            self.fetchData();
+            this.drawer = false;
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = false;
+        .finally(() => {
+          this.loading = false;
         });
     },
     deleteItem: async function (user) {
@@ -237,7 +227,6 @@ export default {
         return;
       }
 
-      var self = this;
       this.error = "";
       this.loading = user;
 
@@ -246,50 +235,49 @@ export default {
           delete: 1,
           user: user,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (!response.data.success) {
-            self.error = response.data.error;
-            self.loading = false;
+            this.error = response.data.error;
+            this.loading = false;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = false;
-          self.loading = null;
+        .finally(() => {
+          this.loading = false;
+          this.loading = null;
         });
     },
     fixDNS(fix) {
-      var self = this;
       this.error = "";
       this.loading = true;
 
       api
-        .post("sites/" + self.domainId + "/fix" + fix, {})
-        .then(async function (response) {
+        .post("sites/" + this.domainId + "/fix" + fix, {})
+        .then(async (response) => {
           console.log(response);
 
-          self.loading = false;
+          this.loading = false;
 
-          switch (await self.$refs.oauth.check(response.data)) {
+          switch (await this.$refs.oauth.check(response.data)) {
             case true:
-              return self.fixDNS(fix);
+              return this.fixDNS(fix);
             case false:
               return;
           }
 
           if (!response.data.success) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         });
     },

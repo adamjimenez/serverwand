@@ -49,18 +49,17 @@ export default {
     },
 
     extract() {
-      var self = this;
       this.$emit("loading", true);
 
       api.event(
         'servers/' + this.serverId + '/files?cmd=extract&id=' + encodeURIComponent(this.selected[0].id),
         result => {
-          self.msg = result.msg;
+          this.msg = result.msg;
         },
-        error => self.$emit("error", error),
+        error => this.$emit("error", error),
         () => {
-          self.msg = '';
-          self.$emit("complete");
+          this.msg = '';
+          this.$emit("complete");
         }
       );
 

@@ -151,72 +151,69 @@ export default {
   },
   methods: {
     fetchData(clearCacheEntry) {
-      var self = this;
       this.error = "";
       this.siteId = this.$route.params.id;
-      clearTimeout(self.timer);
+      clearTimeout(this.timer);
       this.fetching = true;
 
       api
         .get("sites/" + this.siteId + "/summary", {
           clearCacheEntry: clearCacheEntry,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.item) {
-            self.data = response.data.item;
+            this.data = response.data.item;
           }
 
-          if (self.data.domain) {
-            document.title = "Summary" + " | " + self.data.domain;
+          if (this.data.domain) {
+            document.title = "Summary" + " | " + this.data.domain;
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
 
-          if (self.data.dns && self.data.dns.updating) {
+          if (this.data.dns && this.data.dns.updating) {
             console.log("checking dns");
-            self.timer = setTimeout(function () {
-              self.fetchData(true);
+            this.timer = setTimeout(function () {
+              this.fetchData(true);
             }, 10000);
           }
         });
     },
     fixDomainDns() {
-      var self = this;
       this.error = "";
       this.loading = true;
 
       api
-        .post("sites/" + self.siteId + "/fixdns", {})
-        .then(async function (response) {
+        .post("sites/" + this.siteId + "/fixdns", {})
+        .then(async (response) => {
           console.log(response);
 
-          self.loading = false;
+          this.loading = false;
 
-          switch (await self.$refs.oauth.check(response.data)) {
+          switch (await this.$refs.oauth.check(response.data)) {
             case true:
-              return self.fixDomainDns();
+              return this.fixDomainDns();
             case false:
               return;
           }
 
           if (!response.data.success) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData(true);
+            this.fetchData(true);
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         });
     },
     toggleAuth() {
-      var self = this;
       this.fetching = true;
       this.error = "";
 
@@ -224,20 +221,20 @@ export default {
         .post("sites/" + this.siteId + "/auth", {
           status: this.data.auth.active,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (!response.data.success) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData(true);
+            this.fetchData(true);
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     prettyBytes(value) {

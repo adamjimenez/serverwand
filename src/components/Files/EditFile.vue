@@ -69,8 +69,6 @@ export default {
       return this.$refs.editor.editor;
     },
     open(item) {
-      var self = this;
-
       this.$emit("loading", true);
 
       console.log(item.id);
@@ -84,25 +82,24 @@ export default {
           console.log(response);
 
           if (response.data.success !== false) {
-            self.data.id = item.id;
-            self.data.file = self.basename(item.id);
-            self.data.content = response.data.content;
-            self.dialog = true;
+            this.data.id = item.id;
+            this.data.file = this.basename(item.id);
+            this.data.content = response.data.content;
+            this.dialog = true;
 
             // set language
-            //self.setLanguage();
+            //this.setLanguage();
           } else {
-            self.$emit("error", response.data.error);
+            this.$emit("error", response.data.error);
           }
         })
         .catch(error => console.log(error))
         .finally(() => {
-          self.fetching = false;
-          self.$emit("loading", false);
+          this.fetching = false;
+          this.$emit("loading", false);
         });
     },
     saveFile() {
-      var self = this;
       this.fetching = true;
 
       this.$emit("loading", true);
@@ -116,22 +113,22 @@ export default {
           console.log(response);
 
           if (response.data.success) {
-            self.$emit("complete");
+            this.$emit("complete");
           } else {
-            self.$emit("error", response.data.error);
+            this.$emit("error", response.data.error);
           }
         })
         .catch(error => {
           console.log(error);
         })
         .finally(() => {
-          self.fetching = false;          
-          self.$emit("loading", false);
+          this.fetching = false;          
+          this.$emit("loading", false);
         });
     },
     goToLine(line) {
       line = parseInt(line);
-      var editor = this.getEditor()
+      let editor = this.getEditor()
       editor.setPosition({ lineNumber: line, column: 1 });
       editor.revealLineInCenter(line);
       editor.focus();

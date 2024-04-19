@@ -30,8 +30,6 @@ export default {
 
   methods: {
     logout() {
-      var self = this;
-
       api
         .post("auth/logout")
         .then(response => {
@@ -40,16 +38,16 @@ export default {
               router.push("/auth/login");
               return false;
             } else {
-              self.error=response.data.error;
+              this.error=response.data.error;
             }
           })
         .catch(error => {
             console.log(error);
           })
         .finally(() => {
-            self.dialog=false;
-            self.loading=false;
-          });
+          this.dialog=false;
+          this.loading=false;
+        });
     },
   },
 };

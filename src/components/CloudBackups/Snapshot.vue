@@ -31,9 +31,9 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn @click="
-            $emit('closed');
-          showMessage = false;
-          " :disabled="fetching">
+      $emit('closed');
+    showMessage = false;
+    " :disabled="fetching">
             Close
           </v-btn>
         </v-card-actions>
@@ -67,7 +67,6 @@ export default {
     },
 
     createSnapshot() {
-      var self = this;
       this.fetching = true;
 
       api
@@ -78,20 +77,20 @@ export default {
         .then(response => {
           console.log(response);
 
-          self.dialog = false;
+          this.dialog = false;
 
           if (response.data.success) {
-            self.$emit("complete", response.data.result);
+            this.$emit("complete", response.data.result);
           } else {
-            var error = response.data.error
+            let error = response.data.error
               ? response.data.error
               : response.data;
 
-            self.$emit("error", error);
+            this.$emit("error", error);
           }
         })
         .catch((error) => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
 
     }
   },

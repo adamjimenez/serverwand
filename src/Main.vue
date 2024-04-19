@@ -114,27 +114,25 @@ export default {
     };
   },
   created() {
-    var self = this;
-
     axios.interceptors.response.use(
-      function (response) {
+      (response) => {
         if (!response) {
           return false;
         }
 
         if (response.data.error == "master password") {
           // show password prompt
-          self.masterPasswordDialog = true;
+          this.masterPasswordDialog = true;
         } else if (response.data.error == "missing key") {
           // show password prompt
-          self.resetKeyDialog = true;
-          self.serverId = response.data.server;
+          this.resetKeyDialog = true;
+          this.serverId = response.data.server;
           return response;
         } else {
           return response;
         }
       },
-      function (error) {
+      (error) => {
         const originalRequest = error.config;
 
         if (
@@ -172,11 +170,10 @@ export default {
       }
     },
     data() {
-      var self = this;
-      this.restricted = self.data.user !== "0";
+      this.restricted = this.data.user !== "0";
 
-      this.filtered = this.items.filter(function (item) {
-        return self.restricted ? !item.restricted : true;
+      this.filtered = this.items.filter((item) => {
+        return this.restricted ? !item.restricted : true;
       });
     },
     rail(value) {
@@ -185,68 +182,63 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.loading = true;
 
       api
         .get("settings/profile")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
-          self.data = response.data.profile;
+          this.data = response.data.profile;
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = false;
+        .finally(() => {
+          this.loading = false;
         });
     },
     submitMasterPassword() {
-      var self = this;
-
       api
         .post("auth/masterpassword", {
-          masterPassword: sha256(self.masterPassword),
+          masterPassword: sha256(this.masterPassword),
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
           if (response.data.success) {
-            self.$router.go();
+            this.$router.go();
           } else {
-            self.error = response.data.error;
+            this.error = response.data.error;
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.dialog = false;
-          self.loading = false;
+        .finally(() => {
+          this.dialog = false;
+          this.loading = false;
         });
     },
     resetKey() {
-      var self = this;
-
       api
-        .post("servers/" + self.serverId + "/resetkey", {
-          username: self.data.user,
-          password: self.data.pass,
+        .post("servers/" + this.serverId + "/resetkey", {
+          username: this.data.user,
+          password: this.data.pass,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
           if (response.data.success) {
-            self.$router.go();
+            this.$router.go();
           } else {
-            self.error = response.data.error;
+            this.error = response.data.error;
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.resetKeyDialog = false;
-          self.loading = false;
+        .finally(() => {
+          this.resetKeyDialog = false;
+          this.loading = false;
         });
     },
     isActive(to) {

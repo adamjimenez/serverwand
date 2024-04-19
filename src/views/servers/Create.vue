@@ -191,84 +191,79 @@ export default {
 
   methods: {
     fetchData() {
-      var self = this
       this.error = ''
       this.loading = true
 
       api.get('servers/' + this.serverId)
-        .then(function (response) {
+        .then((response) => {
           console.log(response)
 
-          if (self.serverId) {
-            self.data = response.data.item
+          if (this.serverId) {
+            this.data = response.data.item
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error)
         })
-        .finally(function () {
-          self.loading = false
+        .finally(() => {
+          this.loading = false
         })
 
       api.get('providers/tokens')
-        .then(function (response) {
+        .then((response) => {
           console.log(response)
 
-          self.provider_tokens.splice(1)
+          this.provider_tokens.splice(1)
 
           if (response.data.tokens) {
-            response.data.tokens.forEach(function (item) {
-              self.provider_tokens.push({
+            response.data.tokens.forEach((item) => {
+              this.provider_tokens.push({
                 text: item.label,
                 value: item.id
               })
             })
           }
         })
-        .catch(function (error) {
-          self.error = error
+        .catch((error) => {
+          this.error = error
         })
-        .finally(function () {
-          self.loading = false
+        .finally(() => {
+          this.loading = false
         })
     },
     install() {
-      var self = this
-
-      self.dialog = true
-      self.details = ''
+      this.dialog = true
+      this.details = ''
 
       // subscribe to status changes
-      var url = 'servers/' + self.serverId + '/install?webserver=1';
-      if (self.data.mailserver) {
+      let url = 'servers/' + this.serverId + '/install?webserver=1';
+      if (this.data.mailserver) {
         url += '&mailserver=1'
       }
 
       api.event(
         url,
         result => {
-          self.details = result.msg + '...';
+          this.details = result.msg + '...';
 
           if (result.progress) {
-            self.progress = result.progress;
+            this.progress = result.progress;
           }
         },
         error => {
-          self.error = error;
+          this.error = error;
         },
         () => {
-          self.dialog = false;
+          this.dialog = false;
 
-          if (!self.error) {
-            self.$router.push('/servers/' + self.serverId + '/summary')
+          if (!this.error) {
+            this.$router.push('/servers/' + this.serverId + '/summary')
           }
         }
       );
 
     },
     validate: async function () {
-      var self = this
-
       const { valid } = await this.$refs.form.validate()
 
       if (!valid) {
@@ -279,40 +274,40 @@ export default {
       this.dialog = true
       this.error = ''
 
-      if (self.data.unclaimed > 0) {
-        self.serverId = self.data.unclaimed
+      if (this.data.unclaimed > 0) {
+        this.serverId = this.data.unclaimed
       }
 
       console.log('save server');
-      console.log(self.serverId);
+      console.log(this.serverId);
 
-      if (self.serverId) {
-        api.post('servers/' + self.serverId + '/update', this.data)
-          .then(function () {
-            self.install()
+      if (this.serverId) {
+        api.post('servers/' + this.serverId + '/update', this.data)
+          .then(() => {
+            this.install()
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error)
           })
       } else {
         api.post('servers/create', this.data)
-          .then(function (response) {
+          .then((response) => {
             console.log(response)
 
             if (!response.data.success) {
-              self.error = response.data.error;
-              self.dialog = false
+              this.error = response.data.error;
+              this.dialog = false
             } else if (response.data.id) {
-              self.serverId = response.data.id
+              this.serverId = response.data.id
 
-              if (self.serverId) {
-                self.install()
+              if (this.serverId) {
+                this.install()
               }
             }
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error)
-            self.dialog = false
+            this.dialog = false
           })
       }
     },
@@ -325,29 +320,28 @@ export default {
         return
       }
 
-      var child
+      let child;
       if (!noAuthPrompt) {
         child = window.open('loading')
       }
 
-      var self = this
       this.loading = true
-      self.regions = []
-      self.images = []
-      self.types = []
-      self.unclaimed = []
+      this.regions = []
+      this.images = []
+      this.types = []
+      this.unclaimed = []
 
       api.post('providers/?cmd=options', { provider: provider })
-        .then(function (response) {
+        .then((response) => {
           console.log(response)
 
           if (response.data.require_auth && !noAuthPrompt) {
             child.location = 'https://serverwand.com/account/services/' + provider
 
-            var interval = setInterval(function () {
+            let interval = setInterval(() => {
               if (child.closed) {
                 clearInterval(interval)
-                self.getOptions(item, true)
+                this.getOptions(item, true)
                 return
               }
             }, 500)
@@ -356,42 +350,40 @@ export default {
               child.close()
             }
 
-            self.regions = response.data.options.regions
-            self.images = response.data.options.images
-            self.types = response.data.options.types
+            this.regions = response.data.options.regions
+            this.images = response.data.options.images
+            this.types = response.data.options.types
 
             response.data.unclaimed.forEach(element => {
-              self.unclaimed.push({
+              this.unclaimed.push({
                 title: element.label,
                 value: element.id
               })
             })
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           if (child) {
             child.close()
           }
           console.log(error)
         })
-        .finally(function () {
-          self.loading = false
+        .finally(() => {
+          this.loading = false
         })
     },
     submitToken() {
-      var self = this
-
       api.post('providers/tokens', this.provider_token)
-        .then(function (response) {
+        .then((response) => {
           if (response.data.error) {
-            self.error = response.data.error
+            this.error = response.data.error
           } else {
-            self.drawer = false
-            self.fetchData()
+            this.drawer = false
+            this.fetchData()
           }
         })
-        .catch(function (error) {
-          self.error = error
+        .catch((error) => {
+          this.error = error
         })
     }
   }

@@ -77,7 +77,6 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this
       this.error = ''
       // this.fetching = true
       this.domainId = this.$route.params.id
@@ -87,11 +86,11 @@ export default {
           console.log(response)
 
           if (response.data.item) {
-            self.data = response.data.item
+            this.data = response.data.item
           }
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false)
+        .finally(() => this.fetching = false)
     }
   }
 }

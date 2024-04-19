@@ -29,34 +29,33 @@ export default {
   }),
   methods: {
     create(data) {
-      var self = this;
       this.loading = true;
 
       api
         .post("sites/create", data)
         .then(response => {
-            if(response.data.site_id) {
-              self.$router.push("/sites/" + response.data.site_id + "/summary");
-            } else if(response.data.error) {
-              if(response.data.error === "auth") {
-                self.provider=response.data.provider;
-                self.authRequired=true;
+          if (response.data.site_id) {
+            this.$router.push("/sites/" + response.data.site_id + "/summary");
+          } else if (response.data.error) {
+            if (response.data.error === "auth") {
+              this.provider = response.data.provider;
+              this.authRequired = true;
 
-                var interval=setInterval(() => {
-                    if(self.newWindow&&self.newWindow.closed) {
-                      self.newWindow=null;
-                      clearInterval(interval);
-                      self.create(data);
-                      return;
-                    }
-                  }, 500);
-              } else {
-                self.$emit("error", response.data.error);
-              }
+              let interval = setInterval(() => {
+                if (this.newWindow && this.newWindow.closed) {
+                  this.newWindow = null;
+                  clearInterval(interval);
+                  this.create(data);
+                  return;
+                }
+              }, 500);
+            } else {
+              this.$emit("error", response.data.error);
             }
-          })
+          }
+        })
         .catch(error => console.log(error))
-        .finally(() => self.loading=false);
+        .finally(() => this.loading = false);
     },
 
     authPrompt() {

@@ -88,30 +88,28 @@ export default {
         this.serverId = this.$route.params.id;
         this.fetchData();
 
-        var self = this;
-
-        window.onhashchange = async function () {
-            var path = location.hash.substr(1);
+        window.onhashchange = async () => {
+            let path = location.hash.substr(1);
 
             if (!path) {
                 return;
             }
 
-            var file = path;
-            var line = 1;
+            let file = path;
+            let line = 1;
             if (file.indexOf(':') !== -1) {
-                var arr = file.split(':');
+                let arr = file.split(':');
                 file = arr[0];
                 line = arr[1];
             }
 
-            self.fecthing = true;
-            await self.$refs.editFile.open({
+            this.fecthing = true;
+            await this.$refs.editFile.open({
                 id: file,
                 name: file,
             });
 
-            self.$refs.editFile.goToLine(line);
+            this.$refs.editFile.goToLine(line);
             location.hash = '';
         };
     },
@@ -134,35 +132,32 @@ export default {
     },
     methods: {
         fetchData() {
-            var self = this;
             this.error = "";
             this.fetching = true;
 
             api
                 .get("servers/" + this.serverId)
-                .then(function (response) {
+                .then((response) => {
                     console.log(response);
 
                     if (response.data.error) {
-                        self.error = response.data.error;
+                        this.error = response.data.error;
                         return false;
                     }
 
-                    self.data = response.data.item;
+                    this.data = response.data.item;
                 })
-                .catch(function (error) {
+                .catch((error) => {
                     console.log(error);
                 })
-                .finally(function () {
-                    self.fetching = false;
+                .finally(() => {
+                    this.fetching = false;
                 });
         },
         fetchLog: async function(log) {
-            var self = this;
-
             if (log) {
-                self.log = log;
-            } else if (!self.log) {
+                this.log = log;
+            } else if (!this.log) {
                 return;
             }
 
@@ -176,15 +171,15 @@ export default {
             this.logContent = "loading..";
 
             api
-                .post("servers/" + this.serverId + "/fetchlog", { log: self.log })
-                .then(async function (response) {
+                .post("servers/" + this.serverId + "/fetchlog", { log: this.log })
+                .then(async (response) => {
                     console.log(response);
-                    self.logContent = response.data.content;
-                    await self.$nextTick();
+                    this.logContent = response.data.content;
+                    await this.$nextTick();
                     scrollEl.scrollTop = scrollTop;
                 })
-                .finally(function () {
-                    self.fetching = false;
+                .finally(() => {
+                    this.fetching = false;
                 });
         },
         handleError(error) {

@@ -77,7 +77,6 @@ export default {
   },
   methods: {
     fetchData(clearCacheEntry) {
-      var self = this;
       this.error = "";
       this.fetching = true
 
@@ -85,51 +84,50 @@ export default {
         .get("servers/" + this.serverId + "/summary", {
           clearCacheEntry: clearCacheEntry,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           }
 
           if (response.data.item) {
-            self.data = response.data.item;
-            self.orig = JSON.parse(JSON.stringify(response.data.item));
-            document.title = "Settings | " + self.data.name;
+            this.data = response.data.item;
+            this.orig = JSON.parse(JSON.stringify(response.data.item));
+            document.title = "Settings | " + this.data.name;
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     editServer() {
       this.$router.push("/servers/" + this.$route.params.id + "/edit");
     },
     saveNotifications() {
-      let self = this;
       this.fetching = true;
 
       api
         .post(
           "servers/" + this.serverId + "/notifications", {
-          notifications: self.data.health.checks
+          notifications: this.data.health.checks
         })
-        .then(function (response) {
+        .then((response) => {
           if (response.data.error) {
-            self.error = response.data.error
+            this.error = response.data.error
             return false
           }
 
-          self.fetchData(true)
+          this.fetchData(true)
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
   },

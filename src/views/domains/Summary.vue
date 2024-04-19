@@ -107,7 +107,6 @@ export default {
   },
   methods: {
     fetchData(clearCacheEntry) {
-      var self = this;
       this.error = "";
       this.domainId = this.$route.params.id;
       this.fetching = true;
@@ -116,22 +115,22 @@ export default {
         .get("domains/" + this.domainId + "/summary", {
           clearCacheEntry: clearCacheEntry,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.item) {
-            self.data = response.data.item;
+            this.data = response.data.item;
           }
 
-          if (self.data.domain) {
-            document.title = "Summary | " + self.data.domain;
+          if (this.data.domain) {
+            document.title = "Summary | " + this.data.domain;
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
   },

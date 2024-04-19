@@ -55,7 +55,6 @@ export default {
 
     methods: {
         edit() {
-            var self = this;
             this.fetching = true;
 
             api
@@ -63,21 +62,20 @@ export default {
                     clearCacheEntry: true,
                 })
                 .then(response => {
-                    self.data = JSON.parse(JSON.stringify(response.data.config));
-                    self.items = JSON.parse(JSON.stringify(response.data.config));
-                    self.fetching = false;
-                    self.drawer = true;
+                    this.data = JSON.parse(JSON.stringify(response.data.config));
+                    this.items = JSON.parse(JSON.stringify(response.data.config));
+                    this.fetching = false;
+                    this.drawer = true;
                 });
         },
 
         save() {
-            var self = this;
             this.fetching = true;
             
             // get changes
             let changes = {};
-            this.items.forEach(function (val) {
-                self.data.forEach(function (old) {
+            this.items.forEach((val) => {
+                this.data.forEach((old) => {
                     if (val.name === old.name && val.active !== old.active) {
                         changes[val.name] = val.active;
                     }
@@ -89,8 +87,8 @@ export default {
                     config: changes,
                 })
                 .then(() => {
-                    self.fetching = false;
-                    self.drawer = false;
+                    this.fetching = false;
+                    this.drawer = false;
                 });
         },
     },

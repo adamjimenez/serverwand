@@ -93,23 +93,22 @@ export default {
             }
 
             this.dialog = true;
-            var self = this;
             this.error = null;
             this.fetching = true;
 
             api.event(
                 'servers/' + this.serverId + '/volumes/resize?volume=' + encodeURIComponent(this.volume) + '&size=' + encodeURIComponent(this.size),
                 result => {
-                    self.msg = result.msg;
+                    this.msg = result.msg;
                 },
-                error => self.error = error,
+                error => this.error = error,
                 () => {
-                    self.msg = '';
-                    self.fetching = false;
+                    this.msg = '';
+                    this.fetching = false;
 
-                    if (!self.error) {
-                        self.dialog = false;
-                        self.$emit("complete");
+                    if (!this.error) {
+                        this.dialog = false;
+                        this.$emit("complete");
                     }
                 }
             );

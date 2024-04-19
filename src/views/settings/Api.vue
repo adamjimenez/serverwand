@@ -86,22 +86,21 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
       api
         .get("apikeys")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
-          self.items = response.data.items;
+          this.items = response.data.items;
           document.title = "Api";
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     addItem() {
@@ -109,26 +108,25 @@ export default {
       this.drawer = true;
     },
     saveItem() {
-      var self = this;
       this.details = "";
       this.error = "";
 
       api
         .post("apikeys", this.data)
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (!response.data.success) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.dialog = true;
-            self.details = response.data.api_key;
+            this.dialog = true;
+            this.details = response.data.api_key;
 
-            self.drawer = false;
-            self.fetchData();
+            this.drawer = false;
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -137,26 +135,25 @@ export default {
         return;
       }
 
-      var self = this;
       this.error = "";
       this.loading = id;
 
       api
         .post("apikeys", { delete: 1, api_key: id })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = null;
+        .finally(() => {
+          this.loading = null;
         });
     },
   },

@@ -32,30 +32,29 @@ export default {
   }),
   methods: {
     create(data) {
-      var self = this;
-      self.loading = true;
+      this.loading = true;
 
       api
         .post("domains/create", data)
         .then(response => {
           if (response.data.domain_id) {
-            self.$router.push(
+            this.$router.push(
               "/domains/" + response.data.domain_id + "/summary"
             );
           } else if (response.data.error) {
             if (response.data.error === "auth") {
-              self.provider = response.data.provider;
-              self.authRequired = true;
+              this.provider = response.data.provider;
+              this.authRequired = true;
 
-              var interval = setInterval(() => {
-                if (self.newWindow && self.newWindow.closed) {
+              let interval = setInterval(() => {
+                if (this.newWindow && this.newWindow.closed) {
                   clearInterval(interval);
-                  self.create(data);
+                  this.create(data);
                   return;
                 }
               }, 500);
             } else {
-              self.error = response.data.error;
+              this.error = response.data.error;
             }
           }
         })
@@ -63,7 +62,7 @@ export default {
           console.log(error);
         })
         .finally(() => {
-          self.loading = false;
+          this.loading = false;
         });
     },
 

@@ -77,7 +77,6 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.domainId = this.$route.params.id;
 
@@ -86,48 +85,47 @@ export default {
 
       api
         .get("sites/" + this.domainId + "/backups")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
             return false;
           }
 
-          self.data = response.data;
-          document.title = "Backups" + " | " + self.data.domain;
+          this.data = response.data;
+          document.title = "Backups" + " | " + this.data.domain;
 
-          self.serverId = self.data.server.id;
-          self.path = '/var/www/vhosts/' + self.data.server.ip + '/public/backups';
+          this.serverId = this.data.server.id;
+          this.path = '/var/www/vhosts/' + this.data.server.ip + '/public/backups';
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     createBackup() {
-      var self = this;
       this.fetching = true;
       this.error = '';
 
       api
         .get("sites/" + this.domainId + "/backups/create")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (!response.data.success) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     download(item) {
@@ -139,21 +137,20 @@ export default {
         return;
       }
 
-      var self = this;
       this.fetching = true;
       this.loading = item.name;
 
       api
         .post("sites/" + this.domainId + "/backups", { ids: [item.name] })
-        .then(function () {
-          self.fetchData();
+        .then(() => {
+          this.fetchData();
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
-          self.fetching = false;
+          this.fetching = false;
         })
-        .finally(function () {
-          self.loading = null;
+        .finally(() => {
+          this.loading = null;
         });
     },
     restore: async function (item) {
@@ -161,17 +158,16 @@ export default {
         return;
       }
 
-      var self = this;
-      self.fetching = true;
+      this.fetching = true;
 
       api
         .post("sites/" + this.domainId + "/backups", { restore: item.name })
-        .then(function () {
-          self.fetchData();
+        .then(() => {
+          this.fetchData();
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
-          self.fetching = false;
+          this.fetching = false;
         });
     },
     handleError(error) {

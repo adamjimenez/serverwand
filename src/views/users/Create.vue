@@ -70,7 +70,6 @@ export default {
 
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.loading = true;
 
@@ -79,38 +78,36 @@ export default {
         .then(response => {
           console.log(response);
 
-          if (self.id) {
-            self.data = response.data.item;
+          if (this.id) {
+            this.data = response.data.item;
           }
         })
         .catch(error => {
           console.log(error);
         })
         .finally(() => {
-          self.loading = false;
+          this.loading = false;
         });
     },
     validate() {
-      var self = this;
-
       this.details = "";
       this.loading = true;
 
       api
-        .post("users/" + self.id, this.data)
+        .post("users/" + this.id, this.data)
         .then(response => {
           console.log(response);
           if (response.data.id) {
-            self.$router.push("/users/" + response.data.id + "/summary");
+            this.$router.push("/users/" + response.data.id + "/summary");
           } else if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           }
         })
         .catch(error => {
           console.log(error);
         })
         .finally(() => {
-          self.loading = false;
+          this.loading = false;
         });
     },
   },

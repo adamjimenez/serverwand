@@ -97,7 +97,6 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
@@ -105,12 +104,12 @@ export default {
         .get("servers/" + this.serverId + "/messages")
         .then(response => {
           console.log(response);
-          self.data = response.data.item;
-          self.items = response.data.messages;
+          this.data = response.data.item;
+          this.items = response.data.messages;
 
-          self.items = [];
+          this.items = [];
           response.data.messages.forEach((element) => {
-            self.items.push({
+            this.items.push({
               id: element.id,
               size: element.size,
               sender: element.sender,
@@ -120,14 +119,12 @@ export default {
             });
           });
 
-          document.title = "Mail" + " | " + self.data.name;
+          document.title = "Mail" + " | " + this.data.name;
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
     },
     deleteMail() {
-      var self = this;
-
       // get selected ids
       var ids = [];
       this.selected.forEach((element) => {
@@ -135,13 +132,13 @@ export default {
       });
 
       // process deletions
-      self.fetching = true;
+      this.fetching = true;
 
       api
         .post("servers/" + this.serverId + "/messages", { ids: ids })
-        .then(() => self.fetchData())
+        .then(() => this.fetchData())
         .catch((error) => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
     },
     view(event, item) {
       this.messageId = item.item.id

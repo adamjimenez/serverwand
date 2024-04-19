@@ -144,19 +144,18 @@ export default {
       return items;
     },
     filtered: function () {
-      var self = this;
       let filtered = [];
 
       this.items.forEach((element) => {
-        if (self.provider && element.provider == self.provider) {
+        if (this.provider && element.provider == this.provider) {
           return;
         }
 
-        if (self.team) {
+        if (this.team) {
           let found = false;
 
-          self.teams.forEach(function (team) {
-            if (team.id == self.team) {
+          this.teams.forEach(function (team) {
+            if (team.id == this.team) {
               team.servers.forEach(function (server) {
                 if (server.server == element.id) {
                   found = true;
@@ -182,7 +181,6 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
@@ -190,19 +188,19 @@ export default {
         .get("servers/")
         .then(response => {
           console.log(response);
-          self.items = response.data.items;
+          this.items = response.data.items;
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
 
       api
         .get("teams/")
         .then(response => {
           console.log(response);
-          self.teams = response.data.items;
+          this.teams = response.data.items;
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
     },
   },
 };

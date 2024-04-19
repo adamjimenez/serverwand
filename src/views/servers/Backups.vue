@@ -271,9 +271,8 @@ export default {
     selected: function () {
       let selected = [];
 
-      var self = this;
-      this.selectedIds.forEach(function (id) {
-        var item = self.items.find(obj => obj.id === id);
+      this.selectedIds.forEach((id) => {
+        let item = this.items.find(obj => obj.id === id);
         if (item) {
           selected.push(item)
         }
@@ -288,37 +287,36 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.message = "";
       this.fetching = true;
 
       api
         .post("servers/" + this.serverId + "/backups", { path: this.path })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
             return;
           }
 
-          self.s3 = response.data.s3;
-          self.server = response.data.item;
+          this.s3 = response.data.s3;
+          this.server = response.data.item;
 
           if (response.data.backups && response.data.backups.length) {
-            self.backups = response.data.backups;
+            this.backups = response.data.backups;
           }
 
-          document.title = "Backups | " + self.server.name;
+          document.title = "Backups | " + this.server.name;
 
-          self.list();
+          this.list();
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     browse(item) {
@@ -327,7 +325,6 @@ export default {
       this.list();
     },
     list() {
-      var self = this;
       this.error = "";
       this.message = "";
       this.fetching = true;
@@ -336,17 +333,17 @@ export default {
         .post("servers/" + this.serverId + "/backups?cmd=list", {
           path: this.path,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
             return;
           }
 
-          self.items = [];
+          this.items = [];
           response.data.files.forEach((element) => {
-            self.items.push({
+            this.items.push({
               id: element.id,
               name: element.name,
               size: element.size ? element.size : 0,
@@ -360,11 +357,11 @@ export default {
             });
           });
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     open(item) {
@@ -393,19 +390,17 @@ export default {
       this.s3Drawer = true;
     },
     save() {
-      var self = this;
-
       this.fetching = true;
 
       api
         .post("servers/" + this.serverId + "/backups", this.s3)
-        .then(function () {
-          self.fetchData();
-          self.s3Drawer = false;
+        .then(() => {
+          this.fetchData();
+          this.s3Drawer = false;
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
-          self.fetching = false;
+          this.fetching = false;
         });
     },
     async deleteSnapshot(name) {
@@ -413,7 +408,6 @@ export default {
         return;
       }
 
-      var self = this;
       this.loading = name;
       this.error = "";
 
@@ -422,21 +416,21 @@ export default {
           cmd: "deleteSnapshot",
           name: name,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (!response.data.success) {
-            self.error = response.data.error;
-            self.fetching = false;
+            this.error = response.data.error;
+            this.fetching = false;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = null;
+        .finally(() => {
+          this.loading = null;
         });
 
       return false;
@@ -450,7 +444,6 @@ export default {
       //this.list();
     },
     toggleBackups() {
-      var self = this;
       this.fetching = true;
       this.error = "";
 
@@ -458,20 +451,20 @@ export default {
         .post("servers/" + this.serverId + "/backups", {
           active: this.s3.active,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (!response.data.success) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     formatDate(value) {

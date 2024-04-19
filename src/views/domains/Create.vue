@@ -68,7 +68,6 @@ export default {
 
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.loading = false;
 
@@ -77,30 +76,29 @@ export default {
         .then(response => {
             console.log(response);
 
-            if (self.domainId)
-              self.data=response.data.item;
+            if (this.domainId)
+            this.data=response.data.item;
           })
         .catch(error => console.log(error))
-        .finally(() => self.loading = false);
+        .finally(() => this.loading = false);
     },
     save() {
-      var self = this;
       this.error = "";
       this.details = "";
       this.loading = true;
 
       console.log(arguments);
 
-      if (self.domainId) {
+      if (this.domainId) {
         api
           .post("domains/" + this.domainId + "/update", this.data)
           .then(response => {
               console.log(response);
-              self.$router.push("/domains/"+self.domainId+"/summary");
+              this.$router.push("/domains/" + this.domainId + "/summary");
             })
           .catch(error => console.log(error));
       } else {
-        self.loading = false;
+        this.loading = false;
         this.$refs.Domain.create(this.data);
       }
     },

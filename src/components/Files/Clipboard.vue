@@ -2,7 +2,8 @@
   <div>
     <v-btn v-if="selected.length" @click="cut()" title="Cut" icon="mdi:mdi-content-cut"></v-btn>
     <v-btn v-if="selected.length" @click="copy()" title="Copy" icon="mdi:mdi-content-copy"></v-btn>
-    <v-btn v-if="data.items.length && path != data.src" @click="paste()" title="Paste" icon="mdi:mdi-content-paste"></v-btn>
+    <v-btn v-if="data.items.length && path != data.src" @click="paste()" title="Paste"
+      icon="mdi:mdi-content-paste"></v-btn>
     <Confirm ref="confirm" />
   </div>
 </template>
@@ -59,13 +60,12 @@ export default {
     paste: async function () {
       console.log(this.data);
 
-      var cmd = this.data.cut ? "Move" : "Copy";
+      let cmd = this.data.cut ? "Move" : "Copy";
 
       if (!await this.$refs.confirm.open(cmd + " " + this.data.items.length + " items?")) {
         return;
       }
 
-      var self = this;
       this.fetching = true;
 
       api
@@ -79,21 +79,21 @@ export default {
           console.log(response);
 
           if (cmd.toLowerCase() === "move") {
-            self.data.items = [];
+            this.data.items = [];
           }
 
           if (response.data.success) {
-            self.$emit("complete");
+            this.$emit("complete");
           } else {
-            var error = response.data.error
+            let error = response.data.error
               ? response.data.error
               : response.data;
 
-            self.$emit('error', error);
+            this.$emit('error', error);
           }
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
     },
   },
 };

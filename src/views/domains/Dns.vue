@@ -109,35 +109,34 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.domainId = this.$route.params.id;
       this.fetching = true;
 
       api
         .get("domains/" + this.domainId + "/records")
-        .then(async function (response) {
+        .then(async (response) => {
           console.log(response);
 
-          switch (await self.$refs.oauth.check(response.data)) {
+          switch (await this.$refs.oauth.check(response.data)) {
             case true:
-              return self.fetchData();
+              return this.fetchData();
             case false:
               return;
           }
 
-          self.data = response.data;
+          this.data = response.data;
 
-          //self.data = response.data.item
-          document.title = "DNS" + " | " + self.data.item.domain;
+          //this.data = response.data.item
+          document.title = "DNS" + " | " + this.data.item.domain;
 
-          self.error = response.data.error;
+          this.error = response.data.error;
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     addItem() {
@@ -148,8 +147,6 @@ export default {
       this.saveItem();
     },
     saveItem() {
-      var self = this;
-
       if (this.record.type) {
         this.details = "";
         this.fetching = true;
@@ -163,29 +160,29 @@ export default {
 
         api
           .post(url, this.record)
-          .then(async function (response) {
+          .then(async (response) => {
             console.log(response);
 
-            switch (await self.$refs.oauth.check(response.data)) {
+            switch (await this.$refs.oauth.check(response.data)) {
               case true:
-                return self.saveItem();
+                return this.saveItem();
               case false:
                 return;
             }
 
             if (!response.data.success) {
-              self.error = response.data.error;
+              this.error = response.data.error;
             } else {
-              self.drawer = false;
-              self.fetchData();
+              this.drawer = false;
+              this.fetchData();
             }
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error);
-            self.fetching = false;
+            this.fetching = false;
           })
-          .finally(function () {
-            self.fetching = false;
+          .finally(() => {
+            this.fetching = false;
           });
       }
     },
@@ -200,26 +197,25 @@ export default {
 
       this.loading = item.id;
       this.error = "";
-      var self = this;
 
       api
         .post("domains/" + this.domainId + "/records/" + item.id, {
           delete: 1,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (!response.data.success) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = null;
+        .finally(() => {
+          this.loading = null;
         });
     },
   },

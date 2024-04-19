@@ -89,7 +89,6 @@ export default {
 
     methods: {
         toggle() {
-            var self = this;
             this.fetching = true;
             this.error = "";
 
@@ -97,19 +96,19 @@ export default {
                 .post(this.path, {
                     active: this.data.active,
                 })
-                .then(function (response) {
+                .then((response) => {
                     console.log(response);
 
                     if (!response.data.success) {
-                        self.error = response.data.error;
+                        this.error = response.data.error;
                     }
                 })
-                .catch(function (error) {
+                .catch((error) => {
                     console.log(error);
                 })
-                .finally(function () {
-                    self.fetching = false;
-                    self.$emit("save");
+                .finally(() => {
+                    this.fetching = false;
+                    this.$emit("save");
                 });
         },
         addItem() {
@@ -121,29 +120,27 @@ export default {
                 return;
             }
 
-            var self = this;
             this.loading = line;
             this.error = "";
 
             api
                 .post(this.path, { line: line })
-                .then(function (response) {
+                .then((response) => {
                     console.log(response);
 
                     if (!response.data.success) {
-                        self.error = response.data.error;
+                        this.error = response.data.error;
                     }
                 })
-                .catch(function (error) {
+                .catch((error) => {
                     console.log(error);
                 })
                 .finally(() => {
                     this.loading = null;
-                    self.$emit("save");
+                    this.$emit("save");
                 });
         },
         saveItem() {
-            var self = this;
             this.error = "";
             this.fetching = true;
 
@@ -152,10 +149,10 @@ export default {
                 .then(response => {
                     console.log(response);
                     if (response.data.error) {
-                        self.error = response.data.error;
+                        this.error = response.data.error;
                     } else {
-                        self.drawer = false;
-                        self.$emit("save");
+                        this.drawer = false;
+                        this.$emit("save");
                     }
                 })
                 .catch(error => console.log(error))

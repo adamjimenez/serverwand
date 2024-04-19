@@ -59,7 +59,6 @@ export default {
       this.dialog = true;
     },
     save() {
-      var self = this;
       this.error = "";
       this.fetching = true;
       this.loading = true;
@@ -74,20 +73,20 @@ export default {
           console.log(response);
 
           if (response.data.success) {
-            self.dialog = false;
-            self.$emit("complete");
+            this.dialog = false;
+            this.$emit("complete");
           } else {
-            var error = response.data.error
+            let error = response.data.error
               ? response.data.error
               : response.data;
 
-            self.$emit("error", error);
+              this.$emit("error", error);
           }
         })
         .catch(error => console.log(error))
         .finally(() => {
-          self.fetching = false;
-          self.loading = false;
+          this.fetching = false;
+          this.loading = false;
         });
     },
   },

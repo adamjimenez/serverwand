@@ -64,7 +64,6 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       // this.fetching = true
       this.serverId = this.$route.params.id;
@@ -79,16 +78,16 @@ export default {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           }
 
           if (response.data.item) {
-            self.data = response.data.item;
-            window.server = self.data;
+            this.data = response.data.item;
+            window.server = this.data;
           }
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
     },
   },
 };

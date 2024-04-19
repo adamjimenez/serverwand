@@ -90,49 +90,47 @@ export default {
 
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.loading = false;
 
       api
         .get("sites/" + this.domainId)
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
-          if (self.domainId) {
-            self.data = response.data.items[0];
+          if (this.domainId) {
+            this.data = response.data.items[0];
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = false;
+        .finally(() => {
+          this.loading = false;
         });
 
       api
         .get("servers/")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           response.data.items.forEach((element) => {
-            self.servers.push({
+            this.servers.push({
               title: element.name,
               value: element.id,
             });
 
-            self.dnsProviders[element.id] = element.dns;
+            this.dnsProviders[element.id] = element.dns;
           });
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = false;
+        .finally(() => {
+          this.loading = false;
         });
     },
     save() {
-      var self = this;
       this.error = "";
       this.details = "";
       this.loading = true;
@@ -145,25 +143,25 @@ export default {
 
       console.log(arguments);
 
-      if (self.domainId) {
+      if (this.domainId) {
         api
           .post("sites/" + this.domainId + "/update", this.data)
-          .then(function (response) {
+          .then((response) => {
             console.log(response);
 
             if (response.data.error) {
-              self.error = response.data.error
+              this.error = response.data.error
               return false
             }
 
-            self.$router.push("/sites/" + self.domainId + "/summary");
+            this.$router.push("/sites/" + this.domainId + "/summary");
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error);
             self.error = error;
           });
       } else {
-        self.loading = false;
+        this.loading = false;
         this.$refs.Site.create(this.data);
       }
     },

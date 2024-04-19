@@ -47,22 +47,21 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
       api
         .get("domains/" + this.id)
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
-          self.data = response.data.item;
-          document.title = "Settings" + " | " + self.data.domain;
+          this.data = response.data.item;
+          document.title = "Settings" + " | " + this.data.domain;
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     editItem() {
@@ -73,27 +72,26 @@ export default {
         return;
       }
 
-      var self = this;
       this.dialog = true;
       this.loading = true;
 
       api
         .post("domains/" + this.id, { delete: 1 })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.$router.push("/domains/");
+            this.$router.push("/domains/");
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.dialog = false;
-          self.loading = false;
+        .finally(() => {
+          this.dialog = false;
+          this.loading = false;
         });
     },
   },

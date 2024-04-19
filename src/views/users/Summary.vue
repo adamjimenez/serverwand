@@ -98,7 +98,6 @@ export default {
   },
   methods: {
     fetchData(clearCacheEntry) {
-      var self = this;
       this.error = "";
       this.userId = this.$route.params.id;
       this.fetching = true;
@@ -110,11 +109,11 @@ export default {
         .then(response => {
             console.log(response);
 
-            self.data=response.data.item;
-            document.title="Summary"+" | "+self.data.name;
+            this.data=response.data.item;
+            document.title="Summary"+" | " + this.data.name;
           })
         .catch(error => console.log(error))
-        .finally(() => self.fetching=false);
+        .finally(() => this.fetching=false);
     },
   },
 };

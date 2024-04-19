@@ -15,18 +15,9 @@
 
         <v-card-text>
 
-          <v-select
-              v-model="timeZone"
-              :items="timeZones"
-              label="Time Zone"
-          ></v-select>
+          <v-select v-model="timeZone" :items="timeZones" label="Time Zone"></v-select>
 
-          <v-btn
-            :disabled="fetching"
-            :loading="fetching"
-            color="success"
-            @click="save"
-          >
+          <v-btn :disabled="fetching" :loading="fetching" color="success" @click="save">
             Save
           </v-btn>
         </v-card-text>
@@ -53,35 +44,31 @@ export default {
 
   methods: {
     edit() {
-      var self = this;
       this.fetching = true;
 
       api
         .get("servers/" + this.serverId + "/time_zone", {
-            clearCacheEntry: true,
+          clearCacheEntry: true,
         })
         .then(response => {
-            self.timeZones = response.data.time_zones;
-            console.log(self.timeZones)
-            console.log(response.data)
-            self.timeZone = response.data.time_zone;
-            self.fetching = false;
-            self.drawer = true;
+          this.timeZones = response.data.time_zones;
+          this.timeZone = response.data.time_zone;
+          this.fetching = false;
+          this.drawer = true;
         });
     },
 
     save() {
-      var self = this;
       this.fetching = true;
 
       api
         .post("servers/" + this.serverId + "/time_zone", {
-            time_zone: self.timeZone,
+          time_zone: this.timeZone,
         })
         .then(() => {
-            self.fetching=false;
-            self.drawer=false;
-            self.$emit("save");
+          this.fetching = false;
+          this.drawer = false;
+          this.$emit("save");
         });
     },
   },

@@ -128,43 +128,42 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
       api
         .get("sites/")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
             return false;
           }
 
-          self.items = response.data.items;
+          this.items = response.data.items;
 
           response.data.items.forEach((element) => {
-            self.filtered.push(element);
+            this.filtered.push(element);
           });
 
           api.get("servers/").then(function (response) {
             response.data.items.forEach((element) => {
-              self.server_opts.push({
+              this.server_opts.push({
                 title: element.name,
                 value: element.id,
               });
-              self.servers[element.id] = element.name
+              this.servers[element.id] = element.name
             });
           });
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
 
-          if (localStorage.server) self.server = localStorage.server;
+          if (localStorage.server) this.server = localStorage.server;
         });
     },
     prettyBytes(value) {

@@ -164,28 +164,27 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
       api
         .get("servers/" + this.serverId + "/systemusers?detailed=1")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
             return false;
           }
 
-          self.data = response.data.item;
-          document.title = "System users" + " | " + self.data.name;
+          this.data = response.data.item;
+          document.title = "System users" + " | " + this.data.name;
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     addItem() {
@@ -201,25 +200,24 @@ export default {
       this.userDrawer = true;
     },
     editItem(user) {
-      var self = this;
       this.user = user;
       this.fetching = true;
       this.tab = 'settings';
 
       api
         .get("servers/" + this.serverId + "/systemusers/" + this.user.name)
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
-          self.keys = response.data.keys;
-          self.fetching = false;
+          this.keys = response.data.keys;
+          this.fetching = false;
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
-          self.fetching = false;
+          this.fetching = false;
         })
-        .finally(function () {
-          self.system_user = user;
-          self.userDrawer = true;
+        .finally(() => {
+          this.system_user = user;
+          this.userDrawer = true;
         });
     },
     deleteItem: async function (user) {
@@ -227,33 +225,30 @@ export default {
         return;
       }
 
-      var self = this;
       this.loading = user;
       this.error = "";
 
       api
         .post("servers/" + this.serverId + "/systemusers", { user: user })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (!response.data.success) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = null;
+        .finally(() => {
+          this.loading = null;
         });
 
       return false;
     },
     saveUser() {
-      var self = this;
-
       if (this.system_user.name) {
         this.details = "";
         this.fetching = true;
@@ -261,20 +256,20 @@ export default {
 
         api
           .post("servers/" + this.serverId + "/systemusers", this.system_user)
-          .then(function (response) {
+          .then((response) => {
             console.log(response);
 
             if (!response.data.success) {
-              self.error = response.data.error;
-              self.fetching = false;
+              this.error = response.data.error;
+              this.fetching = false;
             } else {
-              self.userDrawer = false;
-              self.fetchData();
+              this.userDrawer = false;
+              this.fetchData();
             }
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error);
-            self.fetching = false;
+            this.fetching = false;
           });
       }
     },
@@ -283,7 +278,6 @@ export default {
         return;
       }
 
-      var self = this;
       this.loading = line;
       this.error = "";
 
@@ -292,51 +286,50 @@ export default {
           "servers/" + this.serverId + "/systemusers/" + this.user.name,
           { line: line }
         )
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (!response.data.success) {
-            self.fetching = false;
-            self.error = response.data.error;
+            this.fetching = false;
+            this.error = response.data.error;
           } else {
-            self.editItem(self.user);
-            self.tab = 'keys';
+            this.editItem(this.user);
+            this.tab = 'keys';
           }
         })
-        .catch(function (error) {
-          self.fetching = false;
+        .catch((error) => {
+          this.fetching = false;
           console.log(error);
         })
-        .finally(function () {
-          self.loading = null;
+        .finally(() => {
+          this.loading = null;
         });
     },
     addKey() {
       this.keyDrawer = true;
     },
     saveKey() {
-      var self = this;
       this.fetching = true;
       this.error = "";
 
       api
         .post("servers/" + this.serverId + "/systemusers/" + this.user.name, {
-          key: self.key,
+          key: this.key,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (!response.data.success) {
-            self.fetching = false;
-            self.error = response.data.error;
+            this.fetching = false;
+            this.error = response.data.error;
           } else {
-            self.keyDrawer = false;
-            self.editItem(self.user);
-            self.tab = 'keys';
+            this.keyDrawer = false;
+            this.editItem(this.user);
+            this.tab = 'keys';
           }
         })
-        .catch(function (error) {
-          self.fetching = false;
+        .catch((error) => {
+          this.fetching = false;
           console.log(error);
         });
     },
@@ -345,8 +338,7 @@ export default {
         return;
       }
       
-      var self = this;
-      self.fetching = true;
+      this.fetching = true;
       api
         .post("servers/" + this.serverId + "/savesshuser", {
           ssh_username: "",
@@ -355,13 +347,13 @@ export default {
           console.log(response);
 
           if (!response.data.success) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.$emit('complete');
+            this.$emit('complete');
           }
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
     },
   },
 };

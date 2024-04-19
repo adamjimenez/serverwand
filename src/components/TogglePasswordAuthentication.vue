@@ -47,7 +47,6 @@ export default {
 
   methods: {
     togglePasswordAuthentication() {
-      var self = this;
       this.error = "";
       this.loading = true;
 
@@ -60,16 +59,16 @@ export default {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else if (response.data.success) {
-            self.$emit("complete");
+            this.$emit("complete");
           }
         })
         .catch(error => {
           console.log(error);
         })
         .finally(() => {
-          self.loading = null;
+          this.loading = null;
         });
     },
   },

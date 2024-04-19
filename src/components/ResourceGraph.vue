@@ -70,10 +70,9 @@ export default {
             }
 
             // refresh after an interval
-            var self = this;
             clearTimeout(this.timer);
-            this.timer = setTimeout(function () {
-                self.refresh();
+            this.timer = setTimeout(() => {
+                this.refresh();
             }, 1 * 60 * 1000);
         }
     },

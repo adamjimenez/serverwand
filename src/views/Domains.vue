@@ -78,7 +78,6 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
@@ -88,22 +87,22 @@ export default {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
             return false;
           }
 
-          self.items = response.data.items;
+          this.items = response.data.items;
 
           response.data.provider_tokens.forEach((element) => {
-            self.registrars[element.id] = element;
+            this.registrars[element.id] = element;
           });
 
           response.data.items.forEach((element) => {
-            self.filtered.push(element);
+            this.filtered.push(element);
           });
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
     },
   },
 };

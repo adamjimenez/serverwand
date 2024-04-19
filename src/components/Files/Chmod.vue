@@ -157,10 +157,9 @@ export default {
       this.modeToCheckboxes();
     },
     doChmod() {
-      var self = this;
       this.fetching = true;
 
-      var files = [];
+      let files = [];
       this.selected.forEach(element => files.push(element.id));
 
       api
@@ -174,18 +173,18 @@ export default {
           console.log(response);
 
           if (response.data.success) {
-            self.dialog = false;
-            self.$emit("complete");
+            this.dialog = false;
+            this.$emit("complete");
           } else {
-            var error = response.data.error
+            let error = response.data.error
               ? response.data.error
               : response.data;
 
-            self.$emit("error", error);
+            this.$emit("error", error);
           }
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
     },
   },
 };

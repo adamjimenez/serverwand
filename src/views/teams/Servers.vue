@@ -82,7 +82,6 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
@@ -90,11 +89,11 @@ export default {
         .get("teams/" + this.id)
         .then(response => {
           console.log(response);
-          self.data = response.data.item;
-          document.title = "Servers" + " | " + self.data.name;
+          this.data = response.data.item;
+          document.title = "Servers" + " | " + this.data.name;
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
 
       api
         .get("servers/")
@@ -102,24 +101,22 @@ export default {
           console.log(response);
 
           response.data.items.forEach((element) => {
-            self.servers.push({
+            this.servers.push({
               title: element.name,
               value: element.id,
             });
           });
         })
         .catch(error => console.log(error))
-        .finally(() => self.loading = false);
+        .finally(() => this.loading = false);
 
-      api.get("settings/profile").then(response => self.useMasterPassword = response.data.profile.prefs.useMasterPassword);
+      api.get("settings/profile").then(response => this.useMasterPassword = response.data.profile.prefs.useMasterPassword);
     },
     addItem() {
       this.server.name = "";
       this.drawer = true;
     },
     saveItem() {
-      var self = this;
-
       if (this.data.server) {
         this.details = "";
         this.dialog = true;
@@ -131,17 +128,17 @@ export default {
             console.log(response);
 
             if (!response.data.success) {
-              self.error = response.data.error;
+              this.error = response.data.error;
             } else {
-              self.drawer = false;
-              self.fetchData();
+              this.drawer = false;
+              this.fetchData();
             }
           })
           .catch(error => {
             console.log(error);
-            self.dialog = false;
+            this.dialog = false;
           })
-          .finally(() => self.dialog = false);
+          .finally(() => this.dialog = false);
       }
     },
     deleteItem: async function (item) {
@@ -149,26 +146,25 @@ export default {
         return;
       }
 
-      var self = this;
       this.error = "";
       this.dialog = true;
       this.loading = item.name;
 
       api
         .post("teams/" + this.id + '/servers', { delete: 1, server: item.id })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
         .catch(error => console.log(error))
-        .finally(function () {
-          self.dialog = false;
-          self.loading = null;
+        .finally(() => {
+          this.dialog = false;
+          this.loading = null;
         });
     }
   },

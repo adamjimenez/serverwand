@@ -1,5 +1,6 @@
 <template>
-    <v-dialog v-model="dialog" :max-width="options.width" :style="{ zIndex: options.zIndex }" @keydown.esc="cancel" persistent>
+    <v-dialog v-model="dialog" :max-width="options.width" :style="{ zIndex: options.zIndex }" @keydown.esc="cancel"
+        persistent>
         <v-card>
             <v-toolbar dark :color="options.color" dense flat>
                 <v-toolbar-title class="text-body-2 font-weight-bold grey--text">
@@ -35,6 +36,7 @@ export default {
             },
             window: null,
             timeout: null,
+            popup: null,
         };
     },
     methods: {
@@ -60,20 +62,17 @@ export default {
             this.dialog = false;
         },
         open() {
-            var self = this;
-            var popup = window.open("https://serverwand.com/account/services/" + this.provider);
+            this.popup = window.open("https://serverwand.com/account/services/" + this.provider);
+            this.checkIfPopupWindowClosed();
+        },
+        checkIfPopupWindowClosed() {
+            clearTimeout(this.timer);
 
-            function checkIfPopupWindowClosed() {
-                clearTimeout(self.timer);
-
-                if (popup.closed) {
-                    return self.agree();
-                }
-
-                self.timer = setTimeout(checkIfPopupWindowClosed, 1000);
+            if (this.popup.closed) {
+                return this.agree();
             }
 
-            checkIfPopupWindowClosed();
+            this.timer = setTimeout(this.checkIfPopupWindowClosed, 1000);
         }
     },
 };

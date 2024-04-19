@@ -42,7 +42,6 @@ export default {
 
   methods: {
     edit() {
-      var self = this;
       this.fetching = true;
 
       api
@@ -50,23 +49,22 @@ export default {
           clearCacheEntry: true,
         })
         .then(response => {
-          self.config = response.data.config;
-          self.fetching = false;
-          self.drawer = true;
+          this.config = response.data.config;
+          this.fetching = false;
+          this.drawer = true;
         });
     },
 
     save() {
-      var self = this;
       this.fetching = true;
 
       api
         .post("servers/" + this.serverId + "/mariadb_config", {
-          config: self.config,
+          config: this.config,
         })
         .then(() => {
-          self.fetching = false;
-          self.drawer = false;
+          this.fetching = false;
+          this.drawer = false;
         });
     },
   },

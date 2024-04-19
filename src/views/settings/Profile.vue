@@ -127,46 +127,43 @@ export default {
 
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.loading = true;
 
       api
         .get("settings/profile")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
-          self.data = response.data.profile;
-          self.useMasterPassword = self.data.prefs.useMasterPassword;
+          this.data = response.data.profile;
+          this.useMasterPassword = this.data.prefs.useMasterPassword;
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = false;
+        .finally(() => {
+          this.loading = false;
         });
     },
     validate() {
-      var self = this;
-
       if (this.$refs.form.validate()) {
         this.dialog = true;
 
         api
           .post("settings/profile", this.data)
-          .then(function (response) {
+          .then((response) => {
             console.log(response);
             if (response.data.success) {
-              self.$router.push("/");
+              this.$router.push("/");
             } else {
-              self.error = response.data.error;
+              this.error = response.data.error;
             }
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error);
           })
-          .finally(function () {
-            self.dialog = false;
-            self.loading = false;
+          .finally(() => {
+            this.dialog = false;
+            this.loading = false;
           });
       }
     },
@@ -183,12 +180,11 @@ export default {
       }
     },
     saveMasterPassword() {
-      var self = this;
       this.masterPasswordDialog = false;
       this.loading = true;
 
-      var masterPassword = sha256(self.mp.current);
-      var newMasterPassword = sha256(self.mp.password);
+      var masterPassword = sha256(this.mp.current);
+      var newMasterPassword = sha256(this.mp.password);
 
       api
         .post("settings/savemasterpassword", {
@@ -196,77 +192,75 @@ export default {
           masterPassword: masterPassword,
           newMasterPassword: newMasterPassword,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
           if (response.data.success) {
-            self.fetchData();
+            this.fetchData();
           } else {
-            self.error = response.data.error;
+            this.error = response.data.error;
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.dialog = false;
-          self.loading = false;
+        .finally(() => {
+          this.dialog = false;
+          this.loading = false;
         });
 
       //this.fetchData()
     },
     removeMasterPassword() {
-      var self = this;
       this.removePasswordDialog = false;
       this.loading = true;
-      var masterPassword = "";
+      let masterPassword = "";
 
-      if (self.mp.password) {
-        masterPassword = sha256(self.mp.password);
+      if (this.mp.password) {
+        masterPassword = sha256(this.mp.password);
       }
 
       api
         .post("settings/removemasterpassword", {
           masterPassword: masterPassword,
-          forceRemove: self.mp.forceRemove,
+          forceRemove: this.mp.forceRemove,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
           if (response.data.success) {
-            self.fetchData();
+            this.fetchData();
           } else {
-            self.error = response.data.error;
+            this.error = response.data.error;
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = false;
+        .finally(() => {
+          this.loading = false;
         });
 
       //this.fetchData()
     },
     toggleEmails() {
-      var self = this;
       this.loading = true;
 
       api
         .post("settings/profile", {
-          emails: self.data.emails,
+          emails: this.data.emails,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
           if (response.data.success) {
-            self.fetchData();
+            this.fetchData();
           } else {
-            self.error = response.data.error;
+            this.error = response.data.error;
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = false;
+        .finally(() => {
+          this.loading = false;
         });
     },
   },

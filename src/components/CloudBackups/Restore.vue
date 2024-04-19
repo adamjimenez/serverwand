@@ -44,11 +44,10 @@ export default {
       if (!await this.$refs.confirm.open('Restore selected files?')) {
         return;
       }
-      
-      var self = this;
+
       this.fetching = true;
 
-      var files = [];
+      let files = [];
       this.selected.forEach((element) => {
         files.push(element.name);
       });
@@ -63,17 +62,17 @@ export default {
           console.log(response);
 
           if (response.data.success) {
-            self.$emit("complete", response.data.result);
+            this.$emit("complete", response.data.result);
           } else {
-            var error = response.data.error
+            let error = response.data.error
               ? response.data.error
               : response.data;
 
-            self.$emit("error", error);
+            this.$emit("error", error);
           }
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
     }
   },
 };

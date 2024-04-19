@@ -74,7 +74,6 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
@@ -82,19 +81,17 @@ export default {
         .get("users/" + this.id + "/notes")
         .then(response => {
           console.log(response);
-          self.notes = response.data.notes;
+          this.notes = response.data.notes;
           document.title = 'Notes';
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
     },
     addItem() {
       this.domain.name = "";
       this.drawer = true;
     },
     saveItem() {
-      var self = this;
-
       if (this.data.note) {
         this.details = "";
         this.dialog = true;
@@ -106,18 +103,18 @@ export default {
             console.log(response);
 
             if (!response.data.success) {
-              self.error = response.data.error;
+              this.error = response.data.error;
             } else {
-              self.data.note = "";
-              self.drawer = false;
-              self.fetchData();
+              this.data.note = "";
+              this.drawer = false;
+              this.fetchData();
             }
           })
           .catch(error => {
             console.log(error);
-            self.dialog = false;
+            this.dialog = false;
           })
-          .finally(() => self.dialog = false);
+          .finally(() => this.dialog = false);
       }
     },
     deleteItem: async function (item) {
@@ -125,7 +122,6 @@ export default {
         return;
       }
 
-      var self = this;
       this.error = "";
       this.dialog = true;
       this.loading = item.id;
@@ -136,14 +132,14 @@ export default {
           console.log(response);
 
           if (response.data.error)
-            self.error = response.data.error;
+          this.error = response.data.error;
           else
-            self.fetchData();
+          this.fetchData();
         })
         .catch(error => console.log(error))
         .finally(() => {
-          self.dialog = false;
-          self.loading = null;
+          this.dialog = false;
+          this.loading = null;
         });
     },
   },

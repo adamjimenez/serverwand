@@ -266,7 +266,6 @@ export default {
   },
   methods: {
     fetchData(clearCacheEntry) {
-      var self = this;
       this.error = "";
       this.fetching = true;
       this.serverId = this.$route.params.id;
@@ -279,25 +278,25 @@ export default {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           }
 
           if (response.data.item) {
-            self.data = response.data.item;
+            this.data = response.data.item;
           }
 
-          if (self.data.mem_total) {
-            self.data.mem_perc = Math.round(
-              (1 - self.data.mem_free / self.data.mem_total) * 100
+          if (this.data.mem_total) {
+            this.data.mem_perc = Math.round(
+              (1 - this.data.mem_free / this.data.mem_total) * 100
             );
           }
 
-          self.hostname = self.data.hostname;
+          this.hostname = this.data.hostname;
 
-          document.title = "Summary | " + self.data.name;
+          document.title = "Summary | " + this.data.name;
         })
         .catch(error => console.log(error))
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
     },
     prettyBytes(value) {
       return util.prettyBytes(value);

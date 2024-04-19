@@ -114,51 +114,49 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this
       this.error = ''
       this.fetching = true
 
       api.get('servers/' + this.serverId + '/firewall')
-        .then(function (response) {
+        .then((response) => {
           console.log(response)
 
           if (response.data.error) {
-            self.error = response.data.error
+            this.error = response.data.error
             return false
           }
 
-          self.active = response.data.active
-          self.items = response.data.rules
-          self.data = response.data.item
-          document.title = 'Firewall' + ' | ' + self.data.name
+          this.active = response.data.active
+          this.items = response.data.rules
+          this.data = response.data.item
+          document.title = 'Firewall' + ' | ' + this.data.name
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error)
         })
-        .finally(function () {
-          self.fetching = false
+        .finally(() => {
+          this.fetching = false
         })
     },
     toggle() {
-      var self = this
       this.fetching = true
       this.error = ''
 
       api.post('servers/' + this.serverId + '/firewall', { status: this.active })
-        .then(function (response) {
+        .then((response) => {
           console.log(response)
 
           if (!response.data.success) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData()
+            this.fetchData()
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error)
         })
-        .finally(function () {
-          self.fetching = false
+        .finally(() => {
+          this.fetching = false
         })
     },
     addItem() {
@@ -197,26 +195,25 @@ export default {
       }
     },
     saveItem: async function () {
-      var self = this
       this.error = ''
       this.fetching = true
       api.post('servers/' + this.serverId + '/firewall', this.item)
-        .then(function (response) {
+        .then((response) => {
           console.log(response)
           if (response.data.success) {
-            self.drawer = false
-            self.fetchData()
+            this.drawer = false
+            this.fetchData()
           } else {
-            self.error = response.data.error
+            this.error = response.data.error
               ? response.data.error
               : response.data;
           }
         })
-        .catch(function (error) {
-          self.error = error
+        .catch((error) => {
+          this.error = error
         })
-        .finally(function () {
-          self.fetching = false
+        .finally(() => {
+          this.fetching = false
         })
     },
   },

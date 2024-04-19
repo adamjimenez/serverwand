@@ -277,40 +277,39 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
       this.siteId = this.$route.params.id[0];
 
       api
         .get("sites/" + this.siteId + "/apps")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
             return false;
           }
 
-          self.data = response.data.item;
-          document.title = "Apps" + " | " + self.data.domain;
+          this.data = response.data.item;
+          document.title = "Apps" + " | " + this.data.domain;
 
-          self.data.stagingDomain = "staging." + self.data.domain;
+          this.data.stagingDomain = "staging." + this.data.domain;
 
-          api.get("servers/").then(function (response) {
+          api.get("servers/").then((response) => {
             response.data.items.forEach((element) => {
-              self.server_opts.push({
+              this.server_opts.push({
                 title: element.name,
                 value: element.id,
               });
             });
           });
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     install: async function (app) {
@@ -323,59 +322,53 @@ export default {
         return;
       }
 
-      var self = this;
       this.error = "";
       this.fetching = true;
       this.loading = true;
 
       api
         .post("sites/" + this.$route.params.id + "/apps", { app: app })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
-          self.loading = false;
+        .finally(() => {
+          this.fetching = false;
+          this.loading = false;
         });
 
     },
     clearLogs() {
-      var self = this;
-
       this.fetching = true;
       this.error = "";
 
       api
         .post("sites/" + this.siteId + "/apps", { flush: true })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (!response.data.success) {
-            self.error = response.data.error;
-            self.fetching = false;
+            this.error = response.data.error;
+            this.fetching = false;
           } else {
-            self.gitDialog = false;
-            self.fetchData();
+            this.gitDialog = false;
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
-          self.fetching = false;
-        })
-        .finally(function () { });
+          this.fetching = false;
+        });
     },
     submitGit() {
-      var self = this;
-
       if (this.data.git_url) {
         this.fetching = true;
         this.error = "";
@@ -385,22 +378,21 @@ export default {
             git_url: this.data.git_url,
             public_dir: this.data.public_dir,
           })
-          .then(function (response) {
+          .then((response) => {
             console.log(response);
 
             if (!response.data.success) {
-              self.error = response.data.error;
-              self.fetching = false;
+              this.error = response.data.error;
+              this.fetching = false;
             } else {
-              self.gitDialog = false;
-              self.fetchData();
+              this.gitDialog = false;
+              this.fetchData();
             }
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error);
-            self.fetching = false;
+            this.fetching = false;
           })
-          .finally(function () { });
       }
     },
     cloneApp() {
@@ -417,27 +409,24 @@ export default {
       this.$refs.Site.create(data);
     },
     openSync(target) {
-      var self = this;
       this.target = target;
       this.syncDialog = true;
 
       api
         .get("sites/" + target + "/database/tables")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
-          self.tables = response.data.tables;
+          this.tables = response.data.tables;
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
-        })
-        .finally(function () { });
+        });
     },
     sync() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
-      var params = {
+      let params = {
         files: this.files,
         database: this.database,
         tables: this.tableNames,
@@ -445,39 +434,38 @@ export default {
 
       //console.log(params);
 
-      var cmd = this.target === this.siteId ? "pull" : "push";
+      let cmd = this.target === this.siteId ? "pull" : "push";
 
       api
         .post("sites/" + this.siteId + "/apps/" + cmd, params)
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
-          self.syncDialog = false;
+        .finally(() => {
+          this.fetching = false;
+          this.syncDialog = false;
         });
     },
     pull() {
-      var self = this;
       this.fetching = true;
 
       api
         .get("sites/" + this.siteId + "/apps/pull")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     selectAll: function () {
@@ -493,7 +481,6 @@ export default {
       this.allSelected = false;
     },
     toggleStatus() {
-      var self = this;
       this.error = "";
       this.loading = true;
 
@@ -501,38 +488,37 @@ export default {
         .post("sites/" + this.siteId + "/apps/", {
           status: this.data.app.online,
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
-            self.fetching = false;
+            this.error = response.data.error;
+            this.fetching = false;
           } else if (response.data.success) {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
-          self.fetching = false;
+          this.fetching = false;
         })
-        .finally(function () {
-          self.loading = false;
+        .finally(() => {
+          this.loading = false;
         });
     },
     gitPull() {
-      var self = this;
       this.fetching = true;
 
       api
         .get("sites/" + this.siteId + "/git/pull")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     openWordpress() {

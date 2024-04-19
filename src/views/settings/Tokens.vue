@@ -106,22 +106,21 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       this.fetching = true;
 
       api
         .get("providers/tokens")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
-          self.items = response.data.tokens;
+          this.items = response.data.tokens;
           document.title = "Tokens";
         })
-        .catch(function (error) {
-          self.error = error;
+        .catch((error) => {
+          this.error = error;
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     addItem() {
@@ -133,43 +132,40 @@ export default {
         return;
       }
 
-      var self = this;
       this.error = "";
       this.loading = id;
 
       api
         .post("providers/tokens/" + id, { delete: 1 })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = null;
+        .finally(() => {
+          this.loading = null;
         });
     },
     submitToken() {
-      var self = this;
-
       api
         .post("providers/tokens", this.provider_token)
-        .then(function (response) {
+        .then((response) => {
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
           } else {
-            self.drawer = false;
-            self.fetchData();
+            this.drawer = false;
+            this.fetchData();
           }
         })
-        .catch(function (error) {
-          self.error = error;
+        .catch((error) => {
+          this.error = error;
         });
     },
   },
