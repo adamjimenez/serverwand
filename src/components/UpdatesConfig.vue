@@ -12,13 +12,8 @@
     <v-dialog v-model="drawer">
       <v-card title="Configure Updates">
         <v-card-text>
-            <v-switch
-                v-model="automatic_updates"
-                label="Automatic updates"
-                @change="toggle()"
-                color="primary"
-                hide-details
-            ></v-switch>
+          <v-switch v-model="automatic_updates" label="Automatic updates" @change="toggle()" color="primary"
+            hide-details></v-switch>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -42,7 +37,6 @@ export default {
 
   methods: {
     edit() {
-      var self = this;
       this.fetching = true;
 
       api
@@ -50,24 +44,23 @@ export default {
           clearCacheEntry: true,
         })
         .then(response => {
-            self.automatic_updates=response.data.automatic_updates;
-            self.fetching=false;
-            self.drawer=true;
-          });
+          this.automatic_updates = response.data.automatic_updates;
+          this.fetching = false;
+          this.drawer = true;
+        });
     },
 
     toggle() {
-      var self = this;
       this.fetching = true;
 
       api
         .post("servers/" + this.serverId + "/updates", {
-          automatic_updates: self.automatic_updates,
+          automatic_updates: this.automatic_updates,
         })
         .then(() => {
-            self.fetching=false;
-            self.drawer=false;
-          });
+          this.fetching = false;
+          this.drawer = false;
+        });
     },
   },
 };

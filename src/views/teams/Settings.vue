@@ -63,20 +63,19 @@ export default {
     fetchData() {
       this.error = "";
       this.fetching = true;
-      var self = this;
 
       api
         .get("teams/" + this.id)
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
-          self.data = response.data.item;
-          document.title = "Settings" + " | " + self.data.name;
+          this.data = response.data.item;
+          document.title = "Settings" + " | " + this.data.name;
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     editItem() {
@@ -92,7 +91,7 @@ export default {
 
       api
         .post("teams/" + this.id, { delete: 1 })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
@@ -101,10 +100,10 @@ export default {
             this.$router.push("/teams/");
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
+        .finally(() => {
           this.dialog = false;
           this.loading = null;
         });
@@ -114,14 +113,14 @@ export default {
 
       api
         .post("teams/" + this.id, this.data)
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
           this.fetchData();
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
+        .finally(() => {
           this.loading = null;
           this.drawer = false;
         });

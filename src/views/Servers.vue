@@ -154,9 +154,9 @@ export default {
         if (this.team) {
           let found = false;
 
-          this.teams.forEach(function (team) {
+          this.teams.forEach((team) => {
             if (team.id == this.team) {
-              team.servers.forEach(function (server) {
+              team.servers.forEach((server) => {
                 if (server.server == element.id) {
                   found = true;
                 }

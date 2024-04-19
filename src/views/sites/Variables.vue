@@ -76,28 +76,27 @@ export default {
   },
   methods: {
     fetchData() {
-      let self = this;
       this.error = "";
       this.fetching = true;
 
       api
         .get("sites/" + this.siteId + "/variables")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (response.data.error) {
-            self.error = response.data.error;
+            this.error = response.data.error;
             return false;
           }
 
-          self.data = response.data.item;
-          document.title = "Variables" + " | " + self.data.name;
+          this.data = response.data.item;
+          document.title = "Variables" + " | " + this.data.name;
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.fetching = false;
+        .finally(() => {
+          this.fetching = false;
         });
     },
     addItem() {
@@ -113,27 +112,26 @@ export default {
         return;
       }
 
-      let self = this;
       this.loading = line;
       this.error = "";
 
       api
         .post("sites/" + this.siteId + "/variables", { line: line })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           if (!response.data.success) {
-            self.fetching = false;
-            self.error = response.data.error;
+            this.fetching = false;
+            this.error = response.data.error;
           } else {
-            self.fetchData();
+            this.fetchData();
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
-          self.loading = null;
+        .finally(() => {
+          this.loading = null;
         });
     },
     saveItem: async function() {

@@ -25,8 +25,7 @@ export default {
 
   watch: {
     path: function (newVal) {
-      if (this)
-        this.data.path = newVal
+      this.data.path = newVal
     },
   },
 
@@ -67,7 +66,7 @@ export default {
             this.dialog = false;
             this.$emit("complete");
           } else {
-            var error = response.data.error
+            let error = response.data.error
               ? response.data.error
               : response.data;
 

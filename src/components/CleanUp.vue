@@ -67,7 +67,7 @@ export default {
 
   methods: {
     sumSize(files) {
-      var total = 0;
+      let total = 0;
       files.forEach((element) => {
         total += parseInt(element.size);
         //console.log(element.size)

@@ -54,7 +54,6 @@ export default {
   },
   methods: {
     fetchData() {
-      var self = this;
       this.error = "";
       // this.fetching = true
 
@@ -62,13 +61,13 @@ export default {
         .get("teams/" + this.id)
         .then(response => {
           console.log(response);
-          self.data = response.data.item;
-          document.title = self.data.name;
+          this.data = response.data.item;
+          document.title = this.data.name;
         })
         .catch(error => {
           console.log(error);
         })
-        .finally(() => self.fetching = false);
+        .finally(() => this.fetching = false);
     },
   },
 };

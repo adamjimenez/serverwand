@@ -34,8 +34,7 @@ export default {
 
   watch: {
     path: function (newVal) {
-      if (this)
-        this.data.path = newVal
+      this.data.path = newVal
     },
   },
 

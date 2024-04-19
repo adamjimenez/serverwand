@@ -111,7 +111,7 @@ export default {
 
   methods: {
     calcMode() {
-      var owner = 0,
+      let owner = 0,
         pub = 0,
         group = 0;
 

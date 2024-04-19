@@ -179,7 +179,7 @@ export default {
             if (this.data.ssh_username) {
                 console.log("open ssh " + this.data.ssh_username);
 
-                var url =
+                let url =
                     "http://shiftedit.net/ssh/?host=" +
                     this.data.hostname +
                     "&user=" +

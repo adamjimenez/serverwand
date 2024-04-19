@@ -14,7 +14,6 @@
         <v-card-title> Edit Time Zone </v-card-title>
 
         <v-card-text>
-
           <v-select v-model="timeZone" :items="timeZones" label="Time Zone"></v-select>
 
           <v-btn :disabled="fetching" :loading="fetching" color="success" @click="save">

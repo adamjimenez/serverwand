@@ -1,24 +1,14 @@
 <template>
-    <v-menu offset-y left>
-      <template v-slot:activator="{ props }">
-        <v-btn
-          icon="mdi:mdi-account-circle"
-          v-bind="props"
-        ></v-btn>
-      </template>
-      <v-list>
-          <v-list-item
-            v-for="(item, index) in items"
-            :key="index"
-            @click="goto(item.to)"
-            :title="item.value"
-          >            
-            <template v-slot:prepend>
-              <v-icon>{{ item.icon }}</v-icon>
-            </template>
-          </v-list-item>
-      </v-list>
-    </v-menu>
+  <v-menu offset-y left>
+    <template v-slot:activator="{ props }">
+      <v-btn icon="mdi:mdi-account-circle" v-bind="props"></v-btn>
+    </template>
+    <v-list>
+      <v-list-item v-for="(item, index) in items" :key="index" @click="goto(item.to)" :title="item.value"
+        :prepend-icon="item.icon">
+      </v-list-item>
+    </v-list>
+  </v-menu>
 </template>
 
 <script>

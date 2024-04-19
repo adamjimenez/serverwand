@@ -75,8 +75,6 @@ export default {
         return;
       }
 
-      var self = this;
-
       this.r = new Resumable({
         target: "https://serverwand.com/api/servers/" + this.serverId + "/files",
         testChunks: false,
@@ -94,6 +92,7 @@ export default {
         this.r.assignBrowse(this.$refs.uploadFolderButton.$el, true);
       }
 
+      let self = this;
       this.r.on("fileAdded", function () {
         self.error = "";
         this.opts.query.path = self.path;
@@ -101,19 +100,17 @@ export default {
       });
 
       this.r.on("fileProgress", file => {
-        //console.log(file);
+        let perc = parseInt(this.r.progress() * 100);
 
-        var perc = parseInt(self.r.progress() * 100);
-
-        self.progress = perc;
-        self.fileName = file.fileName;
-        self.dragover = false;
+        this.progress = perc;
+        this.fileName = file.fileName;
+        this.dragover = false;
       });
 
       this.r.on("fileSuccess", (file, message) => {
-        var data = JSON.parse(message);
+        let data = JSON.parse(message);
         if (data.error) {
-          self.error = data.error;
+          this.error = data.error;
         }
       });
 
@@ -128,25 +125,23 @@ export default {
         }
       });
 
-      this.r.on("error", message => self.$emit("error", message));
+      this.r.on("error", message => this.$emit("error", message));
       this.r.assignDrop(this.dropZone.$el);
 
       // handle dragover
-      var enterTarget = null;
+      let enterTarget = null;
       this.dropZone.$el.addEventListener("dragenter", (e) => {
-        [2];
         console.log('dragenter');
 
         e.preventDefault();
         enterTarget = e.target;
-        self.dragover = true;
+        this.dragover = true;
       });
       this.dropZone.$el.addEventListener("dragleave", (e) => {
-        [2];
         if (enterTarget == e.target) {
           console.log('dragleave');
           e.preventDefault();
-          self.dragover = false;
+          this.dragover = false;
         }
       });
     }
