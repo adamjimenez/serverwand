@@ -2,9 +2,7 @@
   <span ref="container">
     <v-tooltip :text="copyText" top v-if="text">
       <template v-slot:activator="{ props }">
-        <span v-bind="props" @click="copy(val)" @mouseleave="resetCopyText">
-          {{ label ? label : val }}
-        </span>
+        <span v-bind="props" @click="copy(val)" @mouseleave="resetCopyText"></span>
       </template>
     </v-tooltip>
 
@@ -27,7 +25,8 @@ export default {
   },
   data() {
     return {
-      copyText: "Copy",
+      defaultText: "Copy",
+      copyText: "",
     };
   },
   methods: {
@@ -42,8 +41,14 @@ export default {
       this.copyText = "Copied";
     },
     resetCopyText() {
-      setTimeout(() => this.copyText = "Copy", 500);
+      setTimeout(() => this.copyText = this.defaultText, 500);
     },
   },
+  mounted: function () {
+    if (this.label) {
+      this.defaultText = this.label;
+    }
+    this.copyText = this.defaultText;
+  }
 };
 </script>

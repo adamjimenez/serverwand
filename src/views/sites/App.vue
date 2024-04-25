@@ -24,7 +24,7 @@
 
         <span v-if="data.app">
           <v-btn @click="clearLogs" title="Clear logs" v-if="data.app.isNode" icon="block"></v-btn>
-          <v-btn @click="showCloneApp = true" title="Copy app" icon="mdi:mdi-content-copy"></v-btn>
+          <v-btn @click="showCloneApp = true" title="Clone app" icon="mdi:mdi-content-copy"></v-btn>
           <v-switch v-if="data.app.isNode" v-model="data.app.online" :label="data.app.status" @change="toggleStatus()"
             color="primary" hide-details></v-switch>
           <v-btn v-if="data.app.name === 'wordpress'" @click="openWordpress" title="Open Wordpress"
@@ -37,8 +37,11 @@
 
         <span v-if="data.app.git_url">
           <v-btn @click="gitPull"> Pull </v-btn>
-          <v-btn @click="gitInfo = true"> Info </v-btn>
+          <v-btn @click="infoDialog = true"> Info </v-btn>
         </span>
+
+        <v-btn v-else title="Deployment keys" @click="fetchKeys(); keysDialog = true" icon="mdi:mdi-key"> </v-btn>
+
       </template>
 
       <v-card-text>
@@ -73,11 +76,47 @@
       </v-card-text>
     </v-card>
 
-    <v-dialog v-model="gitInfo" max-width="600">
-      <v-card title="Git info">
+    <v-dialog v-model="keysDialog" max-width="600">
+      <v-card title="Deployment keys">
         <v-card-text>
           <v-container fluid>
-            <v-row>
+            <v-list v-if="!fetching">
+                <v-list-item v-for="(item, i) in keys" :key="`item-${i}`" :title="item.label">
+                  <v-list-item-subtitle style="white-space: nowrap;">
+                    {{ item.key }}
+                  </v-list-item-subtitle>
+                  <template v-slot:append>
+                    <v-btn icon :disabled="fetching" :loading="fetching">
+                      <Copy :val="'https://serverwand.com/api/sites/' + siteId + '/deploy?k=' + item.key" label="Copy deployment URL" />
+                    </v-btn>
+                    <v-btn icon="mdi:mdi-delete" size="small" :disabled="fetching" :loading="loading === item.id" @click.stop="deleteKey(item.id)"></v-btn>
+                  </template>
+                </v-list-item>
+              </v-list>
+
+              <v-btn @click="addKey" icon="mdi:mdi-plus"></v-btn>
+          </v-container>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="keyDialog">
+      <v-card title="Create key">
+        <v-card-text>
+          <v-text-field v-model="keyLabel" label="Label"></v-text-field>
+
+          <v-btn :disabled="!keyLabel" :loading="fetching" color="success" @click="saveKey">
+            Save
+          </v-btn>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="infoDialog" max-width="600">
+      <v-card title="Info">
+        <v-card-text>
+          <v-container fluid>
+            <v-row v-if="data.app.git_url">
               <v-col>
                 <v-text-field v-model="data.app.git_url" label="Git URL" readonly></v-text-field>
               </v-col>
@@ -87,7 +126,7 @@
               </v-col>
             </v-row>
 
-            <v-row>
+            <v-row v-if="data.app.git_url">
               <v-col>
                 <v-text-field v-model="data.app.ssh_key" label="SSH key"
                   hint="Save to GitHub or Bitbucket in order to push to this repository" readonly></v-text-field>
@@ -98,7 +137,7 @@
               </v-col>
             </v-row>
 
-            <v-row>
+            <v-row v-if="data.app.git_url">
               <v-col>
                 <v-text-field v-model="data.app.webhook_url" label="Git Pull Webhook"
                   hint="Use this webhook to initiiate a Git Pull" readonly></v-text-field>
@@ -108,6 +147,7 @@
                 <Copy :val="data.app.webhook_url" />
               </v-col>
             </v-row>
+
           </v-container>
         </v-card-text>
       </v-card>
@@ -226,7 +266,8 @@ export default {
     loading: false,
     fetching: false,
     gitDialog: false,
-    gitInfo: false,
+    infoDialog: false,
+    keysDialog: false,
     cloneDialog: false,
     syncDialog: false,
     target: 0,
@@ -265,6 +306,9 @@ export default {
     authRequired: false,
     newWindow: false,
     showCloneApp: false,
+    keys: [],
+    keyDialog: false,
+    keyLabel: '',
   }),
   created() {
     // fetch the data when the view is created and the data is
@@ -526,6 +570,88 @@ export default {
     },
     handleError(error) {
       this.error = error;
+    },
+    fetchKeys() {
+      this.error = "";
+      this.fetching = true;
+
+      api
+        .get("sites/" + this.siteId + "/keys")
+        .then((response) => {
+          console.log(response);
+
+          if (response.data.error) {
+            this.error = response.data.error;
+            return false;
+          }
+
+          this.keys = response.data.keys;
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.fetching = false;
+        });
+    },
+    deleteKey: async function (keyId) {
+      if (!await this.$refs.confirm.open("Delete key?")) {
+        return;
+      }
+
+      this.loading = keyId;
+      this.error = "";
+
+      api
+        .post(
+          "sites/" + this.siteId + "/keys/",
+          { delete: keyId }
+        )
+        .then((response) => {
+          console.log(response);
+
+          if (!response.data.success) {
+            this.fetching = false;
+            this.error = response.data.error;
+          } else {
+            this.fetchKeys();
+          }
+        })
+        .catch((error) => {
+          this.fetching = false;
+          console.log(error);
+        })
+        .finally(() => {
+          this.loading = null;
+        });
+    },
+    addKey() {
+      this.keyLabel = '';
+      this.keyDialog = true;
+    },
+    saveKey() {
+      this.fetching = true;
+      this.error = "";
+
+      api
+        .post("sites/" + this.siteId + "/keys/", {
+          label: this.keyLabel,
+        })
+        .then((response) => {
+          console.log(response);
+
+          if (!response.data.success) {
+            this.fetching = false;
+            this.error = response.data.error;
+          } else {
+            this.keyDialog = false;
+            this.fetchKeys();
+          }
+        })
+        .catch((error) => {
+          this.fetching = false;
+          console.log(error);
+        });
     },
   },
 };
