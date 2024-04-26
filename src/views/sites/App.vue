@@ -87,7 +87,7 @@
                   </v-list-item-subtitle>
                   <template v-slot:append>
                     <v-btn icon :disabled="fetching" :loading="fetching">
-                      <Copy :val="'https://serverwand.com/api/sites/' + siteId + '/deploy?k=' + item.key" label="Copy deployment URL" />
+                      <Copy :val="'https://serverwand.com/api/sites/' + siteId + '/deploy?k=' + item.key" title="Copy deployment URL" />
                     </v-btn>
                     <v-btn icon="mdi:mdi-delete" size="small" :disabled="fetching" :loading="loading === item.id" @click.stop="deleteKey(item.id)"></v-btn>
                   </template>
