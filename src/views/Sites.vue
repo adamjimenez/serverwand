@@ -63,12 +63,10 @@ export default {
       searchPanel: [false],
       search: "",
       selected: [],
+			display: {},
     };
   },
   computed: {
-    display: function () {
-      return this.$vuetify.display;
-    },
     headers: function () {
       var items = [{
         title: "Site",
@@ -105,7 +103,9 @@ export default {
       return items;
     }
   },
-  created() {
+  created() {;
+		this.display = this.$vuetify.display;
+
     document.title = "Sites";
     this.fetchData();
   },

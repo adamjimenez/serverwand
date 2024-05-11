@@ -9,7 +9,7 @@
           <v-data-table :headers="headers" :items="filtered">
             <template v-slot:item.domain="{ item }">
               <v-list-item :to="'/domains/' + item.id + '/summary'" :title="item.domain" class="px-0">
-                <template v-slot:prepend v-if="!mobile">
+                <template v-slot:prepend v-if="!display.mobile">
                   <v-icon>fas fa-globe</v-icon>
                 </template>
               </v-list-item>
@@ -46,24 +46,23 @@ export default {
       searchPanel: [false],
       search: "",
       selected: [],
+			display: {},
     };
   },
   created() {
+		this.display = this.$vuetify.display;
+
     document.title = "Domains";
     this.fetchData();
   },
   computed: {
-    mobile: function () {
-      const { mobile } = useDisplay();
-      return mobile.value;
-    },
     headers: function () {
       var items = [{
         title: "Domain ",
         key: "domain",
       }];
 
-      if (!this.mobile) {
+      if (!this.display.mobile) {
         items.push({
           title: "Registrar ",
           key: "registrar",

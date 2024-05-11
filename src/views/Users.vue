@@ -8,7 +8,7 @@
       <v-data-table :headers="headers" :items="filtered">
         <template v-slot:item.name="{ item }">
           <v-list-item :to="'/users/' + item.id + '/summary'" :title="item.name" class="px-0">
-            <template v-slot:prepend v-if="!mobile">
+            <template v-slot:prepend v-if="!display.mobile">
               <v-icon>fas fa-user</v-icon>
             </template>
           </v-list-item>
@@ -40,9 +40,12 @@ export default {
         title: "Name ",
         key: "name",
       }],
+			display: {},
     };
   },
   created() {
+		this.display = this.$vuetify.display;
+
     document.title = "Users";
     this.fetchData();
   },
@@ -74,12 +77,6 @@ export default {
           if (localStorage.server) this.server = localStorage.server;
         });
     },
-  },
-  computed: {
-    mobile: function () {
-      const { mobile } = useDisplay();
-      return mobile.value;
-    }
   },
 };
 </script>

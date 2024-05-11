@@ -12,7 +12,7 @@
               {{ item.members.length }} member{{ item.members.length != 1 ? "s" : "" }},
               {{ item.servers.length }} server{{ item.servers.length != 1 ? "s" : "" }}
             </v-list-item-subtitle>
-            <template v-slot:prepend v-if="!mobile">
+            <template v-slot:prepend v-if="!display.mobile">
               <v-icon>fas fa-users</v-icon>
             </template>
           </v-list-item>
@@ -42,9 +42,12 @@ export default {
         title: "Name",
         key: "name",
       }],
+			display: {},
     };
   },
-  created() {
+  created() {    
+		this.display = this.$vuetify.display;
+
     document.title = "Teams";
     this.fetchData();
   },
@@ -66,12 +69,6 @@ export default {
         .catch(error => console.log(error))
         .finally(() => this.fetching = false);
     },
-  },
-  computed: {
-    mobile: function () {
-      const { mobile } = useDisplay();
-      return mobile.value;
-    }
   },
 };
 </script>

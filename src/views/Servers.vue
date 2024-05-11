@@ -28,7 +28,7 @@
               <template v-slot:item.name="{ item }">
                 <v-list-item :to="'/servers/' + item.id + '/summary'" :title="item.name" :subtitle="item.hostname"
                   class="px-0">
-                  <template v-slot:prepend v-if="!mobile">
+                  <template v-slot:prepend v-if="!display.mobile">
                     <ServerIcon :provider="item.provider"></ServerIcon>
                   </template>
                 </v-list-item>
@@ -47,7 +47,7 @@
                     </v-icon>
                   </template>
 
-                  <span v-if="!mobile">
+                  <span v-if="!display.mobile">
                     <span v-if="item.connected == 0">
                       Unavailable
                     </span>
@@ -109,13 +109,10 @@ export default {
         value: "vultr",
         icon: "fas fa-server",
       }],
+			display: {},
     };
   },
   computed: {
-    mobile: function () {
-      const { mobile } = useDisplay();
-      return mobile.value;
-    },
     headers: function () {
       let items = [{
         title: "Server ",
@@ -125,7 +122,7 @@ export default {
         key: "connected",
       }];
 
-      if (!this.mobile) {
+      if (this.display.smAndUp) {
         items.push(
           {
             title: "Region ",
@@ -176,6 +173,8 @@ export default {
     }
   },
   created() {
+		this.display = this.$vuetify.display;
+
     document.title = "Servers";
     this.fetchData();
   },

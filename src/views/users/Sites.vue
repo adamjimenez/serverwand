@@ -105,7 +105,7 @@ export default {
 
       api
         .get("sites/")
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
 
           response.data.items.forEach((element) => {
@@ -122,10 +122,10 @@ export default {
             });
           });
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         })
-        .finally(function () {
+        .finally(() => {
           this.loading = false;
         });
     },
