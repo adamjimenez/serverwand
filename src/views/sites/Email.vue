@@ -15,66 +15,91 @@
       </v-card>
 -->
 
-    <div>
 
-      <v-card :loading="fetching">
-        <v-card-actions>
-          <v-btn @click="addEmail()" icon="mdi:mdi-plus" v-if="data.server.mailserver"></v-btn>
+    <v-card :loading="fetching">
+      <v-card-actions>
+        <v-btn @click="addEmail()" icon="mdi:mdi-plus" v-if="data.server.mailserver"></v-btn>
 
-          <v-btn v-if="data.dns?.not_set" @click="fixDNS('mx')"
-            :title="data.dns.MX + ' != ' + data.server.hostname">Fix MX mismatch</v-btn>
+        <v-btn v-if="data.dns?.not_set" @click="fixDNS('mx', data.dns)"
+          :title="data.dns.MX + ' != ' + data.server.hostname">Fix MX mismatch</v-btn>
 
-          <v-btn v-if="data.dkim?.not_set" @click="fixDNS('dkim')">Fix Missing DKIM</v-btn>
+        <v-btn v-if="data.dkim?.not_set" @click="fixDNS('dkim', data.dkim)">Fix DKIM</v-btn>
 
-          <v-btn v-if="data.spf?.not_set" @click="fixDNS('spf')">Fix Missing SPF</v-btn>
+        <v-btn v-if="data.spf?.not_set" @click="fixDNS('spf', data.spf)">Fix SPF</v-btn>
 
-          <v-btn v-if="data.dmarc?.not_set" @click="fixDNS('dmarc')">Fix Missing DMARC</v-btn>
+        <v-btn v-if="data.dmarc?.not_set" @click="fixDNS('dmarc', data.dmarc)">Fix DMARC</v-btn>
 
-          <v-switch v-if="data.server.mailserver" v-model="data.email" label="Email" @change="toggleEmail()" hide-details
-            color="primary"></v-switch>
-        </v-card-actions>
+        <v-switch v-if="data.server.mailserver" v-model="data.email" label="Email" @change="toggleEmail()" hide-details
+          color="primary"></v-switch>
+      </v-card-actions>
+    </v-card>
+
+    <v-card class="mx-auto">
+      <v-list max-width="600">
+
+        <v-list-item v-for="(item, i) in data.emails" :key="`item-${i}`" :title="item.name" :subtitle="item.value"
+          @click="editItem(item)">
+
+          <v-list-item-title>
+            {{ item.user }}
+            <span v-if="item.destination">
+              <v-icon>fas fa-long-arrow-alt-right</v-icon>
+              {{ item.destination }}
+            </span>
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            {{ prettyBytes(item.disk_usage) }}
+          </v-list-item-subtitle>
+
+          <template v-slot:append>
+            <v-btn icon :disabled="fetching" :loading="loading === item.user" @click="deleteItem(item.user)"
+              @click.stop>
+              <v-icon size="small" icon="mdi:mdi-delete"></v-icon>
+            </v-btn>
+          </template>
+        </v-list-item>
+
+      </v-list>
+    </v-card>
+
+    <v-dialog v-model="drawer" max-width="600">
+      <v-card title="Email account">
+        <v-card-text>
+          <v-text-field v-model="email.user" label="Name" required :readonly="userReadonly" autofocus></v-text-field>
+          <PasswordField v-model="email.password" label="Password" required></PasswordField>
+          <v-text-field v-model="email.destination" label="Forwarding" required></v-text-field>
+          <v-btn :disabled="!email.user" :loading="fetching" color="success" @click="saveEmail()" text="Save"></v-btn>
+        </v-card-text>
       </v-card>
+    </v-dialog>
 
-      <v-card class="mx-auto">
-        <v-list max-width="600">
+    <v-dialog v-model="dnsDialog" max-width="600">
+      <v-card :title="'Fix ' + dnsData.fix">
+        <v-card-text>
+          <p>
+            Add the following record to <strong>{{ dnsData.nameserver }}</strong>
+          </p>
 
-          <v-list-item v-for="(item, i) in data.emails" :key="`item-${i}`" :title="item.name" :subtitle="item.value"
-            @click="editItem(item)">
-
-            <v-list-item-title>
-              {{ item.user }}
-              <span v-if="item.destination">
-                <v-icon>fas fa-long-arrow-alt-right</v-icon>
-                {{ item.destination }}
-              </span>
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              {{ prettyBytes(item.disk_usage) }}
-            </v-list-item-subtitle>
-
-            <template v-slot:append>
-              <v-btn icon :disabled="fetching" :loading="loading === item.user" @click="deleteItem(item.user)"
-                @click.stop>
-                <v-icon size="small" icon="mdi:mdi-delete"></v-icon>
-              </v-btn>
-            </template>
-          </v-list-item>
-
-        </v-list>
+          <v-list>
+            <v-list-item title="Type">
+              <template v-slot:subtitle>
+                <Copy :val="dnsData.record.type" text />
+              </template>             
+            </v-list-item>
+            <v-list-item title="Hostname">
+              <template v-slot:subtitle>
+                <Copy :val="dnsData.record.hostname" text />
+              </template>             
+            </v-list-item>
+            <v-list-item title="Value">
+              <template v-slot:subtitle>
+                <Copy :val="dnsData.record.value" text />
+              </template>             
+            </v-list-item>
+          </v-list>
+        </v-card-text>
       </v-card>
-
-      <v-dialog v-model="drawer" max-width="600">
-        <v-card title="Email account">
-          <v-card-text>
-            <v-text-field v-model="email.user" label="Name" required :readonly="userReadonly" autofocus></v-text-field>
-            <PasswordField v-model="email.password" label="Password" required></PasswordField>
-            <v-text-field v-model="email.destination" label="Forwarding" required></v-text-field>
-            <v-btn :disabled="!email.user" :loading="fetching" color="success" @click="saveEmail()" text="Save"></v-btn>
-          </v-card-text>
-        </v-card>
-      </v-dialog>
-
-    </div>
+    </v-dialog>
 
     <Confirm ref="confirm" />
     <OAuth ref="oauth" />
@@ -88,6 +113,7 @@ import util from "../../services/util";
 import Confirm from "../../components/ConfirmDialog.vue";
 import PasswordField from "../../components/PasswordField.vue";
 import OAuth from "../../components/OAuth.vue";
+import Copy from "../../components/Copy";
 
 export default {
   components: {
@@ -95,6 +121,7 @@ export default {
     Confirm,
     PasswordField,
     OAuth,
+    Copy,
   },
   data() {
     return {
@@ -120,6 +147,8 @@ export default {
       userReadonly: false,
       timer: null,
       authRequired: false,
+      dnsDialog: false,
+      dnsData: {},
     };
   },
   created() {
@@ -253,7 +282,14 @@ export default {
           this.loading = null;
         });
     },
-    fixDNS(fix) {
+    fixDNS(fix, data) {
+      if (!data.fixable) {
+        this.dnsDialog = true;
+        this.dnsData = data
+        this.dnsData.fix = fix;
+        return;
+      }
+
       this.error = "";
       this.loading = true;
 
