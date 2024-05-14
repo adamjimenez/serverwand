@@ -3,7 +3,7 @@
     <v-app-bar app flat>
       <v-app-bar-nav-icon @click.stop="rail = !rail" size="small"></v-app-bar-nav-icon>
 
-      <router-link to="/servers" class="text-decoration-none text-primary" v-if="!mobile">
+      <router-link to="/servers" class="text-decoration-none text-primary" v-if="!display.mobile">
         <v-list-item>
           <template v-slot:prepend>
             <v-icon class="mr-0 pl-3" size="large" color="primary">fas fa-magic</v-icon>
@@ -18,7 +18,7 @@
       <UserMenu />
     </v-app-bar>
 
-    <v-navigation-drawer :expand-on-hover="!mobile" disable-route-watcher :rail="rail" permanent>
+    <v-navigation-drawer :expand-on-hover="!display.mobile" disable-route-watcher :rail="rail" permanent>
       <v-list nav>
         <v-list-item base-color="primary" variant="flat" :to="createLink">
           <template v-slot:prepend>
@@ -111,9 +111,12 @@ export default {
       masterPassword: "",
       restricted: false,
       rail: true,
+			display: {},
     };
   },
   created() {
+		this.display = this.$vuetify.display;
+
     axios.interceptors.response.use(
       (response) => {
         if (!response) {
@@ -246,10 +249,6 @@ export default {
     }
   },
   computed: {
-    mobile: function () {
-      const { mobile } = useDisplay();
-      return mobile.value;
-    },
     createLink: function () {
       let parts = this.$route.path.split('/');
       parts.shift();
