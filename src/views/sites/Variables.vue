@@ -65,7 +65,7 @@ export default {
       rules: {
         required: (value) => !!value || "Required.",
         alphanumeric: (v) =>
-          /^[a-zA-Z0-9-_!]+$/g.test(v) || "Must contain alphanumeric characters only",
+          /^[a-zA-Z0-9-_!\.]+$/g.test(v) || "Must contain alphanumeric characters only",
       },
       valid: false,
     };
