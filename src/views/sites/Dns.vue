@@ -222,8 +222,6 @@ export default {
   },
   computed: {
     isValid: function () {
-      record.name || record.target || record.priority
-
       if (!this.record.type) {
         return false;
       }
