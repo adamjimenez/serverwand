@@ -39,7 +39,7 @@
 
           <v-text-field v-if="record.type === 'MX'" v-model="record.priority" label="Priority" required></v-text-field>
 
-          <v-btn :disabled="!record.name || record.target || record.priority" :loading="fetching" color="success"
+          <v-btn :disabled="!isValid" :loading="fetching" color="success"
             @click="saveItem()">
             Save
           </v-btn>
@@ -220,5 +220,24 @@ export default {
         });
     },
   },
+  computed: {
+    isValid: function () {
+      record.name || record.target || record.priority
+
+      if (!this.record.type) {
+        return false;
+      }
+
+      if (!this.record.target) {
+        return false;
+      }
+
+      if (this.record.type === 'MX' && !this.record.priority) {
+        return false;
+      }
+
+      return true;
+    }
+  }
 };
 </script>
