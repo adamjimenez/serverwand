@@ -24,7 +24,7 @@
           <template v-slot:prepend>
             <v-icon size="small" style="width: 24px; text-align: center;">mdi:mdi-plus</v-icon>
           </template>
-          Create
+          {{ createLabel }}
         </v-list-item>
 
         <v-list-item v-for="item in filtered" :key="item.title" :to="item.to" :active="isActive(item.to)"
@@ -86,7 +86,6 @@ import UserMenu from "./components/UserMenu";
 import api from "./services/api";
 import axios from "axios";
 import { sha256 } from "js-sha256";
-import { useDisplay } from 'vuetify';
 
 export default {
   components: {
@@ -112,6 +111,8 @@ export default {
       restricted: false,
       rail: true,
 			display: {},
+      createLink: '/servers/create',
+      createLabel: 'New server',
     };
   },
   created() {
@@ -181,6 +182,21 @@ export default {
     },
     rail(value) {
       localStorage.rail = value;
+    },
+    '$route.path': function () {
+      let parts = this.$route.path.split('/');
+      parts.shift();
+
+      let section = parts[0];
+      if (!['servers', 'sites', 'domains', 'teams', 'users'].includes(parts[0])) {
+        section = 'servers';
+      }
+
+      this.createLink = '/' + section + '/create';
+
+      let label = 'New ';
+      label += section.substr(0, section.length - 1);
+      this.createLabel = label;
     }
   },
   methods: {
@@ -248,18 +264,5 @@ export default {
       return location.pathname.startsWith(to);
     }
   },
-  computed: {
-    createLink: function () {
-      let parts = this.$route.path.split('/');
-      parts.shift();
-
-      let section = parts[0];
-      if (!['servers', 'sites', 'domains', 'teams', 'users'].includes(parts[0])) {
-        section = 'servers';
-      }
-
-      return '/' + section + '/create';
-    }
-  }
 };
 </script>
