@@ -111,8 +111,8 @@ export default {
       restricted: false,
       rail: true,
 			display: {},
-      createLink: '/servers/create',
-      createLabel: 'New server',
+      createLink: '',
+      createLabel: '',
     };
   },
   created() {
@@ -162,6 +162,8 @@ export default {
     if (localStorage.rail === 'false') {
       this.rail = false;
     }
+
+    this.updateCreateButton();
   },
   watch: {
     dark(newDark) {
@@ -184,19 +186,7 @@ export default {
       localStorage.rail = value;
     },
     '$route.path': function () {
-      let parts = this.$route.path.split('/');
-      parts.shift();
-
-      let section = parts[0];
-      if (!['servers', 'sites', 'domains', 'teams', 'users'].includes(parts[0])) {
-        section = 'servers';
-      }
-
-      this.createLink = '/' + section + '/create';
-
-      let label = 'New ';
-      label += section.substr(0, section.length - 1);
-      this.createLabel = label;
+      this.updateCreateButton();
     }
   },
   methods: {
@@ -262,6 +252,21 @@ export default {
     },
     isActive(to) {
       return location.pathname.startsWith(to);
+    },
+    updateCreateButton() {
+      let parts = this.$route.path.split('/');
+      parts.shift();
+
+      let section = parts[0];
+      if (!['servers', 'sites', 'domains', 'teams', 'users'].includes(parts[0])) {
+        section = 'servers';
+      }
+
+      this.createLink = '/' + section + '/create';
+
+      let label = 'New ';
+      label += section.substr(0, section.length - 1);
+      this.createLabel = label;
     }
   },
 };
