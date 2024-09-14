@@ -2,8 +2,6 @@
     <div>
       <v-alert v-if="error" type="error" :text="error"></v-alert>
   
-      <Loading :value="loading" />
-  
       <v-card :loading="fetching">
   
         <v-data-table v-if="items.length" v-model="selected" :headers="headers" :items="items" item-value="ip" show-select class="results"
@@ -24,8 +22,14 @@
       </v-card>
   
       <v-card>
+
         <v-card-actions>
-          <v-btn @click="unban()" :disabled="selected.length === 0" :loading="fetching"> Unban </v-btn>
+            
+            <v-btn @click="unban()" :disabled="selected.length === 0" :loading="loading === 'unban'"> Unban </v-btn>
+
+            <v-spacer></v-spacer>
+
+            <v-switch v-model="active" label="Active" @change="toggle()" hide-details color="primary" :loading="loading === 'toggle'"></v-switch>
         </v-card-actions>
       </v-card>
     </div>
@@ -33,20 +37,14 @@
   
   <script>
   import api from "../../services/api";
-  import Loading from "../../components/Loading";
-  import ClearMailQueue from "../../components/ClearMailQueue";
   
   export default {
-    components: {
-      Loading,
-      ClearMailQueue,
-    },
     data() {
       return {
         error: "",
         items: [],
         data: {},
-        loading: false,
+        loading: null,
         fetching: false,
         serverId: 0,
         selected: [],
@@ -60,6 +58,7 @@
           title: "Jail",
           key: "jail",
         }],
+        active: false,
       };
     },
     created() {
@@ -76,6 +75,7 @@
           .then(response => {
             console.log(response);
 
+            this.active = response.data.active;
             this.items = response.data.items;
   
             document.title = "Banned" + " | " + response.data.item.name;
@@ -83,6 +83,30 @@
           .catch(error => console.log(error))
           .finally(() => this.fetching = false);
       },
+      toggle() {
+        this.loading = 'toggle'
+        this.error = ''
+
+        api.post("servers/" + this.serverId + "/services", {
+          name: 'fail2ban',
+          start: this.active,
+        })
+        .then(response => {
+            console.log(response)
+
+            if (!response.data.success) {
+                this.error = response.data.error;
+            } else {
+                this.fetchData()
+            }
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+            .finally(() => {
+                this.loading = null
+            })
+        },
       unban() {
         // get selected ids
         let items = [];
@@ -91,13 +115,13 @@
         });
   
         // process deletions
-        this.fetching = true;
+        this.loading = 'unban';
   
         api
           .post("servers/" + this.serverId + "/banned", { items: items })
           .then(() => this.fetchData())
           .catch((error) => console.log(error))
-          .finally(() => this.fetching = false);
+          .finally(() => this.loading = null);
       },
       handleComplete: function (result) {
         this.error = result;

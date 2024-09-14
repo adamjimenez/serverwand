@@ -59,12 +59,11 @@ export default {
     toggle(item) {
       this.loading = item.name;
       this.error = "";
-      var action = item.active ? "start" : "stop";
 
       api
         .post("servers/" + this.serverId + "/services", {
           name: item.name,
-          action: action,
+          start: item.active,
         })
         .then(response => {
           console.log(response);
