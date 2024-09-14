@@ -128,7 +128,14 @@
 
                 <v-list-item title="IP address">
                   <v-list-item-subtitle>
-                    <Copy :val="data.ip" text />
+                    <Copy :val="data.ip" text />                    
+
+                    <v-tooltip :text="data.ip_data?.org  + ', ' + data.ip_data?.city + ', ' + data.ip_data?.country">
+                      <template v-slot:activator="{ props }">
+                        <v-btn v-bind="props" :class="'fi fi-'+ data?.ip_data?.country?.toLowerCase() + ' fis'" class="ml-1" size="x-small"></v-btn>
+                      </template>
+                    </v-tooltip>
+
                   </v-list-item-subtitle>
                 </v-list-item>
 

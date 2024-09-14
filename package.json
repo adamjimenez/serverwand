@@ -12,6 +12,7 @@
     "@mdi/font": "^7.2.96",
     "axios": "^0.21.1",
     "axios-cache-adapter": "^2.7.3",
+    "flag-icons": "^7.2.3",
     "js-sha256": "^0.9.0",
     "moment": "^2.29.1",
     "monaco-editor": "^0.41.0",

@@ -26,6 +26,7 @@
       <v-tab :to="'/servers/' + serverId + '/systemusers'">System users</v-tab>
       <v-tab :to="'/servers/' + serverId + '/firewall'">Firewall</v-tab>
       <v-tab :to="'/servers/' + serverId + '/services'">Services</v-tab>
+      <v-tab :to="'/servers/' + serverId + '/banned'">Banned</v-tab>
       <v-tab :to="'/servers/' + serverId + '/settings'">Settings</v-tab>
     </Tabs>
     <router-view></router-view>

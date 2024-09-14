@@ -19,6 +19,8 @@ import * as directives from 'vuetify/directives'
 import '@mdi/font/css/materialdesignicons.css'
 import '@fortawesome/fontawesome-free/css/all.css' 
 
+import "/node_modules/flag-icons/css/flag-icons.min.css";
+
 const darkTheme = {
   dark: true,
   colors: {
@@ -82,6 +84,9 @@ const routes = [
         }, {
           path: '/servers/:id(.*)*/services',
           component: () => import('./views/servers/Services.vue')
+        }, {
+          path: '/servers/:id(.*)*/banned',
+          component: () => import('./views/servers/Banned.vue')
         }, {
           path: '/servers/:id(.*)*/cronjobs',
           component: () => import('./views/servers/Cronjobs.vue')
