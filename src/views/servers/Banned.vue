@@ -8,12 +8,13 @@
           mobile-breakpoint="0">
 
             <template v-slot:item.ip="{ item }">
-                <span>{{ item.ip }} 
+                <span> 
                     <v-tooltip :text="item.ip_data?.org  + ', ' + item.ip_data?.city + ', ' + item.ip_data?.country">
                       <template v-slot:activator="{ props }">
                         <v-btn v-bind="props" :class="'fi fi-'+ item?.ip_data?.country?.toLowerCase() + ' fis'" class="ml-1" size="x-small"></v-btn>
                       </template>
                     </v-tooltip>
+                    {{ item.ip }}
                 </span>
             </template>
         </v-data-table>
