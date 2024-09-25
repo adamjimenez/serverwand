@@ -3,6 +3,10 @@
     <v-alert v-if="error" type="error" :text="error"></v-alert>
 
     <v-card class="pa-3" :loading="fetching">
+      <v-card-actions>
+        <v-btn @click="fixProblems()" icon="mdi:mdi-auto-fix" title="Find and fix problems"></v-btn>
+      </v-card-actions>
+
       <v-list group max-width="600">
         <template v-for="(item, i) in items" :key="`item-${i}`">
           <v-list-item :value="item">
@@ -12,6 +16,26 @@
         </template>
       </v-list>
     </v-card>
+
+    <v-dialog v-model="dialog" width="300">
+      <v-card color="primary">
+        <v-card-text>
+          <v-alert title="Spellcasting..." color="primary">
+            <template v-slot:prepend>
+              <v-icon :icon="closable ? 'fas fa-magic fa-2x faa-horizontal' : 'fas fa-magic fa-2x faa-horizontal animated'"></v-icon>
+            </template>
+          </v-alert>
+
+          <v-progress-linear :indeterminate="progress == 0" v-model="progress" color="white" v-if="!closable"></v-progress-linear>
+
+          <v-textarea v-model="details" readonly></v-textarea>
+        </v-card-text>
+          
+        <v-card-actions>
+          <v-btn @click="dialog = false" :disabled="!closable">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -26,6 +50,10 @@ export default {
       fetching: false,
       loading: null,
       serverId: 0,
+      dialog: false,
+      closable: false,
+      progress: 0,
+      details: "",
     }
   },
   created() {
@@ -35,6 +63,31 @@ export default {
     this.fetchData();
   },
   methods: {
+    fixProblems() {
+      this.dialog = true
+      this.closable = false;
+      this.details = ''
+
+      // subscribe to status changes
+      let url = 'servers/' + this.serverId + '/check'
+
+      api.event(
+        url,
+        result => {
+          this.details += result.msg + "\n";
+
+          if (result.progress) {
+            this.progress = result.progress;
+          }
+        },
+        error => {
+          this.error = error;
+        },
+        () => {
+          this.closable = true;
+        }
+      );
+    },
     fetchData() {
       this.error = "";
       this.fetching = true;
@@ -56,25 +109,23 @@ export default {
         .catch(error => console.log(error))
         .finally(() => this.fetching = false)
     },
-    toggle(item) {
+    async toggle(item) {
       this.loading = item.name;
       this.error = "";
 
-      api
+      let response = await api
         .post("servers/" + this.serverId + "/services", {
           name: item.name,
           start: item.active,
         })
-        .then(response => {
-          console.log(response);
+        
+      await this.fetchData();          
 
-          if (!response.data.success)
-            this.error = response.data.error;
-          else
-            this.fetchData();
-        })
-        .catch(error => console.log(error))
-        .finally(() => this.loading = null)
+      if (!response.data.success) {
+        this.error = response.data.error;
+      }
+
+      this.loading = null
     },
   },
 };
