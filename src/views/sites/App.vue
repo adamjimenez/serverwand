@@ -22,8 +22,8 @@
           <v-btn @click="openSync(siteId)"> Pull </v-btn>
         </span>
 
-        <span v-if="data.app">
-          <v-btn @click="clearLogs" title="Clear logs" v-if="data.app.isNode" icon="block"></v-btn>
+        <span v-if="data.app" class="d-flex">
+          <v-btn @click="clearLogs" title="Clear logs" v-if="data.app.isNode" icon="mdi:mdi-cancel"></v-btn>
           <v-btn @click="showCloneApp = true" title="Clone app" icon="mdi:mdi-content-copy"></v-btn>
           <v-switch v-if="data.app.isNode" v-model="data.app.online" :label="data.app.status" @change="toggleStatus()"
             color="primary" hide-details></v-switch>
