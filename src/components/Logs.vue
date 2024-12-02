@@ -45,48 +45,17 @@ export default {
             data: {},
             details: "",
             fetching: true,
-            serverId: 0,
-            logs: [{
-                value: "apache_access",
-                title: "Apache Access",
-            }, {
-                value: "apache_error",
-                title: "Apache Error",
-            }, {
-                value: "other_vhosts",
-                title: "Apache Other Vhosts",
-            }, {
-                value: "auth",
-                title: "Auth",
-            }, {
-                value: "fail2ban",
-                title: "Fail2ban",
-            }, {
-                value: "journal",
-                title: "Journal",
-            }, {
-                value: "letsencrypt",
-                title: "Let's Encrypt",
-            }, {
-                value: "mail",
-                title: "Mail",
-            }, {
-                value: "mysql",
-                title: "MySQL",
-            }, {
-                value: "serverstatus",
-                title: "Server Status",
-            }],
-            log: "apache_error",
+            serverId: 0,            
+            logs: [],
+            log: null,
             logContent: "",
-            filter: '',
+            filter: '',            
         };
     },
     created() {
         // fetch the data when the view is created and the data is
         // already being observed
         this.serverId = this.$route.params.id;
-        this.fetchData();
 
         window.onhashchange = async () => {
             let path = location.hash.substr(1);
@@ -131,34 +100,9 @@ export default {
         }
     },
     methods: {
-        fetchData() {
-            this.error = "";
-            this.fetching = true;
-
-            api
-                .get("servers/" + this.serverId)
-                .then((response) => {
-                    console.log(response);
-
-                    if (response.data.error) {
-                        this.error = response.data.error;
-                        return false;
-                    }
-
-                    this.data = response.data.item;
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
-                .finally(() => {
-                    this.fetching = false;
-                });
-        },
         fetchLog: async function(log) {
             if (log) {
                 this.log = log;
-            } else if (!this.log) {
-                return;
             }
 
             this.fetching = true;
@@ -166,17 +110,26 @@ export default {
             await this.$nextTick();
 
             let scrollEl = document.querySelector('.v-dialog .v-card-text')
-            let scrollTop = scrollEl.scrollTop;
+            let scrollTop = scrollEl?.scrollTop;
 
             this.logContent = "loading..";
 
             api
                 .post("servers/" + this.serverId + "/fetchlog", { log: this.log })
                 .then(async (response) => {
-                    console.log(response);
-                    this.logContent = response.data.content;
+                    if (response.data.content) {
+                        this.logContent = response.data.content;
+                    }
+
+                    if (response.data.logs) {
+                        this.logs = response.data.logs;
+                    }
+
                     await this.$nextTick();
-                    scrollEl.scrollTop = scrollTop;
+
+                    if (scrollEl) {
+                        scrollEl.scrollTop = scrollTop;
+                    }
                 })
                 .finally(() => {
                     this.fetching = false;
