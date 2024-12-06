@@ -87,7 +87,7 @@ export default {
             const pathRegex = /(\/(var|etc)[^\s:\\']+( on line [0-9]+))/g;
             const findRegex = this.filter ? RegExp(`\(${this.filter})\+`, 'gi') : /NOMATCH/;
 
-            var lines = this.logContent.split("\n");
+            let lines = this.logContent.split("\n");
             return lines.filter((line) => line.toLowerCase().
                 includes(this.filter.toLowerCase())).
                 join("\n").
@@ -112,12 +112,12 @@ export default {
             let scrollEl = document.querySelector('.v-dialog .v-card-text')
             let scrollTop = scrollEl?.scrollTop;
 
-            this.logContent = "loading..";
+            this.logContent = "";
 
             api
                 .post("servers/" + this.serverId + "/fetchlog", { log: this.log })
                 .then(async (response) => {
-                    if (response.data.content) {
+                    if ('content' in response.data) {
                         this.logContent = response.data.content;
                     }
 
