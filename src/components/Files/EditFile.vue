@@ -2,12 +2,13 @@
   <span>
     <v-alert v-if="error" type="error" :text="error"></v-alert>
 
-    <v-dialog v-model="dialog">
+    <v-dialog v-model="dialog" fullscreen>
       <v-card :loading="fetching" style="height: 95vh;">
 
         <v-toolbar :title="data.id">
           <template v-slot:append>
             <v-btn @click="saveFile" v-if="save !== 'false'" fab icon="mdi:mdi-content-save"></v-btn>
+            <v-btn @click="dialog = false" icon="mdi:mdi-close"></v-btn>
           </template>
         </v-toolbar>
 
