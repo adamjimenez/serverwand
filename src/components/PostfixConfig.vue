@@ -35,13 +35,11 @@ export default {
             drawer: false,
         };
     },
-
     computed: {
         changed: function () {
             return JSON.stringify(this.data) !== JSON.stringify(this.config);
         }
     },
-
     methods: {
         edit() {
             this.fetching = true;

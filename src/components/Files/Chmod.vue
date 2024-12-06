@@ -130,10 +130,10 @@ export default {
       this.data.mode = "" + owner + group + pub;
     },
     modeToCheckboxes() {
-      var perms = this.data.mode;
-      var owner = perms.substr(0, 1);
-      var group = perms.substr(1, 1);
-      var pub = perms.substr(2, 1);
+      let perms = this.data.mode;
+      let owner = perms.substr(0, 1);
+      let group = perms.substr(1, 1);
+      let pub = perms.substr(2, 1);
 
       this.ownerR = owner >= 4 && owner <= 7;
       this.ownerW = owner == 2 || owner == 3 || owner == 6 || owner == 7;

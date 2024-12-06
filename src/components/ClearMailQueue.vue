@@ -14,18 +14,15 @@
   export default {
     components: {
       Confirm,
-    },
-  
+    },  
     props: {
       server: null,
-    },
-  
+    },  
     data() {
       return {
         fetching: false,
       };
-    },
-  
+    },  
     methods: {
       deleteServer: async function () {
         if (!await this.$refs.confirm.open("Delete " + this.server.queue + " items from the mail queue?")) {

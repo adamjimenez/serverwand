@@ -15,17 +15,14 @@ export default {
   components: {
     Confirm,
   },
-
   props: {
     serverId: null,
   },
-
   data() {
     return {
       fetching: false
     };
   },
-
   methods: {
     reboot: async function () {
       if (!await this.$refs.confirm.open("Reboot server?")) {

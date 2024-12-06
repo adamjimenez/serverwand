@@ -31,9 +31,9 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn @click="
-      $emit('closed');
-    showMessage = false;
-    " :disabled="fetching">
+            $emit('closed');
+          showMessage = false;
+          " :disabled="fetching">
             Close
           </v-btn>
         </v-card-actions>

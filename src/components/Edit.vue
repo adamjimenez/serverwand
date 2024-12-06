@@ -91,7 +91,7 @@ export default {
       this.fetching = true;
       this.error = '';
 
-      var data = {};
+      let data = {};
       data[this.name] = this.data.val;
 
       api

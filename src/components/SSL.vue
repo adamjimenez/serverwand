@@ -19,24 +19,10 @@
           </v-btn-toggle>
 
           <div v-if="data.provider == 'custom'">
-            <v-textarea
-              v-model="data.private_key"
-              name="private_key"
-              filled
-              label="Private key"
-              auto-grow
-              value=""
-              :disabled="data.provider !== 'custom'"
-            ></v-textarea>
-            <v-textarea
-              v-model="data.fullchain"
-              name="fullchain"
-              filled
-              label="Certificate (Chained)"
-              auto-grow
-              value=""
-              :disabled="data.provider !== 'custom'"
-            ></v-textarea>
+            <v-textarea v-model="data.private_key" name="private_key" filled label="Private key" auto-grow value=""
+              :disabled="data.provider !== 'custom'"></v-textarea>
+            <v-textarea v-model="data.fullchain" name="fullchain" filled label="Certificate (Chained)" auto-grow
+              value="" :disabled="data.provider !== 'custom'"></v-textarea>
           </div>
         </v-card-text>
 
@@ -90,15 +76,15 @@ export default {
         .post("sites/" + this.siteId + "/ssl", this.data)
         .catch(error => console.log(error))
         .then(response => {
-          this.fetching=false;
+          this.fetching = false;
 
-          if(typeof response==="undefined") {
-            this.error="An error occurred";
-          } else if(!response.data.success) {
-            this.error=response.data.error;
+          if (typeof response === "undefined") {
+            this.error = "An error occurred";
+          } else if (!response.data.success) {
+            this.error = response.data.error;
           } else {
             this.$emit("closed");
-            this.showDialog=false;
+            this.showDialog = false;
           }
         });
     },
