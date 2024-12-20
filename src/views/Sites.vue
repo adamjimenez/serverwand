@@ -13,7 +13,7 @@
             </v-card-text>
           </v-card>
 
-          <v-data-table :headers="headers" :items="filtered">
+          <v-data-table :headers="headers" :items="filtered" :items-per-page="100">
             <template v-slot:item.domain="{ item }">
               <v-list-item :to="'/sites/' + item.id + '/summary'" :title="item.domain" :subtitle="servers[item.server]"
                 class="px-0">

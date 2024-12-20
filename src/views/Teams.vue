@@ -5,7 +5,7 @@
     <Loading :value="loading" />
 
     <v-card :loading="fetching">
-      <v-data-table :headers="headers" :items="items">
+      <v-data-table :headers="headers" :items="items" :items-per-page="100">
         <template v-slot:item.name="{ item }">
           <v-list-item :to="'/teams/' + item.id + '/members'" :title="item.name" class="px-0">
             <v-list-item-subtitle>
@@ -26,7 +26,6 @@
 <script>
 import api from "../services/api";
 import Loading from "../components/Loading";
-import { useDisplay } from 'vuetify';
 
 export default {
   components: {

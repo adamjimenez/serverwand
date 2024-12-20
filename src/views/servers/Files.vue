@@ -46,8 +46,8 @@
         </v-row>
       </v-container>
 
-      <v-data-table v-model="selectedIds" :headers="headers" :items="items" class="results" ref="results" show-select
-        mobile-breakpoint="0" @click:row="function (event, item) { open(item.item) }" :loading="fetching" :page="page">
+      <v-data-table v-model="selectedIds" :headers="headers" :items="items" :items-per-page="100" class="results" ref="results" show-select
+        mobile-breakpoint="0" @click:row="function (event, item) { open(item.item) }" :loading="fetching" :page="page" @update:page="updatePage">
 
         <template v-slot:item.size="{ item }">
           {{ prettyBytes(item.size) }}
@@ -268,7 +268,8 @@ export default {
             }
 
             this.server = response.data.item;
-
+            
+            this.page = 1;
             this.items = [];
             response.data.files.forEach(element => {
               this.items.push({
@@ -349,6 +350,9 @@ export default {
     },
     formatDate(value) {
       return util.formatDate(value);
+    },
+    updatePage(page) {
+      this.page = page;
     }
   },
 };

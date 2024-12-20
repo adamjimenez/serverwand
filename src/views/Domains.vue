@@ -6,7 +6,7 @@
         <Loading :value="loading" />
 
         <v-card flat :loading="fetching">
-          <v-data-table :headers="headers" :items="filtered">
+          <v-data-table :headers="headers" :items="filtered" :items-per-page="100">
             <template v-slot:item.domain="{ item }">
               <v-list-item :to="'/domains/' + item.id + '/summary'" :title="item.domain" class="px-0">
                 <template v-slot:prepend v-if="!display.mobile">

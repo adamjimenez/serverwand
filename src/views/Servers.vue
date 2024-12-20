@@ -24,7 +24,7 @@
               </v-row>
             </v-container>
 
-            <v-data-table :headers="headers" :items="filtered">
+            <v-data-table :headers="headers" :items="filtered" :items-per-page="100">
               <template v-slot:item.name="{ item }">
                 <v-list-item :to="'/servers/' + item.id + '/summary'" :title="item.name" :subtitle="item.hostname"
                   class="px-0">
