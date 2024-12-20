@@ -37,8 +37,8 @@
 
             <v-row>
               <v-col cols="12">
-                <v-data-table :headers="headers" :items="items" class="results" ref="results" mobile-breakpoint="0"
-                  @click:row="function (event, item) { open(item.item) }" v-model="selectedIds" show-select>
+                <v-data-table :headers="headers" :items="items" :items-per-page="100" class="results" ref="results" mobile-breakpoint="0"
+                  @click:row="function (event, item) { open(item.item) }" v-model="selectedIds" show-select :page="page" @update:page="updatePage">
 
                   <template v-slot:item.modified="{ item }">
                     {{ formatDate(item.modified) }}
@@ -52,7 +52,7 @@
           <div v-else>
             <v-row>
               <v-col cols="12">
-                <v-data-table :headers="backupHeaders" :items="backups" mobile-breakpoint="0"
+                <v-data-table :headers="backupHeaders" :items="backups" :items-per-page="100" mobile-breakpoint="0"
                   @click:row="function (event, item) { browse(item.item) }">
 
                   <template v-slot:item.name="{ item }">
@@ -253,6 +253,7 @@ export default {
         title: " ",
         key: "action",
       }],
+      page: 1,
     };
   },
   computed: {
@@ -341,6 +342,7 @@ export default {
             return;
           }
 
+          this.page = 1;
           this.items = [];
           response.data.files.forEach((element) => {
             this.items.push({
@@ -473,6 +475,9 @@ export default {
     prettyBytes(value) {
       return util.prettyBytes(value);
     },
+    updatePage(page) {
+      this.page = page;
+    }
   },
 };
 </script>
