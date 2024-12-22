@@ -23,7 +23,7 @@
 
         <v-card-actions>
           <v-btn @click="doClean()" :disabled="selected.length === 0">
-            Remove
+            Clean
           </v-btn>
         </v-card-actions>
       </v-card>
