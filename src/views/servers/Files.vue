@@ -26,6 +26,8 @@
             @complete="fetchData()" @error="handleError" />
           <Extract :serverId="serverId" :path="path" :selected="selected" @complete="fetchData()" @error="handleError"
             @loading="handleLoading" />
+          <Tail v-if="selected.length === 1" :serverId="serverId" :path="path" :selected="selected"
+            @complete="fetchData()" @error="handleError" />
           <Download v-if="selected.length === 1 && selected[0].type === 'file'" :serverId="serverId" :path="path"
             :selected="selected" />
           <Clipboard :serverId="serverId" :path="path" :selected="selected" @complete="fetchData()"
@@ -82,6 +84,7 @@ import Download from "../../components/Files/Download";
 import Clipboard from "../../components/Files/Clipboard";
 import Upload from "../../components/Files/Upload";
 import Extract from "../../components/Files/Extract";
+import Tail from "../../components/Files/Tail";
 
 export default {
   components: {
@@ -97,6 +100,7 @@ export default {
     Clipboard,
     Upload,
     Extract,
+    Tail,
   },
   data() {
     return {
@@ -207,7 +211,7 @@ export default {
     if (location.hash) {
       this.path = location.hash.substr(1);
 
-      var file = this.basename(this.path);
+      let file = this.basename(this.path);
 
       if (file.indexOf('.') !== -1) {
         this.fileToOpen = file;
