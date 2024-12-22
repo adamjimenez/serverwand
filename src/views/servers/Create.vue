@@ -20,7 +20,7 @@
           <v-text-field v-model="data.name" label="Name" :rules="[rules.required, rules.alphanumeric]"
             required></v-text-field>
 
-          <v-text-field v-if="data.provider === 'custom' || this.serverId > 0" v-model="data.ip"
+          <v-text-field v-if="this.serverId > 0" v-model="data.ip"
             :rules="[rules.required, rules.ip]" label="Server IP"></v-text-field>
 
           <div v-if="data.provider !== 'custom' && data.provider !== 'vultr' && !unclaimed.length">
