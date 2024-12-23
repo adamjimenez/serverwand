@@ -124,26 +124,31 @@ export default {
         title: "",
         key: "",
       }, {
-        title: "Name ",
+        title: "Name",
         key: "name",
       }, {
-        title: "Size ",
+        title: "Size",
         key: "size",
         class: 'd-none d-sm-table-cell',
         cellClass: 'd-none d-sm-table-cell',
       }, {
-        title: "Last modified ",
+        title: "Last modified",
         key: "modified",
         class: 'd-none d-sm-table-cell',
         cellClass: 'd-none d-sm-table-cell',
       }, {
-        title: "Permissions ",
+        title: "Permissions",
         key: "perms",
         class: 'd-none d-sm-table-cell',
         cellClass: 'd-none d-sm-table-cell',
       }, {
-        title: "Owner ",
+        title: "Owner",
         key: "owner",
+        class: 'd-none d-sm-table-cell',
+        cellClass: 'd-none d-sm-table-cell',
+      }, {
+        title: "Destination",
+        key: "dest",
         class: 'd-none d-sm-table-cell',
         cellClass: 'd-none d-sm-table-cell',
       }],
@@ -280,18 +285,10 @@ export default {
             this.page = 1;
             this.items = [];
             response.data.files.forEach(element => {
-              this.items.push({
-                id: element.id,
-                name: element.name,
-                size: element.size,
-                type: element.type,
-                modified: element.modified,
-                perms: element.perms,
-                permsn: element.permsn,
-                owner: element.owner,
-                group: element.group,
-                selected: false,
-              });
+              let item = {...element};
+              item.selected = true;
+
+              this.items.push(item);
             });
 
             document.title = "Files | " + this.server.name;
