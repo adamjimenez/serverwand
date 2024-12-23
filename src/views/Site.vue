@@ -6,7 +6,7 @@
 
     <Loading :value="fetching" />
 
-    <v-list-item :title="data.name" :subtitle="data.hostname">
+    <v-list-item :title="data.name">
       <template v-slot:prepend>
         <SiteIcon :app="data.app" :to="'http://' + data.domain + (data.app == 'wordpress' ? '/wp-admin' : '')"></SiteIcon>        
       </template>
@@ -16,7 +16,7 @@
         </a>
       </v-list-item-title>
       <v-list-item-subtitle>
-        <router-link :to="'/servers/' + data.server.id + '/summary'">
+        <router-link :to="'/servers/' + data.server.id + '/summary'" class="text-no-wrap">
           {{ data.server.name }}
         </router-link>
       </v-list-item-subtitle>

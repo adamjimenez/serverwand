@@ -4,7 +4,12 @@
       <div v-html="error"></div>
     </v-alert>
 
-    <v-list-item :title="data.name" :subtitle="data.hostname">
+    <v-list-item :title="data.name">
+      <template v-slot:subtitle>
+        <span class="text-no-wrap">
+          {{ data.hostname }}
+        </span>
+      </template>
       <template v-slot:prepend>
         <ServerIcon :provider="data.provider"></ServerIcon>
       </template>

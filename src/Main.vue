@@ -20,7 +20,7 @@
 
     <v-navigation-drawer :expand-on-hover="!display.mobile" disable-route-watcher :rail="rail" permanent>
       <v-list nav>
-        <v-list-item base-color="primary" variant="flat" :to="createLink">
+        <v-list-item base-color="primary" variant="flat" :to="createLink" class="text-no-wrap">
           <template v-slot:prepend>
             <v-icon size="small" style="width: 24px; text-align: center;">mdi:mdi-plus</v-icon>
           </template>
