@@ -6,8 +6,8 @@
 
     <v-card :loading="fetching">
 
-      <v-data-table v-if="items.length" v-model="selected" :headers="headers" :items="items" show-select class="results"
-        mobile-breakpoint="0" @click:row="view">
+      <v-data-table v-if="items.length" v-model="selected" :headers="headers" :items="items" show-select
+        mobile-breakpoint="0" @click:row="view" hover :row-props="rowProps">
 
         <template v-slot:item.size="{ item }">
           <span>{{ prettyBytes(item.size) }}</span>
@@ -155,6 +155,13 @@ export default {
     handleComplete: function (result) {
       this.error = result;
       this.fetchData();
+    },
+    rowProps(data) {
+      if (this.selected.find(item => item === data.item.id)) {
+        return {
+            class: 'bg-primary'
+        };
+      }
     }
   },
 };

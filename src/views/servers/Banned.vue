@@ -5,7 +5,7 @@
       <v-card :loading="fetching">
   
         <v-data-table v-if="items.length" v-model="selected" :headers="headers" :items="items" item-value="ip" show-select class="results"
-          mobile-breakpoint="0">
+          mobile-breakpoint="0" hover :row-props="rowProps">
 
             <template v-slot:item.ip="{ item }">
                 <span> 
@@ -127,6 +127,13 @@
       handleComplete: function (result) {
         this.error = result;
         this.fetchData();
+      },
+      rowProps(data) {
+        if (this.selected.find(item => item.id === data.item.id)) {
+          return {
+              class: 'bg-primary'
+          };
+        }
       }
     },
   };

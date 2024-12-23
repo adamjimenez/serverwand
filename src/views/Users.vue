@@ -5,9 +5,9 @@
     <Loading :value="loading" />
 
     <v-card :loading="fetching">
-      <v-data-table :headers="headers" :items="filtered" :items-per-page="100">
+      <v-data-table :headers="headers" :items="filtered" :items-per-page="100" hover @click:row="function (event, data) { $router.push('/users/' + data.item.id + '/summary') }">
         <template v-slot:item.name="{ item }">
-          <v-list-item :to="'/users/' + item.id + '/summary'" :title="item.name" class="px-0">
+          <v-list-item :title="item.name" class="px-0">
             <template v-slot:prepend v-if="!display.mobile">
               <v-icon>fas fa-user</v-icon>
             </template>

@@ -51,7 +51,7 @@
       </v-container>
 
       <v-data-table v-model="selectedIds" :headers="headers" :items="items" :items-per-page="100" class="results" ref="results" show-select
-        mobile-breakpoint="0" @click:row="function (event, item) { open(item.item) }" :loading="fetching" :page="page" @update:page="updatePage">
+        mobile-breakpoint="0" @click:row="function (event, item) { open(item.item) }" :loading="fetching" :page="page" @update:page="updatePage" hover :row-props="rowProps">
 
         <template v-slot:item.size="{ item }">
           {{ prettyBytes(item.size) }}
@@ -361,6 +361,13 @@ export default {
     },
     updatePage(page) {
       this.page = page;
+    },
+    rowProps(data) {
+      if (this.selected.find(item => item.id === data.item.id)) {
+        return {
+            class: 'bg-primary'
+        };
+      }
     }
   },
 };

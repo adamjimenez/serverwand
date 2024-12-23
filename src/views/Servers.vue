@@ -24,9 +24,9 @@
               </v-row>
             </v-container>
 
-            <v-data-table :headers="headers" :items="filtered" :items-per-page="100">
+            <v-data-table :headers="headers" :items="filtered" :items-per-page="100" hover @click:row="function (event, data) { $router.push('/servers/' + data.item.id + '/summary') }">
               <template v-slot:item.name="{ item }">
-                <v-list-item :to="'/servers/' + item.id + '/summary'" :title="item.name" :subtitle="item.hostname"
+                <v-list-item :title="item.name" :subtitle="item.hostname"
                   class="px-0">
                   <template v-slot:prepend v-if="!display.mobile">
                     <ServerIcon :provider="item.provider"></ServerIcon>
@@ -200,7 +200,7 @@ export default {
         })
         .catch(error => console.log(error))
         .finally(() => this.fetching = false);
-    },
+    }
   },
 };
 </script>

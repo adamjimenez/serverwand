@@ -5,9 +5,9 @@
     <Loading :value="loading" />
 
     <v-card :loading="fetching">
-      <v-data-table :headers="headers" :items="items" :items-per-page="100">
+      <v-data-table :headers="headers" :items="items" :items-per-page="100" hover @click:row="function (event, data) { $router.push('/teams/' + data.item.id + '/members') }">
         <template v-slot:item.name="{ item }">
-          <v-list-item :to="'/teams/' + item.id + '/members'" :title="item.name" class="px-0">
+          <v-list-item :title="item.name" class="px-0">
             <v-list-item-subtitle>
               {{ item.members.length }} member{{ item.members.length != 1 ? "s" : "" }},
               {{ item.servers.length }} server{{ item.servers.length != 1 ? "s" : "" }}

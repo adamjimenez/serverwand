@@ -13,9 +13,9 @@
             </v-card-text>
           </v-card>
 
-          <v-data-table :headers="headers" :items="filtered" :items-per-page="100">
+          <v-data-table :headers="headers" :items="filtered" :items-per-page="100" hover @click:row="function (event, data) { $router.push('/sites/' + data.item.id + '/summary') }">
             <template v-slot:item.domain="{ item }">
-              <v-list-item :to="'/sites/' + item.id + '/summary'" :title="item.domain" :subtitle="servers[item.server]"
+              <v-list-item :title="item.domain" :subtitle="servers[item.server]"
                 class="px-0">
                 <template v-slot:prepend v-if="display.smAndUp">
                   <SiteIcon :app="item.app"></SiteIcon>

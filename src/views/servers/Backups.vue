@@ -38,7 +38,7 @@
             <v-row>
               <v-col cols="12">
                 <v-data-table :headers="headers" :items="items" :items-per-page="100" class="results" ref="results" mobile-breakpoint="0"
-                  @click:row="function (event, item) { open(item.item) }" v-model="selectedIds" show-select :page="page" @update:page="updatePage">
+                  @click:row="function (event, item) { open(item.item) }" v-model="selectedIds" show-select :page="page" @update:page="updatePage" hover :row-props="rowProps">
 
                   <template v-slot:item.modified="{ item }">
                     {{ formatDate(item.modified) }}
@@ -53,7 +53,7 @@
             <v-row>
               <v-col cols="12">
                 <v-data-table :headers="backupHeaders" :items="backups" :items-per-page="100" mobile-breakpoint="0"
-                  @click:row="function (event, item) { browse(item.item) }">
+                  @click:row="function (event, item) { browse(item.item) }" hover>
 
                   <template v-slot:item.name="{ item }">
                     <span @click="browse(item)">{{ item.name }}</span>
@@ -477,6 +477,13 @@ export default {
     },
     updatePage(page) {
       this.page = page;
+    },
+    rowProps(data) {
+      if (this.selected.find(item => item.id === data.item.id)) {
+        return {
+            class: 'bg-primary'
+        };
+      }
     }
   },
 };
