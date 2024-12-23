@@ -77,7 +77,11 @@
     </v-card>
 
     <v-dialog v-model="keysDialog" max-width="600">
-      <v-card title="Deployment keys">
+      <v-card title="Deployment URLs">
+        <template v-slot:subtitle>
+          See docs on how to setup a <a href="//serverwand.com/docs/github-workflow" target="_blank">Github Worflow</a>
+        </template>
+
         <v-card-text>
           <v-container fluid>
             <v-list v-if="!fetching">
@@ -101,10 +105,9 @@
     </v-dialog>
 
     <v-dialog v-model="keyDialog">
-      <v-card title="Create key">
+      <v-card title="Create deployment URL">        
         <v-card-text>
           <v-text-field v-model="keyLabel" label="Label"></v-text-field>
-
           <v-btn :disabled="!keyLabel" :loading="fetching" color="success" @click="saveKey">
             Save
           </v-btn>
