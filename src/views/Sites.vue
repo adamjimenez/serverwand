@@ -15,8 +15,12 @@
 
           <v-data-table :headers="headers" :items="filtered" :items-per-page="100" hover @click:row="function (event, data) { $router.push('/sites/' + data.item.id + '/summary') }">
             <template v-slot:item.domain="{ item }">
-              <v-list-item :title="item.domain" :subtitle="servers[item.server]"
-                class="px-0">
+              <v-list-item :title="item.domain" class="px-0">
+                <template v-slot:subtitle>
+                  <span class="text-no-wrap">
+                    {{ servers[item.server] }}
+                  </span>
+                </template>
                 <template v-slot:prepend v-if="display.smAndUp">
                   <SiteIcon :app="item.app"></SiteIcon>
                 </template>
@@ -77,6 +81,7 @@ export default {
         items.push({
           title: "IP",
           key: "ip",
+          maxWidth: 140,
         });
       }
 
