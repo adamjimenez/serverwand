@@ -22,7 +22,7 @@
     <v-dialog v-model="drawer" max-width="600">
       <v-card title="Server">
         <v-card-text>
-          <v-select v-model="data.server" :items="servers" label="Server" autofocus></v-select>
+          <v-select v-model="data.server" :items="servers" label="Server"></v-select>
 
           <v-btn :disabled="!data.server" :loading="dialog" color="success" @click="saveItem">
             Save
@@ -55,7 +55,9 @@ export default {
       loading: null,
       id: null,
       error: null,
-      data: {},
+      data: {
+        server: null
+      },
       servers: [],
       dialog: false,
       details: "",
@@ -113,7 +115,7 @@ export default {
       api.get("settings/profile").then(response => this.useMasterPassword = response.data.profile.prefs.useMasterPassword);
     },
     addItem() {
-      this.server.name = "";
+      this.data.server = null;
       this.drawer = true;
     },
     saveItem() {
