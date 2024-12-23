@@ -132,7 +132,7 @@ export default {
         class: 'd-none d-sm-table-cell',
         cellClass: 'd-none d-sm-table-cell',
       }, {
-        title: "Last modified",
+        title: "Date modified",
         key: "modified",
         class: 'd-none d-sm-table-cell',
         cellClass: 'd-none d-sm-table-cell',
