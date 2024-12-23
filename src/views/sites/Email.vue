@@ -172,6 +172,11 @@ export default {
         .then((response) => {
           console.log(response);
 
+          if (response.data.error) {
+            this.error = response.data.error;
+            return;
+          }
+
           this.data = response.data.item;
           document.title = "Email" + " | " + this.data.domain;
 
