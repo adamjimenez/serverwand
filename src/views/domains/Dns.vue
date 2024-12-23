@@ -4,7 +4,7 @@
 
     <Loading :value="loading" />
 
-    <v-data-table :headers="headers" :items="data.records" class="results">
+    <v-data-table :headers="headers" :items="data.records" hover>
       <template v-slot:item.type="{ item }">
         <span>{{ item.type }}</span>
       </template>

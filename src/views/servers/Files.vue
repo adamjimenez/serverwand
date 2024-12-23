@@ -50,7 +50,7 @@
         </v-row>
       </v-container>
 
-      <v-data-table v-model="selectedIds" :headers="headers" :items="items" :items-per-page="100" class="results" ref="results" show-select
+      <v-data-table v-model="selectedIds" :headers="headers" :items="items" :items-per-page="100" ref="results" show-select
         mobile-breakpoint="0" @click:row="function (event, item) { open(item.item) }" :loading="fetching" :page="page" @update:page="updatePage" hover :row-props="rowProps">
 
         <template v-slot:item.size="{ item }">

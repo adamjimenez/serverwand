@@ -10,7 +10,7 @@
       </v-card-actions>
     </v-card>
 
-    <v-data-table :headers="headers" :items="data.records" class="results" mobile-breakpoint="0" @click:row="editItem">
+    <v-data-table :headers="headers" :items="data.records" mobile-breakpoint="0" @click:row="editItem" hover>
       <template v-slot:item.type="{ item }">
         <span>{{ item.type }}</span>
       </template>

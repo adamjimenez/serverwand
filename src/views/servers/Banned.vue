@@ -4,7 +4,7 @@
   
       <v-card :loading="fetching">
   
-        <v-data-table v-if="items.length" v-model="selected" :headers="headers" :items="items" item-value="ip" show-select class="results"
+        <v-data-table v-if="items.length" v-model="selected" :headers="headers" :items="items" item-value="ip" show-select
           mobile-breakpoint="0" hover :row-props="rowProps">
 
             <template v-slot:item.ip="{ item }">
