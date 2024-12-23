@@ -14,6 +14,8 @@
             @error="handleError" />
           <NewFolder v-if="selected.length === 0" :serverId="serverId" :path="path" @complete="fetchData()"
             @error="handleError" />
+          <NewLink v-if="selected.length === 0" :serverId="serverId" :path="path" @complete="fetchData()"
+            @error="handleError" />
           <Upload v-if="selected.length === 0" :serverId="serverId" :path="path" :dropZone="$refs.results"
             @complete="fetchData()" @error="handleError" folder="folder" />
           <Rename v-if="selected.length === 1" :serverId="serverId" :path="path" :selected="selected"
@@ -75,6 +77,7 @@ import util from "../../services/util";
 import Loading from "../../components/Loading";
 import NewFile from "../../components/Files/NewFile";
 import NewFolder from "../../components/Files/NewFolder";
+import NewLink from "../../components/Files/NewLink";
 import Chmod from "../../components/Files/Chmod";
 import Chown from "../../components/Files/Chown";
 import Rename from "../../components/Files/Rename";
@@ -91,6 +94,7 @@ export default {
     Loading,
     NewFile,
     NewFolder,
+    NewLink,
     Chmod,
     Chown,
     Rename,
