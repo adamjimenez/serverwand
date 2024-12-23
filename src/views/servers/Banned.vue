@@ -129,7 +129,7 @@
         this.fetchData();
       },
       rowProps(data) {
-        if (this.selected.find(item => item.id === data.item.id)) {
+        if (this.selected.find(item => item === data.item.ip)) {
           return {
               class: 'bg-primary'
           };
