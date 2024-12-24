@@ -89,9 +89,6 @@ export default {
         items.push({
           title: "MX",
           key: "mx",
-        }, {
-          title: "MX",
-          key: "mx",
         });
       }
 
