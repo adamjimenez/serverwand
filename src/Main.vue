@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app flat>
-      <v-app-bar-nav-icon @click.stop="rail = !rail" size="small"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click.stop="if (mobile) { drawer = !drawer; } else { rail = !rail }" size="small"></v-app-bar-nav-icon>
 
       <router-link to="/servers" class="text-decoration-none text-primary" v-if="!display.mobile">
         <v-list-item>
@@ -18,7 +18,7 @@
       <UserMenu />
     </v-app-bar>
 
-    <v-navigation-drawer :expand-on-hover="!display.mobile" disable-route-watcher :rail="rail" permanent>
+    <v-navigation-drawer v-model="drawer" :expand-on-hover="!mobile" :rail="rail" :permanent="!mobile">
       <v-list nav>
         <v-list-item base-color="primary" variant="flat" :to="createLink" class="text-no-wrap">
           <template v-slot:prepend>
@@ -86,6 +86,7 @@ import UserMenu from "./components/UserMenu";
 import api from "./services/api";
 import axios from "axios";
 import { sha256 } from "js-sha256";
+import { useDisplay } from 'vuetify';
 
 export default {
   components: {
@@ -110,9 +111,11 @@ export default {
       masterPassword: "",
       restricted: false,
       rail: true,
+      drawer: true,
 			display: {},
       createLink: '',
       createLabel: '',
+      mobile: false
     };
   },
   created() {
@@ -154,6 +157,9 @@ export default {
     this.fetchData();
   },
   mounted() {
+		const { mobile } = useDisplay();
+		this.mobile = mobile;
+
     if (parseInt(localStorage.dark) !== 0) {
       this.dark = true;
       this.$vuetify.theme.dark = true;
@@ -182,6 +188,10 @@ export default {
         return this.restricted ? !item.restricted : true;
       });
     },
+		mobile(mobile) {
+			this.rail = !mobile;
+			this.drawer = !mobile;
+		},
     rail(value) {
       localStorage.rail = value;
     },
