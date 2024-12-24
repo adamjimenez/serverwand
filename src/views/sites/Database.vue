@@ -6,9 +6,7 @@
 
     <v-card class="pa-3" :loading="fetching">
       <div v-if="data.db_name == false">
-        <v-btn :disabled="loading != ''" :loading="loading == 'database'" @click="addDatabase">
-          Add Database
-        </v-btn>
+        <v-btn :disabled="loading != ''" :loading="loading == 'database'" @click="addDatabase" icon="mdi:mdi-plus"></v-btn>
       </div>
 
       <v-card max-width="300" v-else>
