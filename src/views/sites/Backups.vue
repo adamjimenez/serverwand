@@ -7,7 +7,7 @@
     <v-card :loading="fetching" ref="results">
       <v-card-actions>
         <v-btn title="Create backup" ref="uploadFolderButton" @click="createBackup()" icon="mdi:mdi-plus"></v-btn>
-        <Upload :serverId="serverId" :path="path" :dropZone="$refs.results" @complete="fetchData()"
+        <Upload :serverId="serverId" :path="path" :dropZone="$refs.results" :fileType="['zip']" @complete="fetchData()"
           @error="handleError" />
       </v-card-actions>
       <v-card-text>

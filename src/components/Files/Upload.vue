@@ -34,7 +34,8 @@ export default {
     serverId: null,
     path: null,
     dropZone: null,
-    folder: null
+    folder: null,
+    fileType: null,
   },
 
   watch: {
@@ -84,6 +85,7 @@ export default {
         },
         withCredentials: true,
         chunkSize: 1 * 1024 * 1024,
+        fileType: this.fileType,
       });
 
       this.r.assignBrowse(this.$refs.uploadFileButton.$el);
