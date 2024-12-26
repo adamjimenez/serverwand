@@ -1,9 +1,10 @@
 <template>
   <v-app>
-    <v-app-bar app flat>
-      <v-app-bar-nav-icon @click.stop="if (mobile) { drawer = !drawer; } else { rail = !rail }" size="small"></v-app-bar-nav-icon>
+    <v-app-bar class="d-flex">
+      <v-app-bar-nav-icon v-if="!mobile" variant="text" color="grey-lighten-1"
+        @click.stop="if (mobile) { drawer = !drawer; } else { rail = !rail }"></v-app-bar-nav-icon>
 
-      <router-link to="/servers" class="text-decoration-none text-primary" v-if="!display.mobile">
+      <router-link to="/servers" class="text-decoration-none text-primary" v-if="!mobile">
         <v-list-item>
           <template v-slot:prepend>
             <v-icon class="mr-0 pl-3" size="large" color="primary">fas fa-magic</v-icon>
@@ -14,8 +15,8 @@
         </v-list-item>
       </router-link>
 
-      <Search />
-      <UserMenu />
+      <Search @menuToggle="menuToggle" />
+      <UserMenu v-if="!mobile" />
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" :expand-on-hover="!mobile" :rail="rail" :permanent="!mobile">
@@ -112,14 +113,14 @@ export default {
       restricted: false,
       rail: true,
       drawer: true,
-			display: {},
+      display: {},
       createLink: '',
       createLabel: '',
       mobile: false
     };
   },
   created() {
-		this.display = this.$vuetify.display;
+    this.display = this.$vuetify.display;
 
     axios.interceptors.response.use(
       (response) => {
@@ -157,8 +158,8 @@ export default {
     this.fetchData();
   },
   mounted() {
-		const { mobile } = useDisplay();
-		this.mobile = mobile;
+    const { mobile } = useDisplay();
+    this.mobile = mobile;
 
     if (parseInt(localStorage.dark) !== 0) {
       this.dark = true;
@@ -188,10 +189,10 @@ export default {
         return this.restricted ? !item.restricted : true;
       });
     },
-		mobile(mobile) {
-			this.rail = !mobile;
-			this.drawer = !mobile;
-		},
+    mobile(mobile) {
+      this.rail = !mobile;
+      this.drawer = !mobile;
+    },
     rail(value) {
       localStorage.rail = value;
     },
@@ -277,6 +278,13 @@ export default {
       let label = 'New ';
       label += section.substr(0, section.length - 1);
       this.createLabel = label;
+    },
+    menuToggle() {
+      if (this.mobile) {
+        this.drawer = !this.drawer;
+      } else {
+        this.rail = !this.rail
+      }
     }
   },
 };

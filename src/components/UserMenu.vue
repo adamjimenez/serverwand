@@ -1,7 +1,7 @@
 <template>
   <v-menu offset-y left>
     <template v-slot:activator="{ props }">
-      <v-btn icon="mdi:mdi-account-circle" v-bind="props"></v-btn>
+      <v-btn icon="mdi:mdi-account-circle" v-bind="props" @click.stop @mousedown.stop></v-btn>
     </template>
     <v-list>
       <v-list-item v-for="(item, index) in items" :key="index" @click="goto(item.to)" :title="item.value"

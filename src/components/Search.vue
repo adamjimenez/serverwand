@@ -1,25 +1,41 @@
 <template>
-  <div class="flex-1-1 mx-2">
-    <v-autocomplete v-model="model" :items="items" label="Search" placeholder="Search" @update:modelValue="afterselection"
-      ref="autocomplete" hide-details prepend-inner-icon="mdi:mdi-magnify" single-line rounded variant="solo-filled">
-
-      <template v-slot:item="{ props, item }">
-        <v-list-item v-bind="props" :prepend-icon="item?.raw?.avatar" :title="item?.raw?.title"
-          :subtitle="item?.raw?.subtitle"></v-list-item>
+  <div class="text-align-center d-flex flex-row justify-start flex-grow-1">
+    <v-autocomplete v-model="model" :items="items" label="Search" placeholder="Search"
+      @update:modelValue="afterselection" ref="autocomplete" hide-details hide-no-data single-line rounded no-filter
+      class="mx-5" style="max-width: 800px;" variant="solo-filled" @focus="onSearchFocus" menu-icon="">
+      <template v-slot:prepend-inner>
+        <v-icon icon="mdi:mdi-arrow-left" v-if="searchFocussed" @click.stop="searchFocussed = false"
+          @mousedown.stop></v-icon>
+        <v-app-bar-nav-icon v-else-if="mobile" color="grey-lighten-1" @click.stop="menuToggle"
+          @mousedown.stop></v-app-bar-nav-icon>
+        <v-icon v-else icon="mdi:mdi-magnify"></v-icon>
       </template>
-
+      <template v-slot:append-inner>
+        <UserMenu v-if="mobile && !searchFocussed"></UserMenu>
+      </template>
+      <template v-slot:item="{ item, props }">
+        <v-list-item v-bind="props"></v-list-item>
+      </template>
     </v-autocomplete>
   </div>
+
 </template>
 
 <script>
 import api from "../services/api";
+import UserMenu from "./UserMenu";
+import { useDisplay } from 'vuetify';
 
 export default {
+  components: {
+    UserMenu,
+  },
   data: () => ({
     model: null,
     items: [],
     servers: [],
+    mobile: false,
+    searchFocussed: false,
   }),
 
   created() {
@@ -31,6 +47,9 @@ export default {
   },
 
   methods: {
+    menuToggle() {
+      this.$emit("menuToggle");
+    },
     fetchData() {
       this.error = this.post = null;
       this.loading = true;
@@ -113,12 +132,22 @@ export default {
         .finally(() => this.loading = false);
     },
     afterselection() {
+      this.searchFocussed = false;
       this.$nextTick(() => {
         this.$router.push(this.model);
         this.model = null;
         this.$refs.autocomplete.blur();
       });
     },
+    onSearchFocus: function () {
+      if (this.mobile) {
+        this.searchFocussed = true;
+      }
+    }
+  },
+  mounted() {
+    const { mobile } = useDisplay();
+    this.mobile = mobile;
   },
 };
 </script>
