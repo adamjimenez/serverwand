@@ -2,12 +2,12 @@
   <v-app>
     <v-app-bar class="d-flex">
       <v-app-bar-nav-icon v-if="!mobile" variant="text" color="grey-lighten-1"
-        @click.stop="if (mobile) { drawer = !drawer; } else { rail = !rail }"></v-app-bar-nav-icon>
+        @click.stop="menuToggle"></v-app-bar-nav-icon>
 
       <router-link to="/servers" class="text-decoration-none text-primary" v-if="!mobile">
         <v-list-item>
           <template v-slot:prepend>
-            <v-icon class="mr-0 pl-3" size="large" color="primary">fas fa-magic</v-icon>
+            <v-icon class="mr-0 pl-2" size="large" color="primary">fas fa-magic</v-icon>
           </template>
           <template v-slot:title>
             <h2>ServerWand</h2>
