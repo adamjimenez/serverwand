@@ -108,7 +108,7 @@ export default {
           this.items = response.data.messages;
 
           this.items = [];
-          response.data.messages.forEach((element) => {
+          response.data.messages?.forEach((element) => {
             this.items.push({
               id: element.id,
               size: element.size,
@@ -119,7 +119,7 @@ export default {
             });
           });
 
-          document.title = "Mail" + " | " + this.data.name;
+          document.title = "Mail" + " | " + this.data?.name;
         })
         .catch(error => console.log(error))
         .finally(() => this.fetching = false);
