@@ -274,10 +274,7 @@ export default {
       }
 
       this.createLink = '/' + section + '/create';
-
-      let label = 'New ';
-      label += section.substr(0, section.length - 1);
-      this.createLabel = label;
+      this.createLabel = 'New ' + section.substr(0, section.length - 1);
     },
     menuToggle() {
       if (this.mobile) {
