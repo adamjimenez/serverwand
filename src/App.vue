@@ -12,6 +12,10 @@ body {
 .editor {
     height: 75vh;
 }
+
+.v-data-table-footer__items-per-page {
+  display: none !important;
+}
 </style>
 
 <style>
