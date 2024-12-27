@@ -1,7 +1,7 @@
 <template>
     <div>
-      <v-btn :loading="fetching" @click="deleteServer" v-bind="$attrs" :disabled="fetching || server.queue == 0">
-        Clear Mail Queue ({{ server.queue ? server.queue : 0 }})
+      <v-btn :loading="fetching" @click="deleteServer" v-bind="$attrs" :disabled="fetching || server?.queue == 0">
+        Clear Mail Queue ({{ server?.queue ? server.queue : 0 }})
       </v-btn>
       <Confirm ref="confirm" />
     </div>
@@ -25,7 +25,7 @@
     },  
     methods: {
       deleteServer: async function () {
-        if (!await this.$refs.confirm.open("Delete " + this.server.queue + " items from the mail queue?")) {
+        if (!await this.$refs.confirm.open("Delete " + this.server?.queue + " items from the mail queue?")) {
           return;
         }
         
