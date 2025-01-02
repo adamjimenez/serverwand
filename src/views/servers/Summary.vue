@@ -36,13 +36,13 @@
                     <span class="text-h5">
                       <v-icon icon="fas fa-memory" size="small"></v-icon>
                     </span>
-                    <div class="text-subtitle-1">Memory Usage</div>
+                    <div class="text-subtitle-1">Memory usage</div>
                   </div>
 
-                  <v-progress-linear :model-value="data.mem_perc" height="20" color="primary"></v-progress-linear>
+                  <v-progress-linear :model-value="data.mem_perc" height="20" :color="data.mem_perc >= 90 ? 'error' : 'primary'"></v-progress-linear>
 
                   <div>
-                    {{ prettyBytes(data.mem_free * 1024) }} free of
+                    {{ prettyBytes(data.mem_free * 1024) }} available of
                     {{ prettyBytes(data.mem_total * 1024) }}
                   </div>
                 </v-card-text>
@@ -145,7 +145,7 @@
                   </v-list-item-subtitle>
                 </v-list-item>
 
-                <v-list-item title="Time Zone" :subtitle="data.timeZone">
+                <v-list-item title="Time zone" :subtitle="data.timeZone">
                   <template v-slot:append>
                     <TimeZone :serverId="serverId" @save="fetchData(true)" />
                   </template>
@@ -168,7 +168,7 @@
                   </template>
                 </v-list-item>
 
-                <v-list-item title="Kernel version" :subtitle="data.kernel"></v-list-item>
+                <v-list-item title="Kernel" :subtitle="data.kernel"></v-list-item>
 
                 <v-list-item title="Apache" :subtitle="data.apache">
                   <template v-slot:append>
