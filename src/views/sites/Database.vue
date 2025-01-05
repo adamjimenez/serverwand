@@ -24,19 +24,19 @@
             </template>
           </v-list-item>
 
-          <v-list-item title="DB Name" :subtitle="data.db_name">
+          <v-list-item title="DB name" :subtitle="data.db_name">
             <template v-slot:subtitle>
               <Copy :val="data.db_name" text />
             </template>
           </v-list-item>
 
-          <v-list-item title="DB Username" :subtitle="data.db_name">
+          <v-list-item title="DB username" :subtitle="data.db_name">
             <template v-slot:subtitle>
               <Copy :val="data.db_name" text />
             </template>
           </v-list-item>
 
-          <v-list-item title="DB Password" subtitle="******">
+          <v-list-item title="DB password" subtitle="******">
             <template v-slot:subtitle>
               <Copy :val="data.db_password" text label="******" />
             </template>

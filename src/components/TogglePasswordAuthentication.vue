@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-switch v-model="data.passwordAuthentication" label="Password Authentication" @change="togglePasswordAuthentication" hide-details color="primary" :loading="loading">
+    <v-switch v-model="data.passwordAuthentication" label="Password authentication" @change="togglePasswordAuthentication" hide-details color="primary" :loading="loading">
       <template v-slot:append>
         <v-tooltip location="top" text="We recommend password authentication is
             disabled in favour of key authentication.">

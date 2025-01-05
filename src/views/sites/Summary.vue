@@ -10,11 +10,11 @@
         <v-list lines="two">
           <DNS :server="data.server"></DNS>
 
-          <v-list-item title="Disk Usage" :subtitle="prettyBytes(data.disk_usage * 1024)"></v-list-item>
+          <v-list-item title="Disk usage" :subtitle="prettyBytes(data.disk_usage * 1024)"></v-list-item>
 
-          <v-list-item title="Data Transfer" :subtitle="prettyBytes(data.transfer * 1024)"></v-list-item>
+          <v-list-item title="Data transfer" :subtitle="prettyBytes(data.transfer * 1024)"></v-list-item>
 
-          <v-list-item title="FTP Host" :subtitle="data.domain">
+          <v-list-item title="FTP host" :subtitle="data.domain">
             <template v-slot:subtitle>
               <Copy :val="data.domain" text />
             </template>
