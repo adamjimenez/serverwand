@@ -144,7 +144,7 @@ export default {
       let filtered = [];
 
       this.items.forEach((element) => {
-        if (this.provider && element.provider == this.provider) {
+        if (this.provider && element.provider !== this.provider) {
           return;
         }
 
