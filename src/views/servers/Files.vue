@@ -54,7 +54,9 @@
         mobile-breakpoint="0" @click:row="function (event, item) { open(item.item) }" :loading="fetching" :page="page" @update:page="updatePage" hover :row-props="rowProps">
 
         <template v-slot:item.size="{ item }">
-          {{ prettyBytes(item.size) }}
+          <span v-if="item.type === 'file'">
+            {{ prettyBytes(item.size) }}
+          </span>
         </template>
 
         <template v-slot:item.modified="{ item }">
