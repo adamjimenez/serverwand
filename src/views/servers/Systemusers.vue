@@ -15,18 +15,21 @@
           @click="editItem(item)">
           <template v-slot:append>
 
-            <v-icon v-if="item.name === data.ssh_username" size="x-small" title="Default SSH user" color="primary"
-                icon="fas fa-check" class="mx-1" @click.stop="clearSSHUser"></v-icon>
+            <v-icon v-if="item.default_ssh_user" size="x-small" title="Default SSH user" color="primary"
+              icon="fas fa-check" class="mx-1"></v-icon>
 
-              <v-icon v-if="item.sudo" size="x-small" title="Sudo privileges" color="primary"
-                icon="fas fa-crown" class="mx-1"></v-icon>
-              <v-icon v-else size="x-small" title="Non-sudo user" color="primary" icon="fas fa-user" class="mx-1"></v-icon>
+            <v-icon v-if="item.sudo" size="x-small" title="Sudo privileges" color="primary" icon="fas fa-crown"
+              class="mx-1"></v-icon>
+            <v-icon v-else size="x-small" title="Non-sudo user" color="primary" icon="fas fa-user"
+              class="mx-1"></v-icon>
 
-              <v-icon v-if="item.sudo_without_password" size="x-small" title="Sudo without password" color="primary" icon="fas
+            <v-icon v-if="item.sudo_without_password" size="x-small" title="Sudo without password" color="primary" icon="fas
                 fa-lock-open" class="mx-1"></v-icon>
-              <v-icon v-else size="x-small" color="primary" title="Sudo with password" icon="fas fa-lock" class="mx-1"></v-icon>
+            <v-icon v-else size="x-small" color="primary" title="Sudo with password" icon="fas fa-lock"
+              class="mx-1"></v-icon>
 
-            <v-btn :disabled="loading" :loading="loading === item.name" @click.stop="deleteItem(item.name)" size="small" icon="mdi:mdi-delete"></v-btn>
+            <v-btn :disabled="loading" :loading="loading === item.name" @click.stop="deleteItem(item.name)" size="small"
+              icon="mdi:mdi-delete"></v-btn>
           </template>
         </v-list-item>
       </v-list>
@@ -44,15 +47,19 @@
           <v-window v-model="tab">
             <v-window-item value="settings">
 
-              <v-text-field v-model="system_user.name" label="User" :readonly="!system_user.new" required autofocus></v-text-field>
+              <v-text-field v-model="system_user.name" label="User" :readonly="!system_user.new" required
+                autofocus></v-text-field>
 
               <PasswordField v-model="system_user.password" label="Password" required autocomplete="new-password">
               </PasswordField>
 
-              <v-switch v-model="system_user.sudo" label="sudo" color="primary" hide-details></v-switch>
+              <v-switch :disabled="system_user.default_ssh_user" v-model="system_user.default_ssh_user"
+                label="Default SSH user" color="primary" hide-details></v-switch>
+
+              <v-switch v-model="system_user.sudo" label="Sudo" color="primary" hide-details></v-switch>
 
               <v-switch :disabled="!system_user.sudo" v-model="system_user.sudo_without_password"
-                label="sudo without password" color="primary" hide-details></v-switch>
+                label="Sudo without password" color="primary" hide-details></v-switch>
 
               <v-btn :disabled="!system_user.name" :loading="loading" color="success" @click="saveUser" class="mt-5">
                 Save
@@ -87,7 +94,8 @@
                     <v-btn icon :disabled="fetching" :loading="fetching">
                       <Copy :val="item.key" />
                     </v-btn>
-                    <v-btn icon="mdi:mdi-delete" size="small" :disabled="fetching" :loading="loading === item.line" @click.stop="deleteKey(item.line)"></v-btn>
+                    <v-btn icon="mdi:mdi-delete" size="small" :disabled="fetching" :loading="loading === item.line"
+                      @click.stop="deleteKey(item.line)"></v-btn>
                   </template>
                 </v-list-item>
               </v-list>
@@ -332,28 +340,6 @@ export default {
           this.fetching = false;
           console.log(error);
         });
-    },
-    clearSSHUser: async function () {
-      if (!await this.$refs.confirm.open("Clear the default SSH user used for terminal access?")) {
-        return;
-      }
-      
-      this.fetching = true;
-      api
-        .post("servers/" + this.serverId + "/savesshuser", {
-          ssh_username: "",
-        })
-        .then(response => {
-          console.log(response);
-
-          if (!response.data.success) {
-            this.error = response.data.error;
-          } else {
-            this.$emit('complete');
-          }
-        })
-        .catch(error => console.log(error))
-        .finally(() => this.fetching = false);
     },
   },
 };
