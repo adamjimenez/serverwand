@@ -2,7 +2,7 @@
   <div>
     <v-btn v-if="selected.length" @click="cut()" title="Cut" icon="mdi:mdi-content-cut"></v-btn>
     <v-btn v-if="selected.length" @click="copy()" title="Copy" icon="mdi:mdi-content-copy"></v-btn>
-    <v-btn v-if="data.items.length && path != data.src" @click="paste()" title="Paste"
+    <v-btn v-if="data.items.length && (path != data.src || !data.cut)" @click="paste()" title="Paste"
       icon="mdi:mdi-content-paste"></v-btn>
     <Confirm ref="confirm" />
   </div>
@@ -67,6 +67,7 @@ export default {
       }
 
       this.fetching = true;
+      this.$emit('error', null);
 
       api
         .post("servers/" + this.serverId + "/files", {
