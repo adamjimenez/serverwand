@@ -4,9 +4,6 @@
 
     <Loading :value="loading" />
 
-    <SSL :siteId="this.siteId" :provider="data.ssl_provider.provider" :fullchain="data.ssl_provider.fullchain"
-      @closed="fetchData(true)" />
-
     <v-card>
       <v-card max-width="600">
         <v-list>
@@ -48,14 +45,12 @@
 import api from '../../services/api'
 import Loading from '../../components/Loading'
 import Edit from '../../components/Edit'
-import SSL from '../../components/SSL'
 import Confirm from "../../components/ConfirmDialog.vue";
 
 export default {
   components: {
     Loading,
     Edit,
-    SSL,
     Confirm,
   },
   data() {

@@ -68,14 +68,16 @@
                 <v-list-item-subtitle>
                   {{ data.auth.password }}
                   <Edit :val="data.auth.password" label="Auth Password" name="password" password
-                    :path="'sites/' + this.siteId + '/auth'" @save="fetchData(true)" />
+                    :path="'sites/' + siteId + '/auth'" @save="fetchData(true)" />
                 </v-list-item-subtitle>
               </v-list-item>
             </div>
           </div>
 
+          <SSL :siteId="siteId" :ssl="data.ssl_provider" @closed="fetchData(true)" />
+
           <IPRestrictions :active="data.ip_restrictions.active" :items="data.ip_restrictions.ips"
-            :path="'sites/' + this.siteId + '/iprestrictions'" @save="fetchData(true)" :remoteAddr="data.remote_addr" />
+            :path="'sites/' + siteId + '/iprestrictions'" @save="fetchData(true)" :remoteAddr="data.remote_addr" />
         </v-list>
       </v-card>
     </v-card>
@@ -91,6 +93,7 @@ import Edit from "../../components/Edit";
 import IPRestrictions from "../../components/IPRestrictions";
 import DNS from "../../components/DNS";
 import OAuth from "../../components/OAuth.vue";
+import SSL from '../../components/SSL';
 
 export default {
   components: {
@@ -100,6 +103,7 @@ export default {
     IPRestrictions,
     DNS,
     OAuth,
+    SSL,
   },
   data() {
     return {

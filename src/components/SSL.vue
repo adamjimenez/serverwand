@@ -1,14 +1,20 @@
 <template>
   <div>
-    <v-card>
-      <v-card-title primary-title>
-        <v-btn @click="open"> SSL: {{ this.provider }} </v-btn>
-      </v-card-title>
-    </v-card>
+
+    <v-list-item title="SSL">
+      <template v-slot:subtitle>
+        <span class="text-capitalize">{{ subtitle }}</span>
+      </template>
+      <template v-slot:append>
+        <v-btn icon @click="open()">
+            <v-icon size="small">fas fa-wrench</v-icon>
+        </v-btn>
+      </template>
+    </v-list-item>
 
     <v-dialog app scrollable v-model="showDialog" max-width="600">
       <v-card :loading="fetching" title="SSL">
-        <v-alert v-if="this.error" type="error" :text="error"></v-alert>
+        <v-alert v-if="error" type="error" :text="error"></v-alert>
 
         <v-card-text>
           <v-btn-toggle v-model="data.provider" mandatory>
@@ -40,8 +46,7 @@ import api from "../services/api";
 export default {
   props: {
     siteId: null,
-    provider: null,
-    fullchain: null,
+    ssl: null,
   },
   data() {
     return {
@@ -56,16 +61,13 @@ export default {
     };
   },
   created() {
-    this.data.provider = this.provider;
-    this.data.fullchain = this.fullchain;
+    this.data = this.ssl;
   },
 
   methods: {
     open() {
       this.showDialog = true;
-      this.data.provider = this.provider;
-      this.data.private_key = "";
-      this.data.fullchain = this.fullchain;
+      this.data = this.ssl;
     },
 
     save() {
@@ -89,5 +91,17 @@ export default {
         });
     },
   },
+
+  computed: {
+    subtitle() {
+      let subtitle = this.ssl?.provider
+
+      if (this.ssl?.expiry) {
+        subtitle += '. expires: ' + this.ssl?.expiry;
+      }
+
+      return subtitle;
+    }
+  }
 };
 </script>
