@@ -75,6 +75,7 @@ export default {
   methods: {
     fetchData() {
       this.error = "";
+      this.id = this.$route.params.id;
       this.fetching = true;
 
       api

@@ -72,7 +72,6 @@ export default {
   created() {
     // fetch the data when the view is created and the data is
     // already being observed
-    this.id = this.$route.params.id;
     this.fetchData();
   },
   watch: {
@@ -83,6 +82,7 @@ export default {
     fetchData() {
       this.error = "";
       this.fetching = true;
+      this.id = this.$route.params.id;
 
       api
         .get("teams/" + this.id)

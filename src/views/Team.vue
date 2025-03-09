@@ -55,7 +55,7 @@ export default {
   methods: {
     fetchData() {
       this.error = "";
-      // this.fetching = true
+      this.id = this.$route.params.id;
 
       api
         .get("teams/" + this.id)

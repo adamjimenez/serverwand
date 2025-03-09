@@ -40,7 +40,6 @@ export default {
 
   created() {
     document.title = "Team details";
-    this.id = this.$route.params.id;
     this.fetchData();
   },
 

@@ -42,12 +42,12 @@ export default {
   created() {
     // fetch the data when the view is created and the data is
     // already being observed
-    this.id = this.$route.params.id;
     this.fetchData();
   },
   methods: {
     fetchData() {
       this.error = "";
+      this.id = this.$route.params.id;
       this.fetching = true;
 
       api

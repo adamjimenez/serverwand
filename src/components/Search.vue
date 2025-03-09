@@ -129,6 +129,39 @@ export default {
             });
           });
         })
+
+        api
+          .get("domains/")
+          .then(response => {
+            console.log(response);
+            response.data.items.forEach((element) => {
+              let avatar = 'fas fa-globe';
+
+              this.items.push({
+                title: element.domain,
+                subtitle: '',
+                value: "/domains/" + element.id + "/summary",
+                avatar: avatar,
+              });
+            });
+          })
+          
+        api
+          .get("teams/")
+          .then(response => {
+            console.log(response);
+            response.data.items.forEach((element) => {
+              let avatar = 'fas fa-users';
+
+              this.items.push({
+                title: element.name,
+                subtitle: '',
+                value: "/teams/" + element.id + "/members",
+                avatar: avatar,
+              });
+            });
+          })
+          
         .catch(error => console.log(error))
         .finally(() => this.loading = false);
     },
