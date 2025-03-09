@@ -45,6 +45,11 @@ export default {
                 return;
             }
 
+            if (!data.provider) {
+                this.error = 'missing DNS provider';
+                return false;
+            }
+
             this.provider = data.provider;
             this.dialog = true;
 

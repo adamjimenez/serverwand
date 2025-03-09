@@ -29,7 +29,6 @@
 <script>
 import api from "../services/api";
 import Loading from "../components/Loading";
-import { useDisplay } from 'vuetify';
 
 export default {
   components: {

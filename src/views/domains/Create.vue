@@ -18,8 +18,13 @@
             autofocus
           ></v-text-field>
 
+          <v-select
+            v-model="data.dns"
+            :items="['linode', 'digitalocean']"
+          ></v-select>
+
           <v-btn
-            :disabled="domainId > 0 || !data.domain"
+            :disabled="!domainId && !data.domain"
             :loading="loading"
             color="success"
             @click="validate"
@@ -86,8 +91,6 @@ export default {
       this.error = "";
       this.details = "";
       this.loading = true;
-
-      console.log(arguments);
 
       if (this.domainId) {
         api

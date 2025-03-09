@@ -4,7 +4,7 @@
 
     <Loading :value="loading" />
 
-    <v-data-table :headers="headers" :items="data.records" hover>
+    <v-data-table :headers="headers" :items="data.records" hover v-if="data.records">
       <template v-slot:item.type="{ item }">
         <span>{{ item.type }}</span>
       </template>
@@ -20,7 +20,13 @@
 
     <v-card>
       <v-card-actions>
-        <v-btn @click="addItem()"> Add DNS Record </v-btn>
+        <div v-if="data.records">
+          <v-btn @click="addItem()"> Add DNS Record </v-btn>
+          <v-btn @click="importZoneDialog = true">Import Zone</v-btn>
+        </div>
+        <div v-else>
+          <v-btn @click="addZone()">Add DNS Zone</v-btn>
+        </div>
       </v-card-actions>
     </v-card>
 
@@ -38,6 +44,19 @@
 
           <v-btn :disabled="fetching" :loading="fetching" color="success" @click="submitItem">
             Save
+          </v-btn>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="importZoneDialog">
+      <v-card title="Import zone">
+
+        <v-card-text>
+          <v-text-field v-model="nameserver" label="Nameserver" required></v-text-field>
+
+          <v-btn :disabled="!nameserver" :loading="fetching" color="success" @click="importZone">
+            Import
           </v-btn>
         </v-card-text>
       </v-card>
@@ -96,6 +115,8 @@ export default {
         key: "actions",
         sortable: false,
       }],
+      importZoneDialog: false,
+      nameserver: '',
     };
   },
   created() {
@@ -118,7 +139,15 @@ export default {
         .then(async (response) => {
           console.log(response);
 
-          switch (await this.$refs.oauth.check(response.data)) {
+          if (!response.data.item.provider) {
+              this.error = 'missing DNS provider';
+              return false;
+          }
+
+          let data = {...response.data.item};
+          data.error = response.data.error;
+
+          switch (await this.$refs.oauth.check(data)) {
             case true:
               return this.fetchData();
             case false:
@@ -143,48 +172,110 @@ export default {
       this.record = {};
       this.drawer = true;
     },
+    addZone() {
+      this.fetching = true;
+      this.error = "";
+
+      let url = "domains/" + this.domainId + "/records";
+
+      api
+        .post(url, {
+          zone: true
+        })
+        .then(async () => {
+          this.fetchData();
+        })
+        .catch((error) => {
+          console.log(error);
+          this.fetching = false;
+        })
+        .finally(() => {
+          this.fetching = false;
+        });
+    },
+    importZone() {
+      this.details = "";
+      this.fetching = true;
+      this.error = "";
+
+      let url = "domains/" + this.domainId + "/records";
+
+      if (this.record.id) {
+        url += "/" + this.record.id;
+      }
+
+      api
+        .post(url, {nameserver: this.nameserver})
+        .then(async (response) => {
+          console.log(response);
+
+          switch (await this.$refs.oauth.check(response.data)) {
+            case true:
+              return this.saveItem();
+            case false:
+              return;
+          }
+
+          if (!response.data.success) {
+            this.error = response.data.error;
+          } else {
+            this.drawer = false;
+            this.fetchData();
+            this.importZoneDialog = false;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.fetching = false;
+        })
+        .finally(() => {
+          this.fetching = false;
+        });
+    },
     submitItem() {
       this.saveItem();
     },
     saveItem() {
       if (this.record.type) {
-        this.details = "";
-        this.fetching = true;
-        this.error = "";
-
-        var url = "domains/" + this.domainId + "/records";
-
-        if (this.record.id) {
-          url += "/" + this.record.id;
-        }
-
-        api
-          .post(url, this.record)
-          .then(async (response) => {
-            console.log(response);
-
-            switch (await this.$refs.oauth.check(response.data)) {
-              case true:
-                return this.saveItem();
-              case false:
-                return;
-            }
-
-            if (!response.data.success) {
-              this.error = response.data.error;
-            } else {
-              this.drawer = false;
-              this.fetchData();
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-            this.fetching = false;
-          })
-          .finally(() => {
-            this.fetching = false;
-          });
+        return;
       }
+
+      this.details = "";
+      this.fetching = true;
+      this.error = "";
+
+      let url = "domains/" + this.domainId + "/records";
+
+      if (this.record.id) {
+        url += "/" + this.record.id;
+      }
+
+      api
+        .post(url, this.record)
+        .then(async (response) => {
+          console.log(response);
+
+          switch (await this.$refs.oauth.check(response.data)) {
+            case true:
+              return this.saveItem();
+            case false:
+              return;
+          }
+
+          if (!response.data.success) {
+            this.error = response.data.error;
+          } else {
+            this.drawer = false;
+            this.fetchData();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.fetching = false;
+        })
+        .finally(() => {
+          this.fetching = false;
+        });
     },
     editItem(item) {
       this.record = JSON.parse(JSON.stringify(item));
