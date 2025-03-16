@@ -9,7 +9,7 @@
       <span>Configure Updates</span>
     </v-tooltip>
 
-    <v-dialog v-model="drawer">
+    <v-dialog v-model="drawer" max-width="600">
       <v-card title="Configure Updates">
         <v-card-text>
           <v-switch v-model="automatic_updates" label="Automatic updates" @change="toggle()" color="primary"

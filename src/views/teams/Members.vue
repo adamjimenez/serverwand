@@ -19,8 +19,19 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="drawer" max-width="600">
-      <v-card title="Member">
+    <v-dialog v-model="drawer" max-width="600" persistent>
+      <v-card>
+        <v-card-title class="d-flex justify-space-between align-center">
+          <div class="text-h5 text-medium-emphasis ps-2">
+            Member
+          </div>
+
+         <v-btn
+           icon="mdi:mdi-close"
+           variant="text"
+           @click="drawer = false"
+          ></v-btn>
+        </v-card-title>
         <v-card-text>
           <v-text-field v-model="member.email" label="Email" required autofocus></v-text-field>
 

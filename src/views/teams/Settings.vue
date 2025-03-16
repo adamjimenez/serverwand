@@ -14,8 +14,19 @@
       </v-card>
     </v-card>
 
-    <v-dialog v-model="drawer" max-width="600">
-      <v-card title="Edit Name">
+    <v-dialog v-model="drawer" max-width="600" persistent>
+      <v-card>
+        <v-card-title class="d-flex justify-space-between align-center">
+          <div class="text-h5 text-medium-emphasis ps-2">
+            Edit name
+          </div>
+
+         <v-btn
+           icon="mdi:mdi-close"
+           variant="text"
+           @click="drawer = false"
+          ></v-btn>
+        </v-card-title>
         <v-card-text>
           <v-text-field v-model="data.name" label="Name" required autofocus></v-text-field>
 

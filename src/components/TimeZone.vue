@@ -9,9 +9,19 @@
       <span>Configure Time Zone</span>
     </v-tooltip>
 
-    <v-dialog v-model="drawer">
+    <v-dialog v-model="drawer" max-width="600" persistent>
       <v-card>
-        <v-card-title> Edit Time Zone </v-card-title>
+        <v-card-title class="d-flex justify-space-between align-center">
+          <div class="text-h5 text-medium-emphasis ps-2">
+            Edit Time Zone
+          </div>
+
+         <v-btn
+           icon="mdi:mdi-close"
+           variant="text"
+           @click="drawer = false"
+          ></v-btn>
+        </v-card-title>
 
         <v-card-text>
           <v-select v-model="timeZone" :items="timeZones" label="Time Zone"></v-select>
