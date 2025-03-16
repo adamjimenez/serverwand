@@ -74,7 +74,7 @@
                       <AttachVolume v-if="i === 0" :serverId="serverId" @complete="fetchData(true)"></AttachVolume>
                       <DetachVolume v-if="i > 0" :serverId="serverId" :volume="disk.name" @complete="fetchData(true)">
                       </DetachVolume>
-                      <ResizeVolume v-if="i > 0" :serverId="serverId" :volume="disk.name" @complete="fetchData(true)">
+                      <ResizeVolume v-if="i > 0" :serverId="serverId" :volume="disk.name" :size="Math.ceil(disk.space/1000000)" @complete="fetchData(true)">
                       </ResizeVolume>
                     </div>
                   </v-card-text>

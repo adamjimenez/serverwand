@@ -6,13 +6,13 @@
             <v-card :loading="fetching" title="Resize Volume">
 
                 <v-card-text>
-                    <v-text-field type="number" v-model="size" :min="min" suffix="GB"></v-text-field>
+                    <v-text-field type="number" v-model="sizeValue" :min="min" suffix="GB"></v-text-field>
                 </v-card-text>
 
                 <v-divider></v-divider>
 
                 <v-card-actions>
-                    <v-btn @click="run()" :disabled="size === min" color="success" :loading="fetching">
+                    <v-btn @click="run()" :disabled="sizeValue === min" color="success" :loading="fetching">
                         Resize
                     </v-btn>
                 </v-card-actions>
@@ -43,10 +43,11 @@ export default {
     props: {
         serverId: null,
         volume: null,
+        size: null
     },
     data() {
         return {
-            size: 0,
+            sizeValue: 0,
             min: 0,
             fetching: false,
             dialog: false,
@@ -61,6 +62,7 @@ export default {
         open() {
             this.dialog = true;
             this.fetching = true;
+            this.sizeValue = this.size;
 
             api
                 .get("servers/" + this.serverId + "/volumes", { clearCacheEntry: true })
@@ -80,7 +82,7 @@ export default {
 
                     response.data?.volumes.forEach(volume => {
                         if ('/mnt/' + volume.name === this.volume) {
-                            this.size = volume.size;
+                            this.sizeValue = volume.size;
                             this.min = volume.size;
                         }
                     });
@@ -97,7 +99,7 @@ export default {
             this.fetching = true;
 
             api.event(
-                'servers/' + this.serverId + '/volumes/resize?volume=' + encodeURIComponent(this.volume) + '&size=' + encodeURIComponent(this.size),
+                'servers/' + this.serverId + '/volumes/resize?volume=' + encodeURIComponent(this.volume) + '&size=' + encodeURIComponent(this.sizeValue),
                 result => {
                     this.msg = result.msg;
                 },
