@@ -23,7 +23,7 @@
           </template>
 
           <template v-slot:append>
-            <v-btn icon :disabled="fetching" :loading="fetching" @click.stop="deleteItem(item)"
+            <v-btn icon :disabled="fetching" :loading="loading == item.id" @click.stop="deleteItem(item)"
               v-if="item.comment != 'ServerWand'">
               <v-icon size="small">mdi:mdi-delete</v-icon>
             </v-btn>
@@ -32,8 +32,20 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="drawer" max-width="600">
+    <v-dialog v-model="drawer" max-width="600" persistent>
       <v-card>
+        <v-card-title class="d-flex justify-space-between align-center">
+          <div class="text-h5 text-medium-emphasis ps-2">
+            Firewall rule
+          </div>
+
+         <v-btn
+           icon="mdi:mdi-close"
+           variant="text"
+           @click="drawer = false"
+          ></v-btn>
+        </v-card-title>
+
         <v-form v-model="valid" title="Firewall rule">
           <v-card-text>
             <v-text-field v-model="item.port" label="Port range" placeholder="80, 443, 5000:5010" required
@@ -44,7 +56,7 @@
 
             <v-select v-model="item.action" :items="action" label="Action" required></v-select>
 
-            <IP v-model="item.from" label="From" :remoteAddr="data.remote_addr" />
+            <IP v-model="item.from" label="From" :remoteAddr="data.remote_addr" any />
 
             <v-text-field v-model="item.comment" label="Comment"></v-text-field>
 
@@ -74,7 +86,7 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      loading: '',
       error: '',
       active: false,
       items: {},
@@ -101,7 +113,6 @@ export default {
       rules: {
         required: value => !!value || 'Required.',
         port: v => (!v || /^\d+(:\d+)?$/.test(v)) || '1-65535',
-        ip: v => (!v || /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(v)) || 'Invalid IP address',
       },
       valid: false,
     }
@@ -118,9 +129,7 @@ export default {
       this.fetching = true
 
       api.get('servers/' + this.serverId + '/firewall')
-        .then((response) => {
-          console.log(response)
-
+        .then(response => {
           if (response.data.error) {
             this.error = response.data.error
             return false
@@ -143,9 +152,7 @@ export default {
       this.error = ''
 
       api.post('servers/' + this.serverId + '/firewall', { status: this.active })
-        .then((response) => {
-          console.log(response)
-
+        .then(response => {
           if (!response.data.success) {
             this.error = response.data.error;
           } else {
@@ -177,15 +184,14 @@ export default {
       this.drawer = true;
     },
     deleteItem: async function (item) {
-      var label = item.port + '/' + item.protocol + ' ' + item.action + ' from ' + item.from;
+      let label = item.port + '/' + item.protocol + ' ' + item.action + ' from ' + item.from;
 
       if (!await this.$refs.confirm.open("Delete " + label)) {
         return;
       }
-      this.fetching = true
+      this.loading = item.id
       this.error = ''
-      var response = await api.post('servers/' + this.serverId + '/firewall', { id: item.id });
-      console.log(response)
+      let response = await api.post('servers/' + this.serverId + '/firewall', { id: item.id });
 
       this.fetching = false;
       if (!response.data.success) {
@@ -198,8 +204,7 @@ export default {
       this.error = ''
       this.fetching = true
       api.post('servers/' + this.serverId + '/firewall', this.item)
-        .then((response) => {
-          console.log(response)
+        .then(response => {
           if (response.data.success) {
             this.drawer = false
             this.fetchData()

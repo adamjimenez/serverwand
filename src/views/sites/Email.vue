@@ -15,7 +15,6 @@
       </v-card>
 -->
 
-
     <v-card :loading="fetching">
       <v-card-actions>
         <v-btn @click="addEmail()" icon="mdi:mdi-plus" v-if="data.server.mailserver"></v-btn>

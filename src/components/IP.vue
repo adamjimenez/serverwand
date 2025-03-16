@@ -1,5 +1,5 @@
 <template>
-    <v-text-field v-bind="$attrs" label="IP address" required :rules="[rules.required, rules.ip]" placeholder="192.168.0.1" ref="textfield" v-model="value">
+    <v-text-field v-bind="$attrs" label="IP address" required :rules="[rules.required, rules.ip]" :placeholder="placeholder" ref="textfield" v-model="value">
         <template v-slot:append-inner>
             <v-icon v-if="remoteAddr" @click="setValue" title="Use local IP" icon="mdi:mdi-map-marker" />
         </template>
@@ -13,19 +13,19 @@ export default {
         modelValue: {
             type: [String],
         },
+        any: null,
     },
     data() {
         return {
             value: '',
             rules: {
-                required: (value) => !!value || "Required.",
+                required: (value) => !!value || "Required",
                 ip: (v) =>
-                    !v ||
-                    /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(
-                        v
-                    ) ||
+                    (v === "any" && this.$props.any !== 'undefined') || 
+                    /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(v) ||
                     "Invalid IP address",
             },
+            placeholder: '192.168.0.1',
         };
     },
     methods: {
@@ -36,6 +36,10 @@ export default {
     },
     mounted: function () {
         this.value = this.modelValue;
+
+        if (typeof this.$props.any !== 'undefined') {
+            this.placeholder += ', any';
+        }
     }
 }
 </script>
