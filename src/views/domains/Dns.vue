@@ -4,7 +4,7 @@
 
     <Loading :value="loading" />
 
-    <v-data-table :headers="headers" :items="data.records" hover v-if="data.records">
+    <v-data-table :headers="headers" :items="data.records" mobile-breakpoint="0" @click:row="editItem" hover>
       <template v-slot:item.type="{ item }">
         <span>{{ item.type }}</span>
       </template>
@@ -288,8 +288,8 @@ export default {
           this.fetching = false;
         });
     },
-    editItem(item) {
-      this.record = JSON.parse(JSON.stringify(item));
+    editItem(event, data) {
+      this.record = JSON.parse(JSON.stringify(data.item));
       this.drawer = true;
     },
     deleteItem: async function (item) {
