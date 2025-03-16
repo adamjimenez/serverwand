@@ -28,8 +28,19 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="drawer" max-width="600">
-      <v-card title="DNS Record">
+    <v-dialog v-model="drawer" max-width="600" persistent>
+      <v-card>
+        <v-card-title class="d-flex justify-space-between align-center">
+          <div class="text-h5 text-medium-emphasis ps-2">
+            DNS Record
+          </div>
+
+         <v-btn
+           icon="mdi:mdi-close"
+           variant="text"
+           @click="drawer = false"
+          ></v-btn>
+        </v-card-title>
         <v-card-text>
           <v-select :items="recordType" label="Type" v-model="record.type"></v-select>
 
@@ -149,43 +160,45 @@ export default {
     },
     saveItem() {
       if (this.record.type) {
-        this.details = "";
-        this.fetching = true;
-        this.error = "";
-
-        var url = "sites/" + this.domainId + "/records";
-
-        if (this.record.id) {
-          url += "/" + this.record.id;
-        }
-
-        api
-          .post(url, this.record)
-          .then(async (response) => {
-            console.log(response);
-
-            switch (await this.$refs.oauth.check(response.data)) {
-              case true:
-                return this.saveItem();
-              case false:
-                return;
-            }
-
-            if (!response.data.success) {
-              this.error = response.data.error;
-            } else {
-              this.drawer = false;
-              this.fetchData();
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-            this.fetching = false;
-          })
-          .finally(() => {
-            this.fetching = false;
-          });
+        return;
       }
+      
+      this.details = "";
+      this.fetching = true;
+      this.error = "";
+
+      var url = "sites/" + this.domainId + "/records";
+
+      if (this.record.id) {
+        url += "/" + this.record.id;
+      }
+
+      api
+        .post(url, this.record)
+        .then(async (response) => {
+          console.log(response);
+
+          switch (await this.$refs.oauth.check(response.data)) {
+            case true:
+              return this.saveItem();
+            case false:
+              return;
+          }
+
+          if (!response.data.success) {
+            this.error = response.data.error;
+          } else {
+            this.drawer = false;
+            this.fetchData();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.fetching = false;
+        })
+        .finally(() => {
+          this.fetching = false;
+        });
     },
     editItem(event, data) {
       this.record = JSON.parse(JSON.stringify(data.item));

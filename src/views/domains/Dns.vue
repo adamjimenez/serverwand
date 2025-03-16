@@ -30,8 +30,19 @@
       </v-card-actions>
     </v-card>
 
-    <v-dialog v-model="drawer">
-      <v-card title="DNS Record">
+    <v-dialog v-model="drawer" max-width="600" persistent>
+      <v-card>
+        <v-card-title class="d-flex justify-space-between align-center">
+          <div class="text-h5 text-medium-emphasis ps-2">
+            DNS Record
+          </div>
+
+         <v-btn
+           icon="mdi:mdi-close"
+           variant="text"
+           @click="drawer = false"
+          ></v-btn>
+        </v-card-title>
 
         <v-card-text>
           <v-select :items="recordType" label="Type" v-model="record.type"></v-select>

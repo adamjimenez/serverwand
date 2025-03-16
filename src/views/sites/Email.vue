@@ -61,8 +61,19 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="drawer" max-width="600">
-      <v-card title="Email account">
+    <v-dialog v-model="drawer" max-width="600" persistent>
+      <v-card>
+        <v-card-title class="d-flex justify-space-between align-center">
+          <div class="text-h5 text-medium-emphasis ps-2">
+            Email account
+          </div>
+
+         <v-btn
+           icon="mdi:mdi-close"
+           variant="text"
+           @click="drawer = false"
+          ></v-btn>
+        </v-card-title>
         <v-card-text>
           <v-text-field v-model="email.user" label="Name" required :readonly="userReadonly" autofocus></v-text-field>
           <PasswordField v-model="email.password" label="Password" required></PasswordField>

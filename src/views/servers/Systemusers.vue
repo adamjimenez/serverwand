@@ -35,8 +35,20 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="userDrawer" max-width="600">
-      <v-card title="System user">
+    <v-dialog v-model="userDrawer" max-width="600" persistent>
+      <v-card>
+        <v-card-title class="d-flex justify-space-between align-center">
+          <div class="text-h5 text-medium-emphasis ps-2">
+            System user
+          </div>
+
+         <v-btn
+           icon="mdi:mdi-close"
+           variant="text"
+           @click="userDrawer = false"
+          ></v-btn>
+        </v-card-title>
+
         <v-tabs v-model="tab">
           <v-tab value="settings">Settings</v-tab>
           <v-tab value="keys" :disabled="system_user.new">Keys</v-tab>

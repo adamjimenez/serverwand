@@ -35,11 +35,20 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="drawer" eager max-width="600">
+    <v-dialog v-model="drawer" eager max-width="600" persistent>
       <v-card>
-        <v-form ref="cronjobForm">
-          <v-card-title> Cronjob </v-card-title>
+        <v-card-title class="d-flex justify-space-between align-center">
+          <div class="text-h5 text-medium-emphasis ps-2">
+            Cronjob
+          </div>
 
+         <v-btn
+           icon="mdi:mdi-close"
+           variant="text"
+           @click="drawer = false"
+          ></v-btn>
+        </v-card-title>
+        <v-form ref="cronjobForm">
           <v-card-text>
             <v-switch v-model="cronjob.active" label="Active" color="primary" hide-details></v-switch>
 
@@ -49,19 +58,19 @@
 
             <v-autocomplete v-model="cronjob.user" label="User" :items="users"></v-autocomplete>
 
-            <v-text-field v-model="cronjob.minute" label="Minute" required
+            <v-text-field v-model="cronjob.minute" label="Minute" placeholder="0-59 or *" required
               :rules="[rules.required, rules.minute]"></v-text-field>
 
-            <v-text-field v-model="cronjob.hour" label="Hour" required
+            <v-text-field v-model="cronjob.hour" label="Hour" placeholder="0-23 or *" required
               :rules="[rules.required, rules.hour]"></v-text-field>
 
-            <v-text-field v-model="cronjob.dom" label="Day of month" required
+            <v-text-field v-model="cronjob.dom" label="Day of month" placeholder="1-31 or *" required
               :rules="[rules.required, rules.dom]"></v-text-field>
 
-            <v-text-field v-model="cronjob.mon" label="Month" required
+            <v-text-field v-model="cronjob.mon" label="Month" placeholder="1-12 or *" required
               :rules="[rules.required, rules.mon]"></v-text-field>
 
-            <v-text-field v-model="cronjob.dow" label="Day of week" required
+            <v-text-field v-model="cronjob.dow" label="Day of week" placeholder="1-7 or *" required
               :rules="[rules.required, rules.dow]"></v-text-field>
 
             <v-btn :disabled="fetching" :loading="fetching" color="success" @click="saveCronjob">

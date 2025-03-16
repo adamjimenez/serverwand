@@ -17,8 +17,19 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="drawer" max-width="600">
-      <v-card title="Variable">
+    <v-dialog v-model="drawer" max-width="600" persistent>
+      <v-card>
+        <v-card-title class="d-flex justify-space-between align-center">
+          <div class="text-h5 text-medium-emphasis ps-2">
+            Variable
+          </div>
+
+         <v-btn
+           icon="mdi:mdi-close"
+           variant="text"
+           @click="drawer = false"
+          ></v-btn>
+        </v-card-title>
         <v-form v-model="valid" ref="form">
           <v-card-text>
             <v-text-field v-model="item.line" label="Line" v-show="false"></v-text-field>
