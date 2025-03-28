@@ -85,7 +85,7 @@ export default {
           if (response.data.success !== false) {
             this.data.id = item.id;
             this.data.file = this.basename(item.id);
-            this.data.content = response.data.content;
+            this.data.content = atob(response.data.content);
             this.dialog = true;
 
             // set language

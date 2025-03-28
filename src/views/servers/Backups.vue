@@ -14,6 +14,8 @@
         <v-row>
           <v-btn @click="configure" title="Configure S3" icon="mdi:mdi-settings"></v-btn>
           <Snapshot :serverId="serverId" @complete="handleComplete" @error="handleError" v-if="s3.access_key" />
+          <Download :serverId="serverId" :path="path" :selected="selected" @complete="handleComplete"
+            @error="handleError" />
           <Restore :serverId="serverId" :path="path" :selected="selected" @complete="handleComplete"
             @error="handleError" />
           <v-switch v-model="s3.active" label="Nightly backups" class="my-0" @change="toggleBackups()" hide-details
@@ -127,6 +129,7 @@
 <script>
 import api from "../../services/api";
 import Loading from "../../components/Loading";
+import Download from "../../components/CloudBackups/Download";
 import Restore from "../../components/CloudBackups/Restore";
 import Snapshot from "../../components/CloudBackups/Snapshot";
 import EditFile from "../../components/Files/EditFile";
@@ -136,6 +139,7 @@ import Confirm from "../../components/ConfirmDialog.vue";
 export default {
   components: {
     Loading,
+    Download,
     Restore,
     Snapshot,
     EditFile,
