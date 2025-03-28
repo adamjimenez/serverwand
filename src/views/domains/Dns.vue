@@ -247,7 +247,7 @@ export default {
       this.saveItem();
     },
     saveItem() {
-      if (this.record.type) {
+      if (!this.record.type) {
         return;
       }
 
