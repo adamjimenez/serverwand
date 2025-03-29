@@ -24,7 +24,7 @@
               </v-row>
             </v-container>
 
-            <v-data-table :headers="headers" :items="filtered" :items-per-page="100" hover @click:row="function (event, data) { $router.push('/servers/' + data.item.id + '/summary') }">
+            <v-data-table :headers="headers" :items="filtered" :items-per-page="100" hover @click:row="function (event, data) { $router.push('/servers/' + data.item.id + '/summary') }" fixed-header style="height: calc(100vh - 200px); overflow: auto;">
               <template v-slot:item.name="{ item }">
                 <v-list-item :title="item.name" :subtitle="item.hostname"
                   class="px-0">

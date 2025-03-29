@@ -5,7 +5,7 @@
     <Loading :value="loading" />
 
     <v-card :loading="fetching">
-      <v-data-table :headers="headers" :items="items" :items-per-page="100" hover @click:row="function (event, data) { $router.push('/teams/' + data.item.id + '/members') }">
+      <v-data-table :headers="headers" :items="items" :items-per-page="100" hover @click:row="function (event, data) { $router.push('/teams/' + data.item.id + '/members') }" fixed-header style="height: calc(100vh - 120px); overflow: auto;">
         <template v-slot:item.name="{ item }">
           <v-list-item :title="item.name" class="px-0">
             <v-list-item-subtitle>
