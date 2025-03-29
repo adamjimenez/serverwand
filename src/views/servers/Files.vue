@@ -51,7 +51,7 @@
       </v-container>
 
       <v-data-table v-model="selectedIds" :headers="headers" :items="items" :items-per-page="100" ref="results" show-select
-        mobile-breakpoint="0" @click:row="function (event, item) { open(item.item) }" :loading="fetching" :page="page" @update:page="updatePage" hover :row-props="rowProps">
+        mobile-breakpoint="0" @click:row="function (event, item) { open(item.item) }" :loading="fetching" :page="page" @update:page="updatePage" hover :row-props="rowProps" fixed-header style="height: calc(100vh - 350px); overflow: auto;">
 
         <template v-slot:item.size="{ item }">
           <span v-if="item.type === 'file'">

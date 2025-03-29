@@ -40,7 +40,7 @@
             <v-row>
               <v-col cols="12">
                 <v-data-table :headers="headers" :items="items" :items-per-page="100" class="results" ref="results" mobile-breakpoint="0"
-                  @click:row="function (event, item) { open(item.item) }" v-model="selectedIds" show-select :page="page" @update:page="updatePage" hover :row-props="rowProps">
+                  @click:row="function (event, item) { open(item.item) }" v-model="selectedIds" show-select :page="page" @update:page="updatePage" hover :row-props="rowProps" fixed-header style="height: calc(100vh - 370px); overflow: auto;">
 
                   <template v-slot:item.modified="{ item }">
                     {{ formatDate(item.modified) }}
@@ -55,7 +55,7 @@
             <v-row>
               <v-col cols="12">
                 <v-data-table :headers="backupHeaders" :items="backups" :items-per-page="100" mobile-breakpoint="0"
-                  @click:row="function (event, item) { browse(item.item) }" hover>
+                  @click:row="function (event, item) { browse(item.item) }" hover fixed-header style="height: calc(100vh - 290px); overflow: auto;">
 
                   <template v-slot:item.name="{ item }">
                     <span @click="browse(item)">{{ item.name }}</span>

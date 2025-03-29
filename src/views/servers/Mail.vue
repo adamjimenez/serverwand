@@ -6,8 +6,8 @@
 
     <v-card :loading="fetching">
 
-      <v-data-table v-if="items.length" v-model="selected" :headers="headers" :items="items" show-select
-        mobile-breakpoint="0" @click:row="view" hover :row-props="rowProps">
+      <v-data-table v-if="items.length" v-model="selected" :headers="headers" :items="items" :items-per-page="100" show-select
+        mobile-breakpoint="0" @click:row="view" hover :row-props="rowProps" fixed-header style="height: calc(100vh - 260px); overflow: auto;">
 
         <template v-slot:item.size="{ item }">
           <span>{{ prettyBytes(item.size) }}</span>

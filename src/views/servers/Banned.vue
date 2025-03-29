@@ -4,8 +4,8 @@
 
     <v-card :loading="fetching">
 
-      <v-data-table v-if="items.length" v-model="selected" :headers="headers" :items="items" item-value="ip" show-select
-        mobile-breakpoint="0" hover :row-props="rowProps" items-per-page-text="">
+      <v-data-table v-if="items.length" v-model="selected" :headers="headers" :items="items" :items-per-page="100" item-value="ip" show-select
+        mobile-breakpoint="0" hover :row-props="rowProps" items-per-page-text="" fixed-header style="height: calc(100vh - 260px); overflow: auto;">
 
         <template v-slot:item.ip="{ item }">
           <span>
