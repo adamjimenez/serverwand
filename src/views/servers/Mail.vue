@@ -27,7 +27,17 @@
 
     <v-dialog app v-model="emailDrawer">
       <v-card>
-        <v-card-title> Message: {{ messageId }} </v-card-title>
+        <v-card-title class="d-flex"> 
+          <div>
+            From: {{ message.sender }}<br>
+            To: {{ message.recipient }}
+          </div>
+          <v-spacer></v-spacer>
+          <div>
+            {{ message.date }}<br>
+            {{ prettyBytes(message.size) }}
+          </div>
+        </v-card-title>
 
         <v-card-text>
           <iframe width="100%" height="315" :src="messageUrl" frameborder="0"></iframe>
@@ -55,7 +65,6 @@ export default {
       data: {},
       details: "",
       message: "",
-      messageId: "",
       messageUrl: "",
       loading: false,
       fetching: false,
@@ -141,12 +150,12 @@ export default {
         .finally(() => this.fetching = false);
     },
     view(event, item) {
-      this.messageId = item.item.id
+      this.message = item.item
       this.messageUrl =
         "https://serverwand.com/api/servers/" +
         this.serverId +
         "/messages/" +
-        this.messageId;
+        this.message.id;
       this.emailDrawer = true;
     },
     prettyBytes(value) {
