@@ -1,6 +1,6 @@
 <template>
-    <div v-if="selected.length === 1">
-        <v-btn @click="tail()" :disabled="!selected" title="Tail" icon v-if="selected?.length === 1 && selected[0].type === 'file'">
+    <div v-if="selected?.length === 1 && selected[0].type === 'file'">
+        <v-btn @click="tail()" :disabled="!selected" title="Tail" icon>
             <v-icon>mdi:mdi-format-align-bottom</v-icon>
         </v-btn>
 

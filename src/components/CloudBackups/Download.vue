@@ -1,5 +1,5 @@
 <template>
-  <div v-if="selected.length === 1">
+  <div  v-if="selected?.length === 1 && selected[0].type === 'file'">
     <v-btn @click="download()" title="Download" icon :loading="fetching">
         <v-icon>mdi:mdi-download</v-icon>
     </v-btn>
