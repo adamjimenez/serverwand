@@ -1,18 +1,30 @@
 <template>
     <div style="width: 100%;" v-if="data.items?.length">
+
         <v-row class="mb-3">
-            <v-col>
-                <v-select v-model="resource" :items="resourceOptions" @update:modelValue="load" hide-details></v-select>
+            <v-col cols="12" lg="2" xl="1">
+                <v-list v-if="$vuetify.display.lgAndUp" v-model:selected="resource" class="mt-5">
+                    <v-list-item v-for="item in resourceOptions" :key="item.title" :value="item.value">
+                        {{ item.title }}
+                    </v-list-item>
+                </v-list>
+                <v-select v-else v-model="resource" :items="resourceOptions" hide-details></v-select>
+
+                <v-list v-if="$vuetify.display.lgAndUp" v-model:selected="daysAgo">
+                    <v-list-item v-for="item in data.items" :key="item.title" :value="item.value">
+                        {{ item.title }}
+                    </v-list-item>
+                </v-list>
+                <v-select v-else  v-model="daysAgo" :items="data.items" hide-details></v-select>
             </v-col>
+
             <v-col>
-                <v-select v-model="daysAgo" :items="data.items" @update:modelValue="load" hide-details></v-select>
+                <svg width="100%" :viewBox="'0 0 1000 ' + (graphHeight[resource] ? graphHeight[resource] : '300')" v-html="data.graph" style="max-width: 2400px;"></svg>
             </v-col>
         </v-row>
-        <svg width="100%" :viewBox="'0 0 1000 ' + (graphHeight[resource] ? graphHeight[resource] : '300')"
-            v-html="data.graph"></svg>
     </div>
 </template>
-  
+
 <script>
 import api from "../services/api";
 
@@ -53,7 +65,6 @@ export default {
             error: null,
         };
     },
-
     methods: {
         load() {
             api
@@ -66,7 +77,7 @@ export default {
         refresh() {
             if (this.daysAgo === 0) {
                 console.log('refresh graph');
-                this.load();
+                this.daysAgo = [0];
             }
 
             // refresh after an interval
@@ -75,6 +86,10 @@ export default {
                 this.refresh();
             }, 1 * 60 * 1000);
         }
+    },
+    watch: {
+        resource: 'load',
+        daysAgo: 'load',
     },
     created() {
         this.refresh();

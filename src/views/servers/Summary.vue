@@ -9,7 +9,7 @@
       <v-container class="ma-0" fluid>
         <v-layout row wrap>
           <v-row>
-            <v-col cols="12" sm="6" md="3">
+            <v-col cols="12" sm="6" md="3" lg="auto" class="flex-grow-1">
               <v-card>
                 <v-card-text class="pa-1">
                   <div class="d-flex justify-space-between mb-3">
@@ -29,7 +29,7 @@
               </v-card>
             </v-col>
 
-            <v-col cols="12" sm="6" md="3">
+            <v-col cols="12" sm="6" md="3" lg="auto" class="flex-grow-1">
               <v-card>
                 <v-card-text class="pa-1">
                   <div class="d-flex justify-space-between mb-3">
@@ -39,7 +39,8 @@
                     <div class="text-subtitle-1">Memory usage</div>
                   </div>
 
-                  <v-progress-linear :model-value="data.mem_perc" height="20" :color="data.mem_perc >= 90 ? 'error' : 'primary'"></v-progress-linear>
+                  <v-progress-linear :model-value="data.mem_perc" height="20"
+                    :color="data.mem_perc >= 90 ? 'error' : 'primary'"></v-progress-linear>
 
                   <div>
                     {{ prettyBytes(data.mem_free * 1024) }} available of
@@ -50,7 +51,7 @@
             </v-col>
 
             <template v-for="(disk, i) in data.disks" :key="`item-${i}`">
-              <v-col cols="12" sm="6" md="3">
+              <v-col cols="12" sm="6" md="3" lg="auto" class="flex-grow-1">
                 <v-card>
                   <v-card-text class="pa-1">
                     <div class="d-flex justify-space-between mb-3">
@@ -74,7 +75,8 @@
                       <AttachVolume v-if="i === 0" :serverId="serverId" @complete="fetchData(true)"></AttachVolume>
                       <DetachVolume v-if="i > 0" :serverId="serverId" :volume="disk.name" @complete="fetchData(true)">
                       </DetachVolume>
-                      <ResizeVolume v-if="i > 0" :serverId="serverId" :volume="disk.name" :size="Math.ceil(disk.space/1000000)" @complete="fetchData(true)">
+                      <ResizeVolume v-if="i > 0" :serverId="serverId" :volume="disk.name"
+                        :size="Math.ceil(disk.space / 1000000)" @complete="fetchData(true)">
                       </ResizeVolume>
                     </div>
                   </v-card-text>
@@ -82,7 +84,7 @@
               </v-col>
             </template>
 
-            <v-col cols="12" sm="6" md="3">
+            <v-col cols="12" sm="6" md="3" lg="auto" class="flex-grow-1">
               <v-card>
                 <v-card-text class="pa-1">
                   <div class="d-flex justify-space-between mb-3">
@@ -104,8 +106,8 @@
 
       <v-layout row class="mx-1">
         <v-row>
-          <v-col cols="12" sm="6">
-            <v-card max-width="400">
+          <v-col cols="12" sm="6" md="3" lg="2">
+            <v-card>
               <v-list lines="two">
                 <v-list-item v-if="data.updates >= 0" title="Updates"
                   :subtitle="data.updates + ' updates, ' + data.security_updates + ' security updates.' + (data.reboot_required ? ' Reboot required.' : '')">
@@ -115,7 +117,12 @@
                     </Terminal>
                   </template>
                 </v-list-item>
-
+              </v-list>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="3" lg="2">
+            <v-card>
+              <v-list lines="two">
                 <v-list-item title="Hostname">
                   <v-list-item-subtitle>
                     <Copy :val="data.hostname" text />
@@ -125,38 +132,53 @@
                       :path="'servers/' + this.serverId + '/hostname'" @save="fetchData(true)" />
                   </template>
                 </v-list-item>
+              </v-list>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="3" lg="2">
+            <v-card>
+              <v-list lines="two">
 
                 <v-list-item title="IP address">
                   <v-list-item-subtitle>
-                    <Copy :val="data.ip" text />                    
+                    <Copy :val="data.ip" text />
 
-                    <v-tooltip :text="data.ip_data?.org  + ', ' + data.ip_data?.city + ', ' + data.ip_data?.country">
+                    <v-tooltip :text="data.ip_data?.org + ', ' + data.ip_data?.city + ', ' + data.ip_data?.country">
                       <template v-slot:activator="{ props }">
-                        <v-btn v-bind="props" :class="'fi fi-'+ data?.ip_data?.country?.toLowerCase() + ' fis'" class="ml-1" size="x-small"></v-btn>
+                        <v-btn v-bind="props" :class="'fi fi-' + data?.ip_data?.country?.toLowerCase() + ' fis'"
+                          class="ml-1" size="x-small"></v-btn>
                       </template>
                     </v-tooltip>
 
                   </v-list-item-subtitle>
                 </v-list-item>
-
-                <v-list-item title="IPv6 address" v-if="data.ipv6">
+              </v-list>
+            </v-card>
+          </v-col>
+          <v-col v-if="data.ipv6" cols="12" sm="6" md="3" lg="2">
+            <v-card>
+              <v-list lines="two">
+                <v-list-item title="IPv6 address">
                   <v-list-item-subtitle>
                     <Copy :val="data.ipv6" text />
                   </v-list-item-subtitle>
                 </v-list-item>
-
+              </v-list>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="3" lg="2">
+            <v-card>
+              <v-list lines="two">
                 <v-list-item title="Time zone" :subtitle="data.timeZone">
                   <template v-slot:append>
                     <TimeZone :serverId="serverId" @save="fetchData(true)" />
                   </template>
                 </v-list-item>
               </v-list>
-
             </v-card>
           </v-col>
-
-          <v-col cols="12" sm="6">
-            <v-card max-width="400">
+          <v-col cols="12" sm="6" md="3" lg="2">
+            <v-card>
               <v-list lines="two">
                 <v-list-item title="Operating system" :subtitle="data.os">
                   <template v-slot:append>
@@ -167,34 +189,57 @@
                     <UpdatesConfig :serverId="serverId" />
                   </template>
                 </v-list-item>
-
+              </v-list>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="3" lg="2">
+            <v-card>
+              <v-list lines="two">
                 <v-list-item title="Kernel" :subtitle="data.kernel"></v-list-item>
-
+              </v-list>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="3" lg="2">
+            <v-card>
+              <v-list lines="two">
                 <v-list-item title="Apache" :subtitle="data.apache">
                   <template v-slot:append>
-
                     <Terminal title="GoAccess Web Log Analyzer"
                       cmd="sudo awk '$8=$1$8' /var/log/apache2/other_vhosts_access.log /var/log/apache2/other_vhosts_access.log.1 | goaccess --log-format VCOMBINED -a -"
                       icon>
                       <v-icon size="small">fas fa-chart-line</v-icon>
                     </Terminal>
-
                     <ApacheConfig :serverId="serverId" />
                   </template>
                 </v-list-item>
-
+              </v-list>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="3" lg="2">
+            <v-card>
+              <v-list lines="two">
                 <v-list-item title="PHP" :subtitle="data.php">
                   <template v-slot:append>
                     <PhpConfig :serverId="serverId" />
                   </template>
                 </v-list-item>
-
+              </v-list>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="3" lg="2">
+            <v-card>
+              <v-list lines="two">
                 <v-list-item title="MariaDb" :subtitle="data.mariadb">
                   <template v-slot:append>
                     <MysqlConfig :serverId="serverId" />
                   </template>
                 </v-list-item>
-
+              </v-list>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="3" lg="2">
+            <v-card>
+              <v-list lines="two">
                 <v-list-item title="Postfix" :subtitle="data.postfix">
                   <template v-slot:append>
                     <PostfixConfig :serverId="serverId" />
@@ -202,7 +247,8 @@
                 </v-list-item>
               </v-list>
             </v-card>
-          </v-col></v-row>
+          </v-col>
+        </v-row>
       </v-layout>
 
       <v-container fluid class="ma-0">
