@@ -146,6 +146,9 @@ const routes = [
           path: '/sites/:id(.*)*/app',
           component: () => import('./views/sites/App.vue')
         }, {
+          path: '/sites/:id(.*)*/composer',
+          component: () => import('./views/sites/Composer.vue')
+        }, {
           path: '/sites/:id(.*)*/dns',
           component: () => import('./views/sites/Dns.vue')
         }, {

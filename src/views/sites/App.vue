@@ -31,7 +31,7 @@
             icon="fab fa-wordpress"></v-btn>
         </span>
 
-        <v-btn @click="install(data.app.name)" prepend-icon="fas fa-download"
+        <v-btn @click="install(data.app.name)" prepend-icon="mdi:mdi-download"
           v-if="data.app.latest && data.app.latest !== data.app.version">
           Install {{ data.app.latest }}</v-btn>
 
