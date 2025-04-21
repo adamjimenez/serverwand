@@ -326,7 +326,7 @@ export default {
     },
     browse(item) {
       console.log(item)
-      this.path = "/" + item.name;
+      this.path = "/" + item.name + '/';
       this.list();
     },
     list() {
@@ -380,10 +380,9 @@ export default {
       }
     },
     upLevel() {
-      console.log(this.path);
-      var index = this.path.lastIndexOf("/");
+      let index = this.path.substr(0, this.path.length - 1).lastIndexOf("/");
       if (index !== -1) {
-        this.path = this.path.substr(0, index);
+        this.path = this.path.substr(0, index + 1);
 
         if (!this.path) {
           this.path = "/";
