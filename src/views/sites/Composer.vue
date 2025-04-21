@@ -224,7 +224,7 @@ export default {
                 if (result.data.error) {
                     this.error = result.data.error;
                 } else {
-                    this.drawer = false;
+                    this.addDialog = false;
                     this.fetchData();
                 }
 
