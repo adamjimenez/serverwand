@@ -12,18 +12,22 @@
             <v-col cols="12" sm="6" md="3" lg="auto" class="flex-grow-1">
               <v-card>
                 <v-card-text class="pa-1">
-                  <div class="d-flex justify-space-between mb-3">
-                    <span class="text-h5">
-                      <v-icon icon="fas fa-microchip" size="small"></v-icon>
-                    </span>
-                    <div class="text-subtitle-1">CPU</div>
-                  </div>
+                  <v-skeleton-loader v-if="fetching" type="heading, paragraph"></v-skeleton-loader>
 
-                  <div class="text-h6">
-                    {{ data.cores }} core<span v-if="data.cores > 1">s</span>
-                  </div>
-                  <div class="text-body-2">
-                    {{ data.cpu }}
+                  <div v-else>
+                    <div class="d-flex justify-space-between mb-3">
+                      <span class="text-h5">
+                        <v-icon icon="fas fa-microchip" size="small"></v-icon>
+                      </span>
+                      <div class="text-subtitle-1">CPU</div>
+                    </div>
+
+                    <div class="text-h6">
+                      {{ data.cores }} core<span v-if="data.cores > 1">s</span>
+                    </div>
+                    <div class="text-body-2">
+                      {{ data.cpu }}
+                    </div>
                   </div>
                 </v-card-text>
               </v-card>
@@ -32,19 +36,24 @@
             <v-col cols="12" sm="6" md="3" lg="auto" class="flex-grow-1">
               <v-card>
                 <v-card-text class="pa-1">
-                  <div class="d-flex justify-space-between mb-3">
-                    <span class="text-h5">
-                      <v-icon icon="fas fa-memory" size="small"></v-icon>
-                    </span>
-                    <div class="text-subtitle-1">Memory usage</div>
-                  </div>
+                  <v-skeleton-loader v-if="fetching" type="heading, paragraph"></v-skeleton-loader>
 
-                  <v-progress-linear :model-value="data.mem_perc" height="20"
-                    :color="data.mem_perc >= 90 ? 'error' : 'primary'"></v-progress-linear>
+                  <div v-else>
+                    <div class="d-flex justify-space-between mb-3">
+                      <span class="text-h5">
+                        <v-icon icon="fas fa-memory" size="small"></v-icon>
+                      </span>
+                      <div class="text-subtitle-1">Memory usage</div>
+                    </div>
 
-                  <div>
-                    {{ prettyBytes(data.mem_free * 1024) }} available of
-                    {{ prettyBytes(data.mem_total * 1024) }}
+                    <v-progress-linear :model-value="data.mem_perc" height="20"
+                      :color="data.mem_perc >= 90 ? 'error' : 'primary'" :indeterminate="fetching"></v-progress-linear>
+
+                    <div>
+                      {{ prettyBytes(data.mem_free * 1024) }} available of
+                      {{ prettyBytes(data.mem_total * 1024) }}
+                    </div>
+
                   </div>
                 </v-card-text>
               </v-card>
@@ -87,15 +96,19 @@
             <v-col cols="12" sm="6" md="3" lg="auto" class="flex-grow-1">
               <v-card>
                 <v-card-text class="pa-1">
-                  <div class="d-flex justify-space-between mb-3">
-                    <span class="text-h5">
-                      <v-icon icon="fas fa-clock" size="small"></v-icon>
-                    </span>
-                    <div class="text-subtitle-1">Uptime</div>
-                  </div>
+                  <v-skeleton-loader v-if="fetching" type="heading, paragraph"></v-skeleton-loader>
 
-                  <div class="text-body-2">
-                    {{ data.uptime }}
+                  <div v-else>
+                    <div class="d-flex justify-space-between mb-3">
+                      <span class="text-h5">
+                        <v-icon icon="fas fa-clock" size="small"></v-icon>
+                      </span>
+                      <div class="text-subtitle-1">Uptime</div>
+                    </div>
+
+                    <div class="text-body-2">
+                      {{ data.uptime }}
+                    </div>
                   </div>
                 </v-card-text>
               </v-card>
@@ -109,7 +122,8 @@
           <v-col cols="12" sm="6" md="3" lg="2">
             <v-card>
               <v-list lines="two">
-                <v-list-item v-if="data.updates >= 0" title="Updates"
+                <v-skeleton-loader v-if="fetching" type="heading, paragraph"></v-skeleton-loader>
+                <v-list-item v-else title="Updates"
                   :subtitle="data.updates + ' updates, ' + data.security_updates + ' security updates.' + (data.reboot_required ? ' Reboot required.' : '')">
                   <template v-slot:append>
                     <Terminal :serverId="serverId" @closed="fetchData(true)" cmd="sudo apt-get upgrade -y" icon>
@@ -123,7 +137,8 @@
           <v-col cols="12" sm="6" md="3" lg="2">
             <v-card>
               <v-list lines="two">
-                <v-list-item title="Hostname">
+                <v-skeleton-loader v-if="fetching" type="heading, paragraph"></v-skeleton-loader>
+                <v-list-item v-else title="Hostname">
                   <v-list-item-subtitle>
                     <Copy :val="data.hostname" text />
                   </v-list-item-subtitle>
@@ -138,8 +153,9 @@
           <v-col cols="12" sm="6" md="3" lg="2">
             <v-card>
               <v-list lines="two">
-
-                <v-list-item title="IP address">
+                
+                <v-skeleton-loader v-if="fetching" type="heading, paragraph"></v-skeleton-loader>
+                <v-list-item v-else title="IP address">
                   <v-list-item-subtitle>
                     <Copy :val="data.ip" text />
 
@@ -167,9 +183,10 @@
             </v-card>
           </v-col>
           <v-col cols="12" sm="6" md="3" lg="2">
-            <v-card>
+            <v-card>              
               <v-list lines="two">
-                <v-list-item title="Time zone" :subtitle="data.timeZone">
+                <v-skeleton-loader v-if="fetching" type="heading, paragraph"></v-skeleton-loader>
+                <v-list-item v-else title="Time zone" :subtitle="data.timeZone">
                   <template v-slot:append>
                     <TimeZone :serverId="serverId" @save="fetchData(true)" />
                   </template>
@@ -180,7 +197,8 @@
           <v-col cols="12" sm="6" md="3" lg="2">
             <v-card>
               <v-list lines="two">
-                <v-list-item title="Operating system" :subtitle="data.os">
+                <v-skeleton-loader v-if="fetching" type="heading, paragraph"></v-skeleton-loader>
+                <v-list-item v-else title="Operating system" :subtitle="data.os">
                   <template v-slot:append>
                     <Terminal v-if="data.upgrade_available" :title="'Upgrade to ' + data.upgrade_available"
                       cmd="sudo do-release-upgrade" icon>
@@ -195,14 +213,16 @@
           <v-col cols="12" sm="6" md="3" lg="2">
             <v-card>
               <v-list lines="two">
-                <v-list-item title="Kernel" :subtitle="data.kernel"></v-list-item>
+                <v-skeleton-loader v-if="fetching" type="heading, paragraph"></v-skeleton-loader>
+                <v-list-item v-else title="Kernel" :subtitle="data.kernel"></v-list-item>
               </v-list>
             </v-card>
           </v-col>
           <v-col cols="12" sm="6" md="3" lg="2">
             <v-card>
               <v-list lines="two">
-                <v-list-item title="Apache" :subtitle="data.apache">
+                <v-skeleton-loader v-if="fetching" type="heading, paragraph"></v-skeleton-loader>
+                <v-list-item v-else title="Apache" :subtitle="data.apache">
                   <template v-slot:append>
                     <Terminal title="GoAccess Web Log Analyzer"
                       cmd="sudo awk '$8=$1$8' /var/log/apache2/other_vhosts_access.log /var/log/apache2/other_vhosts_access.log.1 | goaccess --log-format VCOMBINED -a -"
@@ -218,7 +238,8 @@
           <v-col cols="12" sm="6" md="3" lg="2">
             <v-card>
               <v-list lines="two">
-                <v-list-item title="PHP" :subtitle="data.php">
+                <v-skeleton-loader v-if="fetching" type="heading, paragraph"></v-skeleton-loader>
+                <v-list-item v-else title="PHP" :subtitle="data.php">
                   <template v-slot:append>
                     <PhpConfig :serverId="serverId" />
                   </template>
@@ -229,7 +250,8 @@
           <v-col cols="12" sm="6" md="3" lg="2">
             <v-card>
               <v-list lines="two">
-                <v-list-item title="MariaDb" :subtitle="data.mariadb">
+                <v-skeleton-loader v-if="fetching" type="heading, paragraph"></v-skeleton-loader>
+                <v-list-item v-else title="MariaDb" :subtitle="data.mariadb">
                   <template v-slot:append>
                     <MysqlConfig :serverId="serverId" />
                   </template>
@@ -240,7 +262,8 @@
           <v-col cols="12" sm="6" md="3" lg="2">
             <v-card>
               <v-list lines="two">
-                <v-list-item title="Postfix" :subtitle="data.postfix">
+                <v-skeleton-loader v-if="fetching" type="heading, paragraph"></v-skeleton-loader>
+                <v-list-item v-else title="Postfix" :subtitle="data.postfix">
                   <template v-slot:append>
                     <PostfixConfig :serverId="serverId" />
                   </template>
@@ -251,7 +274,8 @@
         </v-row>
       </v-layout>
 
-      <v-container fluid class="ma-0">
+      <v-skeleton-loader v-if="fetching" type="card"></v-skeleton-loader>
+      <v-container fluid class="ma-0" v-else>
         <ResourceGraph :serverId="serverId"></ResourceGraph>
       </v-container>
     </v-card>
