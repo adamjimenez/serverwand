@@ -3,9 +3,32 @@
     <v-alert v-if="error" type="error" :text="error"></v-alert>
 
     <v-card :loading="fetching">
+      <v-card-actions>
+        <v-btn @click="fetchData" :loading="fetching"><v-icon size="small">mdi:mdi-reload</v-icon></v-btn>
+        <v-btn @click="unban()" v-if="selected.length" :loading="loading === 'unban'"> <v-icon size="small">mdi:mdi-delete</v-icon> </v-btn>
 
-      <v-data-table v-if="items.length" v-model="selected" :headers="headers" :items="items" :items-per-page="100" item-value="ip" show-select
-        mobile-breakpoint="0" hover :row-props="rowProps" items-per-page-text="" fixed-header style="height: calc(100vh - 260px); overflow: auto;">
+        <v-spacer></v-spacer>
+
+        <v-switch v-model="active" label="Active" @change="toggle()" hide-details color="primary"
+          :loading="loading === 'toggle'"></v-switch>
+      </v-card-actions>
+
+      <v-data-table
+        v-if="items.length"
+        v-model="selected"
+        :headers="headers"
+        :items="items"
+        :items-per-page="100"
+        item-value="ip"
+        :show-select="display.smAndUp"
+        mobile-breakpoint="0"
+        hover
+        :row-props="rowProps"
+        items-per-page-text=""
+        fixed-header
+        style="height: calc(100vh - 280px); overflow: auto;"
+        @contextmenu:row="select"
+      >
 
         <template v-slot:item.ip="{ item }">
           <span>
@@ -22,22 +45,12 @@
 
       <v-card-text v-else> Empty </v-card-text>
     </v-card>
-
-    <v-card>
-      <v-card-actions>
-        <v-btn @click="unban()" :disabled="selected.length === 0" :loading="loading === 'unban'"> Unban </v-btn>
-
-        <v-spacer></v-spacer>
-
-        <v-switch v-model="active" label="Active" @change="toggle()" hide-details color="primary"
-          :loading="loading === 'toggle'"></v-switch>
-      </v-card-actions>
-    </v-card>
   </div>
 </template>
 
 <script>
 import api from "../../services/api";
+import { useDisplay } from 'vuetify';
 
 export default {
   data() {
@@ -50,9 +63,6 @@ export default {
       serverId: 0,
       selected: [],
       headers: [{
-        title: "",
-        key: "",
-      }, {
         title: "IP",
         key: "ip",
       }, {
@@ -134,7 +144,14 @@ export default {
           class: 'bg-primary'
         };
       }
-    }
+    },    
+    select(event, item) {
+      event.preventDefault();
+
+      if (!this.selected.includes(item.item.ip)) {
+        this.selected.push(item.item.ip);
+      }
+    },
   },
 };
 </script>

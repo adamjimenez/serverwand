@@ -40,7 +40,17 @@
             <v-row>
               <v-col cols="12">
                 <v-data-table :headers="headers" :items="items" :items-per-page="100" class="results" ref="results" mobile-breakpoint="0"
-                  @click:row="function (event, item) { open(item.item) }" v-model="selectedIds" show-select :page="page" @update:page="updatePage" hover :row-props="rowProps" fixed-header style="height: calc(100vh - 370px); overflow: auto;">
+                  v-model="selectedIds"
+                  :show-select="display.smAndUp"
+                  :page="page"
+                  hover
+                  :row-props="rowProps"
+                  fixed-header
+                  style="height: calc(100vh - 370px); overflow: auto;"
+                  @click:row="function (event, item) { open(item.item) }"
+                  @contextmenu:row="select"
+                  @update:page="updatePage"
+                >
 
                   <template v-slot:item.modified="{ item }">
                     {{ formatDate(item.modified) }}
@@ -135,6 +145,7 @@ import Snapshot from "../../components/CloudBackups/Snapshot";
 import EditFile from "../../components/Files/EditFile";
 import util from "../../services/util";
 import Confirm from "../../components/ConfirmDialog.vue";
+import { useDisplay } from 'vuetify';
 
 export default {
   components: {
@@ -287,6 +298,7 @@ export default {
     }
   },
   created() {
+    this.display = this.$vuetify.display;
     this.serverId = this.$route.params.id;
     this.fetchData();
   },
@@ -487,7 +499,14 @@ export default {
             class: 'bg-primary'
         };
       }
-    }
+    },    
+    select(event, item) {
+      event.preventDefault();
+
+      if (!this.selectedIds.includes(item.item.id)) {
+        this.selectedIds.push(item.item.id);
+      }
+    },
   },
 };
 </script>

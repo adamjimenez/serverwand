@@ -1,7 +1,7 @@
 <template>
     <div>
-      <v-btn :loading="fetching" @click="deleteServer" v-bind="$attrs" :disabled="fetching || server?.queue == 0">
-        Clear Mail Queue ({{ server?.queue ? server.queue : 0 }})
+      <v-btn :loading="fetching" @click="deleteServer" v-bind="$attrs">
+        Clear Queue ({{ server?.queue ? server.queue : 0 }})
       </v-btn>
       <Confirm ref="confirm" />
     </div>

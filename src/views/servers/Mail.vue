@@ -6,8 +6,21 @@
 
     <v-card :loading="fetching">
 
-      <v-data-table v-if="items.length" v-model="selected" :headers="headers" :items="items" :items-per-page="100" show-select
-        mobile-breakpoint="0" @click:row="view" hover :row-props="rowProps" fixed-header style="height: calc(100vh - 260px); overflow: auto;">
+      <v-card-actions>
+        <v-btn @click="fetchData" :loading="fetching"><v-icon size="small">mdi:mdi-reload</v-icon></v-btn>
+        <v-btn v-if="selected.length" @click="deleteMail()" :disabled="selected.length" :loading="fetching"> <v-icon
+            size="small">mdi:mdi-delete</v-icon> </v-btn>
+        <ClearMailQueue v-if="data.server?.queue" serverId="serverId" :server="data" class="mx-3"
+          @complete="handleComplete" />
+      </v-card-actions>
+
+      <v-data-table v-if="items.length" v-model="selected" :headers="headers" :items="items" :items-per-page="100"
+        :show-select="display.smAndUp" mobile-breakpoint="0" hover :row-props="rowProps" fixed-header
+        style="height: calc(100vh - 260px); overflow: auto;" @click:row="view" @contextmenu:row="select">
+
+        <template v-slot:item.date="{ item }">
+          <span>{{ formatDate(item.date) }}</span>
+        </template>
 
         <template v-slot:item.size="{ item }">
           <span>{{ prettyBytes(item.size) }}</span>
@@ -18,23 +31,22 @@
       <v-card-text v-else> Queue empty </v-card-text>
     </v-card>
 
-    <v-card>
-      <v-card-actions>
-        <v-btn @click="deleteMail()" :disabled="selected.length === 0" :loading="fetching"> Delete </v-btn>
-        <ClearMailQueue serverId="serverId" :server="data" class="mx-3" @complete="handleComplete" />
-      </v-card-actions>
-    </v-card>
-
     <v-dialog app v-model="emailDrawer">
       <v-card>
-        <v-card-title class="d-flex"> 
-          <div>
-            From: {{ message.sender }}<br>
-            To: {{ message.recipient }}
+        <v-card-title class="d-flex">
+          <div class="text-truncate mr-4" style="max-width: 50%;">
+            <div class="text-truncate" title="From: {{ message.sender }}">
+              From: {{ message.sender }}
+            </div>
+            <div class="text-truncate" title="To: {{ message.recipient }}">
+              To: {{ message.recipient }}
+            </div>
           </div>
+
           <v-spacer></v-spacer>
-          <div>
-            {{ message.date }}<br>
+
+          <div class="text-right">
+            {{ formatDate(message.date) }}<br>
             {{ prettyBytes(message.size) }}
           </div>
         </v-card-title>
@@ -52,6 +64,7 @@ import api from "../../services/api";
 import util from "../../services/util";
 import Loading from "../../components/Loading";
 import ClearMailQueue from "../../components/ClearMailQueue";
+import { useDisplay } from 'vuetify';
 
 export default {
   components: {
@@ -72,14 +85,8 @@ export default {
       serverId: 0,
       selected: [],
       headers: [{
-        title: "",
-        key: "",
-      }, {
-        title: "ID",
-        key: "id",
-      }, {
-        title: "Size",
-        key: "size",
+        title: "Date",
+        key: "date",
         class: 'd-none d-sm-table-cell',
         cellClass: 'd-none d-sm-table-cell',
       }, {
@@ -93,14 +100,15 @@ export default {
         class: 'd-none d-sm-table-cell',
         cellClass: 'd-none d-sm-table-cell',
       }, {
-        title: "Date",
-        key: "date",
+        title: "Size",
+        key: "size",
         class: 'd-none d-sm-table-cell',
         cellClass: 'd-none d-sm-table-cell',
-      }],
+      }]
     };
   },
   created() {
+    this.display = this.$vuetify.display;
     this.serverId = this.$route.params.id;
     this.fetchData();
   },
@@ -158,6 +166,13 @@ export default {
         this.message.id;
       this.emailDrawer = true;
     },
+    select(event, item) {
+      event.preventDefault();
+
+      if (!this.selected.includes(item.item.id)) {
+        this.selected.push(item.item.id);
+      }
+    },
     prettyBytes(value) {
       return util.prettyBytes(value);
     },
@@ -168,10 +183,13 @@ export default {
     rowProps(data) {
       if (this.selected.find(item => item === data.item.id)) {
         return {
-            class: 'bg-primary'
+          class: 'bg-primary'
         };
       }
-    }
+    },
+    formatDate(value) {
+      return util.formatDate(value);
+    },
   },
 };
 </script>

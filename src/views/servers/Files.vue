@@ -50,8 +50,24 @@
         </v-row>
       </v-container>
 
-      <v-data-table v-model="selectedIds" :headers="headers" :items="items" :items-per-page="100" ref="results" show-select
-        mobile-breakpoint="0" @click:row="function (event, item) { open(item.item) }" :loading="fetching" :page="page" @update:page="updatePage" hover :row-props="rowProps" fixed-header style="height: calc(100vh - 350px); overflow: auto;">
+      <v-data-table
+        v-model="selectedIds" 
+        :headers="headers" 
+        :items="items" 
+        :items-per-page="100"
+        :show-select="display.smAndUp"
+        ref="results"
+        mobile-breakpoint="0"
+        :loading="fetching"
+        :page="page"
+        hover
+        :row-props="rowProps"
+        fixed-header
+        style="height: calc(100vh - 345px); overflow: auto;"
+        @update:page="updatePage"
+        @click:row="function (event, item) { open(item.item) }"
+        @contextmenu:row="select"
+      >
 
         <template v-slot:item.size="{ item }">
           <span v-if="item.type === 'file'">
@@ -90,6 +106,7 @@ import Clipboard from "../../components/Files/Clipboard";
 import Upload from "../../components/Files/Upload";
 import Extract from "../../components/Files/Extract";
 import Tail from "../../components/Files/Tail";
+import { useDisplay } from 'vuetify';
 
 export default {
   components: {
@@ -122,10 +139,9 @@ export default {
       serverId: 0,
       selectedIds: [],
       folderSelected: false,
+      fileToOpen: '',
+      page: 1,
       headers: [{
-        title: "",
-        key: "",
-      }, {
         title: "Name",
         key: "name",
       }, {
@@ -153,10 +169,8 @@ export default {
         key: "dest",
         class: 'd-none d-sm-table-cell',
         cellClass: 'd-none d-sm-table-cell',
-      }],
-      fileToOpen: '',
-      page: 1,
-    };
+      }]
+    }
   },
   computed: {
     dir: function () {
@@ -182,7 +196,7 @@ export default {
       });
 
       return selected;
-    }
+    },
   },
   watch: {
     path: {
@@ -206,6 +220,8 @@ export default {
     },
   },
   created() {
+    this.display = this.$vuetify.display;
+
     this.serverId = this.$route.params.id;
 
     // change folder when url hash is manually edited
@@ -283,11 +299,11 @@ export default {
             }
 
             this.server = response.data.item;
-            
+
             this.page = 1;
             this.items = [];
             response.data.files.forEach(element => {
-              let item = {...element};
+              let item = { ...element };
               item.selected = true;
 
               this.items.push(item);
@@ -364,10 +380,17 @@ export default {
     rowProps(data) {
       if (this.selected.find(item => item.id === data.item.id)) {
         return {
-            class: 'bg-primary'
+          class: 'bg-primary'
         };
       }
-    }
+    },
+    select(event, item) {
+      event.preventDefault();
+
+      if (!this.selectedIds.includes(item.item.id)) {
+        this.selectedIds.push(item.item.id);
+      }
+    },
   },
 };
 </script>

@@ -2,8 +2,10 @@ import moment from 'moment'
 
 export default {
     formatDate: function(value) {
-        if (value) {
+        if (parseInt(value) == value) {
             return moment.unix(parseInt(value)).format('DD-MMM-YYYY HH:mm')
+        } else {
+            return moment(value).format('DD-MMM-YYYY HH:mm')
         }
     },
     prettyBytes: function(size) {
