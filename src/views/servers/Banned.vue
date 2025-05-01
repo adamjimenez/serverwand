@@ -148,7 +148,16 @@ export default {
     select(event, item) {
       event.preventDefault();
 
-      if (!this.selected.includes(item.item.ip)) {
+      let found = -1;
+      this.selected.forEach((v, index) => {
+        if (item.item.ip == v) {
+          found = index;
+        }
+      });
+
+      if (found > -1) {
+        this.selected.splice(found, 1);
+      } else {
         this.selected.push(item.item.ip);
       }
     },

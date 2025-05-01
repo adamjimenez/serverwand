@@ -387,7 +387,16 @@ export default {
     select(event, item) {
       event.preventDefault();
 
-      if (!this.selectedIds.includes(item.item.id)) {
+      let found = -1;
+      this.selectedIds.forEach((v, index) => {
+        if (item.item.id == v) {
+          found = index;
+        }
+      });
+
+      if (found > -1) {
+        this.selectedIds.splice(found, 1);
+      } else {
         this.selectedIds.push(item.item.id);
       }
     },

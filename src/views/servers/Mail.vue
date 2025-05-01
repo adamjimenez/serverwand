@@ -166,13 +166,6 @@ export default {
         this.message.id;
       this.emailDrawer = true;
     },
-    select(event, item) {
-      event.preventDefault();
-
-      if (!this.selected.includes(item.item.id)) {
-        this.selected.push(item.item.id);
-      }
-    },
     prettyBytes(value) {
       return util.prettyBytes(value);
     },
@@ -189,6 +182,22 @@ export default {
     },
     formatDate(value) {
       return util.formatDate(value);
+    },
+    select(event, item) {
+      event.preventDefault();
+
+      let found = -1;
+      this.selected.forEach((v, index) => {
+        if (item.item.id == v) {
+          found = index;
+        }
+      });
+
+      if (found > -1) {
+        this.selected.splice(found, 1);
+      } else {
+        this.selected.push(item.item.id);
+      }
     },
   },
 };
