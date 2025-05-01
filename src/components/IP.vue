@@ -1,5 +1,5 @@
 <template>
-    <v-text-field v-bind="$attrs" label="IP address" required :rules="[rules.required, rules.ip]" :placeholder="placeholder" ref="textfield" v-model="value">
+    <v-text-field v-bind="$attrs" label="IP address" required :rules="[rules.required, rules.ip]" :placeholder="placeholder" v-model="value">
         <template v-slot:append-inner>
             <v-icon v-if="remoteAddr" @click="setValue" title="Use local IP" icon="mdi:mdi-map-marker" />
         </template>

@@ -1,16 +1,11 @@
 <template>
   <span ref="container">
-    <v-tooltip :text="copyText" top v-if="text">
+    <v-tooltip :text="copyText" top>
       <template v-slot:activator="{ props }">
-        <span v-bind="props" @click="copy(val)" @mouseleave="resetCopyText">
-          {{ label ? label : val }}  
+        <span v-bind="props" @click="copy(val)" @mouseleave="resetCopyText" v-if="text">
+          <span>{{ label || val }}</span>
         </span>
-      </template>
-    </v-tooltip>
-
-    <v-tooltip :text="copyText" top v-else>
-      <template v-slot:activator="{ props }">
-        <v-btn v-bind="props" icon @click="copy(val)" @mouseleave="resetCopyText">
+        <v-btn v-bind="props" icon @click="copy(val)" @mouseleave="resetCopyText" :variant="variant" v-else>
           <v-icon size="small">mdi:mdi-content-copy</v-icon>
         </v-btn>
       </template>
@@ -21,10 +16,12 @@
 <script>
 export default {
   props: {
+    icon: null,
     title: null,
     label: null,
     val: null,
     text: Boolean,
+    variant: null,
   },
   data() {
     return {

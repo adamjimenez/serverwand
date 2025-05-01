@@ -75,7 +75,11 @@
           ></v-btn>
         </v-card-title>
         <v-card-text>
-          <v-text-field v-model="email.user" label="Name" required :readonly="userReadonly" autofocus></v-text-field>
+          <v-text-field v-model="email.user" label="Name" required :readonly="userReadonly" autofocus :suffix="'@' + data.domain">
+            <template v-slot:append-inner="{ props }">
+              <Copy :val="email.user + '@' + data.domain" icon variant="text" />
+            </template>
+          </v-text-field>
           <PasswordField v-model="email.password" label="Password" required></PasswordField>
           <v-text-field v-model="email.destination" label="Forwarding" required></v-text-field>
           <v-btn :disabled="!email.user" :loading="fetching" color="success" @click="saveEmail()" text="Save"></v-btn>
