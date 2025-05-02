@@ -5,6 +5,26 @@
 </template>
 
 <style>
+/* Disable text selection globally */
+* {
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+  user-select: none; /* Standard */
+  -webkit-touch-callout: none; /* Disable iOS long-press callout */
+}
+
+/* Optionally, allow selection for specific elements (e.g., input fields) */
+input,
+textarea,
+[contenteditable] {
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
+  -webkit-touch-callout: default;
+}
+
 html {
   overflow: auto !important;
 }
