@@ -61,7 +61,8 @@
         hover
         :row-props="rowProps"
         fixed-header
-        style="height: calc(100vh - 345px); overflow: auto;"
+        style="overflow: auto;"
+        :style="display.mobile ? 'height: calc(100vh - 260px);' : 'height: calc(100vh - 345px);'"
         :hide-default-header="!display.smAndUp"
         @update:page="updatePage"
         @click:row="function (event, item) { open(item.item) }"

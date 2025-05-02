@@ -11,10 +11,10 @@
         </span>
       </template>
       <template v-slot:prepend>
-        <ServerIcon :provider="data.provider" v-if="$vuetify.display.smAndUp"></ServerIcon>
-        <v-btn to="/servers/" icon @click="" v-else>
+        <v-btn to="/servers/" icon v-if="$vuetify.display.mobile" class="mr-5">
 						<v-icon icon="mdi: mdi-arrow-left" />
 				</v-btn>
+        <ServerIcon :provider="data.provider" v-if="$vuetify.display.smAndUp"></ServerIcon>
       </template>
       <template v-slot:append>
         <Terminal :data="data" color="success" icon size="small">

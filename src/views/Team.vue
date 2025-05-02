@@ -8,10 +8,10 @@
 
     <v-list-item>
       <template v-slot:prepend>
-        <v-icon left v-if="$vuetify.display.smAndUp">fas fa-users</v-icon>
-        <v-btn to="/servers/" icon @click="" v-else>
+        <v-btn to="/servers/" icon v-if="$vuetify.display.mobile" class="mr-5">
             <v-icon icon="mdi: mdi-arrow-left" />
         </v-btn>
+        <v-icon v-if="$vuetify.display.smAndUp">fas fa-users</v-icon>
       </template>      
       <v-list-item-title>{{ data.name }}</v-list-item-title>
     </v-list-item>

@@ -24,7 +24,16 @@
               </v-row>
             </v-container>
 
-            <v-data-table :headers="headers" :items="filtered" :items-per-page="100" hover @click:row="function (event, data) { $router.push('/servers/' + data.item.id + '/summary') }" fixed-header style="height: calc(100vh - 200px); overflow: auto;">
+            <v-data-table
+              :headers="headers"
+              :items="filtered"
+              :items-per-page="100"
+              hover
+              fixed-header
+              style="height: calc(100vh - 200px); overflow: auto;"
+              :hide-default-header="!display.smAndUp"
+              @click:row="function (event, data) { $router.push('/servers/' + data.item.id + '/summary') }"
+            >
               <template v-slot:item.name="{ item }">
                 <v-list-item :title="item.name" :subtitle="item.hostname"
                   class="px-0">
@@ -80,7 +89,6 @@
 import api from "../services/api";
 import Loading from "../components/Loading";
 import ServerIcon from "../components/ServerIcon";
-import { useDisplay } from 'vuetify';
 
 export default {
   components: {

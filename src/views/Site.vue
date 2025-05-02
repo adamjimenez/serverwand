@@ -8,10 +8,10 @@
 
     <v-list-item :title="data.name">
       <template v-slot:prepend>
-        <SiteIcon :app="data.app" :to="'http://' + data.domain + (data.app == 'wordpress' ? '/wp-admin' : '')" v-if="$vuetify.display.smAndUp"></SiteIcon>
-        <v-btn to="/servers/" icon @click="" v-else>
+        <v-btn to="/servers/" icon v-if="$vuetify.display.mobile" class="mr-5">
 						<v-icon icon="mdi: mdi-arrow-left" />
 				</v-btn>
+        <SiteIcon :app="data.app" :to="'http://' + data.domain + (data.app == 'wordpress' ? '/wp-admin' : '')" v-if="$vuetify.display.smAndUp"></SiteIcon>
       </template>
       <v-list-item-title>
         <a :href="'http://' + data.domain" target="_blank">

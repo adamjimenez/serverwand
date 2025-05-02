@@ -47,7 +47,7 @@
                   :row-props="rowProps"
                   fixed-header                  
                   :hide-default-header="!display.smAndUp"
-                  style="height: calc(100vh - 370px); overflow: auto;"
+                  :style="display.mobile ? 'height: calc(100vh - 230px);' : 'height: calc(100vh - 370px);'"
                   @click:row="function (event, item) { open(item.item) }"
                   @contextmenu:row="select"
                   @update:page="updatePage"
@@ -65,8 +65,17 @@
           <div v-else>
             <v-row>
               <v-col cols="12">
-                <v-data-table :headers="backupHeaders" :items="backups" :items-per-page="100" mobile-breakpoint="0"
-                  @click:row="function (event, item) { browse(item.item) }" hover fixed-header style="height: calc(100vh - 290px); overflow: auto;">
+                <v-data-table
+                  :headers="backupHeaders"
+                  :items="backups"
+                  :items-per-page="100"
+                  mobile-breakpoint="0"
+                  hover
+                  fixed-header
+                  style="overflow: auto;"                  
+                  :style="display.mobile ? 'height: calc(100vh - 230px);' : 'height: calc(100vh - 370px);'"
+                  @click:row="function (event, item) { browse(item.item) }"
+                >
 
                   <template v-slot:item.name="{ item }">
                     <span @click="browse(item)">{{ item.name }}</span>

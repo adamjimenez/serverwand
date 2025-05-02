@@ -13,7 +13,16 @@
             </v-card-text>
           </v-card>
 
-          <v-data-table :headers="headers" :items="filtered" :items-per-page="100" hover @click:row="function (event, data) { $router.push('/sites/' + data.item.id + '/summary') }" fixed-header style="height: calc(100vh - 200px); overflow: auto;">
+          <v-data-table
+            :headers="headers"
+            :items="filtered"
+            :items-per-page="100"
+            hover
+            @click:row="function (event, data) { $router.push('/sites/' + data.item.id + '/summary') }"
+            fixed-header
+            :hide-default-header="!display.smAndUp"
+            style="height: calc(100vh - 200px); overflow: auto;"
+          >
             <template v-slot:item.domain="{ item }">
               <v-list-item :title="item.domain" class="px-0">
                 <template v-slot:subtitle>
