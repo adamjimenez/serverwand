@@ -146,7 +146,6 @@ import Snapshot from "../../components/CloudBackups/Snapshot";
 import EditFile from "../../components/Files/EditFile";
 import util from "../../services/util";
 import Confirm from "../../components/ConfirmDialog.vue";
-import { useDisplay } from 'vuetify';
 
 export default {
   components: {

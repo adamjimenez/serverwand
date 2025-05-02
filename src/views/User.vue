@@ -6,13 +6,15 @@
 
     <Loading :value="fetching" />
 
-    <v-container v-if="!fetching" fluid>
-      <v-row>
-        <v-col>
-          <v-list-item :title="data.name" prepend-icon="fas fa-user"></v-list-item>
-        </v-col>
-      </v-row>
-    </v-container>
+    <v-list-item>
+      <template v-slot:prepend>
+        <v-icon left v-if="$vuetify.display.smAndUp">fas fa-user</v-icon>
+        <v-btn to="/servers/" icon @click="" v-else>
+            <v-icon icon="mdi: mdi-arrow-left" />
+        </v-btn>
+      </template>      
+      <v-list-item-title>{{ data.name }}</v-list-item-title>
+    </v-list-item>
 
     <Tabs>
       <v-tab :to="'/users/' + userId + '/summary'">Summary</v-tab>
@@ -44,6 +46,7 @@ export default {
       error: null,
       data: {},
       fetching: false,
+      hideAppBar: true
     };
   },
   created() {

@@ -51,7 +51,6 @@
 
 <script>
 import api from "../../services/api";
-import { useDisplay } from 'vuetify';
 
 export default {
   data() {

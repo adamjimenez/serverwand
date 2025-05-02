@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar class="d-flex">
+    <v-app-bar class="d-flex" v-if="!hideAppBar || !mobile">
       <v-app-bar-nav-icon v-if="!mobile" variant="text" color="grey-lighten-1"
         @click.stop="menuToggle"></v-app-bar-nav-icon>
 
@@ -39,7 +39,12 @@
 
     <v-main>
       <v-container fluid>
-        <router-view :restricted="restricted"></router-view>
+        <router-view
+          :restricted="restricted"
+          v-slot="{ Component }"
+        >          
+				  <component :is="Component" ref="childComponent" />
+        </router-view>
       </v-container>
     </v-main>
 
@@ -116,7 +121,8 @@ export default {
       display: {},
       createLink: '',
       createLabel: '',
-      mobile: false
+      mobile: false,
+      hideAppBar: false,
     };
   },
   created() {
@@ -169,8 +175,10 @@ export default {
     if (localStorage.rail === 'false') {
       this.rail = false;
     }
-
+    
     this.updateCreateButton();
+
+    this.hideAppBar = this.$refs.childComponent.hideAppBar;
   },
   watch: {
     dark(newDark) {
@@ -196,7 +204,9 @@ export default {
     rail(value) {
       localStorage.rail = value;
     },
-    '$route.path': function () {
+    '$route.path': async function () {
+      await this.$nextTick()
+      this.hideAppBar = this.$refs.childComponent.hideAppBar;
       this.updateCreateButton();
     }
   },

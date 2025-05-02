@@ -105,7 +105,6 @@ import Clipboard from "../../components/Files/Clipboard";
 import Upload from "../../components/Files/Upload";
 import Extract from "../../components/Files/Extract";
 import Tail from "../../components/Files/Tail";
-import { useDisplay } from 'vuetify';
 
 export default {
   components: {

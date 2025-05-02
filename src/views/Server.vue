@@ -11,7 +11,10 @@
         </span>
       </template>
       <template v-slot:prepend>
-        <ServerIcon :provider="data.provider"></ServerIcon>
+        <ServerIcon :provider="data.provider" v-if="$vuetify.display.smAndUp"></ServerIcon>
+        <v-btn to="/servers/" icon @click="" v-else>
+						<v-icon icon="mdi: mdi-arrow-left" />
+				</v-btn>
       </template>
       <template v-slot:append>
         <Terminal :data="data" color="success" icon size="small">
@@ -59,6 +62,7 @@ export default {
       users: [],
       details: "",
       fetching: false,
+      hideAppBar: true
     };
   },
   created() {

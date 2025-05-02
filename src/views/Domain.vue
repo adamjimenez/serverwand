@@ -6,22 +6,20 @@
 
     <Loading :value="fetching" />
 
-    <v-container v-if="!fetching" fluid>
-      <v-row>
-        <v-col>
-          <v-list-item :title="data.domain">
-            <template v-slot:prepend>
-              <v-icon left>fas fa-globe</v-icon>
-            </template>
-          </v-list-item>
-        </v-col>
+    <v-list-item>
+      <template v-slot:prepend>
+        <v-icon left v-if="$vuetify.display.smAndUp">fas fa-globe</v-icon>
+        <v-btn to="/servers/" icon @click="" v-else>
+            <v-icon icon="mdi: mdi-arrow-left" />
+        </v-btn>
+      </template>
+      
+      <v-list-item-title>{{ data.domain }}</v-list-item-title>
 
-        <v-col class="d-flex align-center justify-end">
-          <v-btn v-bind:href="'http://' + data.domain" target="_blank" title="Open site in new window" icon="mdi:mdi-open-in-new" size="small">
-          </v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
+      <template v-slot:append>
+        <v-btn v-bind:href="'http://' + data.domain" target="_blank" title="Open site in new window" icon="mdi:mdi-open-in-new" size="small"></v-btn>
+      </template>
+    </v-list-item>
 
     <Tabs>
       <v-tab :to="'/domains/' + domainId + '/summary'">Summary</v-tab>
@@ -45,14 +43,12 @@ export default {
   data() {
     return {
       domainId: null,
-      post: null,
       error: null,
       data: {
         server: {},
       },
-      details: "",
       fetching: false,
-      aliasDrawer: false,
+      hideAppBar: true
     };
   },
   created() {

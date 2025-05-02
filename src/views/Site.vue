@@ -8,7 +8,10 @@
 
     <v-list-item :title="data.name">
       <template v-slot:prepend>
-        <SiteIcon :app="data.app" :to="'http://' + data.domain + (data.app == 'wordpress' ? '/wp-admin' : '')"></SiteIcon>        
+        <SiteIcon :app="data.app" :to="'http://' + data.domain + (data.app == 'wordpress' ? '/wp-admin' : '')" v-if="$vuetify.display.smAndUp"></SiteIcon>
+        <v-btn to="/servers/" icon @click="" v-else>
+						<v-icon icon="mdi: mdi-arrow-left" />
+				</v-btn>
       </template>
       <v-list-item-title>
         <a :href="'http://' + data.domain" target="_blank">
@@ -16,8 +19,8 @@
         </a>
       </v-list-item-title>
       <v-list-item-subtitle>
-        <router-link :to="'/servers/' + data.server.id + '/summary'" class="text-no-wrap">
-          {{ data.server.name }}
+        <router-link :to="'/servers/' + data.server?.id + '/summary'" class="text-no-wrap">
+          {{ data.server?.name }}
         </router-link>
       </v-list-item-subtitle>
       <template v-slot:append>
@@ -59,14 +62,10 @@ export default {
   data() {
     return {
       domainId: null,
-      post: null,
       error: null,
-      data: {
-        server: {}
-      },
-      details: '',
+      data: {},
       fetching: false,
-      aliasDrawer: false
+      hideAppBar: true
     }
   },
   created() {

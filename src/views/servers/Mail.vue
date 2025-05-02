@@ -77,7 +77,6 @@ import api from "../../services/api";
 import util from "../../services/util";
 import Loading from "../../components/Loading";
 import ClearMailQueue from "../../components/ClearMailQueue";
-import { useDisplay } from 'vuetify';
 
 export default {
   components: {
