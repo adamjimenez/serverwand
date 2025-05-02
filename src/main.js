@@ -300,7 +300,7 @@ const router = createRouter({
 
 // Global error handler for chunk load failures
 window.addEventListener('error', (event) => {
-  if (/Loading chunk .* failed/i.test(event.message)) {
+  if (/Loading chunk * failed/i.test(event.message)) {
     const lastReload = localStorage.getItem('lastChunkReload');
     const now = Date.now();
     if (!lastReload || now - parseInt(lastReload) > 1000) {
