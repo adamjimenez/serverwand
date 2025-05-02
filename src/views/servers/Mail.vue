@@ -8,7 +8,7 @@
 
       <v-card-actions>
         <v-btn @click="fetchData" :loading="fetching"><v-icon size="small">mdi:mdi-reload</v-icon></v-btn>
-        <v-btn v-if="selected.length" @click="deleteMail()" :disabled="selected.length" :loading="fetching"> <v-icon
+        <v-btn v-if="selected.length" @click="deleteMail()" :loading="fetching"> <v-icon
             size="small">mdi:mdi-delete</v-icon> </v-btn>
         <ClearMailQueue v-if="data.server?.queue" serverId="serverId" :server="data" class="mx-3"
           @complete="handleComplete" />
