@@ -10,11 +10,11 @@
     <v-card :loading="fetching">
 
       <v-container fluid>
-        <v-row>
+        <v-row class="align-center">
           <v-btn icon @click="upLevel()" :disabled="path === '/'" title="Up one level">
             <v-icon size="small">mdi:mdi-arrow-up</v-icon>
           </v-btn>
-          <v-text-field v-model="path" class="mx-2" @change="fetchData" @keydown.enter="fetchData"></v-text-field>
+          <v-text-field v-model="path" class="mx-2" @change="fetchData" @keydown.enter="fetchData" variant="solo" hide-details></v-text-field>
           <!--
             <v-text-field placeholder="Search" prepend-inner-icon="mdi:mdi-magnify" v-model="search" class="ma-0 pa-0"
               @change="fetchData" @keydown.enter="fetchData"></v-text-field>
@@ -75,7 +75,7 @@
         </template>
 
         <template v-slot:item.modified="{ item }">
-          {{ formatDate(item.modified) }}
+          {{ formatDate(item.modified, 'DD/MM/YYYY HH:mm') }}
         </template>
 
         <template v-slot:item.owner="{ item }">
@@ -370,8 +370,8 @@ export default {
     prettyBytes(value) {
       return util.prettyBytes(value);
     },
-    formatDate(value) {
-      return util.formatDate(value);
+    formatDate(value, format) {
+      return util.formatDate(value, format);
     },
     updatePage(page) {
       this.page = page;

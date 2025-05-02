@@ -1,11 +1,15 @@
 import moment from 'moment'
 
 export default {
-    formatDate: function(value) {
+    formatDate: function(value, format) {
+        if (!format) {
+            format = 'DD-MMM-YYYY HH:mm';
+        }
+
         if (parseInt(value) == value) {
-            return moment.unix(parseInt(value)).format('DD-MMM-YYYY HH:mm')
+            return moment.unix(parseInt(value)).format(format)
         } else {
-            return moment(value).format('DD-MMM-YYYY HH:mm')
+            return moment(value).format(format)
         }
     },
     prettyBytes: function(size) {
