@@ -8,7 +8,18 @@
       @loading="handleLoading" />
 
     <v-card :loading="fetching">
+
       <v-container fluid>
+        <v-row>
+          <v-btn icon @click="upLevel()" :disabled="path === '/'" title="Up one level">
+            <v-icon size="small">mdi:mdi-arrow-up</v-icon>
+          </v-btn>
+          <v-text-field v-model="path" class="mx-2" @change="fetchData" @keydown.enter="fetchData"></v-text-field>
+          <!--
+            <v-text-field placeholder="Search" prepend-inner-icon="mdi:mdi-magnify" v-model="search" class="ma-0 pa-0"
+              @change="fetchData" @keydown.enter="fetchData"></v-text-field>
+            -->
+        </v-row>
         <v-row>
           <NewFile v-if="selected.length === 0" :serverId="serverId" :path="path" @complete="fetchData()"
             @error="handleError" />
@@ -37,19 +48,6 @@
         </v-row>
       </v-container>
 
-      <v-container fluid>
-        <v-row>
-          <v-btn icon @click="upLevel()" :disabled="path === '/'" title="Up one level">
-            <v-icon size="small">mdi:mdi-arrow-up</v-icon>
-          </v-btn>
-          <v-text-field v-model="path" class="mx-2" @change="fetchData" @keydown.enter="fetchData"></v-text-field>
-          <!--
-            <v-text-field placeholder="Search" prepend-inner-icon="mdi:mdi-magnify" v-model="search" class="ma-0 pa-0"
-              @change="fetchData" @keydown.enter="fetchData"></v-text-field>
-            -->
-        </v-row>
-      </v-container>
-
       <v-data-table
         v-model="selectedIds" 
         :headers="headers" 
@@ -64,6 +62,7 @@
         :row-props="rowProps"
         fixed-header
         style="height: calc(100vh - 345px); overflow: auto;"
+        :hide-default-header="!display.smAndUp"
         @update:page="updatePage"
         @click:row="function (event, item) { open(item.item) }"
         @contextmenu:row="select"
@@ -145,13 +144,13 @@ export default {
         title: "Name",
         key: "name",
       }, {
-        title: "Size",
-        key: "size",
+        title: "Date modified",
+        key: "modified",
         class: 'd-none d-sm-table-cell',
         cellClass: 'd-none d-sm-table-cell',
       }, {
-        title: "Date modified",
-        key: "modified",
+        title: "Size",
+        key: "size",
         class: 'd-none d-sm-table-cell',
         cellClass: 'd-none d-sm-table-cell',
       }, {

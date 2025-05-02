@@ -25,7 +25,8 @@
         hover
         :row-props="rowProps"
         items-per-page-text=""
-        fixed-header
+        fixed-header        
+        :hide-default-header="!display.smAndUp"
         style="height: calc(100vh - 280px); overflow: auto;"
         @contextmenu:row="select"
       >

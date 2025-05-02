@@ -45,7 +45,8 @@
                   :page="page"
                   hover
                   :row-props="rowProps"
-                  fixed-header
+                  fixed-header                  
+                  :hide-default-header="!display.smAndUp"
                   style="height: calc(100vh - 370px); overflow: auto;"
                   @click:row="function (event, item) { open(item.item) }"
                   @contextmenu:row="select"

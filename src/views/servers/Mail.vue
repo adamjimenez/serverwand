@@ -14,9 +14,22 @@
           @complete="handleComplete" />
       </v-card-actions>
 
-      <v-data-table v-if="items.length" v-model="selected" :headers="headers" :items="items" :items-per-page="100"
-        :show-select="display.smAndUp" mobile-breakpoint="0" hover :row-props="rowProps" fixed-header
-        style="height: calc(100vh - 260px); overflow: auto;" @click:row="view" @contextmenu:row="select">
+      <v-data-table
+        v-if="items.length"
+        v-model="selected"
+        :headers="headers"
+        :items="items"
+        :items-per-page="100"
+        :show-select="display.smAndUp"
+        mobile-breakpoint="0"
+        hover
+        :row-props="rowProps"
+        fixed-header        
+        :hide-default-header="!display.smAndUp"
+        style="height: calc(100vh - 260px); overflow: auto;"
+        @click:row="view"
+        @contextmenu:row="select"
+      >
 
         <template v-slot:item.date="{ item }">
           <span>{{ formatDate(item.date) }}</span>
