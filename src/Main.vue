@@ -29,7 +29,7 @@
         </v-list-item>
 
         <v-list-item v-for="item in filtered" :key="item.title" :to="item.to" :active="isActive(item.to)"
-          :title="item.title">
+          :title="item.title" @click="if (mobile) { drawer = false; }">
           <template v-slot:prepend>
             <v-icon size="small" class="text-center" style="width: 24px;">{{ item.icon }}</v-icon>
           </template>
