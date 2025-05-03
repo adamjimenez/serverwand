@@ -1,7 +1,7 @@
 <template>
   <v-form ref="form" v-model="valid" lazy-validation>
     <v-card-title primary-title>
-      <h1 style="text-align: center; width: 100%">ServerWand</h1>
+      <h1 class="text-center">ServerWand</h1>
     </v-card-title>
 
     <v-subheader> Password reminder </v-subheader>

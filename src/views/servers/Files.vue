@@ -60,8 +60,8 @@
         :page="page"
         hover
         :row-props="rowProps"
-        fixed-header
-        style="overflow: auto;"
+        fixed-header  
+        class="overflow-auto"
         :style="display.mobile ? 'height: calc(100vh - 260px);' : 'height: calc(100vh - 345px);'"
         :hide-default-header="!display.smAndUp"
         @update:page="updatePage"

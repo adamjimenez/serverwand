@@ -12,7 +12,7 @@
         {{ error }}
       </v-alert>
 
-      <div style="margin: 0 8px">
+      <div class="mx-2">
         <v-btn
           :disabled="dialog"
           :loading="dialog"
@@ -43,7 +43,7 @@
         ></v-text-field>
       </v-card-text>
 
-      <div style="margin: 0 8px">
+      <div class="mx-2">
         <v-btn
           :disabled="dialog"
           :loading="dialog"

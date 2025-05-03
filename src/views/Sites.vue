@@ -21,7 +21,8 @@
             @click:row="function (event, data) { $router.push('/sites/' + data.item.id + '/summary') }"
             fixed-header
             :hide-default-header="!display.smAndUp"
-            style="height: calc(100vh - 200px); overflow: auto;"
+            class="overflow-auto"
+            style="height: calc(100vh - 200px);"
           >
             <template v-slot:item.domain="{ item }">
               <v-list-item :title="item.domain" class="px-0">

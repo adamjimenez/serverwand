@@ -27,7 +27,7 @@
         items-per-page-text=""
         fixed-header        
         :hide-default-header="!display.smAndUp"
-        style="overflow: auto;"
+        class="overflow-auto"
         :style="display.mobile ? 'height: calc(100vh - 240px);' : 'height: calc(100vh - 280px);'"
         @contextmenu:row="select"
       >

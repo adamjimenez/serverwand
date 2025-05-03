@@ -30,7 +30,8 @@
               :items-per-page="100"
               hover
               fixed-header
-              style="height: calc(100vh - 200px); overflow: auto;"
+              class="overflow-auto"
+              style="height: calc(100vh - 200px);"
               :hide-default-header="!display.smAndUp"
               @click:row="function (event, data) { $router.push('/servers/' + data.item.id + '/summary') }"
             >

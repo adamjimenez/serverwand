@@ -26,7 +26,7 @@
         :row-props="rowProps"
         fixed-header        
         :hide-default-header="!display.smAndUp"
-        style="height: overflow: auto;"
+        class="overflow-auto"
         :style="display.mobile ? 'height: calc(100vh - 200px);' : 'height: calc(100vh - 345px);'"
         @click:row="view"
         @contextmenu:row="select"

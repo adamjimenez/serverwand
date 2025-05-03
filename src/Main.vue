@@ -23,7 +23,7 @@
       <v-list nav>
         <v-list-item base-color="primary" variant="flat" :to="createLink" class="text-no-wrap">
           <template v-slot:prepend>
-            <v-icon size="small" style="width: 24px; text-align: center;">mdi:mdi-plus</v-icon>
+            <v-icon size="small" class="text-center" style="width: 24px;">mdi:mdi-plus</v-icon>
           </template>
           {{ createLabel }}
         </v-list-item>
@@ -31,7 +31,7 @@
         <v-list-item v-for="item in filtered" :key="item.title" :to="item.to" :active="isActive(item.to)"
           :title="item.title">
           <template v-slot:prepend>
-            <v-icon size="small" style="width: 24px; text-align: center;">{{ item.icon }}</v-icon>
+            <v-icon size="small" class="text-center" style="width: 24px;">{{ item.icon }}</v-icon>
           </template>
         </v-list-item>
       </v-list>

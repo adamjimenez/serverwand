@@ -72,7 +72,7 @@
                   mobile-breakpoint="0"
                   hover
                   fixed-header
-                  style="overflow: auto;"                  
+                  class="overflow-auto"
                   :style="display.mobile ? 'height: calc(100vh - 230px);' : 'height: calc(100vh - 370px);'"
                   @click:row="function (event, item) { browse(item.item) }"
                 >

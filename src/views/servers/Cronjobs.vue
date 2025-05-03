@@ -118,8 +118,7 @@ export default {
       cronjobs: [],
       rules: {
         required: (value) => !!value || "Required",
-        alpha: (v) =>
-          /^[a-zA-Z-]+$/g.test(v) || "Must contain a-z characters only",
+        alpha: (v) => /^[a-zA-Z-]+$/g.test(v) || "Must contain a-z characters only",
         minute: (v) => /^[0-9,/*]+$/g.test(v) || "0-59 or *",
         hour: (v) => /^[0-9,/*]+$/g.test(v) || "0-23 or *",
         dom: (v) => /^[0-9,/*]+$/g.test(v) || "1-31 or *",
