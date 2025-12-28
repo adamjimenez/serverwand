@@ -8,7 +8,7 @@
 
       <v-card-actions>
         <v-btn @click="fetchData" :loading="fetching"><v-icon size="small">mdi:mdi-reload</v-icon></v-btn>
-        <v-btn v-if="selected.length" @click="deleteMail()" :loading="fetching"> <v-icon
+        <v-btn v-if="selected.length" @click="deleteMail()" :loading="loading == 'delete'"> <v-icon
             size="small">mdi:mdi-delete</v-icon> </v-btn>
         <ClearMailQueue v-if="data.server?.queue" serverId="serverId" :server="data" class="mx-3"
           @complete="handleComplete" />
@@ -92,7 +92,7 @@ export default {
       details: "",
       message: "",
       messageUrl: "",
-      loading: false,
+      loading: '',
       fetching: false,
       emailDrawer: false,
       serverId: 0,
@@ -154,21 +154,25 @@ export default {
         .catch(error => console.log(error))
         .finally(() => this.fetching = false);
     },
-    deleteMail() {
+    deleteMail: async function() {
       // get selected ids
-      var ids = [];
+      let ids = [];
       this.selected.forEach((element) => {
         ids.push(element);
       });
 
       // process deletions
-      this.fetching = true;
+      this.loading = 'delete';
 
-      api
-        .post("servers/" + this.serverId + "/messages", { ids: ids })
-        .then(() => this.fetchData())
-        .catch((error) => console.log(error))
-        .finally(() => this.fetching = false);
+      await api.post("servers/" + this.serverId + "/messages", { ids: ids })
+
+      if (!response.data.success) {
+        this.error = response.data.error;
+        return;
+      }
+      this.loading = '';
+
+      this.fetchData()
     },
     view(event, item) {
       this.message = item.item
