@@ -75,7 +75,6 @@ export default {
     details: "",
     serverId: 0,
     error: "",
-    authRequired: false,
   }),
 
   created() {
