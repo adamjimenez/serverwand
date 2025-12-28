@@ -4,13 +4,15 @@
 
 <style>
 /* Disable text selection globally */
+/*
 * {
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE/Edge */
-  user-select: none; /* Standard */
-  -webkit-touch-callout: none; /* Disable iOS long-press callout */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
+*/
 
 /* Optionally, allow selection for specific elements (e.g., input fields) */
 input,
