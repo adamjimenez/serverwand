@@ -41,7 +41,9 @@
               <Copy :val="path" text />
             </v-list-item-subtitle>
             <template v-slot:append>
-              <v-btn icon="fas fa-folder-open" :to="'/servers/' + data.server?.id + '/Files#' + path" size="small"></v-btn>
+              <v-btn icon :to="'/servers/' + data.server?.id + '/Files#' + path">
+                <v-icon size="small">mdi:mdi-folder-open</v-icon>
+              </v-btn>
             </template>
           </v-list-item>
 
