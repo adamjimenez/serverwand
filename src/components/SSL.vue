@@ -4,10 +4,12 @@
     <v-list-item title="SSL">
       <template v-slot:subtitle>
         <span class="text-capitalize">{{ subtitle }}</span>
+        <v-icon v-if="sslValid" color="success">mdi:mdi-check</v-icon>
+        <v-icon v-else color="error">mdi:mdi-close</v-icon>
       </template>
       <template v-slot:append>
         <v-btn icon @click="open()">
-            <v-icon size="small">fas fa-wrench</v-icon>
+            <v-icon size="small">mdi:mdi-wrench</v-icon>
         </v-btn>
       </template>
     </v-list-item>
@@ -101,6 +103,17 @@ export default {
       }
 
       return subtitle;
+    },
+    sslValid() {
+      if (this.ssl?.expiry) {
+        const date = new Date(this.ssl?.expiry.replace(/-/g, ' '));
+
+        if (date < new Date()) {
+          return false;
+        }
+      }
+
+      return true;
     }
   }
 };
