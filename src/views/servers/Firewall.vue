@@ -32,7 +32,7 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="drawer" max-width="600" persistent>
+    <v-dialog v-model="drawer" max-width="600" persistent scrollable>
       <v-card>
         <v-card-title class="d-flex justify-space-between align-center">
           <div class="text-h5 text-medium-emphasis ps-2">
@@ -46,25 +46,25 @@
           ></v-btn>
         </v-card-title>
 
-        <v-form v-model="valid" title="Firewall rule">
-          <v-card-text>
-            <v-text-field v-model="item.port" label="Port range" placeholder="80, 443, 5000:5010" required
-              :rules="[rules.required, rules.port]" autofocus>
-            </v-text-field>
+        <v-card-text>
+          <v-form v-model="valid" title="Firewall rule">
+              <v-text-field v-model="item.port" label="Port range" placeholder="80, 443, 5000:5010" required
+                :rules="[rules.required, rules.port]" autofocus>
+              </v-text-field>
 
-            <v-select v-model="item.protocol" :items="protocol" label="Protocol"></v-select>
+              <v-select v-model="item.protocol" :items="protocol" label="Protocol"></v-select>
 
-            <v-select v-model="item.action" :items="action" label="Action" required></v-select>
+              <v-select v-model="item.action" :items="action" label="Action" required></v-select>
 
-            <IP v-model="item.from" label="From" :remoteAddr="data.remote_addr" any />
+              <IP v-model="item.from" label="From" :remoteAddr="data.remote_addr" any />
 
-            <v-text-field v-model="item.comment" label="Comment"></v-text-field>
+              <v-text-field v-model="item.comment" label="Comment"></v-text-field>
 
-            <v-btn :disabled="!valid" :loading="fetching" color="success" @click="saveItem">
-              Save
-            </v-btn>
-          </v-card-text>
-        </v-form>
+              <v-btn :disabled="!valid" :loading="fetching" color="success" @click="saveItem">
+                Save
+              </v-btn>
+          </v-form>
+        </v-card-text>
       </v-card>
     </v-dialog>
 

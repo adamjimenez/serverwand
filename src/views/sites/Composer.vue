@@ -20,7 +20,7 @@
             </v-list>
         </v-card>
 
-        <v-dialog v-model="addDialog" max-width="600" persistent>
+        <v-dialog v-model="addDialog" max-width="600" persistent scrollable>
             <v-card>
                 <v-card-title class="d-flex justify-space-between align-center">
                     <div class="text-h5 text-medium-emphasis ps-2">
@@ -29,15 +29,15 @@
 
                     <v-btn icon="mdi:mdi-close" variant="text" @click="addDialog = false"></v-btn>
                 </v-card-title>
-                <v-form v-model="valid" ref="form">
                     <v-card-text>
-                        <v-text-field v-model="item.name" label="Name"></v-text-field>
+                        <v-form v-model="valid" ref="form">
+                            <v-text-field v-model="item.name" label="Name"></v-text-field>
 
-                        <v-btn :disabled="!valid" :loading="loading === 'save'" color="success" @click="saveItem">
-                            Save
-                        </v-btn>
+                            <v-btn :disabled="!valid" :loading="loading === 'save'" color="success" @click="saveItem">
+                                Save
+                            </v-btn>
+                        </v-form>
                     </v-card-text>
-                </v-form>
             </v-card>
         </v-dialog>
 

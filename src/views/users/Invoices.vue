@@ -42,9 +42,9 @@
                 </v-col>
 
                 <v-col cols="12" md="2">
-                  <v-btn @click="removeRow(index)" v-if="index > 0" icon="fas fa-minus"></v-btn>
+                  <v-btn @click="removeRow(index)" v-if="index > 0" icon="mdi:mdi-minus"></v-btn>
 
-                  <v-btn @click="addRow()" v-if="index + 1 === data.items.length" icon="fas fa-plus"></v-btn>
+                  <v-btn @click="addRow()" v-if="index + 1 === data.items.length" icon="mdi:mdi-plus"></v-btn>
                 </v-col>
               </v-row>
             </v-container>

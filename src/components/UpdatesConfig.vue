@@ -3,7 +3,7 @@
     <v-tooltip location="top">
       <template v-slot:activator="{ props }">
         <v-btn v-bind="props" icon @click="edit()">
-          <v-icon size="small">fas fa-wrench</v-icon>
+          <v-icon size="small">mdi:mdi-wrench</v-icon>
         </v-btn>
       </template>
       <span>Configure Updates</span>

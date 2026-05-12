@@ -23,7 +23,7 @@
               {{ item.servers.length }} server{{ item.servers.length != 1 ? "s" : "" }}
             </v-list-item-subtitle>
             <template v-slot:prepend v-if="!display.mobile">
-              <v-icon>fas fa-users</v-icon>
+              <v-icon>mdi:mdi-account-group</v-icon>
             </template>
           </v-list-item>
         </template>

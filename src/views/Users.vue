@@ -19,7 +19,7 @@
         <template v-slot:item.name="{ item }">
           <v-list-item :title="item.name" class="px-0">
             <template v-slot:prepend v-if="!display.mobile">
-              <v-icon>fas fa-user</v-icon>
+              <v-icon>mdi:mdi-account</v-icon>
             </template>
           </v-list-item>
         </template>

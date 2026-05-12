@@ -35,7 +35,7 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="userDrawer" max-width="600" persistent>
+    <v-dialog v-model="userDrawer" max-width="600" persistent scrollable>
       <v-card>
         <v-card-title class="d-flex justify-space-between align-center">
           <div class="text-h5 text-medium-emphasis ps-2">

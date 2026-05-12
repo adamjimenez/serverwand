@@ -1,7 +1,7 @@
 <template>
     <span>
         <v-btn icon @click="logContent = ''; showLogs = true; fetchLog();" title="Server Logs">
-            <v-icon size="small">fas fa-file-alt</v-icon>
+            <v-icon size="small">mdi:mdi-text-box-outline</v-icon>
         </v-btn>
 
         <EditFile ref="editFile" :serverId="serverId" action="files" @complete="fetchLog()" @error="handleError"
@@ -17,7 +17,7 @@
                         <v-text-field label="Filter" v-model="filter" hide-details class="ma-1"></v-text-field>
 
                         <v-btn @click="fetchLog()" :disabled="!log" icon class="ma-3">
-                            <v-icon :class="fetching ? 'fa-spin' : ''" size="small">fas fa-redo-alt</v-icon>
+                            <v-icon :class="fetching ? 'fa-spin' : ''" size="small">mdi:mdi-refresh</v-icon>
                         </v-btn>
                     </v-row>
                 </v-card-title>

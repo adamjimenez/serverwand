@@ -23,7 +23,7 @@
         <v-card-text>
           <v-row>
             <v-col style="max-width: 40px;">
-              <v-icon>fas fa-network-wired</v-icon>
+              <v-icon>mdi:mdi-network</v-icon>
             </v-col>
             <v-col>Max Connection Usage</v-col>
           </v-row>

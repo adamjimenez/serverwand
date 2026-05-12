@@ -17,7 +17,7 @@
                   <div v-else>
                     <div class="d-flex justify-space-between mb-3">
                       <span class="text-h5">
-                        <v-icon icon="fas fa-microchip" size="small"></v-icon>
+                        <v-icon icon="mdi:mdi-cpu-64-bit" size="small"></v-icon>
                       </span>
                       <div class="text-subtitle-1">CPU</div>
                     </div>
@@ -41,7 +41,7 @@
                   <div v-else>
                     <div class="d-flex justify-space-between mb-3">
                       <span class="text-h5">
-                        <v-icon icon="fas fa-memory" size="small"></v-icon>
+                        <v-icon icon="mdi:mdi-memory" size="small"></v-icon>
                       </span>
                       <div class="text-subtitle-1">Memory usage</div>
                     </div>
@@ -65,7 +65,7 @@
                   <v-card-text class="pa-1">
                     <div class="d-flex justify-space-between mb-3">
                       <span class="text-h5">
-                        <v-icon icon="fas fa-hdd" size="small"></v-icon>
+                        <v-icon icon="mdi:mdi-harddisk" size="small"></v-icon>
                       </span>
                       <div class="text-subtitle-1">{{ disk.name }}</div>
                     </div>
@@ -101,7 +101,7 @@
                   <div v-else>
                     <div class="d-flex justify-space-between mb-3">
                       <span class="text-h5">
-                        <v-icon icon="fas fa-clock" size="small"></v-icon>
+                        <v-icon icon="mdi:mdi-clock" size="small"></v-icon>
                       </span>
                       <div class="text-subtitle-1">Uptime</div>
                     </div>
@@ -127,7 +127,7 @@
                   :subtitle="data.updates + ' updates, ' + data.security_updates + ' security updates.' + (data.reboot_required ? ' Reboot required.' : '')">
                   <template v-slot:append>
                     <Terminal :serverId="serverId" @closed="fetchData(true)" cmd="sudo apt-get upgrade -y" icon>
-                      <v-icon size="small">fas fa-download</v-icon>
+                      <v-icon size="small">mdi:mdi-download</v-icon>
                     </Terminal>
                   </template>
                 </v-list-item>
@@ -202,7 +202,7 @@
                   <template v-slot:append>
                     <Terminal v-if="data.upgrade_available" :title="'Upgrade to ' + data.upgrade_available"
                       cmd="sudo do-release-upgrade" icon>
-                      <v-icon size="small">fas fa-rocket</v-icon>
+                      <v-icon size="small">mdi:mdi-rocket</v-icon>
                     </Terminal>
                     <UpdatesConfig :serverId="serverId" />
                   </template>
@@ -227,7 +227,7 @@
                     <Terminal title="GoAccess Web Log Analyzer"
                       cmd="sudo awk '$8=$1$8' /var/log/apache2/other_vhosts_access.log /var/log/apache2/other_vhosts_access.log.1 | goaccess --log-format VCOMBINED -a -"
                       icon>
-                      <v-icon size="small">fas fa-chart-line</v-icon>
+                      <v-icon size="small">mdi:mdi-chart-line</v-icon>
                     </Terminal>
                     <ApacheConfig :serverId="serverId" />
                   </template>

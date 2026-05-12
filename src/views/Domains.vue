@@ -20,7 +20,7 @@
             <template v-slot:item.domain="{ item }">
               <v-list-item :title="item.domain" class="px-0">
                 <template v-slot:prepend v-if="!display.mobile">
-                  <v-icon>fas fa-globe</v-icon>
+                  <v-icon>mdi:mdi-web</v-icon>
                 </template>
               </v-list-item>
             </template>

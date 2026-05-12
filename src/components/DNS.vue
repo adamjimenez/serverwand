@@ -8,7 +8,7 @@
             :subtitle="(data.dns?.A ? data.dns?.A : 'blank') + ' != ' + server.ip">
 
             <template v-slot:append>
-                <v-btn v-if="data.dns?.not_set" @click="fixDomainDns(data.domain)" title="Fix" icon="fas fa-hammer" size="small"></v-btn>
+                <v-btn v-if="data.dns?.not_set" @click="fixDomainDns(data.domain)" title="Fix" icon="mdi:mdi-hammer" size="small"></v-btn>
             </template>
         </v-list-item>
         <OAuth ref="oauth" />

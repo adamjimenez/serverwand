@@ -1,7 +1,7 @@
 <template>
   <span>
     <v-btn icon @click="clean()" title="Disk Clean Up">
-      <v-icon size="small">fas fa-broom</v-icon>
+      <v-icon size="small">mdi:mdi-broom</v-icon>
     </v-btn>
 
     <v-dialog scrollable v-model="showClean" max-width="600">

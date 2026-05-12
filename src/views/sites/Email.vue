@@ -42,7 +42,7 @@
           <v-list-item-title>
             {{ item.user }}
             <span v-if="item.destination">
-              <v-icon>fas fa-long-arrow-alt-right</v-icon>
+              <v-icon>mdi:mdi-arrow-right</v-icon>
               {{ item.destination }}
             </span>
           </v-list-item-title>

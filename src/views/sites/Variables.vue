@@ -17,7 +17,7 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="drawer" max-width="600" persistent>
+    <v-dialog v-model="drawer" max-width="600" persistent scrollable>
       <v-card>
         <v-card-title class="d-flex justify-space-between align-center">
           <div class="text-h5 text-medium-emphasis ps-2">
@@ -30,21 +30,21 @@
            @click="drawer = false"
           ></v-btn>
         </v-card-title>
-        <v-form v-model="valid" ref="form">
           <v-card-text>
-            <v-text-field v-model="item.line" label="Line" v-show="false"></v-text-field>
+            <v-form v-model="valid" ref="form">
+                <v-text-field v-model="item.line" label="Line" v-show="false"></v-text-field>
 
-            <v-text-field v-model="item.name" label="Name" required
-              :rules="[rules.required, rules.alphanumeric]" autofocus></v-text-field>
+                <v-text-field v-model="item.name" label="Name" required
+                  :rules="[rules.required, rules.alphanumeric]" autofocus></v-text-field>
 
-            <v-text-field v-model="item.value" label="Value" required
-              :rules="[rules.required, rules.alphanumeric]"></v-text-field>
+                <v-text-field v-model="item.value" label="Value" required
+                  :rules="[rules.required, rules.alphanumeric]"></v-text-field>
 
-            <v-btn :disabled="!valid" :loading="loading === 'save'" color="success" @click="saveItem">
-              Save
-            </v-btn>
+                <v-btn :disabled="!valid" :loading="loading === 'save'" color="success" @click="saveItem">
+                  Save
+                </v-btn>
+            </v-form>
           </v-card-text>
-        </v-form>
       </v-card>
     </v-dialog>
     <Confirm ref="confirm" />

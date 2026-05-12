@@ -18,7 +18,7 @@
       </template>
       <template v-slot:append>
         <Terminal :data="data" color="success" icon size="small">
-          <v-icon icon="fas fa-terminal"></v-icon>
+          <v-icon icon="mdi:mdi-console"></v-icon>
         </Terminal>
       </template>
     </v-list-item>

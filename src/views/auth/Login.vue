@@ -2,7 +2,7 @@
   <div>
     <v-form ref="form" v-model="valid" lazy-validation>
       <v-card-title primary-title>
-        <v-icon left color="primary">fas fa-magic</v-icon>
+        <v-icon left color="primary">mdi:mdi-auto-fix</v-icon>
         <strong>SERVERWAND</strong>
       </v-card-title>
 

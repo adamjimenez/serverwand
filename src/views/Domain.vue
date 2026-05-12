@@ -11,7 +11,7 @@
         <v-btn to="/servers/" icon v-if="$vuetify.display.mobile" class="mr-5">
             <v-icon icon="mdi: mdi-arrow-left" />
         </v-btn>
-        <v-icon v-if="$vuetify.display.smAndUp">fas fa-globe</v-icon>
+        <v-icon v-if="$vuetify.display.smAndUp">mdi:mdi-web</v-icon>
       </template>
       
       <v-list-item-title>{{ data.domain }}</v-list-item-title>

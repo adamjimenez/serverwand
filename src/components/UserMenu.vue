@@ -15,8 +15,8 @@
 export default {
   data: () => ({
     items: [
-      { value: "Settings", to: "/settings/profile", icon: 'fas fa-wrench' },
-      { value: "Log out", to: "/auth/logout", icon: 'fas fa-sign-out-alt' },
+      { value: "Settings", to: "/settings/profile", icon: 'mdi:mdi-wrench' },
+      { value: "Log out", to: "/auth/logout", icon: 'mdi:mdi-logout' },
     ],
   }),
 

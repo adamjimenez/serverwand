@@ -24,7 +24,7 @@
               <v-tooltip :text="'Fix DNS mismatch ' + item.dns.A + ' => ' + data.server.ip">
                 <template v-slot:activator="{ props }">
                   <v-btn v-bind="props" icon @click="fixAliasDns(item.domain)">
-                    <v-icon size="x-small">fas fa-wrench</v-icon>
+                    <v-icon size="x-small">mdi:mdi-wrench</v-icon>
                   </v-btn>
                 </template>
               </v-tooltip>
@@ -39,7 +39,7 @@
       </v-list>
     </v-card>
 
-    <v-dialog v-model="drawer" max-width="600" persistent>
+    <v-dialog v-model="drawer" max-width="600" persistent scrollable>
       <v-card>
         <v-card-title class="d-flex justify-space-between align-center">
           <div class="text-h5 text-medium-emphasis ps-2">
