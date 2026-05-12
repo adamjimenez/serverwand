@@ -2,8 +2,6 @@
   <div>
     <v-alert v-if="error" type="error" :text="error"></v-alert>
 
-    <Loading :value="loading" />
-
     <v-card :loading="fetching">
 
       <v-card-actions>
@@ -76,12 +74,10 @@
 <script>
 import api from "../../services/api";
 import util from "../../services/util";
-import Loading from "../../components/Loading";
 import ClearMailQueue from "../../components/ClearMailQueue";
 
 export default {
   components: {
-    Loading,
     ClearMailQueue,
   },
   data() {
