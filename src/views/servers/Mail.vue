@@ -166,10 +166,6 @@ export default {
 
       let response = await api.post("servers/" + this.serverId + "/messages", { ids: ids })
 
-      if (!response.data.success) {
-        this.error = response.data.error;
-        return;
-      }
       this.loading = '';
 
       this.fetchData()
