@@ -164,7 +164,7 @@ export default {
       // process deletions
       this.loading = 'delete';
 
-      let response = await api.post("servers/" + this.serverId + "/messages", { ids: ids })
+      await api.post("servers/" + this.serverId + "/messages", { ids: ids })
 
       this.loading = '';
 
